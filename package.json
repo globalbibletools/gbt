@@ -5,6 +5,7 @@
   "scripts": {},
   "private": true,
   "dependencies": {
+    "next": "13.1.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-router-dom": "6.4.3",
@@ -15,6 +16,7 @@
     "@nrwl/eslint-plugin-nx": "15.7.2",
     "@nrwl/js": "15.7.2",
     "@nrwl/linter": "15.7.2",
+    "@nrwl/next": "15.7.2",
     "@nrwl/react": "15.7.2",
     "@nrwl/webpack": "15.7.2",
     "@nrwl/workspace": "15.7.2",
@@ -28,6 +30,7 @@
     "@typescript-eslint/parser": "5.36.1",
     "autoprefixer": "10.4.13",
     "eslint": "8.15.0",
+    "eslint-config-next": "13.1.1",
     "eslint-config-prettier": "8.1.0",
     "eslint-plugin-import": "2.26.0",
     "eslint-plugin-jsx-a11y": "6.6.1",
