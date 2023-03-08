@@ -9,6 +9,7 @@ if (!apiURL) {
   const vercelURL = process.env['VERCEL_URL']
   apiURL = `https://${vercelURL.replace('gloss-translation', 'gloss-translation-api')}`
 }
+console.log(apiURL)
 
 /**
  * @type {import('@nrwl/next/plugins/with-nx').WithNxOptions}
