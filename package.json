@@ -36,6 +36,7 @@
     "eslint-plugin-jsx-a11y": "6.6.1",
     "eslint-plugin-react": "7.31.11",
     "eslint-plugin-react-hooks": "4.6.0",
+    "mongodb": "5.1.0",
     "nx": "15.7.2",
     "postcss": "8.4.21",
     "prettier": "2.6.2",
