@@ -3,10 +3,25 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { withNx } = require('@nrwl/next/plugins/with-nx');
 
+let apiURL = process.env['API_URL']
+
+if (!apiURL) {
+  const vercelURL = process.env['VERCEL_URL']
+  apiURL = `https://${vercelURL.replace('gloss-translation', 'gloss-translation-api')}`
+}
+
 /**
  * @type {import('@nrwl/next/plugins/with-nx').WithNxOptions}
  **/
 const nextConfig = {
+  async rewrites() {
+    return [
+      {
+        "source": "/api/:match*",
+        "destination": `${apiURL}/api/:match*`
+      },
+    ]
+  },
   nx: {
     // Set this to true if you would like to to use SVGR
     // See: https://github.com/gregberge/svgr
