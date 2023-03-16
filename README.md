@@ -4,7 +4,7 @@
 
 ### Setup
 
-You need node 18, and npm 8 to run this project.
+You need [node 18, npm 8](https://nodejs.org/en/download/), and [mongodb 5](https://www.mongodb.com/docs/manual/installation/) to run this project.
 
 Run `npm install` to install of the project's dependencies.
 
