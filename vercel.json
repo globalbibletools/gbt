@@ -1,0 +1,28 @@
+{
+  "rewrites": [
+    {
+      "source": "api/:path*",
+      "destination": "api/:path",
+      "has": [
+        {
+          "type": "host",
+          "value": "gloss-translation-api.*"
+        }
+      ]
+    },
+    {
+      "source": "/api/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "gloss-translation(?<host>-.+|$)"
+        }
+      ],
+      "destination": "https://gloss-translation-api:host/api/:path"
+    },
+    { 
+      "source": "/([^.]+)",
+      "destination": "/"
+    }
+  ]
+}
