@@ -4,6 +4,7 @@ import {
 } from 'react-router-dom';
 import translationRoutes from '../features/translation/router';
 import languagesRoutes from '../features/languages/router';
+import apiDocsRoutes from '../features/api-docs/router';
 import Layout from './Layout';
 import NotFound from './NotFound';
 
@@ -20,7 +21,8 @@ const router = createBrowserRouter([
         }
       },
       ...translationRoutes,
-      ...languagesRoutes
+      ...languagesRoutes,
+      ...apiDocsRoutes
     ]
   }
 ])
