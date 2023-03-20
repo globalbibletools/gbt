@@ -2,7 +2,9 @@
   "name": "gloss-translation",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "postinstall": "nx run-many --target=prisma-generate --all"
+  },
   "private": true,
   "dependencies": {
     "@prisma/client": "4.11.0",
