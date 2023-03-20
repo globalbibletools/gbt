@@ -22,6 +22,7 @@
     "@nrwl/react": "15.8.7",
     "@nrwl/webpack": "15.8.7",
     "@nrwl/workspace": "15.8.7",
+    "@nx-tools/nx-prisma": "4.0.3",
     "@pmmmwh/react-refresh-webpack-plugin": "0.5.7",
     "@svgr/webpack": "6.1.2",
     "@types/node": "18.11.9",
@@ -48,4 +49,3 @@
     "url-loader": "4.1.1"
   }
 }
-
