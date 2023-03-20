@@ -1,7 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { PrismaClient } from '../../prisma/client'
-
-const client = new PrismaClient()
+import { client } from '../../db'
 
 export default async function(req: NextApiRequest, res: NextApiResponse) {
   const verse = await client.verse.findFirst({
