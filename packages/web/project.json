@@ -15,7 +15,10 @@
         "baseHref": "/",
         "main": "packages/web/src/main.tsx",
         "tsConfig": "packages/web/tsconfig.app.json",
-        "assets": ["packages/web/src/favicon.ico", "packages/web/src/assets"],
+        "assets": [
+          "packages/web/src/favicon.ico",
+          { "input": "packages/web/src/public", "glob": "**/*", "output": "/" }
+        ],
         "styles": ["packages/web/src/styles.css"],
         "scripts": [],
         "isolatedConfig": true,
