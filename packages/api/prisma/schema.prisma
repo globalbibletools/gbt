@@ -14,7 +14,7 @@ datasource db {
 model Book {
   id      Int       @id
   name    String
-  search  String    @unique
+  search  String    @unique // This gives us a human readable key to look up books from URL params.
   Chapter Chapter[]
 }
 
