@@ -50,6 +50,36 @@
       "options": {
         "lintFilePatterns": ["packages/api/**/*.{ts,tsx,js,jsx}"]
       }
+    },
+    "prisma-generate": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx prisma generate --schema=packages/api/prisma/schema.prisma"
+      }
+    },
+    "prisma-migrate": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx prisma migrate dev --schema=packages/api/prisma/schema.prisma"
+      }
+    },
+    "prisma-deploy": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx prisma migrate deploy --schema=packages/api/prisma/schema.prisma"
+      }
+    },
+    "prisma-validate": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx prisma validate --schema=packages/api/prisma/schema.prisma"
+      }
+    },
+    "prisma-format": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx prisma format --schema=packages/api/prisma/schema.prisma"
+      }
     }
   },
   "tags": []
