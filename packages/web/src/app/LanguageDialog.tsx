@@ -3,11 +3,7 @@ import { useTranslation } from 'react-i18next';
 import Dialog, { DialogRef } from '../shared/Dialog';
 import { Icon } from '../shared/Icon';
 import SelectInput from '../shared/SelectInput';
-
-const LANGUAGES = {
-  en: 'English',
-  es: 'Español',
-};
+import languages from './languages.json';
 
 const LanguageDialog = forwardRef<DialogRef>((_, ref) => {
   const { i18n } = useTranslation();
@@ -25,7 +21,7 @@ const LanguageDialog = forwardRef<DialogRef>((_, ref) => {
         onChange={(e) => i18n.changeLanguage(e.currentTarget.value)}
         aria-label="Interface Language"
       >
-        {Object.entries(LANGUAGES).map(([code, lang]) => (
+        {Object.entries(languages).map(([code, lang]) => (
           <option value={code} key={code}>
             {lang}
           </option>
