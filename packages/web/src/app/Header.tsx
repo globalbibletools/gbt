@@ -1,8 +1,15 @@
-import DropdownMenu, { DropdownMenuButton, DropdownMenuLink } from '../shared/DropdownMenu';
+import { useRef } from 'react';
+import { DialogRef } from '../shared/Dialog';
+import DropdownMenu, {
+  DropdownMenuButton,
+  DropdownMenuLink,
+} from '../shared/DropdownMenu';
 import { Icon } from '../shared/Icon';
+import LanguageDialog from './LanguageDialog';
 
 export default function Header() {
-  const userName = "Joe Translator"
+  const userName = 'Joe Translator';
+  const languageDialog = useRef<DialogRef>(null);
 
   return (
     <header className="p-2 flex items-baseline z-10">
@@ -14,12 +21,17 @@ export default function Header() {
             <Icon icon="user" className="mr-2" />
             Profile
           </DropdownMenuLink>
-          <DropdownMenuButton onClick={() => { console.log('language') }}>
+          <DropdownMenuButton
+            onClick={() => {
+              languageDialog.current?.open();
+            }}
+          >
             <Icon icon="earth" className="mr-2" />
             Language
           </DropdownMenuButton>
         </DropdownMenu>
       </nav>
+      <LanguageDialog ref={languageDialog} />
     </header>
   );
 }

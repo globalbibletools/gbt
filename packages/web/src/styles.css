@@ -1,3 +1,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  dialog {
+    inset-inline-start: unset;
+    inset-inline-end: unset;
+  }
+}
