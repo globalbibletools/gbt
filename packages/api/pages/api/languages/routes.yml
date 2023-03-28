@@ -1,0 +1,180 @@
+openapi: 3.0.3
+info:
+  title: Gloss Translation API
+  description: |-
+    This is the Gloss Translation API. 
+    The frontend can be accessed at [https://gloss-translation.vercel.app]().
+  version: 0.0.1
+servers:
+  - url: https://gloss-translation-api.vercel.app/api
+    description: Production server
+  - url: http://localhost:4300/api
+    description: Local server
+components:
+  schemas:
+    Language:
+      required:
+        - code
+        - name
+      type: object
+      properties:
+        type:
+          type: string
+          enum: [language]
+        id:
+          type: string
+          example: es
+          description: The [IETF language code](https://en.wikipedia.org/wiki/IETF_language_tag).
+        attributes:
+          type: object
+          properties:
+            name:
+              type: string
+              example: Español
+              description: The name of the language in the language itself.
+        links:
+          type: object
+          properties:
+            self:
+              type: string
+              format: uri
+              example: '/languages/es'
+paths:
+  /languages:
+    get:
+      summary: Get all languages being translated.
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/vnd.api+json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    allOf:
+                      - type: array
+                        items:
+                        $ref: "#/components/schemas/Language"
+                      - example:
+                        - type: language
+                          id: es 
+                          attributes:
+                            name: Español
+                          links: 
+                            self: /languages/es
+                        - type: language
+                          id: en 
+                          attributes:
+                            name: English
+                          links: 
+                            self: /languages/en
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        format: uri
+                        example: '/languages'
+    post:
+      summary: Create a new language to translate.
+      requestBody:
+        required: true
+        content:
+          application/vnd.api+json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    type:
+                      type: string
+                      enum: [language]
+                    id:
+                      type: string
+                      example: es
+                      description: The [IETF language code](https://en.wikipedia.org/wiki/IETF_language_tag).
+                    attributes:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          example: Español
+                          description: The name of the language in the language itself.
+      responses:
+        201:
+          description: Created
+          content:
+            application/vnd.api+json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Language'
+  /languages/{code}:
+    get:
+      summary: Get a language by its IETF code.
+      parameters:
+        - name: code
+          in: path
+          description: IETF code of the language
+          required: true
+          schema:
+            type: string
+          example: es
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/vnd.api+json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Language"
+    patch:
+      summary: Update a language.
+      parameters:
+        - name: code
+          in: path
+          description: IETF code of the language
+          required: true
+          schema:
+            type: string
+          example: es
+      requestBody:
+        required: true
+        content:
+          application/vnd.api+json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    type:
+                      type: string
+                      enum: [language]
+                    id:
+                      type: string
+                      example: es
+                      description: The [IETF language code](https://en.wikipedia.org/wiki/IETF_language_tag).
+                    attributes:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          example: Español
+                          description: The name of the language in the language itself.
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/vnd.api+json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Language"
+                
