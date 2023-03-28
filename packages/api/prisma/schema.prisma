@@ -2,13 +2,15 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
-  output   = "./client"
+  provider        = "prisma-client-js"
+  output          = "./client"
+  previewFeatures = ["postgresqlExtensions"]
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  extensions = [pgcrypto]
 }
 
 model Book {
@@ -38,7 +40,7 @@ model Verse {
 }
 
 model Language {
-  id   String @id @default(uuid()) @db.Uuid
+  id   String @id @default(dbgenerated("generate_ulid()")) @db.Uuid
   code String @unique
   name String
 }
