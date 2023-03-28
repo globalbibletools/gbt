@@ -13,7 +13,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-router-dom": "6.4.3",
-    "swagger-ui-react": "5.0.0-alpha.4",
+    "swagger-ui-react": "4.18.1",
     "tslib": "2.3.0"
   },
   "devDependencies": {
@@ -34,7 +34,7 @@
     "@types/react": "18.0.25",
     "@types/react-dom": "18.0.9",
     "@types/react-router-dom": "5.3.3",
-    "@types/swagger-ui-react": "^4.11.0",
+    "@types/swagger-ui-react": "4.11.0",
     "@typescript-eslint/eslint-plugin": "5.36.1",
     "@typescript-eslint/parser": "5.36.1",
     "autoprefixer": "10.4.13",
