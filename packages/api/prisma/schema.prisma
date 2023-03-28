@@ -38,7 +38,7 @@ model Verse {
 }
 
 model Language {
-  id   Int    @id
+  id   String @id @default(uuid()) @db.Uuid
   code String @unique
   name String
 }

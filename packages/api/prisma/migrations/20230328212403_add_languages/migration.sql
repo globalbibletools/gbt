@@ -1,6 +1,6 @@
 -- CreateTable
 CREATE TABLE "Language" (
-    "id" INTEGER NOT NULL,
+    "id" UUID NOT NULL,
     "code" TEXT NOT NULL,
     "name" TEXT NOT NULL,
 
