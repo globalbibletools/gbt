@@ -1,0 +1,23 @@
+type: object
+properties:
+  type:
+    type: string
+    enum: [language]
+  id:
+    type: string
+    example: es
+    description: The [IETF language code](https://en.wikipedia.org/wiki/IETF_language_tag).
+  attributes:
+    type: object
+    properties:
+      name:
+        type: string
+        example: Español
+        description: The name of the language in the language itself.
+  links:
+    type: object
+    properties:
+      self:
+        type: string
+        format: uri
+        example: '/languages/es'
