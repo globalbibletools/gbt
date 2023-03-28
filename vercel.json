@@ -15,7 +15,17 @@
       "has": [
         {
           "type": "host",
-          "value": "gloss-translation(?<host>-.+|$)"
+          "value": "gloss-translation.vercel.app"
+        }
+      ],
+      "destination": "https://gloss-translation-api.vercel.app/api/:path"
+    },
+    {
+      "source": "/api/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "gloss-translation(?<host>-.+)?"
         }
       ],
       "destination": "https://gloss-translation-api:host/api/:path"
