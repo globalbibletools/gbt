@@ -36,3 +36,9 @@ model Verse {
 
   @@unique([chapterId, number])
 }
+
+model Language {
+  id   Int    @id
+  code String @unique
+  name String
+}
