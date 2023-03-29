@@ -1,0 +1,21 @@
+openapi: 3.0.3
+info:
+  title: Gloss Translation API
+  description: |-
+    This is the Gloss Translation API. 
+    The frontend can be accessed at [https://gloss-translation.vercel.app]().
+  version: 0.0.1
+servers:
+  - url: https://gloss-translation-api.vercel.app/api
+    description: Production server
+  - url: http://localhost:4300/api
+    description: Local server
+paths:
+  /languages:
+    $ref: ./paths/languages.yml
+  /languages/{id}:
+    $ref: ./paths/language.yml
+components:
+  schemas:
+    Language:
+      $ref: ./schemas/language.yml

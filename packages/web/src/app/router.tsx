@@ -1,7 +1,4 @@
-import {
-  createBrowserRouter,
-  redirect
-} from 'react-router-dom';
+import { createBrowserRouter, redirect } from 'react-router-dom';
 import translationRoutes from '../features/translation/router';
 import languagesRoutes from '../features/languages/router';
 import Layout from './Layout';
@@ -16,13 +13,13 @@ const router = createBrowserRouter([
       {
         index: true,
         loader() {
-          return redirect('/translation')
-        }
+          return redirect('/translation');
+        },
       },
       ...translationRoutes,
-      ...languagesRoutes
-    ]
-  }
-])
+      ...languagesRoutes,
+    ],
+  },
+]);
 
 export default router;

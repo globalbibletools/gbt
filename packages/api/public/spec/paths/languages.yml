@@ -1,0 +1,71 @@
+get:
+  summary: Get all languages being translated.
+  responses:
+    "200":
+      description: Ok
+      content:
+        application/vnd.api+json:
+          schema:
+            type: object
+            properties:
+              data:
+                allOf:
+                  - type: array
+                    items:
+                      $ref: "../schemas/language.yml"
+                  - example:
+                    - type: language
+                      id: es 
+                      attributes:
+                        name: Español
+                      links: 
+                        self: /languages/es
+                    - type: language
+                      id: en 
+                      attributes:
+                        name: English
+                      links: 
+                        self: /languages/en
+              links:
+                type: object
+                properties:
+                  self:
+                    type: string
+                    format: uri
+                    example: '/languages'
+post:
+  summary: Create a new language to translate.
+  requestBody:
+    required: true
+    content:
+      application/vnd.api+json:
+        schema:
+          type: object
+          properties:
+            data:
+              type: object
+              properties:
+                type:
+                  type: string
+                  enum: [language]
+                id:
+                  type: string
+                  example: es
+                  description: The [IETF language code](https://en.wikipedia.org/wiki/IETF_language_tag).
+                attributes:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      example: Español
+                      description: The name of the language in the language itself.
+  responses:
+    201:
+      description: Created
+      content:
+        application/vnd.api+json:
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: "../schemas/language.yml"
