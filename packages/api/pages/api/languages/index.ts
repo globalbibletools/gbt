@@ -13,7 +13,7 @@ export default async function (
   switch (req.method) {
     case 'GET': {
       const languages = await client.language.findMany();
-      return res.status(200).json({
+      res.status(200).json({
         data: languages.map((language) => ({
           type: 'language',
           id: language.code,
@@ -28,6 +28,7 @@ export default async function (
           self: `${req.url}`,
         },
       });
+      break;
     }
     case 'POST': {
       try {
@@ -37,7 +38,7 @@ export default async function (
             name: req.body.data.attributes.name,
           },
         });
-        return res.status(201).json({
+        res.status(201).json({
           data: {
             type: 'language',
             id: language.code,
@@ -62,9 +63,10 @@ export default async function (
           throw error;
         }
       }
+      break;
     }
     default: {
-      return res.status(405).json({
+      res.status(405).json({
         errors: [{ code: 'MethodNotAllowed' }],
       });
     }
