@@ -12,7 +12,7 @@ get:
     "200":
       description: Ok
       content:
-        application/vnd.api+json:
+        application/json:
           schema:
             type: object
             properties:
@@ -31,7 +31,7 @@ patch:
   requestBody:
     required: true
     content:
-      application/vnd.api+json:
+      application/json:
         schema:
           type: object
           properties:
@@ -56,7 +56,7 @@ patch:
     "200":
       description: Ok
       content:
-        application/vnd.api+json:
+        application/json:
           schema:
             type: object
             properties:

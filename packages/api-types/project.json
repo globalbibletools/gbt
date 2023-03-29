@@ -1,0 +1,16 @@
+{
+  "name": "api-types",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/api-types/src",
+  "projectType": "library",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["packages/api-types/**/*.ts"]
+      }
+    }
+  },
+  "tags": []
+}

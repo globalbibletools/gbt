@@ -4,7 +4,7 @@ get:
     "200":
       description: Ok
       content:
-        application/vnd.api+json:
+        application/json:
           schema:
             type: object
             properties:
@@ -38,7 +38,7 @@ post:
   requestBody:
     required: true
     content:
-      application/vnd.api+json:
+      application/json:
         schema:
           type: object
           properties:
@@ -63,7 +63,7 @@ post:
     201:
       description: Created
       content:
-        application/vnd.api+json:
+        application/json:
           schema:
             type: object
             properties:
