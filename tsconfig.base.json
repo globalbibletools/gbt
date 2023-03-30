@@ -15,6 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@translation/api-client": ["packages/api-client/src/index.ts"],
       "@translation/api-types": ["packages/api-types/src/index.ts"]
     }
   },

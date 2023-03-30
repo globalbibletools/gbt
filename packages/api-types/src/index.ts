@@ -2,15 +2,12 @@ export interface LanguageResourceIdentifier {
   type: 'language';
   id: string;
 }
-
 export interface LanguageAttributes {
   name: string;
 }
-
 export interface LanguageLinks {
   self: string;
 }
-
 export type Language = LanguageResourceIdentifier & {
   attributes: LanguageAttributes;
   links: LanguageLinks;
