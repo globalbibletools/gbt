@@ -1,8 +1,8 @@
 import { forwardRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import Dialog, { DialogRef } from '../shared/Dialog';
-import { Icon } from '../shared/Icon';
-import SelectInput from '../shared/SelectInput';
+import Dialog, { DialogRef } from '../shared/components/Dialog';
+import { Icon } from '../shared/components/Icon';
+import SelectInput from '../shared/components/SelectInput';
 import languages from './languages.json';
 
 const LanguageDialog = forwardRef<DialogRef>((_, ref) => {

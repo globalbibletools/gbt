@@ -1,11 +1,11 @@
 import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { DialogRef } from '../shared/Dialog';
+import { DialogRef } from '../shared/components/Dialog';
 import DropdownMenu, {
   DropdownMenuButton,
   DropdownMenuLink,
-} from '../shared/DropdownMenu';
-import { Icon } from '../shared/Icon';
+} from '../shared/components/DropdownMenu';
+import { Icon } from '../shared/components/Icon';
 import LanguageDialog from './LanguageDialog';
 import languages from './languages.json';
 
