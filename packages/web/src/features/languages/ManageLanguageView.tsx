@@ -2,16 +2,10 @@ import apiClient from '../../shared/apiClient';
 import View from '../../shared/components/View';
 import ViewTitle from '../../shared/components/ViewTitle';
 import { FormEvent } from 'react';
-import {
-  useNavigate,
-  useParams,
-  LoaderFunctionArgs,
-  useLoaderData,
-} from 'react-router-dom';
+import { LoaderFunctionArgs, useLoaderData } from 'react-router-dom';
 import TextInput from '../../shared/components/TextInput';
 import FormLabel from '../../shared/components/FormLabel';
 import Button from '../../shared/components/Button';
-import { useFetch } from '../../shared/useFetch';
 import { GetLanguageResponseBody } from '@translation/api-types';
 
 export async function manageLanguageViewLoader({ params }: LoaderFunctionArgs) {

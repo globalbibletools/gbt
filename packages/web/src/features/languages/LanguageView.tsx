@@ -13,56 +13,43 @@ import {
 } from '../../shared/components/List';
 import View from '../../shared/components/View';
 import ViewTitle from '../../shared/components/ViewTitle';
-import { useFetch } from '../../shared/useFetch';
+import { useLoaderData } from 'react-router-dom';
+import { GetLanguagesResponseBody } from '@translation/api-types';
+
+export function languagesViewLoader() {
+  return apiClient.languages.findAll();
+}
 
 export default function LanguagesView() {
-  const languages = useFetch(() => apiClient.languages.findAll());
+  const languages = useLoaderData() as GetLanguagesResponseBody;
+  console.log(languages);
 
   return (
     <View fitToScreen>
       <div className="m-auto w-fit">
         <ViewTitle>Languages</ViewTitle>
-
-        {(() => {
-          switch (languages.status) {
-            case 'loading': {
-              return <div>Loading...</div>;
-            }
-            case 'loaded': {
-              return (
-                <div>
-                  <List>
-                    <ListHeader>
-                      <ListHeaderCell className="min-w-[240px]">
-                        LANGUAGE
-                      </ListHeaderCell>
-                      <ListHeaderCell />
-                    </ListHeader>
-                    <ListRowAction colSpan={2}>
-                      <Link to="./new">
-                        <Icon icon="plus" className="mr-1" />
-                        Add Language
-                      </Link>
-                    </ListRowAction>
-                    <ListBody>
-                      {languages.data.data.map((language) => (
-                        <ListRow key={language.id}>
-                          <ListCell header>{language.attributes.name}</ListCell>
-                          <ListCell>
-                            <Link to={`./${language.id}`}>Manage</Link>
-                          </ListCell>
-                        </ListRow>
-                      ))}
-                    </ListBody>
-                  </List>
-                </div>
-              );
-            }
-            case 'error': {
-              return <div>{languages.error.message}</div>;
-            }
-          }
-        })()}
+        <List>
+          <ListHeader>
+            <ListHeaderCell className="min-w-[240px]">LANGUAGE</ListHeaderCell>
+            <ListHeaderCell />
+          </ListHeader>
+          <ListRowAction colSpan={2}>
+            <Link to="./new">
+              <Icon icon="plus" className="mr-1" />
+              Add Language
+            </Link>
+          </ListRowAction>
+          <ListBody>
+            {languages.data.map((language) => (
+              <ListRow key={language.id}>
+                <ListCell header>{language.attributes.name}</ListCell>
+                <ListCell>
+                  <Link to={`./${language.id}`}>Manage</Link>
+                </ListCell>
+              </ListRow>
+            ))}
+          </ListBody>
+        </List>
       </div>
     </View>
   );
