@@ -15,6 +15,7 @@ import View from '../../shared/components/View';
 import ViewTitle from '../../shared/components/ViewTitle';
 import { useLoaderData } from 'react-router-dom';
 import { GetLanguagesResponseBody } from '@translation/api-types';
+import { capitalize } from '../../shared/utils';
 
 export function languagesViewLoader() {
   return apiClient.languages.findAll();
@@ -22,21 +23,24 @@ export function languagesViewLoader() {
 
 export default function LanguagesView() {
   const languages = useLoaderData() as GetLanguagesResponseBody;
-  console.log(languages);
+
+  const { t } = useTranslation();
 
   return (
     <View fitToScreen>
       <div className="m-auto w-fit">
-        <ViewTitle>Languages</ViewTitle>
+        <ViewTitle>{capitalize(t('language', { count: 100 }))}</ViewTitle>
         <List>
           <ListHeader>
-            <ListHeaderCell className="min-w-[240px]">LANGUAGE</ListHeaderCell>
+            <ListHeaderCell className="min-w-[240px]">
+              {t('language', { count: 1 }).toUpperCase()}
+            </ListHeaderCell>
             <ListHeaderCell />
           </ListHeader>
           <ListRowAction colSpan={2}>
             <Link to="./new">
               <Icon icon="plus" className="mr-1" />
-              Add Language
+              {t('add_language')}
             </Link>
           </ListRowAction>
           <ListBody>
@@ -44,7 +48,7 @@ export default function LanguagesView() {
               <ListRow key={language.id}>
                 <ListCell header>{language.attributes.name}</ListCell>
                 <ListCell>
-                  <Link to={`./${language.id}`}>Manage</Link>
+                  <Link to={`./${language.id}`}>{t('manage')}</Link>
                 </ListCell>
               </ListRow>
             ))}

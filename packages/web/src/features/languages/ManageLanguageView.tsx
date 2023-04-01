@@ -7,6 +7,7 @@ import TextInput from '../../shared/components/TextInput';
 import FormLabel from '../../shared/components/FormLabel';
 import Button from '../../shared/components/Button';
 import { GetLanguageResponseBody } from '@translation/api-types';
+import { useTranslation } from 'react-i18next';
 
 export async function manageLanguageViewLoader({ params }: LoaderFunctionArgs) {
   return apiClient.languages.findByCode(params.code ?? 'unknown');
@@ -14,6 +15,8 @@ export async function manageLanguageViewLoader({ params }: LoaderFunctionArgs) {
 
 export default function ManageLanguageView() {
   const language = useLoaderData() as GetLanguageResponseBody;
+
+  const { t } = useTranslation();
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -38,7 +41,7 @@ export default function ManageLanguageView() {
 
         <form onSubmit={onSubmit}>
           <div className="mb-4">
-            <FormLabel htmlFor="name">NAME</FormLabel>
+            <FormLabel htmlFor="name">{t('name').toUpperCase()}</FormLabel>
             <TextInput
               id="name"
               name="name"
@@ -48,7 +51,7 @@ export default function ManageLanguageView() {
             />
           </div>
           <div>
-            <Button type="submit">Update</Button>
+            <Button type="submit">{t('update')}</Button>
           </div>
         </form>
       </div>

@@ -6,9 +6,12 @@ import { useNavigate } from 'react-router-dom';
 import TextInput from '../../shared/components/TextInput';
 import FormLabel from '../../shared/components/FormLabel';
 import Button from '../../shared/components/Button';
+import { useTranslation } from 'react-i18next';
 
 export default function NewLanguageView() {
   const navigate = useNavigate();
+
+  const { t } = useTranslation();
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -34,11 +37,11 @@ export default function NewLanguageView() {
   return (
     <View fitToScreen>
       <div className="m-auto w-fit">
-        <ViewTitle>New Language</ViewTitle>
+        <ViewTitle>{t('new_language')}</ViewTitle>
 
         <form onSubmit={onSubmit}>
           <div className="mb-2">
-            <FormLabel htmlFor="code">CODE</FormLabel>
+            <FormLabel htmlFor="code">{t('code').toUpperCase()}</FormLabel>
             <TextInput
               id="code"
               name="code"
@@ -47,7 +50,7 @@ export default function NewLanguageView() {
             />
           </div>
           <div className="mb-4">
-            <FormLabel htmlFor="name">NAME</FormLabel>
+            <FormLabel htmlFor="name">{t('name').toUpperCase()}</FormLabel>
             <TextInput
               id="name"
               name="name"
@@ -56,7 +59,7 @@ export default function NewLanguageView() {
             />
           </div>
           <div>
-            <Button type="submit">Create</Button>
+            <Button type="submit">{t('create')}</Button>
           </div>
         </form>
       </div>
