@@ -1,16 +1,6 @@
 {
   "rewrites": [
     {
-      "source": "api/:path*",
-      "destination": "api/:path",
-      "has": [
-        {
-          "type": "host",
-          "value": "gloss-translation-api.*"
-        }
-      ]
-    },
-    {
       "source": "/api/:path*",
       "has": [
         {
@@ -18,20 +8,26 @@
           "value": "gloss-translation.vercel.app"
         }
       ],
-      "destination": "https://gloss-translation-api.vercel.app/api/:path"
+      "destination": "https://gloss-translation-api.vercel.app/api/:path*"
     },
     {
       "source": "/api/:path*",
       "has": [
         {
           "type": "host",
-          "value": "gloss-translation(?<host>-.+)?"
+          "value": "gloss-translation-git-(?<host>.*).vercel.app"
         }
       ],
-      "destination": "https://gloss-translation-api:host/api/:path"
+      "destination": "https://gloss-translation-api-git-:host.vercel.app/api/:path*"
     },
     { 
       "source": "/([^.]+)",
+      "has": [
+        {
+          "type": "host",
+          "value": "gloss-translation(?<host>-(?!api).*|).vercel.app"
+        }
+      ],
       "destination": "/"
     }
   ]
