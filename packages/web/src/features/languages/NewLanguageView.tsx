@@ -7,6 +7,7 @@ import TextInput from '../../shared/components/TextInput';
 import FormLabel from '../../shared/components/FormLabel';
 import Button from '../../shared/components/Button';
 import { useTranslation } from 'react-i18next';
+import { ApiClientError } from '@translation/api-client';
 
 export default function NewLanguageView() {
   const navigate = useNavigate();
@@ -21,15 +22,28 @@ export default function NewLanguageView() {
     const name = (
       e.currentTarget.elements.namedItem('name') as HTMLInputElement
     ).value;
-    await apiClient.languages.create({
-      data: {
-        type: 'language',
-        id: code,
-        attributes: {
-          name,
+    try {
+      await apiClient.languages.create({
+        data: {
+          type: 'language',
+          id: code,
+          attributes: {
+            name,
+          },
         },
-      },
-    });
+      });
+    } catch (error) {
+      if (error instanceof ApiClientError && error.status === 409) {
+        const alreadyExistsError = error.body.errors.find(
+          (error) => error.code === 'AlreadyExists'
+        );
+        if (alreadyExistsError) {
+          alert(`Language with code "${code}" already exists.`);
+          return;
+        }
+      }
+      throw error;
+    }
 
     navigate('/languages');
   }

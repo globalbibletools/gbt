@@ -1,5 +1,7 @@
+import type { ErrorResponse } from '@translation/api-types';
 import Languages from './languages';
 
+export { ErrorResponse };
 export * from './languages';
 
 export interface ApiClientOptions {
@@ -32,7 +34,7 @@ export class ApiClientError extends Error {
   constructor(
     readonly request: Request,
     readonly response: Response,
-    readonly body: unknown
+    readonly body: ErrorResponse
   ) {
     super(
       `${response.statusText} (${response.status}) on ${request.method} request to ${request.url}`
