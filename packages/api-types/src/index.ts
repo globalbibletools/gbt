@@ -2,44 +2,42 @@ export interface LanguageResourceIdentifier {
   type: 'language';
   id: string;
 }
-export interface LanguageAttributes {
-  name: string;
+
+export interface Language extends LanguageResourceIdentifier {
+  attributes: {
+    name: string;
+  };
 }
-export interface LanguageLinks {
-  self: string;
+
+export interface LanguageWithLinks extends Language {
+  links: {
+    self: string;
+  };
 }
-export type Language = LanguageResourceIdentifier & {
-  attributes: LanguageAttributes;
-  links: LanguageLinks;
-};
 
 export interface GetLanguagesResponseBody {
-  data: Language[];
+  data: LanguageWithLinks[];
   links: {
     self: string;
   };
 }
 
 export interface GetLanguageResponseBody {
-  data: Language;
+  data: LanguageWithLinks;
 }
 
 export interface PostLanguageRequestBody {
-  data: LanguageResourceIdentifier & {
-    attributes: LanguageAttributes;
-  };
+  data: Language;
 }
 
 export interface PostLanguageResponseBody {
-  data: Language;
+  data: LanguageWithLinks;
 }
 
 export interface PatchLanguageRequestBody {
-  data: LanguageResourceIdentifier & {
-    attributes: Partial<LanguageAttributes>;
-  };
+  data: Language;
 }
 
 export interface PatchLanguageResponseBody {
-  data: Language;
+  data: LanguageWithLinks;
 }

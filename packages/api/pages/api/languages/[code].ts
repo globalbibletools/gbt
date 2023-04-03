@@ -1,9 +1,17 @@
+import * as z from 'zod';
 import {
   GetLanguageResponseBody,
+  PatchLanguageRequestBody,
   PatchLanguageResponseBody,
 } from '@translation/api-types';
 import { ApiRequest, ApiResponse } from '../../../helpers';
 import { client, Prisma } from '../../../db';
+import { languageSchema } from './schemas';
+
+const patchRequestSchema = (id?: string): z.ZodType<PatchLanguageRequestBody> =>
+  z.object({
+    data: languageSchema(id),
+  });
 
 export default async function (
   req: ApiRequest<{ code: string }>,
@@ -40,7 +48,36 @@ export default async function (
     case 'PATCH': {
       const data: Prisma.LanguageUpdateInput = {};
 
-      const { attributes } = req.body.data;
+      let body;
+      const parseResult = patchRequestSchema(req.query.code).safeParse(
+        req.body
+      );
+      if (parseResult.success) {
+        body = parseResult.data;
+      } else {
+        const { error } = parseResult;
+        const typeMismatch = error.issues.find(
+          (issue) => 'data.type' === issue.path.join('.')
+        );
+        const idMismatch = error.issues.find(
+          (issue) => 'data.id' === issue.path.join('.')
+        );
+        if (typeMismatch) {
+          return res.status(409).json({
+            errors: [{ code: 'TypeMismatch' }],
+          });
+        } else if (idMismatch) {
+          return res.status(409).json({
+            errors: [{ code: 'IdMismatch' }],
+          });
+        } else {
+          return res.status(422).end({
+            errors: [{ code: 'InvalidRequestShape' }],
+          });
+        }
+      }
+
+      const { attributes } = body.data;
 
       if (attributes.name) {
         data.name = attributes.name;
