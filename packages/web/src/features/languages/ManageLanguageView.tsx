@@ -48,6 +48,7 @@ export default function ManageLanguageView() {
               className="block"
               autoComplete="off"
               defaultValue={language.data.attributes.name}
+              required
             />
           </div>
           <div>

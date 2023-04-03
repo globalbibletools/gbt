@@ -47,6 +47,7 @@ export default function NewLanguageView() {
               name="code"
               className="block"
               autoComplete="off"
+              required
             />
           </div>
           <div className="mb-4">
@@ -56,6 +57,7 @@ export default function NewLanguageView() {
               name="name"
               className="block"
               autoComplete="off"
+              required
             />
           </div>
           <div>
