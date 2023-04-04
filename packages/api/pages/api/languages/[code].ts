@@ -4,21 +4,18 @@ import {
   PatchLanguageRequestBody,
   PatchLanguageResponseBody,
 } from '@translation/api-types';
-import { ApiRequest, ApiResponse } from '../../../helpers';
 import { client, Prisma } from '../../../db';
 import { languageSchema } from './schemas';
+import createRoute from '../../../Route';
 
 const patchRequestSchema = (id?: string): z.ZodType<PatchLanguageRequestBody> =>
   z.object({
     data: languageSchema(id),
   });
 
-export default async function (
-  req: ApiRequest<{ code: string }>,
-  res: ApiResponse<GetLanguageResponseBody | PatchLanguageResponseBody>
-) {
-  switch (req.method) {
-    case 'GET': {
+export default createRoute<{ code: string }>()
+  .get<GetLanguageResponseBody>({
+    async handler({ req, res }) {
       const language = await client.language.findUnique({
         where: {
           code: req.query.code,
@@ -43,9 +40,10 @@ export default async function (
           errors: [{ code: 'NotFound' }],
         });
       }
-      break;
-    }
-    case 'PATCH': {
+    },
+  })
+  .patch<PatchLanguageResponseBody>({
+    async handler({ req, res }) {
       const data: Prisma.LanguageUpdateInput = {};
 
       let body;
@@ -63,18 +61,19 @@ export default async function (
           (issue) => 'data.id' === issue.path.join('.')
         );
         if (typeMismatch) {
-          return res.status(409).json({
+          res.status(409).json({
             errors: [{ code: 'TypeMismatch' }],
           });
         } else if (idMismatch) {
-          return res.status(409).json({
+          res.status(409).json({
             errors: [{ code: 'IdMismatch' }],
           });
         } else {
-          return res.status(422).end({
+          res.status(422).end({
             errors: [{ code: 'InvalidRequestShape' }],
           });
         }
+        return;
       }
 
       const { attributes } = body.data;
@@ -116,12 +115,6 @@ export default async function (
           throw error;
         }
       }
-      break;
-    }
-    default: {
-      res.status(405).json({
-        errors: [{ code: 'MethodNotAllowed' }],
-      });
-    }
-  }
-}
+    },
+  })
+  .build();
