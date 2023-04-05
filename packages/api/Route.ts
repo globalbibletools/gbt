@@ -1,52 +1,107 @@
 import { ErrorResponse } from '@translation/api-types';
 import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
+import { ZodSchema } from 'zod';
 
-export interface RequestData<Params, ResponseBody> {
-  req: NextApiRequest & { query: Params };
-  res: NextApiResponse<ResponseBody | ErrorResponse>;
-}
-
-export interface RouteDefinition<Params, ResponseBody> {
-  handler(data: RequestData<Params, ResponseBody>): Promise<void>;
-}
+export type RouteDefinition<Params, RequestBody, ResponseBody> = {
+  handler(
+    req: Omit<NextApiRequest, 'query' | 'body'> & {
+      query: Params;
+      body: RequestBody;
+    },
+    res: NextApiResponse<ResponseBody | ErrorResponse>
+  ): Promise<void>;
+} & (RequestBody extends void
+  ? // eslint-disable-next-line @typescript-eslint/ban-types
+    {}
+  : {
+      schema:
+        | ZodSchema<RequestBody>
+        | ((req: NextApiRequest & { query: Params }) => ZodSchema<RequestBody>);
+    });
 
 export interface RouteBuilder<Params> {
   build(): NextApiHandler;
-  get<ResponseBody>(
-    definition: RouteDefinition<Params, ResponseBody>
+  get<RequestBody, ResponseBody>(
+    definition: RouteDefinition<Params, RequestBody, ResponseBody>
   ): RouteBuilder<Params>;
-  patch<ResponseBody>(
-    definition: RouteDefinition<Params, ResponseBody>
+  patch<RequestBody, ResponseBody>(
+    definition: RouteDefinition<Params, RequestBody, ResponseBody>
   ): RouteBuilder<Params>;
-  post<ResponseBody>(
-    definition: RouteDefinition<Params, ResponseBody>
+  post<RequestBody, ResponseBody>(
+    definition: RouteDefinition<Params, RequestBody, ResponseBody>
   ): RouteBuilder<Params>;
 }
 
 export default function createRoute<Params>(): RouteBuilder<Params> {
   const handlers: { [method: string]: NextApiHandler } = {};
 
-  function createHandler<ResponseBody>(
-    definition: RouteDefinition<Params, ResponseBody>
+  function createHandler<RequestBody, ResponseBody>(
+    definition: RouteDefinition<Params, RequestBody, ResponseBody>
   ): NextApiHandler {
     return async (req, res) => {
-      await definition.handler({
-        req: req as NextApiRequest & { query: Params },
-        res,
-      });
+      if ('schema' in definition) {
+        const schema =
+          typeof definition.schema === 'function'
+            ? definition.schema(req as any)
+            : definition.schema;
+        const parseResult = schema.safeParse(req.body);
+        if (parseResult.success) {
+          req.body = parseResult.data;
+        } else {
+          const paths = parseResult.error.issues.map((issue) =>
+            issue.path.join('.')
+          );
+
+          // We return 422 for most validation issues.
+          // In the future we may provide more helpful error messages.
+          const hasManyIssues = paths.some(
+            (path) => !['data.type', 'data.id'].includes(path)
+          );
+          if (hasManyIssues) {
+            res.status(422).json({
+              errors: [{ code: 'InvalidRequestShape' }],
+            });
+            return;
+          }
+
+          // We return 409 if the body is valid, with the exeception of either the type and id.
+          const typeMismatch = paths.find((path) => 'data.type' === path);
+          const idMismatch = paths.find((path) => 'data.id' === path);
+          res.status(409).json({
+            errors: [
+              typeMismatch && { code: 'TypeMismatch' },
+              idMismatch && { code: 'IdMismatch' },
+            ].filter(Boolean),
+          });
+          return;
+        }
+      } else {
+        req.body = {};
+      }
+
+      await definition.handler(
+        req as NextApiRequest & { query: Params; body: RequestBody },
+        res
+      );
     };
   }
 
   return {
-    get<ResponseBody>(definition: RouteDefinition<Params, ResponseBody>) {
+    get<RequestBody, ResponseBody>(
+      definition: RouteDefinition<Params, RequestBody, ResponseBody>
+    ) {
       handlers['GET'] = createHandler(definition);
       return this;
     },
-    post<ResponseBody>(definition: RouteDefinition<Params, ResponseBody>) {
+    post<RequestBody, ResponseBody>(
+      definition: RouteDefinition<Params, RequestBody, ResponseBody>
+    ) {
       handlers['POST'] = createHandler(definition);
       return this;
     },
-    patch<ResponseBody>(definition: RouteDefinition<Params, ResponseBody>) {
+    patch<RequestBody, ResponseBody>(
+      definition: RouteDefinition<Params, RequestBody, ResponseBody>
+    ) {
       handlers['PATCH'] = createHandler(definition);
       return this;
     },

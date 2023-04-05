@@ -14,8 +14,8 @@ const patchRequestSchema = (id?: string): z.ZodType<PatchLanguageRequestBody> =>
   });
 
 export default createRoute<{ code: string }>()
-  .get<GetLanguageResponseBody>({
-    async handler({ req, res }) {
+  .get<void, GetLanguageResponseBody>({
+    async handler(req, res) {
       const language = await client.language.findUnique({
         where: {
           code: req.query.code,
@@ -42,41 +42,12 @@ export default createRoute<{ code: string }>()
       }
     },
   })
-  .patch<PatchLanguageResponseBody>({
-    async handler({ req, res }) {
+  .patch<PatchLanguageRequestBody, PatchLanguageResponseBody>({
+    schema: (req) => patchRequestSchema(req.query.code),
+    async handler(req, res) {
       const data: Prisma.LanguageUpdateInput = {};
 
-      let body;
-      const parseResult = patchRequestSchema(req.query.code).safeParse(
-        req.body
-      );
-      if (parseResult.success) {
-        body = parseResult.data;
-      } else {
-        const { error } = parseResult;
-        const typeMismatch = error.issues.find(
-          (issue) => 'data.type' === issue.path.join('.')
-        );
-        const idMismatch = error.issues.find(
-          (issue) => 'data.id' === issue.path.join('.')
-        );
-        if (typeMismatch) {
-          res.status(409).json({
-            errors: [{ code: 'TypeMismatch' }],
-          });
-        } else if (idMismatch) {
-          res.status(409).json({
-            errors: [{ code: 'IdMismatch' }],
-          });
-        } else {
-          res.status(422).end({
-            errors: [{ code: 'InvalidRequestShape' }],
-          });
-        }
-        return;
-      }
-
-      const { attributes } = body.data;
+      const { attributes } = req.body.data;
 
       if (attributes.name) {
         data.name = attributes.name;
@@ -104,7 +75,7 @@ export default createRoute<{ code: string }>()
         });
       } catch (error) {
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
-          if (error.code === 'P2001') {
+          if (error.code === 'P2025') {
             return res.status(404).json({
               errors: [{ code: 'NotFound' }],
             });
