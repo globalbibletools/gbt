@@ -1,6 +1,15 @@
-import { ErrorResponse } from '@translation/api-types';
+import { Error } from '@translation/api-types';
 import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 import { ZodSchema } from 'zod';
+import { Prisma } from './prisma/client';
+
+export interface ResponseHelper<Body> {
+  ok(data: Body): void;
+  created(data: Body): void;
+  notFound(errors?: Error[]): void;
+  conflict(errors: Error[]): void;
+  invalid(errors: Error[]): void;
+}
 
 export type RouteDefinition<Params, RequestBody, ResponseBody> = {
   handler(
@@ -8,7 +17,7 @@ export type RouteDefinition<Params, RequestBody, ResponseBody> = {
       query: Params;
       body: RequestBody;
     },
-    res: NextApiResponse<ResponseBody | ErrorResponse>
+    res: ResponseHelper<ResponseBody>
   ): Promise<void>;
 } & (RequestBody extends void
   ? // eslint-disable-next-line @typescript-eslint/ban-types
@@ -39,6 +48,28 @@ export default function createRoute<Params>(): RouteBuilder<Params> {
     definition: RouteDefinition<Params, RequestBody, ResponseBody>
   ): NextApiHandler {
     return async (req, res) => {
+      const responseHelper: ResponseHelper<ResponseBody> = {
+        ok(body?: ResponseBody) {
+          if (body) {
+            res.status(200).json(body);
+          } else {
+            res.status(204);
+          }
+        },
+        created(body: ResponseBody) {
+          res.status(201).json(body);
+        },
+        notFound(errors: Error[] = [{ code: 'NotFound' }]) {
+          res.status(404).json({ errors });
+        },
+        conflict(errors: Error[]) {
+          res.status(409).json({ errors });
+        },
+        invalid(errors: Error[]) {
+          res.status(422).json({ errors });
+        },
+      };
+
       if ('schema' in definition) {
         const schema =
           typeof definition.schema === 'function'
@@ -58,31 +89,42 @@ export default function createRoute<Params>(): RouteBuilder<Params> {
             (path) => !['data.type', 'data.id'].includes(path)
           );
           if (hasManyIssues) {
-            res.status(422).json({
-              errors: [{ code: 'InvalidRequestShape' }],
-            });
-            return;
+            return responseHelper.invalid([{ code: 'InvalidRequestShape' }]);
           }
 
           // We return 409 if the body is valid, with the exeception of either the type and id.
           const typeMismatch = paths.find((path) => 'data.type' === path);
           const idMismatch = paths.find((path) => 'data.id' === path);
-          res.status(409).json({
-            errors: [
-              typeMismatch && { code: 'TypeMismatch' },
-              idMismatch && { code: 'IdMismatch' },
-            ].filter(Boolean),
-          });
-          return;
+          const errors: Error[] = [];
+          if (typeMismatch) {
+            errors.push({ code: 'TypeMismatch' });
+          }
+          if (idMismatch) {
+            errors.push({ code: 'IdMismatch' });
+          }
+          return responseHelper.invalid(errors);
         }
       } else {
         req.body = {};
       }
 
-      await definition.handler(
-        req as NextApiRequest & { query: Params; body: RequestBody },
-        res
-      );
+      try {
+        await definition.handler(
+          req as NextApiRequest & { query: Params; body: RequestBody },
+          responseHelper
+        );
+      } catch (error) {
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+          switch (error.code) {
+            case 'P2025':
+              return responseHelper.notFound();
+            case 'P2002':
+              return responseHelper.conflict([{ code: 'AlreadyExists' }]);
+          }
+        }
+        console.error(error);
+        res.status(500);
+      }
     };
   }
 

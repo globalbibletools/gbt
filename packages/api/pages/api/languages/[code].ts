@@ -8,11 +8,6 @@ import { client, Prisma } from '../../../db';
 import { languageSchema } from './schemas';
 import createRoute from '../../../Route';
 
-const patchRequestSchema = (id?: string): z.ZodType<PatchLanguageRequestBody> =>
-  z.object({
-    data: languageSchema(id),
-  });
-
 export default createRoute<{ code: string }>()
   .get<void, GetLanguageResponseBody>({
     async handler(req, res) {
@@ -23,7 +18,7 @@ export default createRoute<{ code: string }>()
       });
 
       if (language) {
-        res.status(200).json({
+        res.ok({
           data: {
             type: 'language',
             id: language.code,
@@ -36,14 +31,15 @@ export default createRoute<{ code: string }>()
           },
         });
       } else {
-        res.status(404).json({
-          errors: [{ code: 'NotFound' }],
-        });
+        res.notFound();
       }
     },
   })
   .patch<PatchLanguageRequestBody, PatchLanguageResponseBody>({
-    schema: (req) => patchRequestSchema(req.query.code),
+    schema: (req) =>
+      z.object({
+        data: languageSchema(req.query.code),
+      }),
     async handler(req, res) {
       const data: Prisma.LanguageUpdateInput = {};
 
@@ -53,39 +49,25 @@ export default createRoute<{ code: string }>()
         data.name = attributes.name;
       }
 
-      try {
-        const language = await client.language.update({
-          where: {
-            code: req.query.code,
-          },
-          data,
-        });
+      const language = await client.language.update({
+        where: {
+          code: req.query.code,
+        },
+        data,
+      });
 
-        res.status(200).json({
-          data: {
-            type: 'language',
-            id: language.code,
-            attributes: {
-              name: language.name,
-            },
-            links: {
-              self: `${req.url}`,
-            },
+      res.ok({
+        data: {
+          type: 'language',
+          id: language.code,
+          attributes: {
+            name: language.name,
           },
-        });
-      } catch (error) {
-        if (error instanceof Prisma.PrismaClientKnownRequestError) {
-          if (error.code === 'P2025') {
-            return res.status(404).json({
-              errors: [{ code: 'NotFound' }],
-            });
-          } else {
-            throw error;
-          }
-        } else {
-          throw error;
-        }
-      }
+          links: {
+            self: `${req.url}`,
+          },
+        },
+      });
     },
   })
   .build();
