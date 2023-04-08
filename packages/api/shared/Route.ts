@@ -1,7 +1,7 @@
 import { Error } from '@translation/api-types';
 import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 import { ZodSchema } from 'zod';
-import { Prisma } from './prisma/client';
+import { Prisma } from '../prisma/client';
 
 export interface ResponseHelper<Body> {
   /** Returns 200 or 204 dependening on whether there is a response body to send. */

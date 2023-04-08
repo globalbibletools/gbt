@@ -4,9 +4,9 @@ import {
   PostLanguageRequestBody,
   PostLanguageResponseBody,
 } from '@translation/api-types';
-import { client } from '../../../db';
+import { client } from '../../../shared/db';
 import { languageSchema } from './schemas';
-import createRoute from '../../../Route';
+import createRoute from '../../../shared/Route';
 
 export default createRoute<void>()
   .get<void, GetLanguagesResponseBody>({

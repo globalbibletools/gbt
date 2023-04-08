@@ -4,9 +4,9 @@ import {
   PatchLanguageRequestBody,
   PatchLanguageResponseBody,
 } from '@translation/api-types';
-import { client, Prisma } from '../../../db';
+import { client, Prisma } from '../../../shared/db';
 import { languageSchema } from './schemas';
-import createRoute from '../../../Route';
+import createRoute from '../../../shared/Route';
 
 export default createRoute<{ code: string }>()
   .get<void, GetLanguageResponseBody>({
