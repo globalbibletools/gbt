@@ -1,7 +1,9 @@
-import { Error } from '@translation/api-types';
+import { ErrorDetail } from '@translation/api-types';
 import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 import { ZodSchema } from 'zod';
 import { Prisma } from '../prisma/client';
+import BaseError from './BaseError';
+import * as Errors from './errors';
 
 export interface ResponseHelper<Body> {
   /** Returns 200 or 204 dependening on whether there is a response body to send. */
@@ -9,11 +11,13 @@ export interface ResponseHelper<Body> {
   /** Returns 201 created with the contents of the new resource. */
   created(data: Body): void;
   /** Returns 404 with a list of errors. By default it will have a single error with code NotFound. */
-  notFound(errors?: Error[]): void;
+  notFound(errors?: ErrorDetail[]): void;
   /** Returns 409 with a list of errors. */
-  conflict(errors: Error[]): void;
+  conflict(errors: ErrorDetail[]): void;
   /** Returns 422 with a list of errors. */
-  invalid(errors: Error[]): void;
+  invalid(errors: ErrorDetail[]): void;
+  /** Returns 400 with a list of errors. */
+  badRequest(errors: ErrorDetail[]): void;
 }
 
 export type RouteDefinition<Params, RequestBody, ResponseBody> = {
@@ -108,68 +112,80 @@ export default function createRoute<Params>(): RouteBuilder<Params> {
         created(body: ResponseBody) {
           res.status(201).json(body);
         },
-        notFound(errors: Error[] = [{ code: 'NotFound' }]) {
+        notFound(errors: ErrorDetail[] = [{ code: 'NotFound' }]) {
           res.status(404).json({ errors });
         },
-        conflict(errors: Error[]) {
+        conflict(errors: ErrorDetail[]) {
           res.status(409).json({ errors });
         },
-        invalid(errors: Error[]) {
+        invalid(errors: ErrorDetail[]) {
           res.status(422).json({ errors });
         },
+        badRequest(errors: ErrorDetail[]) {
+          res.status(400).json({ errors });
+        },
       };
-
-      if ('schema' in definition) {
-        const schema =
-          typeof definition.schema === 'function'
-            ? definition.schema(req as any)
-            : definition.schema;
-        const parseResult = schema.safeParse(req.body);
-        if (parseResult.success) {
-          req.body = parseResult.data;
-        } else {
-          const paths = parseResult.error.issues.map((issue) =>
-            issue.path.join('.')
-          );
-
-          // We return 422 for most validation issues.
-          // In the future we may provide more helpful error messages.
-          const hasManyIssues = paths.some(
-            (path) => !['data.type', 'data.id'].includes(path)
-          );
-          if (hasManyIssues) {
-            return responseHelper.invalid([{ code: 'InvalidRequestShape' }]);
-          }
-
-          // We return 409 if the body is valid, with the exeception of either the type and id.
-          const typeMismatch = paths.find((path) => 'data.type' === path);
-          const idMismatch = paths.find((path) => 'data.id' === path);
-          const errors: Error[] = [];
-          if (typeMismatch) {
-            errors.push({ code: 'TypeMismatch' });
-          }
-          if (idMismatch) {
-            errors.push({ code: 'IdMismatch' });
-          }
-          return responseHelper.invalid(errors);
-        }
-      } else {
-        req.body = {};
-      }
-
       try {
-        await definition.handler(
-          req as NextApiRequest & { query: Params; body: RequestBody },
-          responseHelper
-        );
-      } catch (error) {
-        if (error instanceof Prisma.PrismaClientKnownRequestError) {
-          switch (error.code) {
-            case 'P2025':
-              return responseHelper.notFound();
-            case 'P2002':
-              return responseHelper.conflict([{ code: 'AlreadyExists' }]);
+        if ('schema' in definition) {
+          const schema =
+            typeof definition.schema === 'function'
+              ? definition.schema(req as any)
+              : definition.schema;
+          const parseResult = schema.safeParse(req.body);
+          if (parseResult.success) {
+            req.body = parseResult.data;
+          } else {
+            const paths = parseResult.error.issues.map((issue) =>
+              issue.path.join('.')
+            );
+
+            // We return 422 for most validation issues.
+            // In the future we may provide more helpful error messages.
+            const hasManyIssues = paths.some(
+              (path) => !['data.type', 'data.id'].includes(path)
+            );
+            if (hasManyIssues) {
+              throw new Errors.InvalidRequestShapeError();
+            }
+
+            // We return 409 if the body is valid, with the exeception of either the type and id.
+            const typeMismatch = paths.find((path) => 'data.type' === path);
+            const idMismatch = paths.find((path) => 'data.id' === path);
+            const errors: BaseError[] = [];
+            if (typeMismatch) {
+              errors.push(new Errors.TypeMismatchError());
+            }
+            if (idMismatch) {
+              errors.push(new Errors.IdMismatchError());
+            }
+            throw new Errors.MultiError('invalid', errors);
           }
+        } else {
+          req.body = {};
+        }
+
+        try {
+          await definition.handler(
+            req as NextApiRequest & { query: Params; body: RequestBody },
+            responseHelper
+          );
+        } catch (error) {
+          if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            switch (error.code) {
+              case 'P2025':
+                throw new Errors.NotFoundError();
+              case 'P2002':
+                throw new Errors.AlreadyExistsError();
+            }
+          }
+        }
+      } catch (error) {
+        if (error instanceof Errors.MultiError) {
+          return responseHelper[error.responseType](error.errors);
+        } else if (error instanceof Errors.NotFoundError) {
+          return responseHelper.notFound([error.toErrorDetail()]);
+        } else if (error instanceof Errors.AlreadyExistsError) {
+          return responseHelper.conflict([error.toErrorDetail()]);
         }
         console.error(error);
         res.status(500);
