@@ -1,4 +1,12 @@
 {
-  "languagesView": "this is where the languages view will go",
-  "translationView": "translation interface is work in progress"
+  "translationView": "translation interface is work in progress",
+  "language_one": "language",
+  "language_other": "languages",
+  "add_language": "Add Language",
+  "new_language": "New Language",
+  "manage": "Manage",
+  "update": "Update",
+  "create": "Create",
+  "name": "name",
+  "code": "code"
 }

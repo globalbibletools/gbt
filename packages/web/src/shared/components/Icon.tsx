@@ -9,5 +9,6 @@ library.add(
   FaSolid.faCaretUp,
   FaSolid.faEarth,
   FaSolid.faUser,
-  FaSolid.faClose
+  FaSolid.faClose,
+  FaSolid.faPlus
 );
