@@ -1,9 +1,9 @@
 export * from './language';
 
-export interface Error {
+export interface ErrorDetail {
   code: string;
 }
 
 export interface ErrorResponse {
-  errors: Error[];
+  errors: ErrorDetail[];
 }

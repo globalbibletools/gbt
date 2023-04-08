@@ -1,16 +1,16 @@
-import { NextApiRequest, NextApiResponse } from 'next'
-import { client } from '../../db'
+import { NextApiRequest, NextApiResponse } from 'next';
+import { client } from '../../shared/db';
 
-export default async function(req: NextApiRequest, res: NextApiResponse) {
+export default async function (req: NextApiRequest, res: NextApiResponse) {
   const verse = await client.verse.findFirst({
     where: {
       number: 1,
       chapter: {
         number: 1,
         book: {
-          search: 'matthew'
+          search: 'matthew',
         },
-      } 
+      },
     },
     select: {
       number: true,
@@ -19,21 +19,21 @@ export default async function(req: NextApiRequest, res: NextApiResponse) {
           number: true,
           book: {
             select: {
-              name: true
-            }
-          }
-        }
-      }
-    }
-  })
+              name: true,
+            },
+          },
+        },
+      },
+    },
+  });
 
   if (verse) {
     res.status(200).json({
       book: verse.chapter.book.name,
       chapter: verse.chapter.number,
-      verse: verse.number
-    })
+      verse: verse.number,
+    });
   } else {
-    res.status(404)
+    res.status(404);
   }
 }
