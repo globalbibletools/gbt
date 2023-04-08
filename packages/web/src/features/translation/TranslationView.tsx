@@ -1,11 +1,11 @@
-import { useTranslation } from 'react-i18next';
+import { useLayoutContext } from '../../app/Layout';
 
 export default function TranslationView() {
-  const { t } = useTranslation();
+  const { language } = useLayoutContext();
 
   return (
     <div className="absolute w-full h-full flex items-center justify-center">
-      {t('translationView')}
+      selected language: {language?.attributes.name ?? 'None'}
     </div>
   );
 }
