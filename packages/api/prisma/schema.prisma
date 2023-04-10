@@ -14,29 +14,46 @@ datasource db {
 }
 
 model Book {
-  id      Int       @id
-  name    String
-  search  String    @unique // This gives us a human readable key to look up books from URL params.
-  Chapter Chapter[]
-}
-
-model Chapter {
   id     Int     @id
-  number Int
-  book   Book    @relation(fields: [bookId], references: [id])
-  bookId Int
+  name   String
+  search String  @unique // This gives us a human readable key to look up books from URL params.
   Verse  Verse[]
-
-  @@unique([bookId, number])
 }
 
 model Verse {
-  id        Int     @id
-  number    Int
-  chapter   Chapter @relation(fields: [chapterId], references: [id])
-  chapterId Int
+  id      Int    @id
+  number  Int
+  chapter Int
+  book    Book   @relation(fields: [bookId], references: [id])
+  bookId  Int
+  Word    Word[]
 
-  @@unique([chapterId, number])
+  @@unique([chapter, number])
+}
+
+model Word {
+  id      String    @id
+  text    String
+  verse   Verse     @relation(fields: [verseId], references: [id])
+  verseId Int
+  order   Int
+  form    LemmaForm @relation(fields: [formId], references: [id])
+  formId  String
+
+  @@unique([verseId, order])
+}
+
+model LemmaForm {
+  id      String @id
+  grammar String
+  lemma   Lemma  @relation(fields: [lemmaId], references: [id])
+  lemmaId String
+  word    Word[]
+}
+
+model Lemma {
+  id    String      @id
+  forms LemmaForm[]
 }
 
 model Language {
