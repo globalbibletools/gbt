@@ -21,12 +21,12 @@ export function Layout() {
   const languages = useLoaderData() as GetLanguagesResponseBody;
   const [language, selectLanguage] = useLocalStorageState<string>(
     'translation-language',
-    languages.data[0]?.id
+    languages.data[0]?.code
   );
 
   const outletContext = useMemo<LayoutContext>(
     () => ({
-      language: languages.data.find((l) => l.id === language),
+      language: languages.data.find((l) => l.code === language),
     }),
     [language, languages]
   );

@@ -24,7 +24,7 @@ export default function Header({ language, onLanguageChange }: HeaderProps) {
   const translationLanguages = useLoaderData() as GetLanguagesResponseBody;
 
   const selectedLanguage = translationLanguages.data.find(
-    (l) => l.id === language
+    (l) => l.code === language
   );
 
   return (
@@ -33,16 +33,16 @@ export default function Header({ language, onLanguageChange }: HeaderProps) {
       <div className="flex-grow" />
       <nav className="flex items-baseline" aria-label="primary">
         <DropdownMenu
-          text={selectedLanguage?.attributes.name ?? 'Language'}
+          text={selectedLanguage?.name ?? 'Language'}
           className="mr-4"
         >
           <DropdownMenuSubmenu text={t('switch_language')}>
             {translationLanguages.data.map((language) => (
               <DropdownMenuButton
-                key={language.id}
-                onClick={() => onLanguageChange(language.id)}
+                key={language.code}
+                onClick={() => onLanguageChange(language.code)}
               >
-                {language.attributes.name}
+                {language.name}
               </DropdownMenuButton>
             ))}
           </DropdownMenuSubmenu>

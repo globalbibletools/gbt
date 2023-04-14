@@ -10,8 +10,6 @@ export default class BaseError extends Error {
     super();
     this.code = this.name.replace(/Error$/, '');
     this.message = this.code;
-
-    Object.setPrototypeOf(this, BaseError.prototype);
   }
 
   toErrorDetail(): ErrorDetail {

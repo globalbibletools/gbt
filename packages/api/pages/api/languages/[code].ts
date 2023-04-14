@@ -1,8 +1,6 @@
-import * as z from 'zod';
 import {
   GetLanguageResponseBody,
   PatchLanguageRequestBody,
-  PatchLanguageResponseBody,
 } from '@translation/api-types';
 import { client, Prisma } from '../../../shared/db';
 import { languageSchema } from './schemas';
@@ -20,14 +18,8 @@ export default createRoute<{ code: string }>()
       if (language) {
         res.ok({
           data: {
-            type: 'language',
-            id: language.code,
-            attributes: {
-              name: language.name,
-            },
-            links: {
-              self: `${req.url}`,
-            },
+            code: language.code,
+            name: language.name,
           },
         });
       } else {
@@ -35,39 +27,23 @@ export default createRoute<{ code: string }>()
       }
     },
   })
-  .patch<PatchLanguageRequestBody, PatchLanguageResponseBody>({
-    schema: (req) =>
-      z.object({
-        data: languageSchema(req.query.code),
-      }),
+  .patch<PatchLanguageRequestBody, void>({
+    schema: languageSchema.omit({ code: true }).partial(),
     async handler(req, res) {
       const data: Prisma.LanguageUpdateInput = {};
 
-      const { attributes } = req.body.data;
-
-      if (attributes.name) {
-        data.name = attributes.name;
+      if (req.body.name) {
+        data.name = req.body.name;
       }
 
-      const language = await client.language.update({
+      await client.language.update({
         where: {
           code: req.query.code,
         },
         data,
       });
 
-      res.ok({
-        data: {
-          type: 'language',
-          id: language.code,
-          attributes: {
-            name: language.name,
-          },
-          links: {
-            self: `${req.url}`,
-          },
-        },
-      });
+      res.ok();
     },
   })
   .build();

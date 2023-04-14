@@ -14,25 +14,10 @@ get:
                     items:
                       $ref: "../schemas/language.yml"
                   - example:
-                    - type: language
-                      id: es 
-                      attributes:
-                        name: Español
-                      links: 
-                        self: /languages/es
-                    - type: language
-                      id: en 
-                      attributes:
-                        name: English
-                      links: 
-                        self: /languages/en
-              links:
-                type: object
-                properties:
-                  self:
-                    type: string
-                    format: uri
-                    example: '/languages'
+                    - code: es 
+                      name: Español
+                    - code: en 
+                      name: English
 post:
   summary: Create a new language to translate.
   requestBody:
@@ -42,30 +27,20 @@ post:
         schema:
           type: object
           properties:
-            data:
-              type: object
-              properties:
-                type:
-                  type: string
-                  enum: [language]
-                id:
-                  type: string
-                  example: es
-                  description: The [IETF language code](https://en.wikipedia.org/wiki/IETF_language_tag).
-                attributes:
-                  type: object
-                  properties:
-                    name:
-                      type: string
-                      example: Español
-                      description: The name of the language in the language itself.
+            code:
+              type: string
+              example: es
+              description: The [IETF language code](https://en.wikipedia.org/wiki/IETF_language_tag).
+            name:
+              type: string
+              example: Español
+              description: The name of the language in the language itself.
   responses:
     201:
       description: Created
-      content:
-        application/json:
+      headers:
+        Location:
           schema:
-            type: object
-            properties:
-              data:
-                $ref: "../schemas/language.yml"
+            type: string
+          description: URL to new language.
+      
