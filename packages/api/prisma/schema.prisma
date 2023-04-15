@@ -17,16 +17,17 @@ model Book {
   id     Int     @id
   name   String
   search String  @unique // This gives us a human readable key to look up books from URL params.
-  Verse  Verse[]
+  verses Verse[]
 }
 
 model Verse {
-  id      Int    @id
-  number  Int
-  chapter Int
-  book    Book   @relation(fields: [bookId], references: [id])
-  bookId  Int
-  Word    Word[]
+  id           Int                @id
+  number       Int
+  chapter      Int
+  book         Book               @relation(fields: [bookId], references: [id])
+  bookId       Int
+  words        Word[]
+  translations VerseTranslation[]
 
   @@unique([bookId, chapter, number])
 }
@@ -57,15 +58,18 @@ model Lemma {
 }
 
 model VerseTranslation {
-  verseId     String
-  langId      String
+  verse       Verse    @relation(fields: [verseId], references: [id])
+  verseId     Int
+  language    Language @relation(fields: [languageId], references: [id])
+  languageId  String   @db.Uuid
   translation String
 
-  @@id([verseId, langId])
+  @@id([verseId, languageId])
 }
 
 model Language {
-  id   String @id @default(dbgenerated("generate_ulid()")) @db.Uuid
-  code String @unique
-  name String
+  id                String             @id @default(dbgenerated("generate_ulid()")) @db.Uuid
+  code              String             @unique
+  name              String
+  verseTranslations VerseTranslation[]
 }
