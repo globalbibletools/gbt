@@ -15,6 +15,10 @@ paths:
     $ref: ./paths/languages.yml
   /languages/{id}:
     $ref: ./paths/language.yml
+  /books/{bookName}/chapters/{chapterNumber}/verses/{verseNumber}/words:
+    $ref: ./paths/verses/words.yml
+  /books/{bookName}/chapters/{chapterNumber}/verses/{verseNumber}/translations/{lang}:
+    $ref: ./paths/verses/translations.yml
 components:
   schemas:
     Language:
