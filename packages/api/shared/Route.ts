@@ -1,15 +1,14 @@
 import { ErrorDetail } from '@translation/api-types';
 import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
-import { ZodSchema } from 'zod';
+import { ZodType } from 'zod';
 import { Prisma } from '../prisma/client';
-import BaseError from './BaseError';
 import * as Errors from './errors';
 
 export interface ResponseHelper<Body> {
   /** Returns 200 or 204 dependening on whether there is a response body to send. */
   ok(data?: Body): void;
   /** Returns 201 created with the contents of the new resource. */
-  created(data: Body): void;
+  created(location: string): void;
   /** Returns 404 with a list of errors. By default it will have a single error with code NotFound. */
   notFound(errors?: ErrorDetail[]): void;
   /** Returns 409 with a list of errors. */
@@ -42,10 +41,17 @@ export type RouteDefinition<Params, RequestBody, ResponseBody> = {
        * The `zod` schema used to parse the request body.
        * This schema should produce an object that matches the `RequestType`.
        * If `RequestBody` is `void` then a schema is not required.
+       *
+       * Note that there are some schemas that typescript is unable to catch.
+       * The most common examples are:
+       * - Not adding optional properties to the schema.
+       * This won't return an error, but when those fields are provided, they won't be operated on.
+       * - Treating a property as required in the schema that is optional in the type.
+       * This will result in 422 errors if the field isn't provided.
+       * - Adding extra properties to the schema that aren't in the type.
+       * This could lead to unexpected 422 errors as well.
        */
-      schema:
-        | ZodSchema<RequestBody>
-        | ((req: NextApiRequest & { query: Params }) => ZodSchema<RequestBody>);
+      schema: ZodType<RequestBody>;
     });
 
 export interface RouteBuilder<Params> {
@@ -106,11 +112,12 @@ export default function createRoute<Params>(): RouteBuilder<Params> {
           if (body) {
             res.status(200).json(body);
           } else {
-            res.status(204);
+            res.status(204).end();
           }
         },
-        created(body: ResponseBody) {
-          res.status(201).json(body);
+        created(location: string) {
+          res.setHeader('Location', location);
+          res.status(201).end();
         },
         notFound(errors: ErrorDetail[] = [{ code: 'NotFound' }]) {
           res.status(404).json({ errors });
@@ -127,38 +134,11 @@ export default function createRoute<Params>(): RouteBuilder<Params> {
       };
       try {
         if ('schema' in definition) {
-          const schema =
-            typeof definition.schema === 'function'
-              ? definition.schema(req as any)
-              : definition.schema;
-          const parseResult = schema.safeParse(req.body);
+          const parseResult = definition.schema.safeParse(req.body);
           if (parseResult.success) {
             req.body = parseResult.data;
           } else {
-            const paths = parseResult.error.issues.map((issue) =>
-              issue.path.join('.')
-            );
-
-            // We return 422 for most validation issues.
-            // In the future we may provide more helpful error messages.
-            const hasManyIssues = paths.some(
-              (path) => !['data.type', 'data.id'].includes(path)
-            );
-            if (hasManyIssues) {
-              throw new Errors.InvalidRequestShapeError();
-            }
-
-            // We return 409 if the body is valid, with the exeception of either the type and id.
-            const typeMismatch = paths.find((path) => 'data.type' === path);
-            const idMismatch = paths.find((path) => 'data.id' === path);
-            const errors: BaseError[] = [];
-            if (typeMismatch) {
-              errors.push(new Errors.TypeMismatchError());
-            }
-            if (idMismatch) {
-              errors.push(new Errors.IdMismatchError());
-            }
-            throw new Errors.MultiError('invalid', errors);
+            throw new Errors.InvalidRequestShapeError();
           }
         } else {
           req.body = {};
@@ -178,17 +158,18 @@ export default function createRoute<Params>(): RouteBuilder<Params> {
                 throw new Errors.AlreadyExistsError();
             }
           }
+          throw error;
         }
       } catch (error) {
-        if (error instanceof Errors.MultiError) {
-          return responseHelper[error.responseType](error.errors);
-        } else if (error instanceof Errors.NotFoundError) {
+        if (error instanceof Errors.NotFoundError) {
           return responseHelper.notFound([error.toErrorDetail()]);
         } else if (error instanceof Errors.AlreadyExistsError) {
           return responseHelper.conflict([error.toErrorDetail()]);
+        } else if (error instanceof Errors.InvalidRequestShapeError) {
+          return responseHelper.invalid([error.toErrorDetail()]);
         }
         console.error(error);
-        res.status(500);
+        res.status(500).end();
       }
     };
   }

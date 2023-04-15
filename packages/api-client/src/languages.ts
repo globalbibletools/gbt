@@ -2,9 +2,7 @@ import type {
   GetLanguageResponseBody,
   GetLanguagesResponseBody,
   PatchLanguageRequestBody,
-  PatchLanguageResponseBody,
   PostLanguageRequestBody,
-  PostLanguageResponseBody,
 } from '@translation/api-types';
 import type ApiClient from './client';
 
@@ -12,9 +10,7 @@ export {
   GetLanguageResponseBody,
   GetLanguagesResponseBody,
   PatchLanguageRequestBody,
-  PatchLanguageResponseBody,
   PostLanguageRequestBody,
-  PostLanguageResponseBody,
 };
 
 export default class Languages {
@@ -26,8 +22,8 @@ export default class Languages {
     });
   }
 
-  create(language: PostLanguageRequestBody): Promise<PostLanguageResponseBody> {
-    return this.client.post({
+  async create(language: PostLanguageRequestBody): Promise<void> {
+    await this.client.post({
       path: '/api/languages',
       body: language,
     });
@@ -39,11 +35,12 @@ export default class Languages {
     });
   }
 
-  update(
+  async update(
+    code: string,
     language: PatchLanguageRequestBody
-  ): Promise<PatchLanguageResponseBody> {
-    return this.client.patch({
-      path: `/api/languages/${language.data.id}`,
+  ): Promise<void> {
+    await this.client.patch({
+      path: `/api/languages/${code}`,
       body: language,
     });
   }

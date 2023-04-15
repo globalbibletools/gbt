@@ -5,7 +5,7 @@ export default function TranslationView() {
 
   return (
     <div className="absolute w-full h-full flex items-center justify-center">
-      selected language: {language?.attributes.name ?? 'None'}
+      selected language: {language?.name ?? 'None'}
     </div>
   );
 }

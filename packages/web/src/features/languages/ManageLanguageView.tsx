@@ -23,21 +23,15 @@ export default function ManageLanguageView() {
     const name = (
       e.currentTarget.elements.namedItem('name') as HTMLInputElement
     ).value;
-    await apiClient.languages.update({
-      data: {
-        type: 'language',
-        id: language.data.id,
-        attributes: {
-          name,
-        },
-      },
+    await apiClient.languages.update(language.data.code, {
+      name,
     });
   }
 
   return (
     <View fitToScreen>
       <div className="m-auto w-fit">
-        <ViewTitle>{language.data.attributes.name}</ViewTitle>
+        <ViewTitle>{language.data.name}</ViewTitle>
 
         <form onSubmit={onSubmit}>
           <div className="mb-4">
@@ -47,7 +41,7 @@ export default function ManageLanguageView() {
               name="name"
               className="block"
               autoComplete="off"
-              defaultValue={language.data.attributes.name}
+              defaultValue={language.data.name}
               required
             />
           </div>

@@ -24,13 +24,8 @@ export default function NewLanguageView() {
     ).value;
     try {
       await apiClient.languages.create({
-        data: {
-          type: 'language',
-          id: code,
-          attributes: {
-            name,
-          },
-        },
+        code,
+        name,
       });
     } catch (error) {
       if (error instanceof ApiClientError && error.status === 409) {

@@ -1,11 +1,15 @@
 import * as z from 'zod';
 import { Language } from '@translation/api-types';
 
-export const languageSchema = (id?: string): z.ZodType<Language> =>
+const schemaForType =
+  <T>() =>
+  <S extends z.ZodType<T, any, any>>(arg: S) => {
+    return arg;
+  };
+
+export const languageSchema = schemaForType<Language>()(
   z.object({
-    type: z.literal('language'),
-    id: id ? z.literal(id) : z.string(),
-    attributes: z.object({
-      name: z.string(),
-    }),
-  });
+    code: z.string(),
+    name: z.string(),
+  })
+);

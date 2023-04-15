@@ -1,43 +1,16 @@
-export interface LanguageResourceIdentifier {
-  type: 'language';
-  id: string;
-}
-
-export interface Language extends LanguageResourceIdentifier {
-  attributes: {
-    name: string;
-  };
-}
-
-export interface LanguageWithLinks extends Language {
-  links: {
-    self: string;
-  };
+export interface Language {
+  code: string;
+  name: string;
 }
 
 export interface GetLanguagesResponseBody {
-  data: LanguageWithLinks[];
-  links: {
-    self: string;
-  };
+  data: Language[];
 }
 
 export interface GetLanguageResponseBody {
-  data: LanguageWithLinks;
-}
-
-export interface PostLanguageRequestBody {
   data: Language;
 }
 
-export interface PostLanguageResponseBody {
-  data: LanguageWithLinks;
-}
+export type PostLanguageRequestBody = Language;
 
-export interface PatchLanguageRequestBody {
-  data: Language;
-}
-
-export interface PatchLanguageResponseBody {
-  data: LanguageWithLinks;
-}
+export type PatchLanguageRequestBody = Partial<Omit<Language, 'code'>>;

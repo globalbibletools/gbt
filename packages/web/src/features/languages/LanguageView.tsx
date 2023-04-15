@@ -45,10 +45,10 @@ export default function LanguagesView() {
           </ListRowAction>
           <ListBody>
             {languages.data.map((language) => (
-              <ListRow key={language.id}>
-                <ListCell header>{language.attributes.name}</ListCell>
+              <ListRow key={language.code}>
+                <ListCell header>{language.name}</ListCell>
                 <ListCell>
-                  <Link to={`./${language.id}`}>{t('manage')}</Link>
+                  <Link to={`./${language.code}`}>{t('manage')}</Link>
                 </ListCell>
               </ListRow>
             ))}

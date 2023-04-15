@@ -2,7 +2,6 @@ import * as z from 'zod';
 import {
   GetLanguagesResponseBody,
   PostLanguageRequestBody,
-  PostLanguageResponseBody,
 } from '@translation/api-types';
 import { client } from '../../../shared/db';
 import { languageSchema } from './schemas';
@@ -14,44 +13,22 @@ export default createRoute<void>()
       const languages = await client.language.findMany();
       res.ok({
         data: languages.map((language) => ({
-          type: 'language',
-          id: language.code,
-          attributes: {
-            name: language.name,
-          },
-          links: {
-            self: `${req.url}/${language.code}`,
-          },
+          code: language.code,
+          name: language.name,
         })),
-        links: {
-          self: `${req.url}`,
-        },
       });
     },
   })
-  .post<PostLanguageRequestBody, PostLanguageResponseBody>({
-    schema: z.object({
-      data: languageSchema(),
-    }),
+  .post<PostLanguageRequestBody, void>({
+    schema: languageSchema,
     async handler(req, res) {
-      const language = await client.language.create({
+      await client.language.create({
         data: {
-          code: req.body.data.id,
-          name: req.body.data.attributes.name,
+          code: req.body.code,
+          name: req.body.name,
         },
       });
-      res.created({
-        data: {
-          type: 'language',
-          id: language.code,
-          attributes: {
-            name: language.name,
-          },
-          links: {
-            self: `${req.url}/${language.code}`,
-          },
-        },
-      });
+      res.created(`/api/languages/${req.body.code}`);
     },
   })
   .build();
