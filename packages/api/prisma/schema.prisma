@@ -28,7 +28,7 @@ model Verse {
   bookId  Int
   Word    Word[]
 
-  @@unique([chapter, number])
+  @@unique([bookId, chapter, number])
 }
 
 model Word {
