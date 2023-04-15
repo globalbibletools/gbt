@@ -56,6 +56,14 @@ model Lemma {
   forms LemmaForm[]
 }
 
+model VerseTranslation {
+  verseId     String
+  langId      String
+  translation String
+
+  @@id([verseId, langId])
+}
+
 model Language {
   id   String @id @default(dbgenerated("generate_ulid()")) @db.Uuid
   code String @unique
