@@ -15,13 +15,12 @@ datasource db {
 
 model Book {
   id     Int     @id
-  name   String
-  search String  @unique // This gives us a human readable key to look up books from URL params.
+  name   String  @unique
   verses Verse[]
 }
 
 model Verse {
-  id           Int                @id
+  id           String             @id
   number       Int
   chapter      Int
   book         Book               @relation(fields: [bookId], references: [id])
@@ -36,12 +35,9 @@ model Word {
   id      String    @id
   text    String
   verse   Verse     @relation(fields: [verseId], references: [id])
-  verseId Int
-  order   Int
+  verseId String
   form    LemmaForm @relation(fields: [formId], references: [id])
   formId  String
-
-  @@unique([verseId, order])
 }
 
 model LemmaForm {
@@ -59,7 +55,7 @@ model Lemma {
 
 model VerseTranslation {
   verse       Verse    @relation(fields: [verseId], references: [id])
-  verseId     Int
+  verseId     String
   language    Language @relation(fields: [languageId], references: [id])
   languageId  String   @db.Uuid
   translation String
