@@ -86,6 +86,12 @@
       "options": {
         "command": "npx prisma format --schema=packages/api/prisma/schema.prisma"
       }
+    },
+    "prisma-reset": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx prisma migrate reset --schema=packages/api/prisma/schema.prisma"
+      }
     }
   },
   "tags": []
