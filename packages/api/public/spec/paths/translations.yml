@@ -1,27 +1,13 @@
 get:
   summary: Get the words of a verse
   parameters:
-    - name: bookName
+    - name: verseId
       in: path
-      description: The search string for the Bible book.
-      required: true
-      schema:
-        type: string
-      example: exodus
-    - name: chapterNumber
-      in: path
-      description: The chapter number within the book
+      description: The verse number within the chapter. In the format of `BBCCCVVV`.
       required: true
       schema:
         type: number
-      example: 14
-    - name: verseNumber
-      in: path
-      description: The verse number within the chapter
-      required: true
-      schema:
-        type: number
-      example: 1
+      example: 0201401
     - name: lang
       in: path
       description: IETF code of the language
@@ -40,10 +26,6 @@ get:
               data:
                 type: object
                 properties:
-                  language:
-                    type: string
-                    description: IETF code of the language
-                    example: es
                   translation: 
                     type: string
                     description: A natural language translation of the verse.

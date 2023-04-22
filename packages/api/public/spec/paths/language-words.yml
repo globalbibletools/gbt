@@ -1,0 +1,31 @@
+patch:
+  summary: Update the gloss of a word for a language.
+  parameters:
+    - name: wordId
+      in: path
+      description: The word ID within the chapter. In the format of `BBCCCVVVWW`.
+      required: true
+      schema:
+        type: number
+      example: 020140101
+    - name: lang
+      in: path
+      description: IETF code of the language
+      required: true
+      schema:
+        type: string
+      example: es
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            gloss:
+              type: string
+              example: Hablaba
+              description: The new gloss to use for the word.
+  responses:
+    "204":
+      description: No Content

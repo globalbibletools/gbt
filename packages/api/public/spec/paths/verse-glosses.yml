@@ -1,0 +1,47 @@
+get:
+  summary: Get the glosses of a verse for a language.
+  parameters:
+    - name: verseId
+      in: path
+      description: The verse number within the chapter. In the format of `BBCCCVVV`.
+      required: true
+      schema:
+        type: number
+      example: 0201401
+    - name: lang
+      in: path
+      description: IETF code of the language
+      required: true
+      schema:
+        type: string
+      example: es
+  responses:
+    "200":
+      description: Ok
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      description: The unique ID for the word in the verse.
+                    gloss:
+                      type: string
+                      description: The gloss for the word in the selected language.
+                example:
+                - id: 02zpg
+                  gloss: 'habló'
+                - id: 02HB7
+                  gloss: 'Jehová'
+                - id: 02BkQ 
+                  gloss: 'a'
+                - id: 02PD3
+                  gloss: 'Moisés'
+                - id: 02FWp
+                  gloss: 'diciendo'
