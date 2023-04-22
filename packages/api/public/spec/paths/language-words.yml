@@ -8,13 +8,7 @@ patch:
       schema:
         type: number
       example: 020140101
-    - name: lang
-      in: path
-      description: IETF code of the language
-      required: true
-      schema:
-        type: string
-      example: es
+    - $ref: '../schemas/parameters.yml#language-code'
   requestBody:
     required: true
     content:

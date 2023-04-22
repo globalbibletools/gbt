@@ -15,15 +15,11 @@ paths:
     $ref: ./paths/words.yml
   /languages:
     $ref: ./paths/languages.yml
-  /languages/{id}:
+  /languages/{code}:
     $ref: ./paths/language.yml
-  /languages/{lang}/verses/{verseId}/translation:
+  /languages/{code}/verses/{verseId}/translation:
     $ref: ./paths/translations.yml
-  /languages/{lang}/verses/{verseId}/glosses:
+  /languages/{code}/verses/{verseId}/glosses:
     $ref: ./paths/verse-glosses.yml
-  /languages/{lang}/words/{wordId}:
+  /languages/{code}/words/{wordId}:
     $ref: ./paths/language-words.yml
-components:
-  schemas:
-    Language:
-      $ref: ./schemas/language.yml

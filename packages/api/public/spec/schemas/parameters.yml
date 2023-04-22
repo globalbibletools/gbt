@@ -1,0 +1,8 @@
+language-code:
+  name: code
+  in: path
+  description: IETF code of the language
+  required: true
+  schema:
+    type: string
+  example: es
