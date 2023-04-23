@@ -1,4 +1,4 @@
-language-code:
+languageCode:
   name: code
   in: path
   description: IETF code of the language
@@ -6,3 +6,19 @@ language-code:
   schema:
     type: string
   example: es
+verseId:
+  name: verseId
+  in: path
+  description: The verse number within the chapter. In the format of `BBCCCVVV`.
+  required: true
+  schema:
+    type: number
+  example: 0201401
+wordId:
+  name: wordId
+  in: path
+  description: The word ID within the chapter. In the format of `BBCCCVVVWW`.
+  required: true
+  schema:
+    type: number
+  example: 020140101

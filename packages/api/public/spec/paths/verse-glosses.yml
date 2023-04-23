@@ -1,14 +1,8 @@
 get:
   summary: Get the glosses of a verse for a language.
   parameters:
-    - name: verseId
-      in: path
-      description: The verse number within the chapter. In the format of `BBCCCVVV`.
-      required: true
-      schema:
-        type: number
-      example: 0201401
-    - $ref: '../schemas/parameters.yml#language-code'
+    - $ref: '../schemas/parameters.yml#languageCode'
+    - $ref: '../schemas/parameters.yml#verseId'
   responses:
     "200":
       description: Ok

@@ -1,14 +1,8 @@
 patch:
   summary: Update the gloss of a word for a language.
   parameters:
-    - name: wordId
-      in: path
-      description: The word ID within the chapter. In the format of `BBCCCVVVWW`.
-      required: true
-      schema:
-        type: number
-      example: 020140101
-    - $ref: '../schemas/parameters.yml#language-code'
+    - $ref: '../schemas/parameters.yml#languageCode'
+    - $ref: '../schemas/parameters.yml#verseId'
   requestBody:
     required: true
     content:

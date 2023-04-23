@@ -1,7 +1,7 @@
 get:
   summary: Get a language by its IETF code.
   parameters:
-    - $ref: '../schemas/parameters.yml#language-code'
+    - $ref: '../schemas/parameters.yml#languageCode'
   responses:
     "200":
       description: Ok
@@ -15,7 +15,7 @@ get:
 patch:
   summary: Update a language.
   parameters:
-    - $ref: '../schemas/parameters.yml#language-code'
+    - $ref: '../schemas/parameters.yml#languageCode'
   requestBody:
     required: true
     content:
