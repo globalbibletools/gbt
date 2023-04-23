@@ -19,17 +19,35 @@ get:
                     id:
                       type: string
                       description: The unique ID for the word in the verse.
-                    gloss:
+                    approvedGloss:
                       type: string
-                      description: The gloss for the word in the selected language.
+                      description: The approved gloss for the word in the selected language.
+                    glosses:
+                      type: array
+                      description: The list of glosses for this word ranked by usage.
+                      items:
+                        type: string
+                    machineGloss:
+                      type: string
+                      description: The machine generated gloss.
                 example:
                 - id: 02zpg
-                  gloss: 'habló'
+                  approvedGloss: 'habló'
+                  glosses: ['habló', 'hablaba']
+                  machineGloss: 'habló'
                 - id: 02HB7
-                  gloss: 'Jehová'
+                  approvedGloss: 'Jehová'
+                  glosses: ['Jehová', Diós]
+                  machineGloss: 'Jehová'
                 - id: 02BkQ 
-                  gloss: 'a'
+                  approvedGloss: 'a'
+                  glosses: ['a']
+                  machineGloss: 'a'
                 - id: 02PD3
-                  gloss: 'Moisés'
+                  approvedGloss: 'Moisés'
+                  glosses: ['Moisés']
+                  machineGloss: 'Moisés'
                 - id: 02FWp
-                  gloss: 'diciendo'
+                  approvedGloss: 'diciendo'
+                  glosses: ['diciendo']
+                  machineGloss: 'diciendo'

@@ -1,5 +1,5 @@
 get:
-  summary: Get the words of a verse
+  summary: Get the natural language translation of a verse.
   parameters:
     - $ref: '../schemas/parameters.yml#languageCode'
     - $ref: '../schemas/parameters.yml#verseId'
