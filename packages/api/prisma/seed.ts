@@ -73,12 +73,8 @@ async function run() {
             strongs,
           });
 
-          if (!lemmas[strongs]) {
-            lemmas[strongs] = {};
-          }
-          if (!lemmas[strongs][grammar]) {
-            lemmas[strongs][grammar] = { verseIds: [] };
-          }
+          lemmas[strongs] ??= {};
+          lemmas[strongs][grammar] ??= { verseIds: [] };
           lemmas[strongs][grammar].verseIds.push(wordId);
         }
       }
