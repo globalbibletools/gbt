@@ -10,62 +10,102 @@ generator client {
 datasource db {
   provider   = "postgresql"
   url        = env("DATABASE_URL")
+  // pgcrypto is necessary for ULIDs which are better than random UUIDs.
   extensions = [pgcrypto]
 }
 
+/// A book of the Bible.
 model Book {
+  /// The ID of the book. Corresponds to its order in the Bible.
   id     Int     @id
+  /// The three letter code used to for look ups from references.
   name   String  @unique
+  /// The list of verses in the book.
   verses Verse[]
 }
 
+/// A verse within a Book of the Bible.
 model Verse {
+  /// The ID of the verse in the format `BBCCCVVV`.
   id           String             @id
+  /// The verse number as it appears in most Bibles.
   number       Int
+  /// The chapter number as it appears in most Bibles.
   chapter      Int
+  /// The book the verse belongs in.
   book         Book               @relation(fields: [bookId], references: [id])
+  /// The ID of the book the verse belongs in.
   bookId       Int
+  /// The list of words in the verse.
   words        Word[]
+  /// This list of natural translations for this verse.
   translations VerseTranslation[]
 
   @@unique([bookId, chapter, number])
 }
 
+/// A single word within a verse.
 model Word {
+  /// The ID of the verse in the format `BBCCCVVVWW`. The last two digits are in order as the words appear in the verse.
   id      String    @id
+  /// The text in Greek, Hebrew, or Aramaic as it appears in the critical text.
   text    String
+  /// The verse the word appears in.
   verse   Verse     @relation(fields: [verseId], references: [id])
+  /// The ID of the verse the word appears in.
   verseId String
+  /// The specific form of the lemma for the word.
   form    LemmaForm @relation(fields: [formId], references: [id])
+  /// The ID of the specific form of the lemma for the word.
   formId  String
 }
 
+/// A form of a lemma. This are differentiated by grammatical forms, as well as suffixes and prefixes.
 model LemmaForm {
+  /// The ID of the form in the format `[H|G]<strongs>-<random id>`. Examples: H245-2, G1243-12
   id      String @id
+  /// The grammar code for this form.
   grammar String
+  /// The lemma that contains this form and its siblings.
   lemma   Lemma  @relation(fields: [lemmaId], references: [id])
+  /// The ID of the lemma that contains this form and its siblings.
   lemmaId String
+  /// The list of words in verses that share this form of the lemma.
   word    Word[]
 }
 
+/// The lemma as defined by strongs numbers.
 model Lemma {
+  /// The ID of the lemma in the format `[H|G]<strongs>`. Examples: H243, G1243
   id    String      @id
+  /// The list of forms of the lemma.
   forms LemmaForm[]
 }
 
+/// A natural translation for a verse.
 model VerseTranslation {
+  /// The verse being translated.
   verse       Verse    @relation(fields: [verseId], references: [id])
+  /// The ID verse being translated.
   verseId     String
+  /// The language of the translation.
   language    Language @relation(fields: [languageId], references: [id])
+  /// The ID of the language of the translation.
   languageId  String   @db.Uuid
+  /// The text of the translation.
   translation String
 
   @@id([verseId, languageId])
 }
 
+/// A language use for translation.
 model Language {
+  /// The ID of the language. This is distinct from the IETF language code.
   id                String             @id @default(dbgenerated("generate_ulid()")) @db.Uuid
+  /// The IETF language code.
   code              String             @unique
+  /// The localized name of the language.
   name              String
+  /// This list of verse translation in this language.
   verseTranslations VerseTranslation[]
 }

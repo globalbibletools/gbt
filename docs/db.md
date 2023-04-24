@@ -2,6 +2,8 @@
 
 Our database is postgresql@14.7 with prisma to manage the schema and migrations. Each package can have its own prisma schema if it has its own database. At this moment, only the api project has a database.
 
+[Database schema](./../packages/api/prisma/schema.prisma)
+
 ## Setup
 
 1. Install postgresql version 14.7
