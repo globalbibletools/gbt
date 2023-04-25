@@ -11,15 +11,15 @@ servers:
   - url: http://localhost:4300/api
     description: Local server
 paths:
+  /verses/{verseId}/words:
+    $ref: ./paths/words.yml
   /languages:
     $ref: ./paths/languages.yml
-  /languages/{id}:
+  /languages/{code}:
     $ref: ./paths/language.yml
-  /books/{bookName}/chapters/{chapterNumber}/verses/{verseNumber}/words:
-    $ref: ./paths/verses/words.yml
-  /books/{bookName}/chapters/{chapterNumber}/verses/{verseNumber}/translations/{lang}:
-    $ref: ./paths/verses/translations.yml
-components:
-  schemas:
-    Language:
-      $ref: ./schemas/language.yml
+  /languages/{code}/verses/{verseId}/translation:
+    $ref: ./paths/translations.yml
+  /languages/{code}/verses/{verseId}/glosses:
+    $ref: ./paths/verse-glosses.yml
+  /languages/{code}/words/{wordId}:
+    $ref: ./paths/language-words.yml

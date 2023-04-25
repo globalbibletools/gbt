@@ -1,0 +1,58 @@
+get:
+  summary: Get the words of a verse
+  parameters:
+    - $ref: '../schemas/parameters.yml#verseId'
+  responses:
+    "200":
+      description: Ok
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      description: The unique ID for the word in the verse.
+                    text:
+                      type: string
+                      description: The full text as it appears in the verse.
+                    lemmaId:
+                      type: string
+                      description: The strongs number that identifies the word.
+                    formId:
+                      type: string
+                      description: The ID of the lemma form.
+                    grammar:
+                      type: string
+                      description: The grammar code for the word as used in the verse.
+                example:
+                - id: 02zpg
+                  text: וַ/יְדַבֵּ֥ר
+                  lemmaId: H1696
+                  formId: H1696-12
+                  grammar: HC/Vpw3ms
+                - id: 02HB7
+                  text: יְהוָֹ֖ה
+                  lemmaId: H3068
+                  formId: H3068-1
+                  grammar: HNp
+                - id: 02BkQ 
+                  text: אֶל־
+                  lemmaId: H413
+                  formId: H413-8
+                  grammar: HR
+                - id: 02PD3
+                  text: מֹשֶׁ֥ה
+                  lemmaId: H4872
+                  formId: H4872-5
+                  grammar: HNp
+                - id: 02FWp
+                  text: לֵּ/אמֹֽר׃
+                  lemmaId: H559
+                  formId: H559-17
+                  grammar: HR/Vqc

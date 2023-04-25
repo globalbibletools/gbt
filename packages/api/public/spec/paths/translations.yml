@@ -1,0 +1,20 @@
+get:
+  summary: Get the natural language translation of a verse.
+  parameters:
+    - $ref: '../schemas/parameters.yml#languageCode'
+    - $ref: '../schemas/parameters.yml#verseId'
+  responses:
+    "200":
+      description: Ok
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  translation: 
+                    type: string
+                    description: A natural language translation of the verse.
+                    example: 'El Señor habló con Moisés y le dijo:'

@@ -25,16 +25,7 @@ post:
     content:
       application/json:
         schema:
-          type: object
-          properties:
-            code:
-              type: string
-              example: es
-              description: The [IETF language code](https://en.wikipedia.org/wiki/IETF_language_tag).
-            name:
-              type: string
-              example: Español
-              description: The name of the language in the language itself.
+          $ref: "../schemas/language.yml"
   responses:
     201:
       description: Created
