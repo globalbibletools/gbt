@@ -13,7 +13,7 @@ verseId:
   required: true
   schema:
     type: number
-  example: 0201401
+  example: 02014001
 wordId:
   name: wordId
   in: path
@@ -21,4 +21,4 @@ wordId:
   required: true
   schema:
     type: number
-  example: 020140101
+  example: 0201400101
