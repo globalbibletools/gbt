@@ -2,7 +2,7 @@ patch:
   summary: Update the gloss of a word for a language.
   parameters:
     - $ref: '../schemas/parameters.yml#languageCode'
-    - $ref: '../schemas/parameters.yml#verseId'
+    - $ref: '../schemas/parameters.yml#wordId'
   requestBody:
     required: true
     content:
