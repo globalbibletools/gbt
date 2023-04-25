@@ -9,7 +9,7 @@ languageCode:
 verseId:
   name: verseId
   in: path
-  description: The verse number within the chapter. In the format of `BBCCCVVV`.
+  description: The verse number within the chapter. In the format of `BBCCCVVV`. (**B**ook, **C**hapter, **V**erse)
   required: true
   schema:
     type: number
@@ -17,7 +17,7 @@ verseId:
 wordId:
   name: wordId
   in: path
-  description: The word ID within the chapter. In the format of `BBCCCVVVWW`.
+  description: The word ID within the chapter. In the format of `BBCCCVVVWW`. (**B**ook, **C**hapter, **V**erse, **W**ord).
   required: true
   schema:
     type: number
