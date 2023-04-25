@@ -54,7 +54,7 @@
     "seed": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "npx ts-node -O '{\"module\":\"commonjs\"}' --project packages/api/tsconfig.json packages/api/prisma/seed.ts"
+        "command": "npx ts-node --project packages/api/tsconfig.json packages/api/prisma/seed.ts"
       }
     },
     "prisma-generate": {

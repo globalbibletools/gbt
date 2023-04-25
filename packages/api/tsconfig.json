@@ -19,5 +19,10 @@
     "jest.config.ts",
     "src/**/*.spec.ts",
     "src/**/*.test.ts"
-  ]
+  ],
+  "ts-node": {
+    "compilerOptions": {
+      "module": "CommonJS"
+    }
+  }
 }
