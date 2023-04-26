@@ -12,3 +12,11 @@ export interface GetVerseResponseBody {
     words: VerseWord[];
   };
 }
+
+export interface Gloss {
+  gloss: string;
+}
+
+export interface GetVerseGlossesResponseBody {
+  data: Gloss[];
+}

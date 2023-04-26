@@ -2,9 +2,9 @@ import {
   GetLanguageResponseBody,
   PatchLanguageRequestBody,
 } from '@translation/api-types';
-import { client, Prisma } from '../../../shared/db';
-import { languageSchema } from './schemas';
-import createRoute from '../../../shared/Route';
+import { client, Prisma } from '../../../../shared/db';
+import { languageSchema } from '../schemas';
+import createRoute from '../../../../shared/Route';
 
 export default createRoute<{ code: string }>()
   .get<void, GetLanguageResponseBody>({
