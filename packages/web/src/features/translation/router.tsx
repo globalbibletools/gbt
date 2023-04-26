@@ -1,9 +1,12 @@
-import { RouteObject } from "react-router-dom"
-import TranslationView from "./TranslationView"
+import { RouteObject } from 'react-router-dom';
+import TranslationView, { translationViewLoader } from './TranslationView';
 
-const routes: RouteObject[] = [{
-  path: 'translation',
-  element: <TranslationView />
-}]
+const routes: RouteObject[] = [
+  {
+    path: 'translate/:verseId',
+    element: <TranslationView />,
+    loader: translationViewLoader,
+  },
+];
 
-export default routes
+export default routes;

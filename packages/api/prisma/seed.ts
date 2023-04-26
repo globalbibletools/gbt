@@ -58,7 +58,7 @@ async function run() {
 
           // We clean the strongs codes since the hebrew ones have some extra characters.
           // We also prefix the code with a language code based on the book.
-          const strongs = `${book.id < 41 ? 'H' : 'G'}${rawStrongs.replace(
+          const strongs = `${book.id < 40 ? 'H' : 'G'}${rawStrongs.replace(
             STRONGS_REGEX,
             ''
           )}`;
