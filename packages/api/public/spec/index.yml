@@ -6,13 +6,10 @@ info:
     The frontend can be accessed at [https://gloss-translation.vercel.app]().
   version: 0.0.1
 servers:
-  - url: https://gloss-translation-api.vercel.app/api
-    description: Production server
-  - url: http://localhost:4300/api
-    description: Local server
+  - url: /api
 paths:
-  /verses/{verseId}/words:
-    $ref: ./paths/words.yml
+  /verses/{verseId}:
+    $ref: ./paths/verse.yml
   /languages:
     $ref: ./paths/languages.yml
   /languages/{code}:

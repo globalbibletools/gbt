@@ -1,4 +1,5 @@
 export * from './language';
+export * from './verses';
 
 export interface ErrorDetail {
   code: string;
