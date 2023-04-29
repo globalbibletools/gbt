@@ -83,7 +83,12 @@ export default class ApiClient {
       body: formattedBody,
     });
     const response = await fetch(request);
-    const responseBody = await response.json();
+    let responseBody;
+    try {
+      responseBody = await response.json();
+    } catch (error) {
+      responseBody = {};
+    }
     if (response.ok) {
       return responseBody;
     } else {

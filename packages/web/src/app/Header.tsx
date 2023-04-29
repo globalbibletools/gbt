@@ -1,7 +1,6 @@
-import { GetLanguagesResponseBody } from '@translation/api-types';
 import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useLoaderData } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import { DialogRef } from '../shared/components/Dialog';
 import DropdownMenu, {
   DropdownMenuButton,
@@ -11,6 +10,7 @@ import DropdownMenu, {
 import { Icon } from '../shared/components/Icon';
 import LanguageDialog from './LanguageDialog';
 import interfaceLanguages from './languages.json';
+import apiClient from '../shared/apiClient';
 
 export interface HeaderProps {
   language: string;
@@ -21,9 +21,12 @@ export default function Header({ language, onLanguageChange }: HeaderProps) {
   const userName = 'Joe Translator';
   const languageDialog = useRef<DialogRef>(null);
   const { t, i18n } = useTranslation();
-  const translationLanguages = useLoaderData() as GetLanguagesResponseBody;
 
-  const selectedLanguage = translationLanguages.data.find(
+  const languagesQuery = useQuery(['languages'], () =>
+    apiClient.languages.findAll()
+  );
+  const translationLanguages = languagesQuery.data?.data ?? [];
+  const selectedLanguage = translationLanguages.find(
     (l) => l.code === language
   );
 
@@ -32,24 +35,26 @@ export default function Header({ language, onLanguageChange }: HeaderProps) {
       <h1 className="font-bold text-lg">Gloss Translation</h1>
       <div className="flex-grow" />
       <nav className="flex items-baseline" aria-label="primary">
-        <DropdownMenu
-          text={selectedLanguage?.name ?? 'Language'}
-          className="mr-4"
-        >
-          <DropdownMenuSubmenu text={t('switch_language')}>
-            {translationLanguages.data.map((language) => (
-              <DropdownMenuButton
-                key={language.code}
-                onClick={() => onLanguageChange(language.code)}
-              >
-                {language.name}
-              </DropdownMenuButton>
-            ))}
-          </DropdownMenuSubmenu>
-          <DropdownMenuLink to={'/languages'}>
-            {t('manage_languages')}
-          </DropdownMenuLink>
-        </DropdownMenu>
+        {translationLanguages.length > 0 && (
+          <DropdownMenu
+            text={selectedLanguage?.name ?? 'Language'}
+            className="mr-4"
+          >
+            <DropdownMenuSubmenu text={t('switch_language')}>
+              {translationLanguages.map((language) => (
+                <DropdownMenuButton
+                  key={language.code}
+                  onClick={() => onLanguageChange(language.code)}
+                >
+                  {language.name}
+                </DropdownMenuButton>
+              ))}
+            </DropdownMenuSubmenu>
+            <DropdownMenuLink to={'/languages'}>
+              {t('manage_languages')}
+            </DropdownMenuLink>
+          </DropdownMenu>
+        )}
         <DropdownMenu text={userName}>
           <DropdownMenuLink to={'#'}>
             <Icon icon="user" className="mr-2" />

@@ -1,16 +1,10 @@
-import { GetLanguagesResponseBody, Language } from '@translation/api-types';
 import { Suspense, useMemo } from 'react';
-import { Outlet, useLoaderData, useOutletContext } from 'react-router-dom';
-import apiClient from '../shared/apiClient';
+import { Outlet, useOutletContext } from 'react-router-dom';
 import useLocalStorageState from '../shared/useLocalStorageState';
 import Header from './Header';
 
-export function layoutLoader() {
-  return apiClient.languages.findAll();
-}
-
 export interface LayoutContext {
-  language?: Language;
+  language: string;
 }
 
 export function useLayoutContext() {
@@ -18,17 +12,14 @@ export function useLayoutContext() {
 }
 
 export function Layout() {
-  const languages = useLoaderData() as GetLanguagesResponseBody;
   const [language, selectLanguage] = useLocalStorageState<string>(
     'translation-language',
-    languages.data[0]?.code
+    'en'
   );
 
   const outletContext = useMemo<LayoutContext>(
-    () => ({
-      language: languages.data.find((l) => l.code === language),
-    }),
-    [language, languages]
+    () => ({ language }),
+    [language]
   );
 
   return (
