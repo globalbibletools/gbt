@@ -58,6 +58,8 @@ model Word {
   form    LemmaForm @relation(fields: [formId], references: [id])
   /// The ID of the specific form of the lemma for the word.
   formId  String
+  /// The list of glosses in different languages for this word.
+  glosses Gloss[]
 }
 
 /// A form of a lemma. This are differentiated by grammatical forms, as well as suffixes and prefixes.
@@ -82,6 +84,20 @@ model Lemma {
   forms LemmaForm[]
 }
 
+/// A language use for translation.
+model Language {
+  /// The ID of the language. This is distinct from the IETF language code.
+  id                String             @id @default(dbgenerated("generate_ulid()")) @db.Uuid
+  /// The IETF language code.
+  code              String             @unique
+  /// The localized name of the language.
+  name              String
+  /// This list of verse translation in this language.
+  verseTranslations VerseTranslation[]
+  /// The list of glosses of different words for this language.
+  glosses           Gloss[]
+}
+
 /// A natural translation for a verse.
 model VerseTranslation {
   /// The verse being translated.
@@ -98,14 +114,17 @@ model VerseTranslation {
   @@id([verseId, languageId])
 }
 
-/// A language use for translation.
-model Language {
-  /// The ID of the language. This is distinct from the IETF language code.
-  id                String             @id @default(dbgenerated("generate_ulid()")) @db.Uuid
-  /// The IETF language code.
-  code              String             @unique
-  /// The localized name of the language.
-  name              String
-  /// This list of verse translation in this language.
-  verseTranslations VerseTranslation[]
+model Gloss {
+  // The word being glossed.
+  word       Word     @relation(fields: [wordId], references: [id])
+  // The ID of the word being glossed.
+  wordId     String
+  /// The language of the gloss.
+  language   Language @relation(fields: [languageId], references: [id])
+  /// The ID of the language of the gloss.
+  languageId String   @db.Uuid
+  /// The text of the gloss.
+  gloss      String
+
+  @@id([wordId, languageId])
 }

@@ -26,6 +26,18 @@ Then you can seed the database with static verse data:
 nx seed api
 ```
 
+This seed script runs fine when the database is on the local machine, but for remote databases, it is quite slow. In these situations, use this command:
+
+```
+pg_restore -Fc --file=data/seed.dump --format=custom --dbname=<connection-string>
+```
+
+Generate a new seed file from your local database with:
+
+```
+pg_dump -Fc --data-only --exclude-table _prisma_migrations <db-name> > data/seed.dump
+```
+
 ## Migrations
 
 To migrate the database schema, first update the prisma schema, and then run the command:

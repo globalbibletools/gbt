@@ -1,8 +1,10 @@
 import type { ErrorResponse } from '@translation/api-types';
 import Languages from './languages';
+import Verses from './verses';
 
 export { ErrorResponse };
 export * from './languages';
+export * from './verses';
 
 export interface ApiClientOptions {
   baseUrl: string;
@@ -49,9 +51,11 @@ export class ApiClientError extends Error {
 
 export default class ApiClient {
   readonly languages: Languages;
+  readonly verses: Verses;
 
   constructor(private options: ApiClientOptions = { baseUrl: '' }) {
     this.languages = new Languages(this);
+    this.verses = new Verses(this);
   }
 
   async request({ path, query, body, method }: ApiClientRequestOptions) {

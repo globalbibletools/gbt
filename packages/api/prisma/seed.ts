@@ -53,12 +53,13 @@ async function run() {
         const filteredWords = words.filter((word) => word.length === 6);
 
         for (let wordIndex = 0; wordIndex < filteredWords.length; wordIndex++) {
-          const [text, , , grammar, rawStrongs] = filteredWords[wordIndex];
+          const [text, , english, grammar, rawStrongs] =
+            filteredWords[wordIndex];
           const order = wordIndex + 1;
 
           // We clean the strongs codes since the hebrew ones have some extra characters.
           // We also prefix the code with a language code based on the book.
-          const strongs = `${book.id < 41 ? 'H' : 'G'}${rawStrongs.replace(
+          const strongs = `${book.id < 40 ? 'H' : 'G'}${rawStrongs.replace(
             STRONGS_REGEX,
             ''
           )}`;
@@ -71,6 +72,7 @@ async function run() {
             verseId: verse.id,
             grammar,
             strongs,
+            english,
           });
 
           lemmas[strongs] ??= {};
@@ -116,6 +118,21 @@ async function run() {
       text: word.text,
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       formId: lemmas[word.strongs][word.grammar].formId!,
+    })),
+  });
+
+  const language = await client.language.create({
+    data: {
+      code: 'en',
+      name: 'English',
+    },
+  });
+
+  await client.gloss.createMany({
+    data: wordData.map((word) => ({
+      wordId: word.id,
+      languageId: language.id,
+      gloss: word.english,
     })),
   });
 

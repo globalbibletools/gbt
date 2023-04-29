@@ -14,7 +14,7 @@ const router = createBrowserRouter([
       {
         index: true,
         loader() {
-          return redirect('/translation');
+          return redirect('/translate/01001001');
         },
       },
       ...translationRoutes,

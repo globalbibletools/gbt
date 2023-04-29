@@ -200,10 +200,10 @@ export default function createRoute<Params>(): RouteBuilder<Params> {
       return this;
     },
     build() {
-      return (req: NextApiRequest, res: NextApiResponse) => {
+      return async (req: NextApiRequest, res: NextApiResponse) => {
         const handler = handlers[req.method ?? ''];
         if (handler) {
-          handler(req, res);
+          await handler(req, res);
         } else {
           res.status(405).json({
             errors: [{ code: 'MethodNotAllowed' }],
