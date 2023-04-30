@@ -10,5 +10,7 @@ library.add(
   FaSolid.faEarth,
   FaSolid.faUser,
   FaSolid.faClose,
-  FaSolid.faPlus
+  FaSolid.faPlus,
+  FaSolid.faArrowLeft,
+  FaSolid.faArrowRight,
 );
