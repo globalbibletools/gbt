@@ -1,87 +1,142 @@
 [
   [
-    "Genesis"
+    "Genesis",
+    "Gen"
   ],
   [
-    "Exodus"
+    "Exodus",
+    "Exod",
+    "Ex",
+    "Exo"
   ],
   [
-    "Leviticus"
+    "Leviticus",
+    "Lev"
   ],
   [
-    "Numbers"
+    "Numbers",
+    "Num"
   ],
   [
-    "Deuteronomy"
+    "Deuteronomy",
+    "Deut",
+    "Deu"
   ],
   [
-    "Joshua"
+    "Joshua",
+    "Josh"
   ],
   [
-    "Judges"
+    "Judges",
+    "Judg",
+    "Jdg"
   ],
   [
-    "Ruth"
+    "Ruth",
+    "Rut"
   ],
   [
-    "1 Samuel"
+    "1 Samuel",
+    "1 Sam",
+    "1st Sam",
+    "1st Samuel",
+    "First Samuel"
   ],
   [
-    "2 Samuel"
+    "2 Samuel",
+    "2 Sam",
+    "2nd Sam",
+    "2nd Samuel",
+    "Second Samuel"
   ],
   [
-    "1 Kings"
+    "1 Kings",
+    "1 Kgs",
+    "1st Kgs",
+    "1st Kings",
+    "First Kings"
   ],
   [
-    "2 Kings"
+    "2 Kings",
+    "2 Kgs",
+    "2nd Kgs",
+    "2nd Kings",
+    "Second Kings"
   ],
   [
-    "1 Chronicles"
+    "1 Chronicles",
+    "1 Chr",
+    "1st Chr",
+    "1st Chronicles",
+    "First Chronicles"
   ],
   [
-    "2 Chronicles"
+    "2 Chronicles",
+    "2 Chr",
+    "2nd Chr",
+    "2nd Chronicles",
+    "Second Chronicles"
   ],
   [
+    "Ezra",
     "Ezra"
   ],
   [
-    "Nehemiah"
+    "Nehemiah",
+    "Neh"
   ],
   [
-    "Esther"
+    "Esther",
+    "Esth",
+    "Est"
   ],
   [
     "Job"
   ],
   [
+    "Psalms",
+    "Ps",
     "Psalm"
   ],
   [
-    "Proverbs"
+    "Proverbs",
+    "Prov",
+    "Pro"
   ],
   [
-    "Ecclesiastes"
+    "Ecclesiastes",
+    "Eccl",
+    "Ecc"
   ],
   [
-    "Song of Songs", "Song of Solomon"
+    "Song of Songs",
+    "Song",
+    "Song of Solomon",
+    "SOS"
   ],
   [
-    "Isaiah"
+    "Isaiah",
+    "Isa"
   ],
   [
-    "Jeremiah"
+    "Jeremiah",
+    "Jer"
   ],
   [
-    "Lamentations"
+    "Lamentations",
+    "Lam"
   ],
   [
-    "Ezekiel"
+    "Ezekiel",
+    "Ezek"
   ],
   [
-    "Daniel"
+    "Daniel",
+    "Dan"
   ],
   [
-    "Hosea"
+    "Hosea",
+    "Hos"
   ],
   [
     "Joel"
@@ -90,34 +145,45 @@
     "Amos"
   ],
   [
-    "Obadiah"
+    "Obadiah",
+    "Obad",
+    "Oba"
   ],
   [
-    "Jonah"
+    "Jonah",
+    "Jon"
   ],
   [
-    "Micah"
+    "Micah",
+    "Mic"
   ],
   [
-    "Nahum"
+    "Nahum",
+    "Nah"
   ],
   [
-    "Habakkuk"
+    "Habakkuk",
+    "Hab"
   ],
   [
-    "Zephaniah"
+    "Zephaniah",
+    "Zeph"
   ],
   [
-    "Haggai"
+    "Haggai",
+    "Hag"
   ],
   [
-    "Zechariah"
+    "Zechariah",
+    "Zech"
   ],
   [
-    "Malachi"
+    "Malachi",
+    "Mal"
   ],
   [
-    "Matthew"
+    "Matthew",
+    "Matt"
   ],
   [
     "Mark"
@@ -132,69 +198,116 @@
     "Acts"
   ],
   [
-    "Romans"
+    "Romans",
+    "Rom"
   ],
   [
-    "1 Corinthians"
+    "1 Corinthians",
+    "1 Cor",
+    "1st Cor",
+    "1st Corinthians",
+    "First Corinthians"
   ],
   [
-    "2 Corinthians"
+    "2 Corinthians",
+    "2 Cor",
+    "2nd Cor",
+    "2nd Corinthians",
+    "Second Corinthians"
   ],
   [
-    "Galatians"
+    "Galatians",
+    "Gal"
   ],
   [
-    "Ephesians"
+    "Ephesians",
+    "Eph"
   ],
   [
-    "Philippians"
+    "Philippians",
+    "Phil"
   ],
   [
-    "Colossians"
+    "Colossians",
+    "Col"
   ],
   [
-    "1 Thessalonians"
+    "1 Thessalonians",
+    "1 Thess",
+    "1st Thess",
+    "1st Thessalonians",
+    "First Thessalonians"
   ],
   [
-    "2 Thessalonians"
+    "2 Thessalonians",
+    "2 Thess",
+    "2nd Thess",
+    "2nd Thessalonians",
+    "Second Thessalonians"
   ],
   [
-    "1 Timothy"
+    "1 Timothy",
+    "1 Tim",
+    "1st Tim",
+    "1st Timothy",
+    "First Timothy"
   ],
   [
-    "2 Timothy"
+    "2 Timothy",
+    "2 Tim",
+    "2nd Tim",
+    "2nd Timothy",
+    "Second Timothy"
   ],
   [
     "Titus"
   ],
   [
-    "Philemon"
+    "Philemon",
+    "Phlm"
   ],
   [
-    "Hebrews"
+    "Hebrews",
+    "Heb"
   ],
   [
-    "James"
+    "James",
+    "Jas"
   ],
   [
-    "1 Peter"
+    "1 Peter",
+    "1 Pet",
+    "1st Pet",
+    "1st Peter",
+    "First Peter"
   ],
   [
-    "2 Peter"
+    "2 Peter",
+    "2 Pet",
+    "2nd Pet",
+    "2nd Peter",
+    "Second Peter"
   ],
   [
-    "1 John"
+    "1 John",
+    "1st John",
+    "First John"
   ],
   [
-    "2 John"
+    "2 John",
+    "2nd John",
+    "Second John"
   ],
   [
-    "3 John"
+    "3 John",
+    "3rd John",
+    "Third John"
   ],
   [
     "Jude"
   ],
   [
-    "Revelation"
+    "Revelation",
+    "Rev"
   ]
 ]
