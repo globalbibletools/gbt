@@ -1,5 +1,6 @@
+import { useState } from 'react';
 import { useLayoutContext } from '../../app/Layout';
-import { decrementVerseId, incrementVerseId, parseVerseId } from '../utils';
+import { decrementVerseId, incrementVerseId, parseReference, parseVerseId } from '../utils';
 import { Icon } from './Icon';
 import TextInput from './TextInput';
 
@@ -18,9 +19,30 @@ export function VerseSelector({ verseId, goToVerse }: VerseSelectorProps) {
   const bookName = bookTerms[bookId - 1][0];
   const reference = `${bookName} ${chapterNumber}:${verseNumber}`;
 
+  const [newReference, setNewReference] = useState('');
+
+  const onInputChange = (e: any) => {
+    e.preventDefault();
+    setNewReference(e.target.value);
+  }
+
+  const onKeyDown = (e: any) => {
+    if (e.keyCode == 13) {
+      e.preventDefault();
+      e.target.value = '';
+      let newVerseId = parseReference(newReference, langCode);
+      if (newVerseId == null) {
+        // TODO: handle invalid input.
+        console.log('UNKNOWN REFERENCE:', newReference);
+      } else {
+        goToVerse(newVerseId);
+      }
+    }
+  }
+
   return (
     <div className='flex flex-row gap-4 items-center'>
-      <TextInput autoComplete="off" placeholder={reference} />
+      <TextInput autoComplete="off" placeholder={reference} onChange={onInputChange} onKeyDown={onKeyDown} />
       <button onClick={() => goToVerse(decrementVerseId(verseId))}>
         <Icon icon="arrow-left" />
       </button>

@@ -99,3 +99,47 @@ export function incrementVerseId(verseId: string) {
   }
   return generateVerseId({ bookId, chapterNumber, verseNumber });
 }
+
+/**
+ * Try to parse a verse ID from a reference, in the given language.
+ * @param reference The string that should be parsed. In the form "bookName chapterNumber:verseNumber". Example: "Exo 3:14".
+ * @param langCode The language to use.
+ * @returns The verse ID if it can be determined, otherwise `null`.
+ */
+export function parseReference(reference: string, langCode: string): string | null {
+  const bookTerms = require(`../assets/book-terms/${langCode}.json`);
+  // Parse the reference into three parts.
+  const referenceRegex = /^(.+)\s(\d+):(\d+)$/;
+  const matches = reference.match(referenceRegex);
+  if (matches == null) {
+    return null;
+  }
+  let [, bookStr, chapterStr, verseStr] = matches;
+  bookStr = bookStr.toLowerCase().trim();
+  // Find the book ID.
+  let bookId;
+  for (let [i, bookArray] of bookTerms.entries()) {
+    for (let term of bookArray) {
+      if (term.toLowerCase() == bookStr) {
+        bookId = i + 1;
+        break;
+      }
+    }
+  }
+  if (bookId == null) {
+    return null;
+  }
+  // Check that the chapter exists.
+  let chapterNumber = parseInt(chapterStr);
+  const chapterCount = verseCounts[bookId - 1].length;
+  if (chapterNumber < 1 || chapterNumber > chapterCount) {
+    return null;
+  }
+  // Check that the verse exists.
+  let verseNumber = parseInt(verseStr);
+  const verseCount = verseCounts[bookId - 1][chapterNumber - 1];
+  if (verseCount < 1 || verseNumber > verseCount) {
+    return null;
+  }
+  return generateVerseId({ bookId, chapterNumber, verseNumber });
+}
