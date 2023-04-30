@@ -32,7 +32,7 @@ const bookFiles = [
   'Oba.json',
   'Jon.json',
   'Mic.json',
-  'Neh.json',
+  'Nam.json',
   'Hab.json',
   'Zep.json',
   'Hag.json',
