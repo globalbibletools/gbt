@@ -1,3 +1,4 @@
+import { useLayoutContext } from '../../app/Layout';
 import { parseVerseId } from '../utils';
 import { Icon } from './Icon';
 import TextInput from './TextInput';
@@ -8,14 +9,18 @@ export interface VerseSelectorProps {
 }
 
 export function VerseSelector({ verseId, goToVerse }: VerseSelectorProps) {
-  console.log('VERSE ID:', verseId);
-  const { bookId, chapterNumber, verseNumber } = parseVerseId(verseId);
-  const reference = `${bookId} ${chapterNumber}:${verseNumber}`;
-
   function changeVerse(delta: number) {
     // TODO: use the delta to calculate the next verse ID.
     goToVerse(verseId);
   }
+
+  const { language } = useLayoutContext();
+  const langCode = language?.code ?? 'en';
+  const bookTerms = require(`../../assets/book-terms/${langCode}.json` );
+
+  const { bookId, chapterNumber, verseNumber } = parseVerseId(verseId);
+  const bookName = bookTerms[bookId - 1][0];
+  const reference = `${bookName} ${chapterNumber}:${verseNumber}`;
 
   return (
     <div className='flex flex-row gap-4 items-center'>
