@@ -10,6 +10,36 @@ export function capitalize(str: string) {
 }
 
 /**
+ * Bound a number into the inclusive range [min, max].
+ * @param num The input number.
+ * @param min The minimum bound.
+ * @param max The maximum bound.
+ * @returns A number in the inclusive range [min, max].
+ */
+export function bound(num: number, min: number, max: number) {
+  return Math.min(Math.max(num, min), max);
+}
+
+/**
+ * Count the chapters in a given book of the Bible.
+ * @param bookId The ID of the book to use.
+ * @returns The number of chapters in the book.
+ */
+export function chapterCount(bookId: number): number {
+  return verseCounts[bookId - 1].length;
+}
+
+/**
+ * Count the verses in a given chapter of the Bible.
+ * @param bookId The ID of the book to use.
+ * @param chapterNumber The number of the chapter to use (1 indexed).
+ * @returns The number of verses in the chapter.
+ */
+export function verseCount(bookId: number, chapterNumber: number): number {
+  return verseCounts[bookId - 1][chapterNumber - 1];
+}
+
+/**
  * Parse a verse ID of form BBCCCVVV.
  * BB - `bookId`
  * CCC - `chapterNumber`
@@ -63,10 +93,10 @@ export function decrementVerseId(verseId: string) {
         bookId = 66;
       }
       // Last chapter of the book.
-      chapterNumber = verseCounts[bookId - 1].length
+      chapterNumber = chapterCount(bookId)
     }
     // Last verse of the chapter.
-    verseNumber = verseCounts[bookId - 1][chapterNumber - 1];
+    verseNumber = verseCount(bookId, chapterNumber);
   }
   return generateVerseId({ bookId, chapterNumber, verseNumber });
 }
@@ -80,13 +110,11 @@ export function decrementVerseId(verseId: string) {
 // TODO: It would be good to have unit tests for this function.
 export function incrementVerseId(verseId: string) {
   let { bookId, chapterNumber, verseNumber }: VerseInfo = parseVerseId(verseId);
-  const chapterCount = verseCounts[bookId - 1].length;
-  const verseCount = verseCounts[bookId - 1][chapterNumber - 1];
   verseNumber += 1;
-  if (verseNumber > verseCount) {
+  if (verseNumber > verseCount(bookId, chapterNumber)) {
     // Wrap to next chapter.
     chapterNumber += 1;
-    if (chapterNumber > chapterCount) {
+    if (chapterNumber > chapterCount(bookId)) {
       // Wrap to next book.
       bookId += 1;
       if (bookId > 66) {
@@ -98,6 +126,17 @@ export function incrementVerseId(verseId: string) {
     verseNumber = 1;
   }
   return generateVerseId({ bookId, chapterNumber, verseNumber });
+}
+
+/**
+ * Get the name of the book in a given language.
+ * @param bookId The book to use.
+ * @param langCode The language to use.
+ * @returns The name of the book in the given language.
+ */
+export function bookName(bookId: number, langCode: string) {
+  const bookTerms = require(`../assets/book-terms/${langCode}.json`);
+  return bookTerms[bookId - 1][0];
 }
 
 /**
@@ -129,17 +168,19 @@ export function parseReference(reference: string, langCode: string): string | nu
   if (bookId == null) {
     return null;
   }
-  // Check that the chapter exists.
-  let chapterNumber = parseInt(chapterStr);
-  const chapterCount = verseCounts[bookId - 1].length;
-  if (chapterNumber < 1 || chapterNumber > chapterCount) {
-    return null;
-  }
-  // Check that the verse exists.
-  let verseNumber = parseInt(verseStr);
-  const verseCount = verseCounts[bookId - 1][chapterNumber - 1];
-  if (verseCount < 1 || verseNumber > verseCount) {
-    return null;
-  }
+  // Coerce the chapter number to be valid.
+  const chapterNumber = bound(parseInt(chapterStr), 1, chapterCount(bookId));
+  // Coerce the verse number to be valid.
+  const verseNumber = bound(parseInt(verseStr), 1, verseCount(bookId, chapterNumber));
   return generateVerseId({ bookId, chapterNumber, verseNumber });
+}
+
+/**
+ * Generate a reference to a verse in the given language.
+ * @param verseInfo The verse to generate a reference for. 
+ * @param langCode The language to use.
+ * @returns A reference in the form "bookName chapterNumber:verseNumber".
+ */
+export function generateReference({ bookId, chapterNumber, verseNumber }: VerseInfo, langCode: string): string {
+  return `${bookName(bookId, langCode)} ${chapterNumber}:${verseNumber}`;
 }
