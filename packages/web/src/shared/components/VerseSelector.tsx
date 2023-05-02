@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { useLayoutContext } from '../../app/Layout';
-import { decrementVerseId, generateReference, incrementVerseId, parseReference, parseVerseId } from '../utils';
+import { useTranslation } from 'react-i18next';
+import { bookName, decrementVerseId, incrementVerseId, parseReference, parseVerseId } from '../verse-utils';
 import { Icon } from './Icon';
 import TextInput from './TextInput';
 
@@ -11,9 +11,10 @@ export interface VerseSelectorProps {
 }
 
 export function VerseSelector({ verseId, goToVerse }: VerseSelectorProps) {
-  const { language } = useLayoutContext();
-  const langCode = language?.code ?? 'en';
-  const reference = generateReference(parseVerseId(verseId), langCode);
+  const { t, i18n } = useTranslation();
+  const langCode = i18n.language;
+  const verseInfo = parseVerseId(verseId);
+  const reference = t('reference_format', { ...verseInfo, bookName: bookName(verseInfo.bookId, langCode) });
   const [newReference, setNewReference] = useState('');
 
   const onInputChange = (e: any) => {

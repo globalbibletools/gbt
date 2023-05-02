@@ -6,7 +6,7 @@ import {
   GetVerseResponseBody,
 } from '@translation/api-types';
 import { VerseSelector } from '../../shared/components/VerseSelector';
-import { parseVerseId } from '../../shared/utils';
+import { parseVerseId } from '../../shared/verse-utils';
 
 export async function translationViewLoader({ params }: LoaderFunctionArgs) {
   const verse = await apiClient.verses.findById(params.verseId ?? 'unknown');

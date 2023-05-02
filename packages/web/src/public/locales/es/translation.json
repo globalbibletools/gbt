@@ -10,5 +10,6 @@
   "update": "Actualizar",
   "create": "Crear",
   "name": "nombre",
-  "code": "código"
+  "code": "código",
+  "reference_format": "{{bookName}} {{chapterNumber}}:{{verseNumber}}"
 }
