@@ -1,12 +1,12 @@
-import { LoaderFunctionArgs, useLoaderData, useNavigate } from 'react-router-dom';
-import apiClient from '../../shared/apiClient';
-import { useLayoutContext } from '../../app/Layout';
 import {
   GetVerseGlossesResponseBody,
   GetVerseResponseBody,
 } from '@translation/api-types';
-import { VerseSelector } from '../../shared/components/VerseSelector';
+import { LoaderFunctionArgs, useLoaderData, useNavigate } from 'react-router-dom';
+import { useLayoutContext } from '../../app/Layout';
+import apiClient from '../../shared/apiClient';
 import { parseVerseId } from '../../shared/verse-utils';
+import { VerseSelector } from './VerseSelector';
 
 export async function translationViewLoader({ params }: LoaderFunctionArgs) {
   const verse = await apiClient.verses.findById(params.verseId ?? 'unknown');

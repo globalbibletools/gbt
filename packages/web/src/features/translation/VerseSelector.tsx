@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { bookName, decrementVerseId, incrementVerseId, parseReference, parseVerseId } from '../verse-utils';
-import { Icon } from './Icon';
-import TextInput from './TextInput';
+import { bookName, decrementVerseId, incrementVerseId, parseReference, parseVerseId } from '../../shared/verse-utils';
+import { Icon } from '../../shared/components/Icon';
+import TextInput from '../../shared/components/TextInput';
 
 
 export interface VerseSelectorProps {
