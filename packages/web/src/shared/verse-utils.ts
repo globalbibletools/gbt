@@ -1,7 +1,7 @@
 // This file contains utility functions related to verse IDs.
 
 import verseCounts from '../assets/verse-counts.json';
-import { bound } from './utils';
+import { clamp } from './utils';
 
 export type VerseInfo = { bookId: number, chapterNumber: number, verseNumber: number };
 
@@ -154,8 +154,8 @@ export function parseReference(reference: string, langCode: string): string | nu
     return null;
   }
   // Coerce the chapter number to be valid.
-  const chapterNumber = bound(parseInt(chapterStr), 1, chapterCount(bookId));
+  const chapterNumber = clamp(parseInt(chapterStr), 1, chapterCount(bookId));
   // Coerce the verse number to be valid.
-  const verseNumber = bound(parseInt(verseStr), 1, verseCount(bookId, chapterNumber));
+  const verseNumber = clamp(parseInt(verseStr), 1, verseCount(bookId, chapterNumber));
   return generateVerseId({ bookId, chapterNumber, verseNumber });
 }

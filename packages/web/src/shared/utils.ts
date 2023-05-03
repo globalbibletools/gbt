@@ -12,6 +12,6 @@ export function capitalize(str: string) {
  * @param max The maximum bound.
  * @returns A number in the inclusive range [min, max].
  */
-export function bound(num: number, min: number, max: number) {
+export function clamp(num: number, min: number, max: number) {
   return Math.min(Math.max(num, min), max);
 }
