@@ -1,10 +1,12 @@
 import type { ErrorResponse } from '@translation/api-types';
 import Languages from './languages';
 import Verses from './verses';
+import Words from './words';
 
 export { ErrorResponse };
 export * from './languages';
 export * from './verses';
+export * from './words';
 
 export interface ApiClientOptions {
   baseUrl: string;
@@ -52,10 +54,12 @@ export class ApiClientError extends Error {
 export default class ApiClient {
   readonly languages: Languages;
   readonly verses: Verses;
+  readonly words: Words;
 
   constructor(private options: ApiClientOptions = { baseUrl: '' }) {
     this.languages = new Languages(this);
     this.verses = new Verses(this);
+    this.words = new Words(this);
   }
 
   async request({ path, query, body, method }: ApiClientRequestOptions) {
@@ -79,7 +83,12 @@ export default class ApiClient {
       body: formattedBody,
     });
     const response = await fetch(request);
-    const responseBody = await response.json();
+    let responseBody;
+    try {
+      responseBody = await response.json();
+    } catch (error) {
+      responseBody = {};
+    }
     if (response.ok) {
       return responseBody;
     } else {

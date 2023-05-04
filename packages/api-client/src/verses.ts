@@ -4,7 +4,7 @@ import type {
 } from '@translation/api-types';
 import ApiClient from './client';
 
-export { GetVerseResponseBody as GetVerseWordsResponseBody };
+export { GetVerseResponseBody };
 
 export default class Verses {
   constructor(private readonly client: ApiClient) {}

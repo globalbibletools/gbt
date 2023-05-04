@@ -13,4 +13,6 @@ library.add(
   FaSolid.faPlus,
   FaSolid.faArrowLeft,
   FaSolid.faArrowRight,
+  FaSolid.faCheck,
+  FaSolid.faArrowsRotate
 );
