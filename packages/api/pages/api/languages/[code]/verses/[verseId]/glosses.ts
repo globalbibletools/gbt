@@ -1,10 +1,5 @@
-import {
-  GetLanguageResponseBody,
-  GetVerseGlossesResponseBody,
-  PatchLanguageRequestBody,
-} from '@translation/api-types';
+import { GetVerseGlossesResponseBody } from '@translation/api-types';
 import { client, Prisma } from '../../../../../../shared/db';
-import { languageSchema } from '../../../schemas';
 import createRoute from '../../../../../../shared/Route';
 
 export default createRoute<{ code: string; verseId: string }>()
@@ -40,6 +35,7 @@ export default createRoute<{ code: string; verseId: string }>()
         if (verse) {
           res.ok({
             data: verse.words.map((word) => ({
+              wordId: word.id,
               gloss: word.glosses[0]?.gloss ?? '',
             })),
           });
