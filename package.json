@@ -39,6 +39,7 @@
     "@typescript-eslint/eslint-plugin": "5.36.1",
     "@typescript-eslint/parser": "5.36.1",
     "autoprefixer": "10.4.13",
+    "downshift": "7.6.0",
     "eslint": "8.15.0",
     "eslint-config-next": "13.1.1",
     "eslint-config-prettier": "8.1.0",

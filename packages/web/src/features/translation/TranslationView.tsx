@@ -2,12 +2,13 @@ import { useParams } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import apiClient from '../../shared/apiClient';
 import { useLayoutContext } from '../../app/Layout';
-import TextInput from '../../shared/components/TextInput';
 import { useState } from 'react';
 import InputHelpText from '../../shared/components/InputHelpText';
 import { GetVerseGlossesResponseBody } from '@translation/api-types';
 import { Icon } from '../../shared/components/Icon';
+import TypeaheadInput from '../../shared/components/TypeaheadInput';
 
+// TODO: load list of glosses for a form and show in dropdown.
 export default function TranslationView() {
   const params = useParams() as { verseId: string };
   const { language } = useLayoutContext();
@@ -87,6 +88,7 @@ export default function TranslationView() {
           return (
             <li key={word.id} className="mx-2 mb-4 w-36">
               <div
+                id={`word-${word.id}`}
                 className={`font-serif mb-2 ${
                   isHebrew ? 'text-2xl text-right' : 'text-lg'
                 }`}
@@ -94,16 +96,19 @@ export default function TranslationView() {
                 {word.text}
               </div>
               <div className="mb-2">{referenceGlosses[i]?.gloss}</div>
-              <TextInput
-                className="w-full"
-                defaultValue={targetGloss}
+              <TypeaheadInput<string, string>
+                value={targetGloss}
+                labelId={`word-${word.id}`}
+                items={targetGloss ? [targetGloss] : []}
+                toValue={(item) => item}
+                renderItem={(item) => item}
+                filter={(input, item) => !input || item.includes(input)}
                 aria-describedby={`word-help-${word.id}`}
-                onBlur={async (e) => {
-                  const newGloss = e.currentTarget.value;
+                onChange={(newGloss) => {
                   if (newGloss !== targetGloss) {
                     glossMutation.mutate({
                       wordId: word.id,
-                      gloss: newGloss,
+                      gloss: newGloss ?? '',
                     });
                   }
                 }}
