@@ -6,7 +6,7 @@ import { client } from '../../../../../shared/db';
 export default createRoute<{ code: string; wordId: string }>()
   .patch<PatchWordGlossRequestBody, void>({
     schema: z.object({
-      gloss: z.string(),
+      gloss: z.string().optional(),
     }),
     async handler(req, res) {
       const language = await client.language.findUnique({
