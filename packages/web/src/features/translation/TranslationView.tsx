@@ -13,6 +13,7 @@ import { VerseSelector } from './VerseSelector';
 export default function TranslationView() {
   const params = useParams() as { verseId: string };
   const { language } = useLayoutContext();
+  const navigate = useNavigate();
 
   const verseQuery = useQuery(['verse', params.verseId], () =>
     apiClient.verses.findById(params.verseId)
@@ -77,14 +78,12 @@ export default function TranslationView() {
   const { bookId } = parseVerseId(verse.id);
 
   const isHebrew = bookId < 40;
-  const navigate = useNavigate();
-
   return (
     <div className="px-4">
       <div className='flex flex-col gap-2'>
         <VerseSelector
           verseId={verse.id}
-          goToVerse={(verseId) => navigate('../translate/' + verseId)} />
+          onVerseChange={(verseId) => navigate('../translate/' + verseId)} />
         <ol className={`flex flex-wrap ${isHebrew ? 'flex-row-reverse' : ''}`}>
           {verse.words.map((word, i) => {
             const targetGloss = targetGlosses[i]?.gloss;
