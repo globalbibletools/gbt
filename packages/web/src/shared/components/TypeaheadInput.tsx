@@ -9,18 +9,21 @@ export interface TypeaheadInputProps<Item, Value> {
   labelId?: string;
   items: Item[];
   toValue(item: Item): Value;
-  renderItem(item: Item): ReactNode;
-  filter(input: string | undefined, item: Item): boolean;
+  renderItem?(item: Item): ReactNode;
+  filter?(input: string | undefined, item: Item): boolean;
   onChange(value?: Value): void;
 }
 
 // TODO: no items state.
-export default function TypeaheadInput<Item, Value>({
+export default function TypeaheadInput<
+  Item extends { toString(): string },
+  Value
+>({
   className = '',
   items,
   toValue,
-  filter,
-  renderItem,
+  filter = () => true,
+  renderItem = (item) => item.toString(),
   value,
   onChange,
 }: TypeaheadInputProps<Item, Value>) {

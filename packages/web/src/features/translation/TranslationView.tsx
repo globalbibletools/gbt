@@ -3,10 +3,8 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import apiClient from '../../shared/apiClient';
 import { useLayoutContext } from '../../app/Layout';
 import { useState } from 'react';
-import InputHelpText from '../../shared/components/InputHelpText';
 import { GetVerseGlossesResponseBody } from '@translation/api-types';
-import { Icon } from '../../shared/components/Icon';
-import TypeaheadInput from '../../shared/components/TypeaheadInput';
+import TranslateWord from './TranslateWord';
 
 // TODO: load list of glosses for a form and show in dropdown.
 export default function TranslationView() {
@@ -30,36 +28,47 @@ export default function TranslationView() {
   >([]);
   const queryClient = useQueryClient();
   const glossMutation = useMutation({
-    mutationFn: (variables: { wordId: string; gloss: string }) =>
+    mutationFn: (variables: { wordId: string; gloss?: string }) =>
       apiClient.words.updateGloss(variables.wordId, language, variables.gloss),
-    onMutate: ({ wordId }) => {
+    onMutate: async ({ wordId, gloss }) => {
       const requestId = Math.floor(Math.random() * 1000000);
       setGlossRequests((requests) => [...requests, { wordId, requestId }]);
-      return { requestId };
+
+      const queryKey = ['verse-glosses', language, params.verseId];
+      await queryClient.cancelQueries({ queryKey });
+      const previousGlosses = queryClient.getQueryData(queryKey);
+      queryClient.setQueryData<GetVerseGlossesResponseBody>(queryKey, (old) => {
+        if (old) {
+          const glosses = old.data.slice();
+          const index = glosses.findIndex((g) => g.wordId === wordId);
+          if (index >= 0) {
+            const doc = glosses[index];
+            glosses.splice(index, 1, { ...doc, approvedGloss: gloss });
+            return {
+              data: glosses,
+            };
+          }
+        }
+        return old;
+      });
+
+      return { requestId, previousGlosses };
     },
-    onError: () => {
+    onError: (_, __, context) => {
+      queryClient.setQueryData(
+        ['verse-glosses', 'language', params.verseId],
+        context?.previousGlosses
+      );
+
       alert('Unknown error occurred.');
     },
-    onSuccess: (_, { wordId, gloss }, context) => {
+    onSettled: (_, __, ___, context) => {
+      queryClient.invalidateQueries({ queryKey: ['verse-glosses'] });
+
       if (context?.requestId) {
         setGlossRequests((requests) =>
           requests.filter((r) => r.requestId !== context.requestId)
         );
-      }
-
-      const queryKey = ['verse-glosses', language, params.verseId];
-      const query =
-        queryClient.getQueryData<GetVerseGlossesResponseBody>(queryKey);
-      if (query) {
-        const glosses = query.data.slice();
-        const index = glosses.findIndex((g) => g.wordId === wordId);
-        if (index >= 0) {
-          const doc = glosses[index];
-          glosses.splice(index, 1, { ...doc, approvedGloss: gloss });
-          queryClient.setQueryData<GetVerseGlossesResponseBody>(queryKey, {
-            data: glosses,
-          });
-        }
       }
     },
   });
@@ -89,55 +98,21 @@ export default function TranslationView() {
           );
 
           return (
-            <li key={word.id} className="mx-2 mb-4 w-36">
-              <div
-                id={`word-${word.id}`}
-                className={`font-serif mb-2 ${
-                  isHebrew ? 'text-2xl text-right' : 'text-lg'
-                }`}
-              >
-                {word.text}
-              </div>
-              <div className="mb-2">{referenceGlosses[i]?.approvedGloss}</div>
-              <TypeaheadInput<string, string>
-                value={targetGloss}
-                labelId={`word-${word.id}`}
-                items={targetGlosses[i]?.glosses}
-                toValue={(item) => item}
-                renderItem={(item) => item}
-                filter={(input, item) => !input || item.includes(input)}
-                aria-describedby={`word-help-${word.id}`}
-                onChange={(newGloss) => {
-                  if (newGloss !== targetGloss) {
-                    glossMutation.mutate({
-                      wordId: word.id,
-                      gloss: newGloss ?? '',
-                    });
-                  }
-                }}
-              />
-              <InputHelpText id={`word-help-${word.id}`}>
-                {(() => {
-                  if (isSaving) {
-                    return (
-                      <>
-                        <Icon icon="arrows-rotate" className="mr-1" />
-                        Saving...
-                      </>
-                    );
-                  } else if (targetGloss) {
-                    return (
-                      <>
-                        <Icon icon="check" className="mr-1" />
-                        Saved
-                      </>
-                    );
-                  } else {
-                    return null;
-                  }
-                })()}
-              </InputHelpText>
-            </li>
+            <TranslateWord
+              key={word.id}
+              word={word}
+              originalLanguage={isHebrew ? 'hebrew' : 'greek'}
+              status={isSaving ? 'saving' : targetGloss ? 'saved' : 'empty'}
+              gloss={targetGloss}
+              referenceGloss={referenceGlosses[i]?.approvedGloss}
+              previousGlosses={targetGlosses[i]?.glosses}
+              onGlossChange={(newGloss) => {
+                glossMutation.mutate({
+                  wordId: word.id,
+                  gloss: newGloss,
+                });
+              }}
+            />
           );
         })}
       </ol>
