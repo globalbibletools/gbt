@@ -1,7 +1,7 @@
 // This file contains utility functions related to verse IDs.
 
-import verseCounts from '../assets/verse-counts.json';
-import { clamp } from './utils';
+import verseCounts from './verse-counts.json';
+import { clamp } from '../../shared/utils';
 
 export type VerseInfo = { bookId: number, chapterNumber: number, verseNumber: number };
 
@@ -120,7 +120,7 @@ export function incrementVerseId(verseId: string) {
  * @returns The name of the book in the given language.
  */
 export function bookName(bookId: number, langCode: string) {
-  const bookTerms = require(`../assets/book-terms/${langCode}.json`);
+  const bookTerms = require(`../../assets/book-terms/${langCode}.json`);
   return bookTerms[bookId - 1][0];
 }
 
@@ -131,7 +131,7 @@ export function bookName(bookId: number, langCode: string) {
  * @returns The verse ID if it can be determined, otherwise `null`.
  */
 export function parseReference(reference: string, langCode: string): string | null {
-  const bookTerms = require(`../assets/book-terms/${langCode}.json`);
+  const bookTerms = require(`../../assets/book-terms/${langCode}.json`);
   // Parse the reference into three parts.
   const referenceRegex = /^(.+)\s(\d+):(\d+)$/;
   const matches = reference.match(referenceRegex);

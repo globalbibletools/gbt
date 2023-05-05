@@ -7,7 +7,7 @@ import apiClient from '../../shared/apiClient';
 import { Icon } from '../../shared/components/Icon';
 import InputHelpText from '../../shared/components/InputHelpText';
 import TextInput from '../../shared/components/TextInput';
-import { parseVerseId } from '../../shared/verse-utils';
+import { parseVerseId } from './verse-utils';
 import { VerseSelector } from './VerseSelector';
 
 export default function TranslationView() {
