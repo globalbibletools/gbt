@@ -53,10 +53,13 @@ export default function TranslationView() {
       if (query) {
         const glosses = query.data.slice();
         const index = glosses.findIndex((g) => g.wordId === wordId);
-        glosses.splice(index, 1, { wordId, gloss });
-        queryClient.setQueryData<GetVerseGlossesResponseBody>(queryKey, {
-          data: glosses,
-        });
+        if (index >= 0) {
+          const doc = glosses[index];
+          glosses.splice(index, 1, { ...doc, approvedGloss: gloss });
+          queryClient.setQueryData<GetVerseGlossesResponseBody>(queryKey, {
+            data: glosses,
+          });
+        }
       }
     },
   });
@@ -80,7 +83,7 @@ export default function TranslationView() {
     <div className="px-4">
       <ol className={`flex flex-wrap ${isHebrew ? 'flex-row-reverse' : ''}`}>
         {verse.words.map((word, i) => {
-          const targetGloss = targetGlosses[i]?.gloss;
+          const targetGloss = targetGlosses[i]?.approvedGloss;
           const isSaving = glossRequests.some(
             ({ wordId }) => wordId === word.id
           );
@@ -95,11 +98,11 @@ export default function TranslationView() {
               >
                 {word.text}
               </div>
-              <div className="mb-2">{referenceGlosses[i]?.gloss}</div>
+              <div className="mb-2">{referenceGlosses[i]?.approvedGloss}</div>
               <TypeaheadInput<string, string>
                 value={targetGloss}
                 labelId={`word-${word.id}`}
-                items={targetGloss ? [targetGloss] : []}
+                items={targetGlosses[i]?.glosses}
                 toValue={(item) => item}
                 renderItem={(item) => item}
                 filter={(input, item) => !input || item.includes(input)}

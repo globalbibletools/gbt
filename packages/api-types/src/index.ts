@@ -40,7 +40,8 @@ export interface GetVerseResponseBody {
 
 export interface Gloss {
   wordId: string;
-  gloss: string;
+  approvedGloss: string;
+  glosses: string[];
 }
 
 export interface GetVerseGlossesResponseBody {
