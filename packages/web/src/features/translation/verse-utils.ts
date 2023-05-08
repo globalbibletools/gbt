@@ -123,10 +123,10 @@ export function incrementVerseId(verseId: string) {
 }
 
 /**
- * Get the name of the book in a given language.
+ * Get the name of the book, using the i18n translation function.
  * @param bookId The book to use.
  * @param t The i18n translation function to use.
- * @returns The name of the book in the given language.
+ * @returns The translated name of the book.
  */
 export function bookName(bookId: number, t: TFunction) {
   return t(bookKeys[bookId - 1], { ns: "bible" });
@@ -172,4 +172,17 @@ export function parseReference(reference: string, t: TFunction): string | null {
     verseCount(bookId, chapterNumber)
   );
   return generateVerseId({ bookId, chapterNumber, verseNumber });
+}
+
+/**
+ * Generate a localized reference for the given verse.
+ * @param verseInfo The verse to reference.
+ * @param t The i18n translation function to use.
+ * @returns The human-readable Bible reference.
+ */
+export function generateReference(verseInfo: VerseInfo, t: TFunction) {
+  return t("reference_format", {
+    ...verseInfo,
+    bookName: bookName(verseInfo.bookId, t),
+  });
 }

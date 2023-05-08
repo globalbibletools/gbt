@@ -1,9 +1,14 @@
-import { useState, KeyboardEvent } from 'react';
-import { useTranslation } from 'react-i18next';
-import { bookName, decrementVerseId, incrementVerseId, parseReference, parseVerseId } from './verse-utils';
-import { Icon } from '../../shared/components/Icon';
-import TextInput from '../../shared/components/TextInput';
-
+import { KeyboardEvent } from "react";
+import { useTranslation } from "react-i18next";
+import { Icon } from "../../shared/components/Icon";
+import TextInput from "../../shared/components/TextInput";
+import {
+  decrementVerseId,
+  generateReference,
+  incrementVerseId,
+  parseReference,
+  parseVerseId
+} from "./verse-utils";
 
 export interface VerseSelectorProps {
   verseId: string;
@@ -11,34 +16,37 @@ export interface VerseSelectorProps {
 }
 
 export function VerseSelector({ verseId, onVerseChange }: VerseSelectorProps) {
-  const { t } = useTranslation(['translation', 'bible']);
+  const { t } = useTranslation(["translation", "bible"]);
   const verseInfo = parseVerseId(verseId);
-  const reference = t('reference_format', { ...verseInfo, bookName: bookName(verseInfo.bookId, t) });
 
   const onKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key == 'Enter') {
+    if (e.key == "Enter") {
       const newReference = (e.target as HTMLInputElement).value;
-      (e.target as HTMLInputElement).value = '';
+      (e.target as HTMLInputElement).value = "";
       let newVerseId = parseReference(newReference, t);
       if (newVerseId == null) {
         // TODO: handle invalid input.
-        console.log('UNKNOWN REFERENCE:', newReference);
+        console.log("UNKNOWN REFERENCE:", newReference);
       } else {
         onVerseChange(newVerseId);
       }
     }
-  }
+  };
 
   return (
-    <div className='flex flex-row gap-4 items-center'>
-      <TextInput autoComplete="off" placeholder={reference} onKeyDown={onKeyDown} />
+    <div className="flex flex-row gap-4 items-center">
+      <TextInput
+        autoComplete="off"
+        placeholder={generateReference(verseInfo, t)}
+        onKeyDown={onKeyDown}
+      />
       <button onClick={() => onVerseChange(decrementVerseId(verseId))}>
         <Icon icon="arrow-left" />
-        <span className="sr-only">{t('previous_verse')}</span>
+        <span className="sr-only">{t("previous_verse")}</span>
       </button>
       <button onClick={() => onVerseChange(incrementVerseId(verseId))}>
         <Icon icon="arrow-right" />
-        <span className="sr-only">{t('next_verse')}</span>
+        <span className="sr-only">{t("next_verse")}</span>
       </button>
     </div>
   );
