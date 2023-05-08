@@ -11,16 +11,15 @@ export interface VerseSelectorProps {
 }
 
 export function VerseSelector({ verseId, onVerseChange }: VerseSelectorProps) {
-  const { t, i18n } = useTranslation();
-  const langCode = i18n.language;
+  const { t } = useTranslation(['translation', 'bible']);
   const verseInfo = parseVerseId(verseId);
-  const reference = t('reference_format', { ...verseInfo, bookName: bookName(verseInfo.bookId, langCode) });
+  const reference = t('reference_format', { ...verseInfo, bookName: bookName(verseInfo.bookId, t) });
 
   const onKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key == 'Enter') {
       const newReference = (e.target as HTMLInputElement).value;
       (e.target as HTMLInputElement).value = '';
-      let newVerseId = parseReference(newReference, langCode);
+      let newVerseId = parseReference(newReference, t);
       if (newVerseId == null) {
         // TODO: handle invalid input.
         console.log('UNKNOWN REFERENCE:', newReference);

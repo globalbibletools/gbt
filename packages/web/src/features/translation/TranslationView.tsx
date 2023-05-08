@@ -7,8 +7,8 @@ import apiClient from '../../shared/apiClient';
 import { Icon } from '../../shared/components/Icon';
 import InputHelpText from '../../shared/components/InputHelpText';
 import TextInput from '../../shared/components/TextInput';
-import { parseVerseId } from './verse-utils';
 import { VerseSelector } from './VerseSelector';
+import { parseVerseId } from './verse-utils';
 
 export default function TranslationView() {
   const params = useParams() as { verseId: string };

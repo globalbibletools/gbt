@@ -1,9 +1,15 @@
 // This file contains utility functions related to verse IDs.
 
-import verseCounts from './verse-counts.json';
-import { clamp } from '../../shared/utils';
+import verseCounts from "./verse-counts.json";
+import { clamp } from "../../shared/utils";
+import { TFunction } from "i18next";
+import { bookKeys } from "./book-keys";
 
-export type VerseInfo = { bookId: number, chapterNumber: number, verseNumber: number };
+export type VerseInfo = {
+  bookId: number;
+  chapterNumber: number;
+  verseNumber: number;
+};
 
 /**
  * Count the chapters in a given book of the Bible.
@@ -40,7 +46,6 @@ export function parseVerseId(verseId: string): VerseInfo {
   return { bookId, chapterNumber, verseNumber };
 }
 
-
 /**
  * Generate a verse ID of form BBCCCVVV.
  * BB - `bookId`
@@ -49,12 +54,16 @@ export function parseVerseId(verseId: string): VerseInfo {
  * @param verseInfo An object containing three keys: `bookId`, `chapterNumber`, and `verseNumber`
  * @returns The generate verse ID, in the form BBCCCVVV.
  */
-export function generateVerseId({ bookId, chapterNumber, verseNumber }: VerseInfo) {
+export function generateVerseId({
+  bookId,
+  chapterNumber,
+  verseNumber,
+}: VerseInfo) {
   return [
-    bookId.toString().padStart(2, '0'),
-    chapterNumber.toString().padStart(3, '0'),
-    verseNumber.toString().padStart(3, '0'),
-  ].join('');
+    bookId.toString().padStart(2, "0"),
+    chapterNumber.toString().padStart(3, "0"),
+    verseNumber.toString().padStart(3, "0"),
+  ].join("");
 }
 
 /**
@@ -78,7 +87,7 @@ export function decrementVerseId(verseId: string) {
         bookId = 66;
       }
       // Last chapter of the book.
-      chapterNumber = chapterCount(bookId)
+      chapterNumber = chapterCount(bookId);
     }
     // Last verse of the chapter.
     verseNumber = verseCount(bookId, chapterNumber);
@@ -116,24 +125,24 @@ export function incrementVerseId(verseId: string) {
 /**
  * Get the name of the book in a given language.
  * @param bookId The book to use.
- * @param langCode The language to use.
+ * @param t The i18n translation function to use.
  * @returns The name of the book in the given language.
  */
-export function bookName(bookId: number, langCode: string) {
-  const bookTerms = require(`../../assets/book-terms/${langCode}.json`);
-  return bookTerms[bookId - 1][0];
+export function bookName(bookId: number, t: TFunction) {
+  return t(bookKeys[bookId - 1], { ns: "bible" });
 }
 
 /**
- * Try to parse a verse ID from a reference, in the given language.
+ * Try to parse a verse ID from a reference, using the i18n translation function.
  * @param reference The string that should be parsed. In the form "bookName chapterNumber:verseNumber". Example: "Exo 3:14".
- * @param langCode The language to use.
+ * @param t The i18n translation function to use.
  * @returns The verse ID if it can be determined, otherwise `null`.
  */
-export function parseReference(reference: string, langCode: string): string | null {
-  const bookTerms = require(`../../assets/book-terms/${langCode}.json`);
+export function parseReference(reference: string, t: TFunction): string | null {
   // Parse the reference into three parts.
-  const referenceRegex = /^(.+)\s(\d+):(\d+)$/;
+  const referenceRegex = new RegExp(
+    t("reference_regex", { ns: "translation" }) as string
+  );
   const matches = reference.match(referenceRegex);
   if (matches == null) {
     return null;
@@ -142,8 +151,9 @@ export function parseReference(reference: string, langCode: string): string | nu
   bookStr = bookStr.toLowerCase().trim();
   // Find the book ID.
   let bookId;
-  for (let [i, bookArray] of bookTerms.entries()) {
-    for (let term of bookArray) {
+  for (let i = 0; i < bookKeys.length; i++) {
+    const bookTerms = t(bookKeys[i], { ns: "bible", context: "match" });
+    for (let term of bookTerms) {
       if (term.toLowerCase() == bookStr) {
         bookId = i + 1;
         break;
@@ -156,6 +166,10 @@ export function parseReference(reference: string, langCode: string): string | nu
   // Coerce the chapter number to be valid.
   const chapterNumber = clamp(parseInt(chapterStr), 1, chapterCount(bookId));
   // Coerce the verse number to be valid.
-  const verseNumber = clamp(parseInt(verseStr), 1, verseCount(bookId, chapterNumber));
+  const verseNumber = clamp(
+    parseInt(verseStr),
+    1,
+    verseCount(bookId, chapterNumber)
+  );
   return generateVerseId({ bookId, chapterNumber, verseNumber });
 }

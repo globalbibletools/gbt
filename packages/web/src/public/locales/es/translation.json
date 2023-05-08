@@ -12,6 +12,7 @@
   "name": "nombre",
   "code": "código",
   "reference_format": "{{bookName}} {{chapterNumber}}:{{verseNumber}}",
+  "reference_regex": "/^(.+)\\s(\\d+):(\\d+)$/",
   "previous_verse": "Verso anterior",
   "next_verse": "Siguiente verso"
 }
