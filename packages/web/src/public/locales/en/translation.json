@@ -11,5 +11,7 @@
   "create": "Create",
   "name": "name",
   "code": "code",
-  "reference_format": "{{bookName}} {{chapterNumber}}:{{verseNumber}}"
+  "reference_format": "{{bookName}} {{chapterNumber}}:{{verseNumber}}",
+  "previous_verse": "Previous Verse",
+  "next_verse": "Next Verse"
 }

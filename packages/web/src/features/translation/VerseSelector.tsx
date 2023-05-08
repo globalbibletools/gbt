@@ -35,9 +35,11 @@ export function VerseSelector({ verseId, onVerseChange }: VerseSelectorProps) {
       <TextInput autoComplete="off" placeholder={reference} onKeyDown={onKeyDown} />
       <button onClick={() => onVerseChange(decrementVerseId(verseId))}>
         <Icon icon="arrow-left" />
+        <span className="sr-only">{t('previous_verse')}</span>
       </button>
       <button onClick={() => onVerseChange(incrementVerseId(verseId))}>
         <Icon icon="arrow-right" />
+        <span className="sr-only">{t('next_verse')}</span>
       </button>
     </div>
   );
