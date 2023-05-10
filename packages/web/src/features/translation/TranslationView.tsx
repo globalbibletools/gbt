@@ -6,7 +6,6 @@ import { useState } from 'react';
 import { GetVerseGlossesResponseBody } from '@translation/api-types';
 import TranslateWord from './TranslateWord';
 
-// TODO: load list of glosses for a form and show in dropdown.
 export default function TranslationView() {
   const params = useParams() as { verseId: string };
   const { language } = useLayoutContext();

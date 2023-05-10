@@ -13,14 +13,14 @@ export interface TypeaheadInputProps {
   value?: string;
   labelId?: string;
   items: TypeaheadInputItem[];
-  onSelect(value?: string): void;
+  onChange(value?: string): void;
 }
 
 export default function TypeaheadInput({
   className = '',
   items,
   value,
-  onSelect,
+  onChange,
 }: TypeaheadInputProps) {
   const [filteredItems, setFilteredItems] =
     useState<TypeaheadInputItem[]>(items);
@@ -34,8 +34,10 @@ export default function TypeaheadInput({
     getItemProps,
     selectedItem,
     selectItem,
+    setHighlightedIndex,
   } = useCombobox({
     onInputValueChange({ inputValue }) {
+      // If none of the items matches the input value exactly, then we want to give the option of creating a new item.
       if (inputValue) {
         const filteredItems = items.filter((item) =>
           item.label.includes(inputValue)
@@ -56,15 +58,24 @@ export default function TypeaheadInput({
     itemToString(item) {
       return item?.label ?? '';
     },
-    onSelectedItemChange(changes) {
-      onSelect(
-        changes.selectedItem?.value === '_create'
-          ? changes.selectedItem.label
-          : changes.selectedItem?.value
+    onSelectedItemChange({ selectedItem }) {
+      onChange(
+        selectedItem?.value === '_create'
+          ? selectedItem.label
+          : selectedItem?.value
       );
     },
   });
 
+  // In order to make this smooth, we want to make sure an item is always highlighted
+  // so you can immediately tab out of the control to select a new value.
+  useEffect(() => {
+    if (highlightedIndex < 0) {
+      setHighlightedIndex(0);
+    }
+  }, [highlightedIndex, setHighlightedIndex]);
+
+  // We need to keep the state of the dropdown in sync with the value prop.
   useEffect(() => {
     selectItem(items.find((item) => item.value === value) ?? null);
   }, [value, selectItem, items]);

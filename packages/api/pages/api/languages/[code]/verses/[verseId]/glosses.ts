@@ -58,8 +58,10 @@ export default createRoute<{ code: string; verseId: string }>()
           res.ok({
             data: verse.words.map((word, i) => ({
               wordId: word.id,
-              approvedGloss: word.glosses[0]?.gloss ?? '',
-              glosses: glosses[i].map((doc) => doc.gloss),
+              approvedGloss: word.glosses[0]?.gloss ?? undefined,
+              glosses: glosses[i]
+                .map((doc) => doc.gloss)
+                .filter((gloss): gloss is string => !!gloss),
             })),
           });
           return;
