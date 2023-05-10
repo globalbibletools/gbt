@@ -10,5 +10,8 @@
   "update": "Actualizar",
   "create": "Crear",
   "name": "nombre",
-  "code": "código"
+  "code": "código",
+  "select_verse": "Seleccionar verso",
+  "previous_verse": "Verso anterior",
+  "next_verse": "Siguiente verso"
 }
