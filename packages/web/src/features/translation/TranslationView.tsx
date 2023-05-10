@@ -43,7 +43,15 @@ export default function TranslationView() {
           const index = glosses.findIndex((g) => g.wordId === wordId);
           if (index >= 0) {
             const doc = glosses[index];
-            glosses.splice(index, 1, { ...doc, approvedGloss: gloss });
+            glosses.splice(index, 1, {
+              ...doc,
+              approvedGloss: gloss,
+              glosses: gloss
+                ? doc.glosses.includes(gloss)
+                  ? doc.glosses
+                  : [...doc.glosses, gloss]
+                : doc.glosses,
+            });
             return {
               data: glosses,
             };

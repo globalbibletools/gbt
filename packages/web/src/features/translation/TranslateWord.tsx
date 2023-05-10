@@ -12,6 +12,8 @@ export interface TranslateWordProps {
   onGlossChange(gloss?: string): void;
 }
 
+// TODO: replace empty string with undefined
+// TODO: ignore empty glosses in dropdown list
 export default function TranslateWord({
   word,
   originalLanguage,
@@ -32,13 +34,12 @@ export default function TranslateWord({
         {word.text}
       </div>
       <div className="mb-2">{referenceGloss}</div>
-      <TypeaheadInput<string, string>
+      <TypeaheadInput
         value={gloss}
         labelId={`word-${word.id}`}
-        items={previousGlosses}
-        toValue={(item) => item}
+        items={previousGlosses.map((gloss) => ({ label: gloss, value: gloss }))}
         aria-describedby={`word-help-${word.id}`}
-        onChange={(newGloss) => {
+        onSelect={(newGloss) => {
           if (newGloss !== gloss) {
             onGlossChange(newGloss);
           }

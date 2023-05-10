@@ -1,33 +1,30 @@
-import { ReactNode, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useCombobox } from 'downshift';
 import TextInput from './TextInput';
 import { Icon } from './Icon';
 
-export interface TypeaheadInputProps<Item, Value> {
-  className?: string;
-  value?: Value;
-  labelId?: string;
-  items: Item[];
-  toValue(item: Item): Value;
-  renderItem?(item: Item): ReactNode;
-  filter?(input: string | undefined, item: Item): boolean;
-  onChange(value?: Value): void;
+export interface TypeaheadInputItem {
+  label: string;
+  value: string;
 }
 
-// TODO: no items state.
-export default function TypeaheadInput<
-  Item extends { toString(): string },
-  Value
->({
+export interface TypeaheadInputProps {
+  className?: string;
+  value?: string;
+  labelId?: string;
+  items: TypeaheadInputItem[];
+  onSelect(value?: string): void;
+}
+
+export default function TypeaheadInput({
   className = '',
   items,
-  toValue,
-  filter = () => true,
-  renderItem = (item) => item.toString(),
   value,
-  onChange,
-}: TypeaheadInputProps<Item, Value>) {
-  const [filteredItems, setFilteredItems] = useState(items);
+  onSelect,
+}: TypeaheadInputProps) {
+  const [filteredItems, setFilteredItems] =
+    useState<TypeaheadInputItem[]>(items);
+
   const {
     isOpen,
     getToggleButtonProps,
@@ -39,19 +36,38 @@ export default function TypeaheadInput<
     selectItem,
   } = useCombobox({
     onInputValueChange({ inputValue }) {
-      setFilteredItems(items.filter((item) => filter(inputValue, item)));
+      if (inputValue) {
+        const filteredItems = items.filter((item) =>
+          item.label.includes(inputValue)
+        );
+        if (filteredItems.every((item) => item.label !== inputValue)) {
+          setFilteredItems([
+            { value: '_create', label: inputValue },
+            ...filteredItems,
+          ]);
+        } else {
+          setFilteredItems(items);
+        }
+      } else {
+        setFilteredItems(items);
+      }
     },
     items: filteredItems,
+    itemToString(item) {
+      return item?.label ?? '';
+    },
     onSelectedItemChange(changes) {
-      onChange(
-        changes.selectedItem ? toValue(changes.selectedItem) : undefined
+      onSelect(
+        changes.selectedItem?.value === '_create'
+          ? changes.selectedItem.label
+          : changes.selectedItem?.value
       );
     },
   });
 
   useEffect(() => {
-    selectItem(items.find((item) => toValue(item) === value) ?? null);
-  }, [value, selectItem, toValue, items]);
+    selectItem(items.find((item) => item.value === value) ?? null);
+  }, [value, selectItem, items]);
 
   return (
     <div className={`relative ${className}`}>
@@ -77,18 +93,24 @@ export default function TypeaheadInput<
       >
         {isOpen &&
           filteredItems.map((item, index) => {
-            const itemValue = toValue(item);
             return (
               <li
                 className={`
-                ${highlightedIndex === index ? 'bg-blue-300' : ''}
-                ${selectedItem === item ? 'font-bold' : ''}
-                py-2 px-3
-              `}
-                key={`${itemValue}${index}`}
+                    ${highlightedIndex === index ? 'bg-blue-300' : ''}
+                    ${selectedItem === item ? 'font-bold' : ''}
+                    py-2 px-3
+                  `}
+                key={`${item.value}-${index}`}
                 {...getItemProps({ item, index })}
               >
-                {renderItem(item)}
+                {item.value === '_create' ? (
+                  <>
+                    <Icon icon="add" /> "
+                    <span className="italic">{item.label}</span>"
+                  </>
+                ) : (
+                  item.label
+                )}
               </li>
             );
           })}
