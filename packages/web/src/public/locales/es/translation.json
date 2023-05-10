@@ -11,8 +11,7 @@
   "create": "Crear",
   "name": "nombre",
   "code": "código",
-  "reference_format": "{{bookName}} {{chapterNumber}}:{{verseNumber}}",
-  "reference_regex": "/^(.+)\\s(\\d+):(\\d+)$/",
+  "select_verse": "Seleccionar verso",
   "previous_verse": "Verso anterior",
   "next_verse": "Siguiente verso"
 }

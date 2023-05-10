@@ -1,9 +1,9 @@
 // This file contains utility functions related to verse IDs.
 
-import verseCounts from "./verse-counts.json";
-import { clamp } from "../../shared/utils";
-import { TFunction } from "i18next";
-import { bookKeys } from "./book-keys";
+import verseCounts from './verse-counts.json';
+import { clamp } from '../../shared/utils';
+import { TFunction } from 'i18next';
+import { bookKeys } from './book-keys';
 
 export type VerseInfo = {
   bookId: number;
@@ -60,10 +60,10 @@ export function generateVerseId({
   verseNumber,
 }: VerseInfo) {
   return [
-    bookId.toString().padStart(2, "0"),
-    chapterNumber.toString().padStart(3, "0"),
-    verseNumber.toString().padStart(3, "0"),
-  ].join("");
+    bookId.toString().padStart(2, '0'),
+    chapterNumber.toString().padStart(3, '0'),
+    verseNumber.toString().padStart(3, '0'),
+  ].join('');
 }
 
 /**
@@ -129,7 +129,7 @@ export function incrementVerseId(verseId: string) {
  * @returns The translated name of the book.
  */
 export function bookName(bookId: number, t: TFunction) {
-  return t(bookKeys[bookId - 1], { ns: "bible" });
+  return t(bookKeys[bookId - 1], { ns: 'bible' });
 }
 
 /**
@@ -141,7 +141,7 @@ export function bookName(bookId: number, t: TFunction) {
 export function parseReference(reference: string, t: TFunction): string | null {
   // Parse the reference into three parts.
   const referenceRegex = new RegExp(
-    t("reference_regex", { ns: "translation" }) as string
+    t('reference_regex', { ns: 'bible' }) as string
   );
   const matches = reference.match(referenceRegex);
   if (matches == null) {
@@ -152,7 +152,7 @@ export function parseReference(reference: string, t: TFunction): string | null {
   // Find the book ID.
   let bookId;
   for (let i = 0; i < bookKeys.length; i++) {
-    const bookTerms = t(bookKeys[i], { ns: "bible", context: "match" });
+    const bookTerms = t(bookKeys[i], { ns: 'bible', context: 'match' });
     for (let term of bookTerms) {
       if (term.toLowerCase() == bookStr) {
         bookId = i + 1;
@@ -181,8 +181,9 @@ export function parseReference(reference: string, t: TFunction): string | null {
  * @returns The human-readable Bible reference.
  */
 export function generateReference(verseInfo: VerseInfo, t: TFunction) {
-  return t("reference_format", {
+  return t('reference_format', {
     ...verseInfo,
     bookName: bookName(verseInfo.bookId, t),
+    ns: 'bible',
   });
 }

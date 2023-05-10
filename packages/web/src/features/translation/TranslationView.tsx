@@ -79,67 +79,67 @@ export default function TranslationView() {
 
   const isHebrew = bookId < 40;
   return (
-    <div className="px-4">
-      <div className='flex flex-col gap-2'>
-        <VerseSelector
-          verseId={verse.id}
-          onVerseChange={(verseId) => navigate('../translate/' + verseId)} />
-        <ol className={`flex flex-wrap ${isHebrew ? 'flex-row-reverse' : ''}`}>
-          {verse.words.map((word, i) => {
-            const targetGloss = targetGlosses[i]?.gloss;
-            const isSaving = glossRequests.some(
-              ({ wordId }) => wordId === word.id
-            );
+    <div className="px-4 flex flex-col gap-2">
+      <VerseSelector
+        verseId={verse.id}
+        onVerseChange={(verseId) => navigate('../translate/' + verseId)}
+      />
+      <ol className={`flex flex-wrap ${isHebrew ? 'flex-row-reverse' : ''}`}>
+        {verse.words.map((word, i) => {
+          const targetGloss = targetGlosses[i]?.gloss;
+          const isSaving = glossRequests.some(
+            ({ wordId }) => wordId === word.id
+          );
 
-            return (
-              <li key={word.id} className="mx-2 mb-4 w-36">
-                <div
-                  className={`font-serif mb-2 ${isHebrew ? 'text-2xl text-right' : 'text-lg'
-                    }`}
-                >
-                  {word.text}
-                </div>
-                <div className="mb-2">{referenceGlosses[i]?.gloss}</div>
-                <TextInput
-                  className="w-full"
-                  defaultValue={targetGloss}
-                  aria-describedby={`word-help-${word.id}`}
-                  onBlur={async (e) => {
-                    const newGloss = e.currentTarget.value;
-                    if (newGloss !== targetGloss) {
-                      glossMutation.mutate({
-                        wordId: word.id,
-                        gloss: newGloss,
-                      });
-                    }
-                  }}
-                />
-                <InputHelpText id={`word-help-${word.id}`}>
-                  {(() => {
-                    if (isSaving) {
-                      return (
-                        <>
-                          <Icon icon="arrows-rotate" className="mr-1" />
-                          Saving...
-                        </>
-                      );
-                    } else if (targetGloss) {
-                      return (
-                        <>
-                          <Icon icon="check" className="mr-1" />
-                          Saved
-                        </>
-                      );
-                    } else {
-                      return null;
-                    }
-                  })()}
-                </InputHelpText>
-              </li>
-            );
-          })}
-        </ol>
-      </div>
+          return (
+            <li key={word.id} className="mx-2 mb-4 w-36">
+              <div
+                className={`font-serif mb-2 ${
+                  isHebrew ? 'text-2xl text-right' : 'text-lg'
+                }`}
+              >
+                {word.text}
+              </div>
+              <div className="mb-2">{referenceGlosses[i]?.gloss}</div>
+              <TextInput
+                className="w-full"
+                defaultValue={targetGloss}
+                aria-describedby={`word-help-${word.id}`}
+                onBlur={async (e) => {
+                  const newGloss = e.currentTarget.value;
+                  if (newGloss !== targetGloss) {
+                    glossMutation.mutate({
+                      wordId: word.id,
+                      gloss: newGloss,
+                    });
+                  }
+                }}
+              />
+              <InputHelpText id={`word-help-${word.id}`}>
+                {(() => {
+                  if (isSaving) {
+                    return (
+                      <>
+                        <Icon icon="arrows-rotate" className="mr-1" />
+                        Saving...
+                      </>
+                    );
+                  } else if (targetGloss) {
+                    return (
+                      <>
+                        <Icon icon="check" className="mr-1" />
+                        Saved
+                      </>
+                    );
+                  } else {
+                    return null;
+                  }
+                })()}
+              </InputHelpText>
+            </li>
+          );
+        })}
+      </ol>
     </div>
   );
 }

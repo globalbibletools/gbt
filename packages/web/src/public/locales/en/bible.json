@@ -1,4 +1,6 @@
 {
+  "reference_format": "{{bookName}} {{chapterNumber}}:{{verseNumber}}",
+  "reference_regex": "^(.+)\\s(\\d+):(\\d+)$",
   "gen": "Genesis",
   "gen_short": "Gen",
   "gen_match": ["Genesis", "Gen", "Gn"],
