@@ -26,6 +26,7 @@ export default function TypeaheadInput({
     useState<TypeaheadInputItem[]>(items);
 
   const {
+    inputValue,
     isOpen,
     getToggleButtonProps,
     getMenuProps,
@@ -36,24 +37,6 @@ export default function TypeaheadInput({
     selectItem,
     setHighlightedIndex,
   } = useCombobox({
-    onInputValueChange({ inputValue }) {
-      // If none of the items matches the input value exactly, then we want to give the option of creating a new item.
-      if (inputValue) {
-        const filteredItems = items.filter((item) =>
-          item.label.includes(inputValue)
-        );
-        if (filteredItems.every((item) => item.label !== inputValue)) {
-          setFilteredItems([
-            { value: '_create', label: inputValue },
-            ...filteredItems,
-          ]);
-        } else {
-          setFilteredItems(items);
-        }
-      } else {
-        setFilteredItems(items);
-      }
-    },
     items: filteredItems,
     itemToString(item) {
       return item?.label ?? '';
@@ -66,6 +49,26 @@ export default function TypeaheadInput({
       );
     },
   });
+
+  // If none of the items matches the input value exactly,
+  // then we want to give the option of creating a new item.
+  useEffect(() => {
+    if (inputValue) {
+      const filteredItems = items.filter((item) =>
+        item.label.includes(inputValue)
+      );
+      if (filteredItems.every((item) => item.label !== inputValue)) {
+        setFilteredItems([
+          { value: '_create', label: inputValue },
+          ...filteredItems,
+        ]);
+      } else {
+        setFilteredItems(items);
+      }
+    } else {
+      setFilteredItems(items);
+    }
+  }, [items, inputValue]);
 
   // In order to make this smooth, we want to make sure an item is always highlighted
   // so you can immediately tab out of the control to select a new value.

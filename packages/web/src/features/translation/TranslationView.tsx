@@ -63,14 +63,16 @@ export default function TranslationView() {
     },
     onError: (_, __, context) => {
       queryClient.setQueryData(
-        ['verse-glosses', 'language', params.verseId],
+        ['verse-glosses', language, params.verseId],
         context?.previousGlosses
       );
 
       alert('Unknown error occurred.');
     },
     onSettled: (_, __, ___, context) => {
-      queryClient.invalidateQueries({ queryKey: ['verse-glosses'] });
+      queryClient.invalidateQueries({
+        queryKey: ['verse-glosses', language, params.verseId],
+      });
 
       if (context?.requestId) {
         setGlossRequests((requests) =>
