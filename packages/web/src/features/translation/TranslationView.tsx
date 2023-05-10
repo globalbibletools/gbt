@@ -1,13 +1,16 @@
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import apiClient from '../../shared/apiClient';
 import { useLayoutContext } from '../../app/Layout';
 import { useState } from 'react';
 import { GetVerseGlossesResponseBody } from '@translation/api-types';
 import TranslateWord from './TranslateWord';
+import { VerseSelector } from './VerseSelector';
+import { parseVerseId } from './verse-utils';
 
 export default function TranslationView() {
   const params = useParams() as { verseId: string };
+  const navigate = useNavigate();
   const { language } = useLayoutContext();
 
   const verseQuery = useQuery(['verse', params.verseId], () =>
@@ -94,11 +97,15 @@ export default function TranslationView() {
   const referenceGlosses = referenceGlossesQuery.data.data;
   const targetGlosses = targetGlossesQuery.data.data;
 
-  const bookId = parseInt(verse.id.slice(0, 2));
-  const isHebrew = bookId < 40;
+  const { bookId } = parseVerseId(verse.id);
 
+  const isHebrew = bookId < 40;
   return (
-    <div className="px-4">
+    <div className="px-4 flex flex-col gap-2">
+      <VerseSelector
+        verseId={verse.id}
+        onVerseChange={(verseId) => navigate('../translate/' + verseId)}
+      />
       <ol className={`flex flex-wrap ${isHebrew ? 'flex-row-reverse' : ''}`}>
         {verse.words.map((word, i) => {
           const targetGloss = targetGlosses[i]?.approvedGloss;

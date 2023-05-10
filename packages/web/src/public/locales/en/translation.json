@@ -10,5 +10,8 @@
   "update": "Update",
   "create": "Create",
   "name": "name",
-  "code": "code"
+  "code": "code",
+  "select_verse": "Select verse",
+  "previous_verse": "Previous Verse",
+  "next_verse": "Next Verse"
 }
