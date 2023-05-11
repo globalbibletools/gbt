@@ -34,10 +34,15 @@ export default function TranslateWord({
       <div className="mb-2">{referenceGloss}</div>
       <TypeaheadInput
         value={gloss}
-        labelId={`word-${word.id}`}
         items={previousGlosses.map((gloss) => ({ label: gloss, value: gloss }))}
         aria-describedby={`word-help-${word.id}`}
+        aria-labelledby={`word-${word.id}`}
         onChange={(newGloss) => {
+          if (newGloss !== gloss) {
+            onGlossChange(newGloss);
+          }
+        }}
+        onCreate={(newGloss) => {
           if (newGloss !== gloss) {
             onGlossChange(newGloss);
           }

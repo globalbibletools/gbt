@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { ComponentProps, useEffect, useState } from 'react';
 import { useCombobox } from 'downshift';
 import TextInput from './TextInput';
 import { Icon } from './Icon';
@@ -8,19 +8,30 @@ export interface TypeaheadInputItem {
   value: string;
 }
 
-export interface TypeaheadInputProps {
-  className?: string;
+export interface TypeaheadInputProps
+  extends Omit<ComponentProps<'input'>, 'value' | 'onChange'> {
   value?: string;
-  labelId?: string;
   items: TypeaheadInputItem[];
   onChange(value?: string): void;
+  onCreate?(text?: string): void;
 }
 
+/**
+ * Text input with autocomplete suggestions.
+ *
+ * Suggestions have the shape of `{ label: string; value: string; }`.
+ * When an item is selected, its value will be passed to the `onChange` event.
+ *
+ * To support the creation of new items, attach the `onCreate` event.
+ * The text value will be passed to the event.
+ */
 export default function TypeaheadInput({
   className = '',
   items,
   value,
   onChange,
+  onCreate,
+  ...props
 }: TypeaheadInputProps) {
   const [filteredItems, setFilteredItems] =
     useState<TypeaheadInputItem[]>(items);
@@ -42,11 +53,11 @@ export default function TypeaheadInput({
       return item?.label ?? '';
     },
     onSelectedItemChange({ selectedItem }) {
-      onChange(
-        selectedItem?.value === '_create'
-          ? selectedItem.label
-          : selectedItem?.value
-      );
+      if (selectedItem?.value === '_create') {
+        onCreate?.(selectedItem.label);
+      } else {
+        onChange(selectedItem?.value);
+      }
     },
   });
 
@@ -57,7 +68,10 @@ export default function TypeaheadInput({
       const filteredItems = items.filter((item) =>
         item.label.includes(inputValue)
       );
-      if (filteredItems.every((item) => item.label !== inputValue)) {
+      if (
+        filteredItems.every((item) => item.label !== inputValue) &&
+        !!onCreate
+      ) {
         setFilteredItems([
           { value: '_create', label: inputValue },
           ...filteredItems,
@@ -68,7 +82,7 @@ export default function TypeaheadInput({
     } else {
       setFilteredItems(items);
     }
-  }, [items, inputValue]);
+  }, [items, inputValue, onCreate]);
 
   // In order to make this smooth, we want to make sure an item is always highlighted
   // so you can immediately tab out of the control to select a new value.
@@ -86,8 +100,9 @@ export default function TypeaheadInput({
   return (
     <div className={`relative ${className}`}>
       <TextInput
-        className={`w-full pr-10 ${isOpen ? 'rounded-b-none' : ''}`}
+        {...props}
         {...getInputProps()}
+        className={`w-full pr-10 ${isOpen ? 'rounded-b-none' : ''}`}
       />
       <button
         aria-label="toggle menu"
