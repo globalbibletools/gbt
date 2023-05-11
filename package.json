@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "postinstall": "nx run-many --target=prisma-generate --all"
+    "postinstall": "nx run-many --target=prisma-generate --all",
+    "prepare": "husky install"
   },
   "private": true,
   "dependencies": {
@@ -46,6 +47,7 @@
     "eslint-plugin-jsx-a11y": "6.6.1",
     "eslint-plugin-react": "7.31.11",
     "eslint-plugin-react-hooks": "4.6.0",
+    "husky": "^8.0.3",
     "i18next": "22.4.13",
     "i18next-browser-languagedetector": "7.0.1",
     "i18next-http-backend": "2.2.0",
