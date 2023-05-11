@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 
 /**
- * Generates a ID to use in generic components with a reasonable gauarantee of uniqueness.
+ * Generates a ID to use in generic components with a reasonable guarantee of uniqueness.
  * This ID can also be used as a prefix for the IDs of elements within the component.
  * @param scope The prefix to add to the ID for readability.
  * @returns A string in the form `scope-a2fc23`
