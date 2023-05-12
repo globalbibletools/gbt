@@ -33,10 +33,35 @@ export default createRoute<{ code: string; verseId: string }>()
         });
 
         if (verse) {
+          const glosses = await Promise.all(
+            verse.words.map(async (word) =>
+              client.gloss.groupBy({
+                by: ['gloss'],
+                where: {
+                  word: {
+                    formId: word.formId,
+                  },
+                  languageId: language.id,
+                },
+                _count: {
+                  gloss: true,
+                },
+                orderBy: {
+                  _count: {
+                    gloss: Prisma.SortOrder.desc,
+                  },
+                },
+              })
+            )
+          );
+
           res.ok({
-            data: verse.words.map((word) => ({
+            data: verse.words.map((word, i) => ({
               wordId: word.id,
-              gloss: word.glosses[0]?.gloss ?? '',
+              approvedGloss: word.glosses[0]?.gloss ?? undefined,
+              glosses: glosses[i]
+                .map((doc) => doc.gloss)
+                .filter((gloss): gloss is string => !!gloss),
             })),
           });
           return;

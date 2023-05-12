@@ -11,8 +11,8 @@ library.add(
   FaSolid.faUser,
   FaSolid.faClose,
   FaSolid.faPlus,
-  FaSolid.faArrowLeft,
-  FaSolid.faArrowRight,
   FaSolid.faCheck,
-  FaSolid.faArrowsRotate
+  FaSolid.faArrowsRotate,
+  FaSolid.faArrowLeft,
+  FaSolid.faArrowRight
 );

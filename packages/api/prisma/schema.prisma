@@ -124,7 +124,7 @@ model Gloss {
   /// The ID of the language of the gloss.
   languageId String   @db.Uuid
   /// The text of the gloss.
-  gloss      String
+  gloss      String?
 
   @@id([wordId, languageId])
 }

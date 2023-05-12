@@ -1,19 +1,17 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { GetVerseGlossesResponseBody } from '@translation/api-types';
-import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useLayoutContext } from '../../app/Layout';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import apiClient from '../../shared/apiClient';
-import { Icon } from '../../shared/components/Icon';
-import InputHelpText from '../../shared/components/InputHelpText';
-import TextInput from '../../shared/components/TextInput';
+import { useLayoutContext } from '../../app/Layout';
+import { useState } from 'react';
+import { GetVerseGlossesResponseBody } from '@translation/api-types';
+import TranslateWord from './TranslateWord';
 import { VerseSelector } from './VerseSelector';
 import { parseVerseId } from './verse-utils';
 
 export default function TranslationView() {
   const params = useParams() as { verseId: string };
-  const { language } = useLayoutContext();
   const navigate = useNavigate();
+  const { language } = useLayoutContext();
 
   const verseQuery = useQuery(['verse', params.verseId], () =>
     apiClient.verses.findById(params.verseId)
@@ -32,33 +30,57 @@ export default function TranslationView() {
   >([]);
   const queryClient = useQueryClient();
   const glossMutation = useMutation({
-    mutationFn: (variables: { wordId: string; gloss: string }) =>
+    mutationFn: (variables: { wordId: string; gloss?: string }) =>
       apiClient.words.updateGloss(variables.wordId, language, variables.gloss),
-    onMutate: ({ wordId }) => {
+    onMutate: async ({ wordId, gloss }) => {
       const requestId = Math.floor(Math.random() * 1000000);
       setGlossRequests((requests) => [...requests, { wordId, requestId }]);
-      return { requestId };
+
+      const queryKey = ['verse-glosses', language, params.verseId];
+      await queryClient.cancelQueries({ queryKey });
+      const previousGlosses = queryClient.getQueryData(queryKey);
+      queryClient.setQueryData<GetVerseGlossesResponseBody>(queryKey, (old) => {
+        if (old) {
+          const glosses = old.data.slice();
+          const index = glosses.findIndex((g) => g.wordId === wordId);
+          if (index >= 0) {
+            const doc = glosses[index];
+            glosses.splice(index, 1, {
+              ...doc,
+              approvedGloss: gloss,
+              glosses: gloss
+                ? doc.glosses.includes(gloss)
+                  ? doc.glosses
+                  : [...doc.glosses, gloss]
+                : doc.glosses,
+            });
+            return {
+              data: glosses,
+            };
+          }
+        }
+        return old;
+      });
+
+      return { requestId, previousGlosses };
     },
-    onError: () => {
+    onError: (_, __, context) => {
+      queryClient.setQueryData(
+        ['verse-glosses', language, params.verseId],
+        context?.previousGlosses
+      );
+
       alert('Unknown error occurred.');
     },
-    onSuccess: (_, { wordId, gloss }, context) => {
+    onSettled: (_, __, ___, context) => {
+      queryClient.invalidateQueries({
+        queryKey: ['verse-glosses', language, params.verseId],
+      });
+
       if (context?.requestId) {
         setGlossRequests((requests) =>
           requests.filter((r) => r.requestId !== context.requestId)
         );
-      }
-
-      const queryKey = ['verse-glosses', language, params.verseId];
-      const query =
-        queryClient.getQueryData<GetVerseGlossesResponseBody>(queryKey);
-      if (query) {
-        const glosses = query.data.slice();
-        const index = glosses.findIndex((g) => g.wordId === wordId);
-        glosses.splice(index, 1, { wordId, gloss });
-        queryClient.setQueryData<GetVerseGlossesResponseBody>(queryKey, {
-          data: glosses,
-        });
       }
     },
   });
@@ -90,57 +112,27 @@ export default function TranslationView() {
       />
       <ol className={`flex flex-wrap ${isHebrew ? 'flex-row-reverse' : ''}`}>
         {verse.words.map((word, i) => {
-          const targetGloss = targetGlosses[i]?.gloss;
+          const targetGloss = targetGlosses[i]?.approvedGloss;
           const isSaving = glossRequests.some(
             ({ wordId }) => wordId === word.id
           );
 
           return (
-            <li key={word.id} className="mx-2 mb-4 w-36">
-              <div
-                className={`font-serif mb-2 ${
-                  isHebrew ? 'text-2xl text-right' : 'text-lg'
-                }`}
-              >
-                {word.text}
-              </div>
-              <div className="mb-2">{referenceGlosses[i]?.gloss}</div>
-              <TextInput
-                className="w-full"
-                defaultValue={targetGloss}
-                aria-describedby={`word-help-${word.id}`}
-                onBlur={async (e) => {
-                  const newGloss = e.currentTarget.value;
-                  if (newGloss !== targetGloss) {
-                    glossMutation.mutate({
-                      wordId: word.id,
-                      gloss: newGloss,
-                    });
-                  }
-                }}
-              />
-              <InputHelpText id={`word-help-${word.id}`}>
-                {(() => {
-                  if (isSaving) {
-                    return (
-                      <>
-                        <Icon icon="arrows-rotate" className="mr-1" />
-                        Saving...
-                      </>
-                    );
-                  } else if (targetGloss) {
-                    return (
-                      <>
-                        <Icon icon="check" className="mr-1" />
-                        Saved
-                      </>
-                    );
-                  } else {
-                    return null;
-                  }
-                })()}
-              </InputHelpText>
-            </li>
+            <TranslateWord
+              key={word.id}
+              word={word}
+              originalLanguage={isHebrew ? 'hebrew' : 'greek'}
+              status={isSaving ? 'saving' : targetGloss ? 'saved' : 'empty'}
+              gloss={targetGloss}
+              referenceGloss={referenceGlosses[i]?.approvedGloss}
+              previousGlosses={targetGlosses[i]?.glosses}
+              onGlossChange={(newGloss) => {
+                glossMutation.mutate({
+                  wordId: word.id,
+                  gloss: newGloss,
+                });
+              }}
+            />
           );
         })}
       </ol>

@@ -40,7 +40,8 @@ export interface GetVerseResponseBody {
 
 export interface Gloss {
   wordId: string;
-  gloss: string;
+  approvedGloss?: string;
+  glosses: string[];
 }
 
 export interface GetVerseGlossesResponseBody {
@@ -48,5 +49,5 @@ export interface GetVerseGlossesResponseBody {
 }
 
 export interface PatchWordGlossRequestBody {
-  gloss: string;
+  gloss?: string;
 }
