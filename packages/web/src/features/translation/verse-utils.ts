@@ -147,13 +147,14 @@ export function parseReference(reference: string, t: TFunction): string | null {
   if (matches == null) {
     return null;
   }
-  let [, bookStr, chapterStr, verseStr] = matches;
+  const [, , chapterStr, verseStr] = matches;
+  let bookStr = matches[1];
   bookStr = bookStr.toLowerCase().trim();
   // Find the book ID.
   let bookId;
   for (let i = 0; i < bookKeys.length; i++) {
     const bookTerms = t(bookKeys[i], { ns: 'bible', context: 'match' });
-    for (let term of bookTerms) {
+    for (const term of bookTerms) {
       if (term.toLowerCase() == bookStr) {
         bookId = i + 1;
         break;
