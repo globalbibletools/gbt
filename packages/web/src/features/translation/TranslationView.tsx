@@ -68,7 +68,11 @@ export default function TranslationView() {
     !referenceGlossesQuery.isSuccess ||
     !targetGlossesQuery.isSuccess;
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex justify-center">
+        <span>Loading...</span>
+      </div>
+    );
   }
 
   const verse = verseQuery.data.data;

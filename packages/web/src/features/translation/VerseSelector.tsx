@@ -23,7 +23,7 @@ export function VerseSelector({ verseId, onVerseChange }: VerseSelectorProps) {
     if (e.key == 'Enter') {
       const newReference = e.currentTarget.value;
       e.currentTarget.value = '';
-      let newVerseId = parseReference(newReference, t);
+      const newVerseId = parseReference(newReference, t);
       if (newVerseId == null) {
         // TODO: handle invalid input.
         console.log('UNKNOWN REFERENCE:', newReference);
