@@ -1,0 +1,6 @@
+post:
+  summary: Logout
+  responses:
+    204:
+      description: No Content
+      

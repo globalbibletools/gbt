@@ -8,6 +8,10 @@ info:
 servers:
   - url: /api
 paths:
+  /login:
+    $ref: ./paths/login.yml
+  /logout:
+    $ref: ./paths/logout.yml
   /verses/{verseId}:
     $ref: ./paths/verse.yml
   /languages:
