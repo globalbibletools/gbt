@@ -3,15 +3,15 @@ import { useCombobox } from 'downshift';
 import TextInput from './TextInput';
 import { Icon } from './Icon';
 
-export interface TypeaheadInputItem {
+export interface AutocompleteItem {
   label: string;
   value: string;
 }
 
-export interface TypeaheadInputProps
+export interface AutocompleteInputProps
   extends Omit<ComponentProps<'input'>, 'value' | 'onChange'> {
   value?: string;
-  items: TypeaheadInputItem[];
+  items: AutocompleteItem[];
   onChange(value?: string): void;
   onCreate?(text?: string): void;
 }
@@ -25,16 +25,15 @@ export interface TypeaheadInputProps
  * To support the creation of new items, attach the `onCreate` event.
  * The text value will be passed to the event.
  */
-export default function TypeaheadInput({
+export default function AutocompleteInput({
   className = '',
   items,
   value,
   onChange,
   onCreate,
   ...props
-}: TypeaheadInputProps) {
-  const [filteredItems, setFilteredItems] =
-    useState<TypeaheadInputItem[]>(items);
+}: AutocompleteInputProps) {
+  const [filteredItems, setFilteredItems] = useState<AutocompleteItem[]>(items);
 
   const {
     inputValue,
@@ -114,8 +113,8 @@ export default function TypeaheadInput({
       </button>
       <ul
         className={`
-          absolute w-full bg-white shadow-md max-h-80 overflow-scroll p-0
-          border-slate-300 border border-t-0 rounded-b
+          absolute w-full bg-white shadow-md max-h-80 overflow-y-scroll p-0
+          border-slate-300 border border-t-0 rounded-b z-10
           ${!(isOpen && filteredItems.length) && 'hidden'}
         `}
         {...getMenuProps()}

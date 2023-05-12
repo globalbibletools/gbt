@@ -1,6 +1,8 @@
+import { useTranslation } from 'react-i18next';
 import { Icon } from '../../shared/components/Icon';
 import InputHelpText from '../../shared/components/InputHelpText';
-import TypeaheadInput from '../../shared/components/TypeaheadInput';
+import AutocompleteInput from '../../shared/components/AutocompleteInput';
+import { capitalize } from '../../shared/utils';
 
 export interface TranslateWordProps {
   word: { id: string; text: string };
@@ -21,6 +23,8 @@ export default function TranslateWord({
   previousGlosses,
   onGlossChange,
 }: TranslateWordProps) {
+  const { t } = useTranslation();
+
   return (
     <li className="mx-2 mb-4 w-36">
       <div
@@ -32,7 +36,7 @@ export default function TranslateWord({
         {word.text}
       </div>
       <div className="mb-2">{referenceGloss}</div>
-      <TypeaheadInput
+      <AutocompleteInput
         value={gloss}
         items={previousGlosses.map((gloss) => ({ label: gloss, value: gloss }))}
         aria-describedby={`word-help-${word.id}`}
@@ -54,14 +58,14 @@ export default function TranslateWord({
             return (
               <>
                 <Icon icon="arrows-rotate" className="mr-1" />
-                Saving...
+                {capitalize(t('saving'))}
               </>
             );
           } else if (status === 'saved') {
             return (
               <>
                 <Icon icon="check" className="mr-1" />
-                Saved
+                {capitalize(t('saved'))}
               </>
             );
           } else {

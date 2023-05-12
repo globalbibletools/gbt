@@ -13,5 +13,7 @@
   "code": "código",
   "select_verse": "Seleccionar verso",
   "previous_verse": "Verso anterior",
-  "next_verse": "Siguiente verso"
+  "next_verse": "Siguiente verso",
+  "saving": "guardando",
+  "saved": "guardado"
 }
