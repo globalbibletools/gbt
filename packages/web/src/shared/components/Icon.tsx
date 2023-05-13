@@ -15,5 +15,6 @@ library.add(
   FaSolid.faArrowsRotate,
   FaSolid.faArrowLeft,
   FaSolid.faArrowRight,
-  FaSolid.faRightFromBracket
+  FaSolid.faRightFromBracket,
+  FaSolid.faExclamationTriangle
 );

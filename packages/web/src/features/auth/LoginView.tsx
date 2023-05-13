@@ -5,6 +5,7 @@ import { useLoaderData, useNavigate, useSearchParams } from 'react-router-dom';
 import Button from '../../shared/components/Button';
 import Card from '../../shared/components/Card';
 import FormLabel from '../../shared/components/FormLabel';
+import { Icon } from '../../shared/components/Icon';
 import TextInput from '../../shared/components/TextInput';
 import View from '../../shared/components/View';
 import ViewTitle from '../../shared/components/ViewTitle';
@@ -19,16 +20,19 @@ export default function LoginView() {
   const { t } = useTranslation('auth');
 
   const { csrfToken } = useLoaderData() as { csrfToken: string };
+  const [query] = useSearchParams();
 
   // Skip login if the user is already authenticated.
   const navigate = useNavigate();
-  const [query] = useSearchParams();
   const { data: session } = useSession();
+  const callbackUrl = query.get('callbackUrl');
   useEffect(() => {
     if (session?.user) {
-      navigate(query.get('callbackUrl') ?? '/', { replace: true });
+      navigate(callbackUrl ?? '/', { replace: true });
     }
-  }, [session?.user, navigate, query]);
+  }, [session?.user, navigate, callbackUrl]);
+
+  const error = query.get('error');
 
   return (
     <View fitToScreen className="flex items-start justify-center">
@@ -40,10 +44,26 @@ export default function LoginView() {
         >
           <ViewTitle>{t('log_in')}</ViewTitle>
 
+          {error && (
+            <p className="font-bold mb-2 text-red-700">
+              <Icon icon="exclamation-triangle" className="mr-1" />
+              {(() => {
+                switch (error) {
+                  case 'EmailSignin':
+                    return t('email_error');
+                  case 'SessionRequired':
+                    return t('login_required');
+                  default:
+                    return t('default_error');
+                }
+              })()}
+            </p>
+          )}
+
           <input type="hidden" name="csrfToken" defaultValue={csrfToken} />
 
           <div className="mb-4">
-            <FormLabel htmlFor="email">{t('email')}</FormLabel>
+            <FormLabel htmlFor="email">{t('email').toUpperCase()}</FormLabel>
             <TextInput className="block w-full" name="email" id="email" />
           </div>
 
