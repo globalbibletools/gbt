@@ -11,6 +11,7 @@ import { Icon } from '../shared/components/Icon';
 import LanguageDialog from './LanguageDialog';
 import interfaceLanguages from './languages.json';
 import apiClient from '../shared/apiClient';
+import { signIn, signOut, useSession } from 'next-auth/react';
 
 export interface HeaderProps {
   language: string;
@@ -18,6 +19,7 @@ export interface HeaderProps {
 }
 
 export default function Header({ language, onLanguageChange }: HeaderProps) {
+  const { data: session, status } = useSession();
   const userName = 'Joe Translator';
   const languageDialog = useRef<DialogRef>(null);
   const { t, i18n } = useTranslation();
@@ -55,22 +57,30 @@ export default function Header({ language, onLanguageChange }: HeaderProps) {
             </DropdownMenuLink>
           </DropdownMenu>
         )}
-        <DropdownMenu text={userName}>
-          <DropdownMenuLink to={'#'}>
-            <Icon icon="user" className="mr-2" />
-            Profile
-          </DropdownMenuLink>
-          <DropdownMenuButton
-            onClick={() => {
-              languageDialog.current?.open();
-            }}
-          >
-            <Icon icon="earth" className="mr-2" />
-            {(interfaceLanguages as { [code: string]: string })[
-              i18n.resolvedLanguage
-            ] ?? t('language', { count: 100 })}
-          </DropdownMenuButton>
-        </DropdownMenu>
+        {status === 'authenticated' && (
+          <DropdownMenu text={session.user?.name ?? ''}>
+            <DropdownMenuLink to={'#'}>
+              <Icon icon="user" className="mr-2" />
+              Profile
+            </DropdownMenuLink>
+            <DropdownMenuButton
+              onClick={() => {
+                languageDialog.current?.open();
+              }}
+            >
+              <Icon icon="earth" className="mr-2" />
+              {(interfaceLanguages as { [code: string]: string })[
+                i18n.resolvedLanguage
+              ] ?? t('language', { count: 100 })}
+            </DropdownMenuButton>
+            <DropdownMenuButton onClick={() => signOut()}>
+              {t('log_out')}
+            </DropdownMenuButton>
+          </DropdownMenu>
+        )}
+        {status === 'unauthenticated' && (
+          <button onClick={() => signIn()}>{t('log_in')}</button>
+        )}
       </nav>
       <LanguageDialog ref={languageDialog} />
     </header>
