@@ -14,6 +14,21 @@ datasource db {
   extensions = [pgcrypto]
 }
 
+model User {
+  id            String    @id @default(dbgenerated("generate_ulid()")) @db.Uuid
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
 /// A book of the Bible.
 model Book {
   /// The ID of the book. Corresponds to its order in the Bible.
