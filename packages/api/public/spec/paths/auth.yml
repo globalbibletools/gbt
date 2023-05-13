@@ -1,0 +1,76 @@
+login:
+  post:
+    summary: Login with email and password
+    parameters:
+      - name: provider
+        in: path
+        description: The login strategy
+        required: true
+        schema:
+          type: string
+          enum: ['email']
+        example: email
+    requestBody:
+      required: true
+      content:
+        application/x-www-form-urlencoded:
+          schema:
+            type: object
+            properties:
+              email:
+                type: string
+                format: email
+                example: 'user@example.com'
+                required: true
+              csrfToken:
+                type: string
+                required: true
+    responses:
+      302:
+        description: Redirect
+logout:
+  post:
+    summary: Log out of session
+    requestBody:
+      required: true
+      content:
+        application/x-www-form-urlencoded:
+          schema:
+            type: object
+            properties:
+              csrfToken:
+                type: string
+                required: true
+    responses:
+      302:
+        description: Redirect
+csrf:
+  get:
+    summary: Get the CSRF token
+    responses:
+      200:
+        description: OK
+session:
+  get:
+    summary: Get the current session data
+    responses:
+      200:
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      example: 'Joe Translator'
+                    email:
+                      type: string
+                      example: 'joe@example.com'
+                expires:
+                  type: string
+                  format: date-time
+
