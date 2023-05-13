@@ -11,7 +11,7 @@ import { Icon } from '../shared/components/Icon';
 import LanguageDialog from './LanguageDialog';
 import interfaceLanguages from './languages.json';
 import apiClient from '../shared/apiClient';
-import { signIn, signOut, useSession } from 'next-auth/react';
+import { signIn, useSession } from 'next-auth/react';
 
 export interface HeaderProps {
   language: string;
@@ -20,7 +20,6 @@ export interface HeaderProps {
 
 export default function Header({ language, onLanguageChange }: HeaderProps) {
   const { data: session, status } = useSession();
-  const userName = 'Joe Translator';
   const languageDialog = useRef<DialogRef>(null);
   const { t, i18n } = useTranslation();
 
@@ -73,9 +72,9 @@ export default function Header({ language, onLanguageChange }: HeaderProps) {
                 i18n.resolvedLanguage
               ] ?? t('language', { count: 100 })}
             </DropdownMenuButton>
-            <DropdownMenuButton onClick={() => signOut()}>
+            <DropdownMenuLink to="/auth/logout">
               {t('log_out')}
-            </DropdownMenuButton>
+            </DropdownMenuLink>
           </DropdownMenu>
         )}
         {status === 'unauthenticated' && (

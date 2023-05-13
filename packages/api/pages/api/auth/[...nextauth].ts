@@ -16,4 +16,10 @@ export default NextAuth({
   session: {
     strategy: 'jwt',
   },
+  pages: {
+    signIn: '/auth/login',
+    signOut: '/auth/logout',
+    verifyRequest: '/auth/verify-login',
+    error: '/auth/error',
+  },
 });
