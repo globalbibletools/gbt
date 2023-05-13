@@ -1,5 +1,6 @@
 import { getCsrfToken, useSession } from 'next-auth/react';
 import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useLoaderData, useNavigate, useSearchParams } from 'react-router-dom';
 import Button from '../../shared/components/Button';
 import Card from '../../shared/components/Card';
@@ -15,13 +16,14 @@ export async function loginViewLoader() {
 }
 
 export default function LoginView() {
-  const { data: session } = useSession();
+  const { t } = useTranslation('auth');
+
   const { csrfToken } = useLoaderData() as { csrfToken: string };
 
-  const [query] = useSearchParams();
-  const navigate = useNavigate();
-
   // Skip login if the user is already authenticated.
+  const navigate = useNavigate();
+  const [query] = useSearchParams();
+  const { data: session } = useSession();
   useEffect(() => {
     if (session?.user) {
       navigate(query.get('callbackUrl') ?? '/', { replace: true });
@@ -36,18 +38,18 @@ export default function LoginView() {
           method="post"
           action="/api/auth/signin/email"
         >
-          <ViewTitle>Log In</ViewTitle>
+          <ViewTitle>{t('log_in')}</ViewTitle>
 
           <input type="hidden" name="csrfToken" defaultValue={csrfToken} />
 
           <div className="mb-4">
-            <FormLabel htmlFor="email">Email</FormLabel>
+            <FormLabel htmlFor="email">{t('email')}</FormLabel>
             <TextInput className="block w-full" name="email" id="email" />
           </div>
 
           <div>
             <Button type="submit" className="w-full">
-              Log In
+              {t('log_in')}
             </Button>
           </div>
         </form>

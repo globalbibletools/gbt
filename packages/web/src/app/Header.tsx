@@ -21,7 +21,7 @@ export interface HeaderProps {
 export default function Header({ language, onLanguageChange }: HeaderProps) {
   const { data: session, status } = useSession();
   const languageDialog = useRef<DialogRef>(null);
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation(['translation', 'auth']);
 
   const languagesQuery = useQuery(['languages'], () =>
     apiClient.languages.findAll()
@@ -59,7 +59,7 @@ export default function Header({ language, onLanguageChange }: HeaderProps) {
         {status === 'authenticated' && (
           <DropdownMenu text={session.user?.name ?? ''}>
             <DropdownMenuLink to={'#'}>
-              <Icon icon="user" className="mr-2" />
+              <Icon icon="user" className="mr-2" fixedWidth />
               Profile
             </DropdownMenuLink>
             <DropdownMenuButton
@@ -67,18 +67,24 @@ export default function Header({ language, onLanguageChange }: HeaderProps) {
                 languageDialog.current?.open();
               }}
             >
-              <Icon icon="earth" className="mr-2" />
+              <Icon icon="earth" className="mr-2" fixedWidth />
               {(interfaceLanguages as { [code: string]: string })[
                 i18n.resolvedLanguage
               ] ?? t('language', { count: 100 })}
             </DropdownMenuButton>
             <DropdownMenuLink to="/auth/logout">
-              {t('log_out')}
+              <Icon icon="right-from-bracket" className="mr-2" fixedWidth />
+              {t('log_out', { ns: 'auth' })}
             </DropdownMenuLink>
           </DropdownMenu>
         )}
         {status === 'unauthenticated' && (
-          <button onClick={() => signIn()}>{t('log_in')}</button>
+          <button
+            onClick={() => signIn()}
+            className="focus:outline-none hover:underline focus:underline"
+          >
+            {t('log_in', { ns: 'auth' })}
+          </button>
         )}
       </nav>
       <LanguageDialog ref={languageDialog} />

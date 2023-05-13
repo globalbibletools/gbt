@@ -14,5 +14,6 @@ library.add(
   FaSolid.faCheck,
   FaSolid.faArrowsRotate,
   FaSolid.faArrowLeft,
-  FaSolid.faArrowRight
+  FaSolid.faArrowRight,
+  FaSolid.faRightFromBracket
 );
