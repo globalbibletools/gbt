@@ -3,14 +3,14 @@ import EmailProvider from 'next-auth/providers/email';
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import { client } from '../../../shared/db';
 import { PrismaClient } from '@prisma/client';
-import { getApiUrl, getWebUrl } from '../../../shared/urls';
 
-process.env.NEXTAUTH_URL = getApiUrl();
-const webUrl = getWebUrl();
+if (process.env.VERCEL && process.env.VERCEL_ENV !== 'production') {
+  process.env.NEXTAUTH_URL = `https://gloss-translation-git-${process.env.VERCEL_GIT_COMMIT_REF}-${process.env.VERCEL_GIT_COMMIT_AUTHOR_LOGIN}.vercel.app`;
+}
 
 const secureCookieOptions = {
   httpOnly: true,
-  // We need same site none cookies for preview URLs.
+  // We need same site none cookies for preview URLs because they are on different domains.
   sameSite: process.env.VERCEL_ENV === 'production' ? 'lax' : 'none',
   path: '/',
   secure: true,
@@ -52,14 +52,16 @@ export default NextAuth({
     : undefined,
   callbacks: {
     async redirect({ url }) {
+      console.log('REDIRECT', url);
+      const baseUrl = process.env.NEXTAUTH_URL ?? '';
       // Allows relative callback URLs
-      if (url.startsWith('/')) return `${webUrl}${url}`;
+      if (url.startsWith('/')) return `${baseUrl}${url}`;
       // Allows callback URLs on the same origin
-      else if (new URL(url).origin === webUrl) return url;
-      return webUrl;
+      else if (new URL(url).origin === baseUrl) return url;
+      return baseUrl;
     },
     async signIn({ user }) {
-      if (!user.email) return `${process.env.NEXTAUTH_URL}/auth/login`;
+      if (!user.email) return '/auth/login';
 
       // We want to prevent users who aren't in the system from being able to login.
       const dbUser = await client.user.findUnique({
@@ -81,7 +83,7 @@ export default NextAuth({
         );
         // We redirect to the verify login page rather than showing an error message
         // so that an attacker can't determine if the account exists.
-        return `${process.env.NEXTAUTH_URL}/auth/verify-login`;
+        return '/auth/verify-login';
       }
     },
   },
