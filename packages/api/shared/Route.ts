@@ -1,8 +1,13 @@
 import { ErrorDetail } from '@translation/api-types';
 import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
+import cors from 'nextjs-cors';
 import { ZodType } from 'zod';
 import { Prisma } from '../prisma/client';
 import * as Errors from './errors';
+
+const origin = process.env.ORIGIN_MATCH
+  ? new RegExp(process.env.ORIGIN_MATCH)
+  : '*';
 
 export interface ResponseHelper<Body> {
   /** Returns 200 or 204 dependening on whether there is a response body to send. */
@@ -107,6 +112,11 @@ export default function createRoute<Params>(): RouteBuilder<Params> {
     definition: RouteDefinition<Params, RequestBody, ResponseBody>
   ): NextApiHandler {
     return async (req, res) => {
+      await cors(req, res, {
+        methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
+        origin,
+      });
+
       const responseHelper: ResponseHelper<ResponseBody> = {
         ok(body?: ResponseBody) {
           if (body) {
@@ -132,6 +142,7 @@ export default function createRoute<Params>(): RouteBuilder<Params> {
           res.status(400).json({ errors });
         },
       };
+
       try {
         if ('schema' in definition) {
           const parseResult = definition.schema.safeParse(req.body);

@@ -1,12 +1,18 @@
+const { DefinePlugin } = require('webpack');
 const { composePlugins, withNx } = require('@nrwl/webpack');
 const { withReact } = require('@nrwl/react');
 
 module.exports = composePlugins(withNx(), withReact(), (config) => {
-  if (config.devServer) {
-    config.devServer.proxy = {
-      '/api': 'http://localhost:4300'
-   }
-  }
+  config.plugins ??= [];
+  config.plugins.push(
+    new DefinePlugin({
+      'process.env.API_URL': JSON.stringify(
+        process.env.VERCEL_ENV === 'preview'
+          ? `https://gloss-translation-api-git-${process.env.VERCEL_GIT_COMMIT_REF}-${process.env.VERCEL_GIT_COMMIT_AUTHOR_LOGIN}.vercel.app`
+          : process.env.API_URL
+      ),
+    })
+  );
 
   return config;
 });
