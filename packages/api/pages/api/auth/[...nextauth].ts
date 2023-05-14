@@ -4,6 +4,10 @@ import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import { client } from '../../../shared/db';
 import { PrismaClient } from '@prisma/client';
 
+if (process.env.VERCEL && !process.env.NEXTAUTH_URL) {
+  process.env.NEXTAUTH_URL = `https://gloss-translation-git-${process.env.VERCEL_GIT_COMMIT_REF}-${process.env.VERCEL_GIT_COMMIT_AUTHOR_LOGIN}.vercel.app/api/authkj`;
+}
+
 export default NextAuth({
   // NextAuth doesn't handle the types for prisma clients in custom directories very well.
   adapter: PrismaAdapter(client as unknown as PrismaClient),
