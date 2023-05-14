@@ -4,9 +4,17 @@ import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import { client } from '../../../shared/db';
 import { PrismaClient } from '@prisma/client';
 
-if (process.env.VERCEL && !process.env.NEXTAUTH_URL) {
-  process.env.NEXTAUTH_URL = `https://gloss-translation-git-${process.env.VERCEL_GIT_COMMIT_REF}-${process.env.VERCEL_GIT_COMMIT_AUTHOR_LOGIN}.vercel.app/api/authkj`;
+if (process.env.VERCEL && process.env.VERCEL_ENV !== 'production') {
+  process.env.NEXTAUTH_URL = `https://gloss-translation-git-${process.env.VERCEL_GIT_COMMIT_REF}-${process.env.VERCEL_GIT_COMMIT_AUTHOR_LOGIN}.vercel.app`;
 }
+
+const secureCookieOptions = {
+  httpOnly: true,
+  // We need same site none cookies for preview URLs because they are on different domains.
+  sameSite: process.env.VERCEL_ENV === 'production' ? 'lax' : 'none',
+  path: '/',
+  secure: true,
+};
 
 export default NextAuth({
   // NextAuth doesn't handle the types for prisma clients in custom directories very well.
@@ -21,12 +29,37 @@ export default NextAuth({
     strategy: 'jwt',
   },
   pages: {
-    signIn: '/auth/login',
-    signOut: '/auth/logout',
-    verifyRequest: '/auth/verify-login',
-    error: '/auth/error',
+    signIn: `${process.env.NEXTAUTH_URL}/auth/login`,
+    signOut: `${process.env.NEXTAUTH_URL}/auth/logout`,
+    verifyRequest: `${process.env.NEXTAUTH_URL}/auth/verify-login`,
+    error: `${process.env.NEXTAUTH_URL}/auth/error`,
   },
+  cookies: process.env.VERCEL
+    ? {
+        sessionToken: {
+          name: `__Secure-next-auth.session-token`,
+          options: secureCookieOptions,
+        },
+        callbackUrl: {
+          name: `__Secure-next-auth.callback-url`,
+          options: secureCookieOptions,
+        },
+        csrfToken: {
+          name: `__Secure-next-auth.csrf-token`,
+          options: secureCookieOptions,
+        },
+      }
+    : undefined,
   callbacks: {
+    async redirect({ url }) {
+      console.log('REDIRECT', url);
+      const baseUrl = process.env.NEXTAUTH_URL ?? '';
+      // Allows relative callback URLs
+      if (url.startsWith('/')) return `${baseUrl}${url}`;
+      // Allows callback URLs on the same origin
+      else if (new URL(url).origin === baseUrl) return url;
+      return baseUrl;
+    },
     async signIn({ user }) {
       if (!user.email) return '/auth/login';
 
