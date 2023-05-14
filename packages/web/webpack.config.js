@@ -1,12 +1,14 @@
+const { DefinePlugin } = require('webpack')
 const { composePlugins, withNx } = require('@nrwl/webpack');
 const { withReact } = require('@nrwl/react');
 
+// TODO: define the NEXTAUTH_URL env var here.
+
 module.exports = composePlugins(withNx(), withReact(), (config) => {
-  if (config.devServer) {
-    config.devServer.proxy = {
-      '/api': 'http://localhost:4300'
-   }
-  }
+  config.plugins ??= []
+  config.plugins.push(new DefinePlugin({
+    'process.env.NEXTAUTH_URL': '"https://localhost:4300"'
+  }))
 
   return config;
 });
