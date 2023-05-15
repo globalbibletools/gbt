@@ -1,9 +1,10 @@
 // This file contains utility functions related to verse IDs.
 
-import verseCounts from './verse-counts.json';
-import { clamp } from '../../shared/utils';
+import fuzzysort from 'fuzzysort';
 import { TFunction } from 'i18next';
+import { clamp } from '../../shared/utils';
 import { bookKeys } from './book-keys';
+import verseCounts from './verse-counts.json';
 
 export type VerseInfo = {
   bookId: number;
@@ -150,20 +151,21 @@ export function parseReference(reference: string, t: TFunction): string | null {
   const [, , chapterStr, verseStr] = matches;
   let bookStr = matches[1];
   bookStr = bookStr.toLowerCase().trim();
+
   // Find the book ID.
   let bookId;
-  for (let i = 0; i < bookKeys.length; i++) {
-    const bookTerms = t(bookKeys[i], { ns: 'bible', context: 'match' });
-    for (const term of bookTerms) {
-      if (term.toLowerCase() == bookStr) {
-        bookId = i + 1;
-        break;
-      }
-    }
-  }
-  if (bookId == null) {
+  const bookNames = bookKeys.map((k, i) => ({
+    name: t(k, { ns: 'bible' }),
+    id: i + 1,
+  }));
+  const results = fuzzysort.go(bookStr, bookNames, { key: 'name' });
+  if (results.length > 0) {
+    bookId = results[0].obj.id;
+    console.log(results);
+  } else {
     return null;
   }
+
   // Coerce the chapter number to be valid.
   const chapterNumber = clamp(parseInt(chapterStr), 1, chapterCount(bookId));
   // Coerce the verse number to be valid.
