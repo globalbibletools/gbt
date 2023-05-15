@@ -14,16 +14,25 @@ datasource db {
   extensions = [pgcrypto]
 }
 
+/// A user who can authenticate into the system.
 model User {
+  /// The ID of the user.
   id            String    @id @default(dbgenerated("generate_ulid()")) @db.Uuid
+  /// The display name of the user.
   name          String?
+  /// The email address for logging in and notifications.
   email         String?   @unique
+  /// The time that the email was last verified.
   emailVerified DateTime?
 }
 
+/// A token sent in an email for logging in.
 model VerificationToken {
+  /// The email address associated with the user logging in.
   identifier String
+  /// The token's value.
   token      String   @unique
+  /// The time after which the token will no longer be usable.
   expires    DateTime
 
   @@unique([identifier, token])

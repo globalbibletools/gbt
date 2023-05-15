@@ -21,6 +21,7 @@ const secureCookieOptions = {
 // In production environments, we add this prefix
 const cookiePrefix = process.env.NODE_ENV === 'production' ? '__Secure-' : '';
 
+// The same domains that are permitted for CORS purposes are permitted for callbacks.
 const ORIGIN_MATCH = process.env.ORIGIN_MATCH
   ? new RegExp(process.env.ORIGIN_MATCH)
   : undefined;
@@ -65,7 +66,7 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
         // Allows relative callback URLs
         if (url.startsWith('/')) return `${baseUrl}${url}`;
 
-        // Allows callback URLs on the same origin or that match
+        // Allows callback URLs on the same origin or that are permitted via CORS settings.
         const origin = new URL(url).origin;
         if (ORIGIN_MATCH?.test(origin) || origin === baseUrl) {
           return url;
