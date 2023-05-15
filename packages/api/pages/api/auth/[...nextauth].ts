@@ -6,15 +6,20 @@ import { PrismaClient } from '@prisma/client';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { cors } from '../../../shared/cors';
 
+// We need secure cookies in production, but not locally
+// because we don't use https locally.
+const useSecureCookies = process.env.NODE_ENV === 'production';
+
 const secureCookieOptions = {
   httpOnly: true,
   // We need same site none cookies for preview URLs because they are on different domains.
   sameSite: process.env.VERCEL_ENV === 'preview' ? 'none' : 'lax',
   path: '/',
-  secure: process.env.NODE_ENV === 'production',
+  secure: useSecureCookies,
 };
 
-const cookiePrefix = process.env.VERCEL ? '__Secure-' : '';
+// In production environments, we add this prefix
+const cookiePrefix = process.env.NODE_ENV === 'production' ? '__Secure-' : '';
 
 const ORIGIN_MATCH = process.env.ORIGIN_MATCH
   ? new RegExp(process.env.ORIGIN_MATCH)
@@ -51,7 +56,7 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
         options: secureCookieOptions,
       },
       csrfToken: {
-        name: `${cookiePrefix}next-auth.csrf-token`,
+        name: `${useSecureCookies ? '__Host' : ''}next-auth.csrf-token`,
         options: secureCookieOptions,
       },
     },
@@ -68,7 +73,7 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
           return baseUrl;
         }
       },
-      async signIn({ user, email }) {
+      async signIn({ user }) {
         if (!user.email) return '/api/auth/login';
 
         // We want to prevent users who aren't in the system from being able to login.
@@ -78,15 +83,10 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
           },
         });
         if (dbUser) {
-          if (email?.verificationRequest) {
-            await new Promise((resolve) =>
-              setTimeout(resolve, Math.floor(Math.random() * 300))
-            );
-            return true;
-          } else {
-            return true;
-            // return process.env.WEB_URL ?? '/api/auth/error';
-          }
+          await new Promise((resolve) =>
+            setTimeout(resolve, Math.floor(Math.random() * 300))
+          );
+          return true;
         } else {
           // Since sending the login email takes some time,
           // we don't want potential attackers to be able to use the request time to determine if a user exists or not.
