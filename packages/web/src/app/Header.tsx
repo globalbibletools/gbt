@@ -11,7 +11,7 @@ import { Icon } from '../shared/components/Icon';
 import LanguageDialog from './LanguageDialog';
 import interfaceLanguages from './languages.json';
 import apiClient from '../shared/apiClient';
-import { signIn, useSession } from 'next-auth/react';
+import useSession from '../shared/useSession';
 
 export interface HeaderProps {
   language: string;
@@ -19,7 +19,7 @@ export interface HeaderProps {
 }
 
 export default function Header({ language, onLanguageChange }: HeaderProps) {
-  const { data: session, status } = useSession();
+  const { session, status } = useSession();
   const languageDialog = useRef<DialogRef>(null);
   const { t, i18n } = useTranslation(['translation', 'auth']);
 
@@ -72,19 +72,21 @@ export default function Header({ language, onLanguageChange }: HeaderProps) {
                 i18n.resolvedLanguage
               ] ?? t('language', { count: 100 })}
             </DropdownMenuButton>
-            <DropdownMenuLink to="/auth/logout">
+            <DropdownMenuLink
+              to={`${process.env.API_URL}/api/auth/signout?callbackUrl=${window.location.href}`}
+            >
               <Icon icon="right-from-bracket" className="mr-2" fixedWidth />
               {t('log_out', { ns: 'auth' })}
             </DropdownMenuLink>
           </DropdownMenu>
         )}
         {status === 'unauthenticated' && (
-          <button
-            onClick={() => signIn()}
+          <a
+            href={`${process.env.API_URL}/api/auth/signin?callbackUrl=${window.location.href}`}
             className="focus:outline-none hover:underline focus:underline"
           >
             {t('log_in', { ns: 'auth' })}
-          </button>
+          </a>
         )}
       </nav>
       <LanguageDialog ref={languageDialog} />
