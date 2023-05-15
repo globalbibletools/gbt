@@ -41,12 +41,6 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
     session: {
       strategy: 'jwt',
     },
-    // pages: {
-    //   signIn: '/auth/login',
-    //   signOut: '/auth/logout',
-    //   verifyRequest: '/auth/verify-login',
-    //   error: '/auth/error',
-    // },
     cookies: {
       sessionToken: {
         name: `${cookiePrefix}next-auth.session-token`,

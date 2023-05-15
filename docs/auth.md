@@ -1,6 +1,7 @@
 # Authentication
 
 We are using [NextAuth](https://next-auth.js.org/) to manage authentication.
+Authentication is handled on the api server since there are plans to have multiple apps with a common login.
 
 Presently only the [email provider](https://next-auth.js.org/providers/email) is supported. This provider works by sending temporary magic links in an email. When the user clicks the link, they are authenticated.
 

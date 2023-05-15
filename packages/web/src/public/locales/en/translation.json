@@ -15,5 +15,7 @@
   "previous_verse": "Previous Verse",
   "next_verse": "Next Verse",
   "saving": "saving",
-  "saved": "saved"
+  "saved": "saved",
+  "log_in": "Log In",
+  "log_out": "Log Out"
 }

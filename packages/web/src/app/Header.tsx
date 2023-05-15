@@ -19,9 +19,9 @@ export interface HeaderProps {
 }
 
 export default function Header({ language, onLanguageChange }: HeaderProps) {
-  const { session, status } = useSession();
+  const session = useSession();
   const languageDialog = useRef<DialogRef>(null);
-  const { t, i18n } = useTranslation(['translation', 'auth']);
+  const { t, i18n } = useTranslation();
 
   const languagesQuery = useQuery(['languages'], () =>
     apiClient.languages.findAll()
@@ -56,8 +56,8 @@ export default function Header({ language, onLanguageChange }: HeaderProps) {
             </DropdownMenuLink>
           </DropdownMenu>
         )}
-        {status === 'authenticated' && (
-          <DropdownMenu text={session.user?.name ?? ''}>
+        {session.status === 'authenticated' && (
+          <DropdownMenu text={session.user.name ?? ''}>
             <DropdownMenuLink to={'#'}>
               <Icon icon="user" className="mr-2" fixedWidth />
               Profile
@@ -76,16 +76,16 @@ export default function Header({ language, onLanguageChange }: HeaderProps) {
               to={`${process.env.API_URL}/api/auth/signout?callbackUrl=${window.location.href}`}
             >
               <Icon icon="right-from-bracket" className="mr-2" fixedWidth />
-              {t('log_out', { ns: 'auth' })}
+              {t('log_out')}
             </DropdownMenuLink>
           </DropdownMenu>
         )}
-        {status === 'unauthenticated' && (
+        {session.status === 'unauthenticated' && (
           <a
             href={`${process.env.API_URL}/api/auth/signin?callbackUrl=${window.location.href}`}
             className="focus:outline-none hover:underline focus:underline"
           >
-            {t('log_in', { ns: 'auth' })}
+            {t('log_in')}
           </a>
         )}
       </nav>

@@ -1,20 +1,34 @@
 import { useQuery } from '@tanstack/react-query';
+import apiClient from './apiClient';
 
-export default function useSession() {
-  const { data, status } = useQuery(['session'], async () => {
-    const response = await fetch(`${process.env.API_URL}/api/auth/session`, {
-      credentials: 'include',
-    });
-    return response.json() as Promise<{
-      user?: { email?: string; name?: string };
-    }>;
-  });
+export type UseSessionResponse =
+  | {
+      status: 'authenticated';
+      user: {
+        email?: string;
+        name?: string;
+      };
+    }
+  | { status: 'unauthenticated' | 'loading' };
 
-  const authStatus = data?.user
-    ? 'authenticated'
-    : status === 'loading'
-    ? 'loading'
-    : 'unauthenticated';
+export default function useSession(): UseSessionResponse {
+  const { data, status } = useQuery(['session'], async () =>
+    apiClient.getSession()
+  );
 
-  return { session: data ?? {}, status: authStatus };
+  if (status === 'success') {
+    const { user } = data;
+    if (user) {
+      return {
+        status: 'authenticated',
+        user,
+      };
+    } else {
+      return { status: 'unauthenticated' };
+    }
+  } else {
+    return {
+      status: 'loading',
+    };
+  }
 }

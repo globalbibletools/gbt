@@ -65,6 +65,7 @@ const className =
 export function DropdownMenuLink({ children, to }: DropdownMenuLinkProps) {
   return (
     <li>
+      {/* If we want to link to external URLs, we have use a standard anchor element. */}
       {typeof to === 'string' && to.startsWith('http') ? (
         <a className={className} href={to}>
           {children}
