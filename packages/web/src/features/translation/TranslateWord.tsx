@@ -26,16 +26,16 @@ export default function TranslateWord({
   const { t } = useTranslation();
 
   return (
-    <li className="mx-2 mb-4 w-36">
+    <li className="mx-2 mb-4">
       <div
         id={`word-${word.id}`}
-        className={`font-serif mb-2 ${
-          originalLanguage === 'hebrew' ? 'text-2xl text-right' : 'text-lg'
+        className={`font-serif mb-2 text-center ${
+          originalLanguage === 'hebrew' ? 'text-2xl' : 'text-lg'
         }`}
       >
         {word.text}
       </div>
-      <div className="mb-2">{referenceGloss}</div>
+      <div className="mb-2 text-center">{referenceGloss}</div>
       <AutocompleteInput
         value={gloss}
         items={previousGlosses.map((gloss) => ({ label: gloss, value: gloss }))}

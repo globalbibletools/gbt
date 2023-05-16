@@ -51,6 +51,11 @@ export default function AutocompleteInput({
     itemToString(item) {
       return item?.label ?? '';
     },
+    onStateChange({ inputValue }) {
+      if (inputValue != undefined) {
+        setWidth(Math.max(inputValue.length, 4));
+      }
+    },
     onSelectedItemChange({ selectedItem }) {
       if (selectedItem?.value === '_create') {
         onCreate?.(selectedItem.label);
@@ -96,12 +101,14 @@ export default function AutocompleteInput({
     selectItem(items.find((item) => item.value === value) ?? null);
   }, [value, selectItem, items]);
 
+  const [width, setWidth] = useState(4);
   return (
     <div className={`relative ${className}`}>
       <TextInput
         {...props}
         {...getInputProps()}
-        className={`w-full pr-10 ${isOpen ? 'rounded-b-none' : ''}`}
+        className={`pr-10 ${isOpen ? 'rounded-b-none' : ''}`}
+        style={{ width: `calc(${width + 'ch'} + 40px)` }}
       />
       <button
         aria-label="toggle menu"
