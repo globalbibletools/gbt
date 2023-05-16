@@ -1,27 +1,13 @@
-# GlossTranslation
+# Global Bible Tools
+
+## Purpose
+
+Our goal is to build tools that make it easy for groups of people to translate Bible study resources into all the languages of the world.
+
+## Roadmap
+
+We are still in the very early stages. At present we are working on a tool for producing interlinear Bibles in any language. From there we have rough plans for taking what we have learned and applying it to tools for translating lexicons, and other original language tools.
 
 ## Contributing
 
-### Setup
-
-You will need [node 18, npm 8+](https://nodejs.org/en/download/), and [posgresql 14.7](https://www.postgresql.org/download/) to run this project.
-
-Run `npm install` to install of the project's dependencies.
-
-Run `npm install -g nx` to make the `nx` command available in the terminal.
-
-[Set up a postgresql database](./docs/db.md)
-
-### Dev Servers
-
-Run `nx serve api` and `nx serve web` to start the development servers.
-
-API server: `http://localhost:4300`
-
-Web server: `http://localhost:4200`
-
-### More documentation
-
-- [API Development](./docs/api.md)
-- [Database Management](./docs/db.md)
-- [Internationalization & Localization](./docs/i18n.md)
+This is an ambitious project, so we need help from software engineers, ux desiginers, translators, and more. If you would like to help out with the software development please take a look at our [contributing docs](./docs/contributing.md).
