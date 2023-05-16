@@ -2,6 +2,7 @@ import { ErrorDetail } from '@translation/api-types';
 import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 import { ZodType } from 'zod';
 import { Prisma } from '../prisma/client';
+import { cors } from './cors';
 import * as Errors from './errors';
 
 export interface ResponseHelper<Body> {
@@ -107,6 +108,8 @@ export default function createRoute<Params>(): RouteBuilder<Params> {
     definition: RouteDefinition<Params, RequestBody, ResponseBody>
   ): NextApiHandler {
     return async (req, res) => {
+      await cors(req, res);
+
       const responseHelper: ResponseHelper<ResponseBody> = {
         ok(body?: ResponseBody) {
           if (body) {
@@ -132,6 +135,7 @@ export default function createRoute<Params>(): RouteBuilder<Params> {
           res.status(400).json({ errors });
         },
       };
+
       try {
         if ('schema' in definition) {
           const parseResult = definition.schema.safeParse(req.body);

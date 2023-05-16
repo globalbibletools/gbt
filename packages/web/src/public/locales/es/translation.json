@@ -15,5 +15,7 @@
   "previous_verse": "Verso anterior",
   "next_verse": "Siguiente verso",
   "saving": "guardando",
-  "saved": "guardado"
+  "saved": "guardado",
+  "log_in": "Acceso",
+  "log_out": "Cerrar sesión"
 }

@@ -6,6 +6,13 @@ export interface ErrorResponse {
   errors: ErrorDetail[];
 }
 
+export interface GetSessionResponse {
+  user?: {
+    email?: string;
+    name?: string;
+  };
+}
+
 export interface Language {
   code: string;
   name: string;
