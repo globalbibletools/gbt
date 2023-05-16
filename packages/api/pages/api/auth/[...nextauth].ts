@@ -91,7 +91,7 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
           );
           // We redirect to the verify login page rather than showing an error message
           // so that an attacker can't determine if the account exists.
-          return '/api/auth/verify-login';
+          return '/api/auth/verify-request';
         }
       },
     },
