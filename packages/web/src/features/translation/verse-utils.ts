@@ -134,16 +134,33 @@ export function bookName(bookId: number, t: TFunction) {
 }
 
 /**
+ * Convert a reference format string for a language to a reference matching regex for that language.
+ * @param formatString The reference format string. See i18n.md for docs.
+ * @returns A regex for matching references.
+ */
+export function convertFormatToRegex(formatString: string): RegExp {
+  // TODO: improve this to increase language support.
+  const regex = formatString
+    .replace('{{bookName}}', '(.+)')
+    .replace('{{chapterNumber}}', '(\\d+)')
+    .replace('{{verseNumber}}', '(\\d+)')
+    .replace(' ', '\\s') // Match whitespace
+    .replace(':', '[,.: ]'); // Match the separator
+  return new RegExp('^' + regex + '$');
+}
+
+/**
  * Try to parse a verse ID from a reference, using the i18n translation function.
  * @param reference The string that should be parsed. In the form "bookName chapterNumber:verseNumber". Example: "Exo 3:14".
  * @param t The i18n translation function to use.
  * @returns The verse ID if it can be determined, otherwise `null`.
  */
 export function parseReference(reference: string, t: TFunction): string | null {
-  // Parse the reference into three parts.
-  const referenceRegex = new RegExp(
-    t('reference_regex', { ns: 'bible' }) as string
+  const referenceRegex = convertFormatToRegex(
+    t('reference_format', { ns: 'bible' }) as string
   );
+  console.log('REGEX:', referenceRegex);
+  // Parse the reference into three parts.
   const matches = reference.match(referenceRegex);
   if (matches == null) {
     return null;
