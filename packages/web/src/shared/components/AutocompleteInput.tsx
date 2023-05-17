@@ -118,18 +118,22 @@ export default function AutocompleteInput({
 
   return (
     <div className={`relative ${className}`}>
-      <TextInput
-        {...props}
-        {...getInputProps()}
-        className={`pr-10 ${isOpen ? 'rounded-b-none' : ''}`}
-        style={{ width: width + 56 + 'px' }}
-      />
-      <div
-        ref={child1}
-        style={{ width: 'auto' }}
-        className="absolute invisible h-auto whitespace-nowrap "
-      >
-        {inputValue}
+      <div className="flex flex-col">
+        <TextInput
+          {...props}
+          {...getInputProps()}
+          className={`pr-10 w-full ${isOpen ? 'rounded-b-none' : ''}`}
+          // style={{ width: width + 56 + 'px' }}
+        />
+        <div className="ml-[13px] mr-[70px]">
+          <div
+            ref={child1}
+            style={{ width: 'auto' }}
+            className="absolute  h-auto whitespace-nowrap "
+          >
+            {inputValue}
+          </div>
+        </div>
       </div>
       <button
         aria-label="toggle menu"
