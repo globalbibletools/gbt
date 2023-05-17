@@ -19,5 +19,7 @@
   "saved": "guardado",
   "submitting": "Sumisión",
   "log_in": "Acceso",
-  "log_out": "Cerrar sesión"
+  "log_out": "Cerrar sesión",
+  "invite": "Invitar",
+  "invite_user": "Invitar Usuario"
 }

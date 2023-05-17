@@ -1,6 +1,7 @@
 import { createBrowserRouter, redirect } from 'react-router-dom';
 import translationRoutes from '../features/translation/router';
 import languagesRoutes from '../features/languages/router';
+import userRoutes from '../features/users/router';
 import Layout from './Layout';
 import NotFound from './NotFound';
 
@@ -16,6 +17,7 @@ const router = createBrowserRouter([
           return redirect('/translate/01001001');
         },
       },
+      ...userRoutes,
       ...translationRoutes,
       ...languagesRoutes,
     ],
