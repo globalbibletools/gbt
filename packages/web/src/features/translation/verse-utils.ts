@@ -159,7 +159,6 @@ export function parseReference(reference: string, t: TFunction): string | null {
   const referenceRegex = convertFormatToRegex(
     t('reference_format', { ns: 'bible' }) as string
   );
-  console.log('REGEX:', referenceRegex);
   // Parse the reference into three parts.
   const matches = reference.match(referenceRegex);
   if (matches == null) {
