@@ -1,4 +1,4 @@
-import { ComponentProps, useEffect, useState } from 'react';
+import { ComponentProps, useEffect, useRef, useState } from 'react';
 import { useCombobox } from 'downshift';
 import TextInput from './TextInput';
 import { Icon } from './Icon';
@@ -53,7 +53,11 @@ export default function AutocompleteInput({
     },
     onStateChange({ inputValue }) {
       if (inputValue != undefined) {
-        setWidth(Math.max(inputValue.length, 4));
+        if (child1.current) {
+          const element: HTMLElement = child1.current;
+          const width = element.clientWidth + 1;
+          setWidth(width);
+        }
       }
     },
     onSelectedItemChange({ selectedItem }) {
@@ -101,15 +105,32 @@ export default function AutocompleteInput({
     selectItem(items.find((item) => item.value === value) ?? null);
   }, [value, selectItem, items]);
 
-  const [width, setWidth] = useState(4);
+  const child1 = useRef(null);
+  const [width, setWidth] = useState(0);
+
+  setTimeout(() => {
+    if (child1.current) {
+      const element: HTMLElement = child1.current;
+      const width = element.clientWidth + 1;
+      setWidth(width);
+    }
+  }, 1);
+
   return (
     <div className={`relative ${className}`}>
       <TextInput
         {...props}
         {...getInputProps()}
         className={`pr-10 ${isOpen ? 'rounded-b-none' : ''}`}
-        style={{ width: `calc(${width + 'ch'} + 40px)` }}
+        style={{ width: width + 56 + 'px' }}
       />
+      <div
+        ref={child1}
+        style={{ width: 'auto' }}
+        className="absolute invisible h-auto whitespace-nowrap "
+      >
+        {inputValue}
+      </div>
       <button
         aria-label="toggle menu"
         className="absolute px-2 top-0 right-0 w-10 h-10"
