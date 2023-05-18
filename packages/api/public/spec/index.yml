@@ -16,6 +16,8 @@ paths:
     $ref: ./paths/auth.yml#csrf
   /auth/session:
     $ref: ./paths/auth.yml#session
+  /users:
+    $ref: ./paths/users.yml#invite
   /verses/{verseId}:
     $ref: ./paths/verse.yml
   /languages:

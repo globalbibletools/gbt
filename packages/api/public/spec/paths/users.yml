@@ -1,0 +1,18 @@
+invite:
+  post:
+    summary: Invite a new user.
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              email:
+                type: string
+                format: email
+                example: 'user@example.com'
+                required: true
+    responses:
+      201:
+        description: Created

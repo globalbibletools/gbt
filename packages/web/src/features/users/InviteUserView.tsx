@@ -7,6 +7,7 @@ import FormLabel from '../../shared/components/FormLabel';
 import TextInput from '../../shared/components/TextInput';
 import View from '../../shared/components/View';
 import ViewTitle from '../../shared/components/ViewTitle';
+import apiClient from '../../shared/apiClient';
 
 export default function InviteUserView() {
   const { t } = useTranslation();
@@ -18,10 +19,14 @@ export default function InviteUserView() {
     ) as HTMLInputElement;
     const email = emailInput.value;
     try {
-      // await apiClient.languages.create({
-      //   code,
-      //   name,
-      // });
+      await apiClient.users.invite(email);
+
+      // NextAuth doesn't provide a way to send a login link from the server,
+      // so we will do that here.
+      await apiClient.users.sendInvite({
+        email,
+        callbackUrl: window.location.origin,
+      });
     } catch (error) {
       if (error instanceof ApiClientError && error.status === 409) {
         const alreadyExistsError = error.body.errors.find(

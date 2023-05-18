@@ -13,6 +13,10 @@ export interface GetSessionResponse {
   };
 }
 
+export interface InviteUserRequestBody {
+  email: string;
+}
+
 export interface Language {
   code: string;
   name: string;
