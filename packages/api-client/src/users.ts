@@ -14,6 +14,7 @@ export default class Users {
   async sendInvite(request: {
     email: string;
     callbackUrl: string;
+    json?: string;
   }): Promise<void> {
     const { csrfToken } = await this.client.get<{ csrfToken: string }>({
       path: '/api/auth/csrf',

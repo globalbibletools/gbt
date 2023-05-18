@@ -21,25 +21,28 @@ export default function InviteUserView() {
 
   const formContext = useForm<FormData>();
   const onSubmit: SubmitHandler<FormData> = async (
-    data: FormData,
+    { email, name },
     { reset }
   ) => {
     try {
-      await apiClient.users.invite({ email: data.email, name: data.email });
+      await apiClient.users.invite({ email, name });
 
       // NextAuth doesn't provide a way to send a login link from the server,
       // so we will do that here.
       await apiClient.users.sendInvite({
-        email: data.email,
+        email,
         callbackUrl: window.location.origin,
+        json: 'true',
       });
+
+      reset();
     } catch (error) {
       if (error instanceof ApiClientError && error.status === 409) {
         const alreadyExistsError = error.body.errors.find(
           (error) => error.code === 'AlreadyExists'
         );
         if (alreadyExistsError) {
-          alert(`User with email "${data.email}" has already been invited.`);
+          alert(`User with email "${email}" has already been invited.`);
           return;
         }
       }
@@ -59,24 +62,24 @@ export default function InviteUserView() {
             <TextInput
               id="name"
               name="name"
-              className="block w-full"
+              className="w-full"
               autoComplete="off"
               required
               aria-describedby="name-error"
             />
-            <InputError id="name-error" name="code" context="code" />
+            <InputError id="name-error" name="name" context="name" />
           </div>
           <div className="mb-2">
             <FormLabel htmlFor="email">{t('email').toUpperCase()}</FormLabel>
             <TextInput
               id="email"
               name="email"
-              className="block w-full"
+              className="w-full"
               autoComplete="off"
               required
               aria-describedby="email-error"
             />
-            <InputError id="email-error" name="code" context="code" />
+            <InputError id="email-error" name="email" context="email" />
           </div>
           <div>
             <SubmitButton>{t('invite')}</SubmitButton>
