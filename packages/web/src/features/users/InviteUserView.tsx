@@ -1,30 +1,36 @@
 import { ApiClientError } from '@translation/api-client';
-import { FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
-import Button from '../../shared/components/Button';
+import { useForm } from 'react-hook-form';
 import Card from '../../shared/components/Card';
-import FormLabel from '../../shared/components/FormLabel';
-import TextInput from '../../shared/components/TextInput';
+import FormLabel from '../../shared/components/form/FormLabel';
+import TextInput from '../../shared/components/form/TextInput';
 import View from '../../shared/components/View';
 import ViewTitle from '../../shared/components/ViewTitle';
 import apiClient from '../../shared/apiClient';
+import Form, { SubmitHandler } from '../../shared/components/form/Form';
+import InputError from '../../shared/components/form/InputError';
+import SubmitButton from '../../shared/components/form/SubmitButton';
+
+export interface FormData {
+  email: string;
+  name: string;
+}
 
 export default function InviteUserView() {
   const { t } = useTranslation();
 
-  async function onSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    const emailInput = e.currentTarget.elements.namedItem(
-      'email'
-    ) as HTMLInputElement;
-    const email = emailInput.value;
+  const formContext = useForm<FormData>();
+  const onSubmit: SubmitHandler<FormData> = async (
+    data: FormData,
+    { reset }
+  ) => {
     try {
-      await apiClient.users.invite(email);
+      await apiClient.users.invite({ email: data.email, name: data.email });
 
       // NextAuth doesn't provide a way to send a login link from the server,
       // so we will do that here.
       await apiClient.users.sendInvite({
-        email,
+        email: data.email,
         callbackUrl: window.location.origin,
       });
     } catch (error) {
@@ -33,21 +39,33 @@ export default function InviteUserView() {
           (error) => error.code === 'AlreadyExists'
         );
         if (alreadyExistsError) {
-          alert(`User with email "${email}" has already been invited.`);
+          alert(`User with email "${data.email}" has already been invited.`);
           return;
         }
       }
       throw error;
     }
 
-    emailInput.value = '';
-  }
+    reset();
+  };
 
   return (
     <View fitToScreen className="flex justify-center items-start">
       <Card className="mx-4 w-96 flex-shrink p-6">
         <ViewTitle>{t('invite_user')}</ViewTitle>
-        <form onSubmit={onSubmit}>
+        <Form context={formContext} onSubmit={onSubmit}>
+          <div className="mb-2">
+            <FormLabel htmlFor="name">{t('name').toUpperCase()}</FormLabel>
+            <TextInput
+              id="name"
+              name="name"
+              className="block w-full"
+              autoComplete="off"
+              required
+              aria-describedby="name-error"
+            />
+            <InputError id="name-error" name="code" context="code" />
+          </div>
           <div className="mb-2">
             <FormLabel htmlFor="email">{t('email').toUpperCase()}</FormLabel>
             <TextInput
@@ -56,12 +74,14 @@ export default function InviteUserView() {
               className="block w-full"
               autoComplete="off"
               required
+              aria-describedby="email-error"
             />
+            <InputError id="email-error" name="code" context="code" />
           </div>
           <div>
-            <Button type="submit">{t('invite')}</Button>
+            <SubmitButton>{t('invite')}</SubmitButton>
           </div>
-        </form>
+        </Form>
       </Card>
     </View>
   );

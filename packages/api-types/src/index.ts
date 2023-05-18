@@ -15,6 +15,7 @@ export interface GetSessionResponse {
 
 export interface InviteUserRequestBody {
   email: string;
+  name: string;
 }
 
 export interface Language {

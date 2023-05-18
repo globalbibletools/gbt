@@ -7,11 +7,13 @@ export default createRoute()
   .post<InviteUserRequestBody, void>({
     schema: z.object({
       email: z.string(),
+      name: z.string(),
     }),
     async handler(req, res) {
       const user = await client.user.create({
         data: {
           email: req.body.email.toLowerCase(),
+          name: req.body.name,
         },
       });
 

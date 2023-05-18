@@ -4,10 +4,7 @@ import ApiClient from './client';
 export default class Users {
   constructor(private readonly client: ApiClient) {}
 
-  invite(email: string): Promise<void> {
-    const body: InviteUserRequestBody = {
-      email,
-    };
+  invite(body: InviteUserRequestBody): Promise<void> {
     return this.client.post({
       path: `/api/users`,
       body,
