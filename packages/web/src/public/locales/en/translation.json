@@ -10,6 +10,7 @@
   "update": "Update",
   "create": "Create",
   "name": "name",
+  "email": "email",
   "code": "code",
   "select_verse": "Select verse",
   "previous_verse": "Previous Verse",

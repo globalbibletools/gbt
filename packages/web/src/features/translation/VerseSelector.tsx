@@ -36,6 +36,7 @@ export function VerseSelector({ verseId, onVerseChange }: VerseSelectorProps) {
   return (
     <div className="flex flex-row gap-4 items-center">
       <TextInput
+        name="verseReference"
         autoComplete="off"
         placeholder={generateReference(verseInfo, t)}
         onKeyDown={onKeyDown}

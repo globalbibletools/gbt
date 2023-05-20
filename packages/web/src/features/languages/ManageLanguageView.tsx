@@ -1,16 +1,21 @@
 import apiClient from '../../shared/apiClient';
 import View from '../../shared/components/View';
 import ViewTitle from '../../shared/components/ViewTitle';
-import { FormEvent } from 'react';
 import { LoaderFunctionArgs, useLoaderData } from 'react-router-dom';
 import TextInput from '../../shared/components/TextInput';
 import FormLabel from '../../shared/components/FormLabel';
-import Button from '../../shared/components/Button';
 import { GetLanguageResponseBody } from '@translation/api-types';
 import { useTranslation } from 'react-i18next';
+import Form from '../../shared/components/Form';
+import InputError from '../../shared/components/InputError';
+import SubmitButton from '../../shared/components/SubmitButton';
 
 export async function manageLanguageViewLoader({ params }: LoaderFunctionArgs) {
   return apiClient.languages.findByCode(params.code ?? 'unknown');
+}
+
+interface FormData {
+  name: string;
 }
 
 export default function ManageLanguageView() {
@@ -18,13 +23,9 @@ export default function ManageLanguageView() {
 
   const { t } = useTranslation();
 
-  async function onSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    const name = (
-      e.currentTarget.elements.namedItem('name') as HTMLInputElement
-    ).value;
+  async function onSubmit(data: FormData) {
     await apiClient.languages.update(language.data.code, {
-      name,
+      name: data.name,
     });
   }
 
@@ -33,7 +34,7 @@ export default function ManageLanguageView() {
       <div className="m-auto w-fit">
         <ViewTitle>{language.data.name}</ViewTitle>
 
-        <form onSubmit={onSubmit}>
+        <Form onSubmit={onSubmit}>
           <div className="mb-4">
             <FormLabel htmlFor="name">{t('name').toUpperCase()}</FormLabel>
             <TextInput
@@ -43,12 +44,14 @@ export default function ManageLanguageView() {
               autoComplete="off"
               defaultValue={language.data.name}
               required
+              aria-describedby="name-error"
             />
+            <InputError id="name-error" name="name" context="name" />
           </div>
           <div>
-            <Button type="submit">{t('update')}</Button>
+            <SubmitButton>{t('update')}</SubmitButton>
           </div>
-        </form>
+        </Form>
       </div>
     </View>
   );
