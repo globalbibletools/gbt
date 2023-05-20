@@ -26,7 +26,6 @@ export interface AutocompleteInputProps
  * The text value will be passed to the event.
  */
 export default function AutocompleteInput({
-  className = '',
   items,
   value,
   onChange,
@@ -117,13 +116,12 @@ export default function AutocompleteInput({
   }, 1);
 
   return (
-    <div className={`relative ${className}`}>
+    <div className="relative" style={{ width: width + 56 + 'px' }}>
       <div className="flex flex-col">
         <TextInput
           {...props}
           {...getInputProps()}
           className={`pr-10 w-full ${isOpen ? 'rounded-b-none' : ''}`}
-          style={{ width: width + 56 + 'px' }}
         />
         <div className="ml-[13px] mr-[70px]">
           <div
