@@ -123,13 +123,13 @@ export default function AutocompleteInput({
           {...props}
           {...getInputProps()}
           className={`pr-10 w-full ${isOpen ? 'rounded-b-none' : ''}`}
-          // style={{ width: width + 56 + 'px' }}
+          style={{ width: width + 56 + 'px' }}
         />
         <div className="ml-[13px] mr-[70px]">
           <div
             ref={child1}
             style={{ width: 'auto' }}
-            className="absolute  h-auto whitespace-nowrap "
+            className="absolute invisible h-auto whitespace-nowrap "
           >
             {inputValue}
           </div>
