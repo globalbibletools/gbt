@@ -104,14 +104,10 @@ export default function AutocompleteInput({
   const [measuredWidth, setMeasuredWidth] = useState(0);
   function updateMeasuredWidth() {
     if (textMeasureElement.current) {
-      const element: HTMLElement = textMeasureElement.current;
-      setMeasuredWidth(element.clientWidth);
+      setMeasuredWidth((textMeasureElement.current as HTMLElement).clientWidth);
     }
   }
-
-  useEffect(() => {
-    updateMeasuredWidth();
-  }, [textMeasureElement]);
+  useEffect(() => updateMeasuredWidth(), [textMeasureElement]);
 
   return (
     // The extra 56 pixel give room for the dropdown button.
