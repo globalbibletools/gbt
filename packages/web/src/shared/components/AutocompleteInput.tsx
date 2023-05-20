@@ -52,11 +52,7 @@ export default function AutocompleteInput({
     },
     onStateChange({ inputValue }) {
       if (inputValue != undefined) {
-        if (child1.current) {
-          const element: HTMLElement = child1.current;
-          const width = element.clientWidth + 1;
-          setWidth(width);
-        }
+        updateMeasuredWidth();
       }
     },
     onSelectedItemChange({ selectedItem }) {
@@ -104,33 +100,35 @@ export default function AutocompleteInput({
     selectItem(items.find((item) => item.value === value) ?? null);
   }, [value, selectItem, items]);
 
-  const child1 = useRef(null);
-  const [width, setWidth] = useState(0);
-
-  setTimeout(() => {
-    if (child1.current) {
-      const element: HTMLElement = child1.current;
-      const width = element.clientWidth + 1;
-      setWidth(width);
+  const textMeasureElement = useRef(null);
+  const [measuredWidth, setMeasuredWidth] = useState(0);
+  function updateMeasuredWidth() {
+    if (textMeasureElement.current) {
+      const element: HTMLElement = textMeasureElement.current;
+      setMeasuredWidth(element.clientWidth);
     }
-  }, 1);
+  }
+
+  useEffect(() => {
+    updateMeasuredWidth();
+  }, [textMeasureElement]);
 
   return (
-    <div className="relative" style={{ width: width + 56 + 'px' }}>
+    // The extra 56 pixel give room for the dropdown button.
+    <div className="relative" style={{ width: measuredWidth + 56 + 'px' }}>
       <div className="flex flex-col">
         <TextInput
           {...props}
           {...getInputProps()}
           className={`pr-10 w-full ${isOpen ? 'rounded-b-none' : ''}`}
         />
-        <div className="ml-[13px] mr-[70px]">
-          <div
-            ref={child1}
-            style={{ width: 'auto' }}
-            className="absolute invisible h-auto whitespace-nowrap "
-          >
-            {inputValue}
-          </div>
+        {/* This invisible element is used to calculate the width of the input text. */}
+        <div
+          ref={textMeasureElement}
+          style={{ width: 'auto' }}
+          className="absolute invisible h-auto whitespace-nowrap "
+        >
+          {inputValue}
         </div>
       </div>
       <button
