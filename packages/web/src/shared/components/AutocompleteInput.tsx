@@ -100,6 +100,8 @@ export default function AutocompleteInput({
     selectItem(items.find((item) => item.value === value) ?? null);
   }, [value, selectItem, items]);
 
+  // The width of textMeasureElement allows us to measure the width of the input text.
+  // That width is used to size the overall component.
   const textMeasureElement = useRef(null);
   const [measuredWidth, setMeasuredWidth] = useState(0);
   function updateMeasuredWidth() {
