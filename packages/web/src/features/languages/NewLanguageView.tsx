@@ -9,6 +9,7 @@ import { ApiClientError } from '@translation/api-client';
 import Form from '../../shared/components/Form';
 import InputError from '../../shared/components/InputError';
 import SubmitButton from '../../shared/components/SubmitButton';
+import { useForm } from 'react-hook-form';
 
 export interface FormData {
   code: string;
@@ -20,6 +21,7 @@ export default function NewLanguageView() {
 
   const { t } = useTranslation();
 
+  const formContext = useForm<FormData>();
   async function onSubmit(data: FormData) {
     try {
       await apiClient.languages.create({
@@ -47,7 +49,7 @@ export default function NewLanguageView() {
       <div className="m-auto w-fit">
         <ViewTitle>{t('new_language')}</ViewTitle>
 
-        <Form onSubmit={onSubmit}>
+        <Form context={formContext} onSubmit={onSubmit}>
           <div className="mb-2">
             <FormLabel htmlFor="code">{t('code').toUpperCase()}</FormLabel>
             <TextInput

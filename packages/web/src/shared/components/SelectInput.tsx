@@ -1,16 +1,35 @@
 import { forwardRef, ComponentProps } from 'react';
+import { useFormContext } from 'react-hook-form';
+import useMergedRef from '../mergeRefs';
 
-const SelectInput = forwardRef<HTMLSelectElement, ComponentProps<'select'>>(
-  ({ className = '', children, ...props }, ref) => {
+export interface SelectInputProps
+  extends Omit<ComponentProps<'select'>, 'name'> {
+  name: string;
+}
+
+const SelectInput = forwardRef<HTMLSelectElement, SelectInputProps>(
+  (
+    { className = '', name, onChange, onBlur, required, children, ...props },
+    ref
+  ) => {
+    const context = useFormContext();
+    const hasErrors = !!context?.formState.errors[name];
+    const registerProps = context?.register(name, {
+      required,
+      onChange,
+      onBlur,
+    });
     return (
       <select
-        ref={ref}
         className={`
-          rounded border border-slate-400 py-2 px-3 shadow-inner h-10
-          focus:outline focus:outline-2 focus:outline-blue-600 focus:shadow-lg
+          rounded border py-2 px-3 shadow-inner h-10
+          focus:outline focus:outline-2 focus:outline-blue-600
+          ${hasErrors ? 'border-red-700 shadow-red-100' : 'border-slate-400'}
           ${className}
         `}
         {...props}
+        {...registerProps}
+        ref={useMergedRef(ref, registerProps?.ref)}
       >
         {children}
       </select>

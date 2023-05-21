@@ -1,5 +1,6 @@
 import { forwardRef, ComponentProps } from 'react';
-import { useFormContext, useFormState } from 'react-hook-form';
+import { useFormContext } from 'react-hook-form';
+import useMergedRef from '../mergeRefs';
 
 export interface TextInputProps extends Omit<ComponentProps<'input'>, 'name'> {
   name: string;
@@ -8,11 +9,8 @@ export interface TextInputProps extends Omit<ComponentProps<'input'>, 'name'> {
 const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
   ({ className = '', name, onChange, onBlur, required, ...props }, ref) => {
     const context = useFormContext();
-    const { errors } = useFormState({ name });
-
-    const hasErrors = !!errors[name];
-
-    const registerProps = context.register(name, {
+    const hasErrors = !!context?.formState.errors[name];
+    const registerProps = context?.register(name, {
       required,
       onChange,
       onBlur,
@@ -28,14 +26,7 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
         `}
         {...props}
         {...registerProps}
-        ref={(el) => {
-          registerProps?.ref(el);
-          if (typeof ref === 'function') {
-            ref(el);
-          } else if (ref) {
-            ref.current = el;
-          }
-        }}
+        ref={useMergedRef(ref, registerProps?.ref)}
       />
     );
   }

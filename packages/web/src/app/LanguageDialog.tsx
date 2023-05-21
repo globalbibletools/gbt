@@ -16,6 +16,7 @@ const LanguageDialog = forwardRef<DialogRef>((_, ref) => {
       </h1>
 
       <SelectInput
+        name="language"
         className="block min-w-[150px]"
         value={i18n.resolvedLanguage}
         onChange={(e) => i18n.changeLanguage(e.currentTarget.value)}

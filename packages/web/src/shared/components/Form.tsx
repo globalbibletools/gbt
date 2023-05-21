@@ -1,21 +1,22 @@
 import { ComponentProps } from 'react';
-import { useForm, FormProvider, FieldValues } from 'react-hook-form';
+import { FormProvider, FieldValues, UseFormReturn } from 'react-hook-form';
 
 export interface SubmitHandler<Data> {
   (data: Data, options: { reset(): void }): Promise<void>;
 }
-export interface FormProps<Data>
+export interface FormProps<Data extends FieldValues>
   extends Omit<ComponentProps<'form'>, 'onSubmit'> {
+  context: UseFormReturn<Data>;
   onSubmit: SubmitHandler<Data>;
 }
 
 export default function Form<Data extends FieldValues>({
   onSubmit,
+  context,
   children,
   ...props
 }: FormProps<Data>) {
-  const formContext = useForm<Data>();
-  const { handleSubmit, formState } = formContext;
+  const { handleSubmit, formState } = context;
 
   return (
     <form
@@ -23,14 +24,14 @@ export default function Form<Data extends FieldValues>({
       onSubmit={(e) => {
         if (!formState.isSubmitting) {
           handleSubmit(async (data) => {
-            await onSubmit(data, { reset: formContext.reset });
+            await onSubmit(data, { reset: context.reset });
           })(e);
         } else {
           e.preventDefault();
         }
       }}
     >
-      <FormProvider {...formContext}>{children}</FormProvider>
+      <FormProvider {...context}>{children}</FormProvider>
     </form>
   );
 }

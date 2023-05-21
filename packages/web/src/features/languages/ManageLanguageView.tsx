@@ -2,6 +2,7 @@ import apiClient from '../../shared/apiClient';
 import View from '../../shared/components/View';
 import ViewTitle from '../../shared/components/ViewTitle';
 import { LoaderFunctionArgs, useLoaderData } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
 import TextInput from '../../shared/components/TextInput';
 import FormLabel from '../../shared/components/FormLabel';
 import { GetLanguageResponseBody } from '@translation/api-types';
@@ -23,6 +24,7 @@ export default function ManageLanguageView() {
 
   const { t } = useTranslation();
 
+  const formContext = useForm<FormData>();
   async function onSubmit(data: FormData) {
     await apiClient.languages.update(language.data.code, {
       name: data.name,
@@ -34,7 +36,7 @@ export default function ManageLanguageView() {
       <div className="m-auto w-fit">
         <ViewTitle>{language.data.name}</ViewTitle>
 
-        <Form onSubmit={onSubmit}>
+        <Form context={formContext} onSubmit={onSubmit}>
           <div className="mb-4">
             <FormLabel htmlFor="name">{t('name').toUpperCase()}</FormLabel>
             <TextInput
