@@ -1,7 +1,7 @@
 import { KeyboardEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Icon } from '../../shared/components/Icon';
-import TextInput from '../../shared/components/TextInput';
+import TextInput from '../../shared/components/form/TextInput';
 import {
   decrementVerseId,
   generateReference,

@@ -2,13 +2,13 @@ import apiClient from '../../shared/apiClient';
 import View from '../../shared/components/View';
 import ViewTitle from '../../shared/components/ViewTitle';
 import { useNavigate } from 'react-router-dom';
-import TextInput from '../../shared/components/TextInput';
-import FormLabel from '../../shared/components/FormLabel';
+import TextInput from '../../shared/components/form/TextInput';
+import FormLabel from '../../shared/components/form/FormLabel';
 import { useTranslation } from 'react-i18next';
 import { ApiClientError } from '@translation/api-client';
-import Form from '../../shared/components/Form';
-import InputError from '../../shared/components/InputError';
-import SubmitButton from '../../shared/components/SubmitButton';
+import Form from '../../shared/components/form/Form';
+import InputError from '../../shared/components/form/InputError';
+import SubmitButton from '../../shared/components/form/SubmitButton';
 import { useForm } from 'react-hook-form';
 
 export interface FormData {

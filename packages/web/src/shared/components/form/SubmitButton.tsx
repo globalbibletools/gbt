@@ -1,8 +1,8 @@
 import { ComponentProps } from 'react';
 import { useFormState } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import Button from './Button';
-import LoadingSpinner from './LoadingSpinner';
+import Button from '../actions/Button';
+import LoadingSpinner from '../LoadingSpinner';
 
 export type SubmitButtonProps = Omit<ComponentProps<typeof Button>, 'type'>;
 

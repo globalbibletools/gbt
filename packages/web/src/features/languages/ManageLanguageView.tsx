@@ -3,13 +3,13 @@ import View from '../../shared/components/View';
 import ViewTitle from '../../shared/components/ViewTitle';
 import { LoaderFunctionArgs, useLoaderData } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import TextInput from '../../shared/components/TextInput';
-import FormLabel from '../../shared/components/FormLabel';
+import TextInput from '../../shared/components/form/TextInput';
+import FormLabel from '../../shared/components/form/FormLabel';
 import { GetLanguageResponseBody } from '@translation/api-types';
 import { useTranslation } from 'react-i18next';
-import Form from '../../shared/components/Form';
-import InputError from '../../shared/components/InputError';
-import SubmitButton from '../../shared/components/SubmitButton';
+import Form from '../../shared/components/form/Form';
+import InputError from '../../shared/components/form/InputError';
+import SubmitButton from '../../shared/components/form/SubmitButton';
 
 export async function manageLanguageViewLoader({ params }: LoaderFunctionArgs) {
   return apiClient.languages.findByCode(params.code ?? 'unknown');
