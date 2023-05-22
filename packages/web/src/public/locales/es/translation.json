@@ -19,5 +19,9 @@
   "saved": "guardado",
   "submitting": "Sumisión",
   "log_in": "Acceso",
-  "log_out": "Cerrar sesión"
+  "log_out": "Cerrar sesión",
+  "close": "cerrar",
+  "language_exists": "Ya existe un idioma con el código \"{{code}}\"",
+  "language_created": "¡Idioma creado!",
+  "language_updated": "¡Idioma actualizado!"
 }

@@ -8,8 +8,10 @@ import { useTranslation } from 'react-i18next';
 import { ApiClientError } from '@translation/api-client';
 import Form from '../../shared/components/form/Form';
 import InputError from '../../shared/components/form/InputError';
-import SubmitButton from '../../shared/components/form/SubmitButton';
 import { useForm } from 'react-hook-form';
+import SubmittingIndicator from '../../shared/components/form/SubmittingIndicator';
+import Button from '../../shared/components/actions/Button';
+import { useFlash } from '../../shared/hooks/flash';
 
 export interface FormData {
   code: string;
@@ -19,6 +21,7 @@ export interface FormData {
 export default function NewLanguageView() {
   const navigate = useNavigate();
 
+  const flash = useFlash();
   const { t } = useTranslation();
 
   const formContext = useForm<FormData>();
@@ -28,20 +31,22 @@ export default function NewLanguageView() {
         code: data.code,
         name: data.name,
       });
+
+      flash.success(t('language_created'));
+
+      navigate('/languages');
     } catch (error) {
       if (error instanceof ApiClientError && error.status === 409) {
         const alreadyExistsError = error.body.errors.find(
           (error) => error.code === 'AlreadyExists'
         );
         if (alreadyExistsError) {
-          alert(`Language with code "${data.code}" already exists.`);
+          flash.error(t('language_exists', { code: data.code }));
           return;
         }
       }
-      throw error;
+      flash.error(`${error}`);
     }
-
-    navigate('/languages');
   }
 
   return (
@@ -75,7 +80,8 @@ export default function NewLanguageView() {
             <InputError id="name-error" name="name" context="name" />
           </div>
           <div>
-            <SubmitButton>{t('create')}</SubmitButton>
+            <Button type="submit">{t('create')}</Button>
+            <SubmittingIndicator className="ml-3" />
           </div>
         </Form>
       </div>
