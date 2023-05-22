@@ -1,6 +1,6 @@
 import { forwardRef, ComponentProps } from 'react';
 import { useFormContext } from 'react-hook-form';
-import useMergedRef from '../mergeRefs';
+import useMergedRef from '../../hooks/mergeRefs';
 
 export interface TextInputProps extends Omit<ComponentProps<'input'>, 'name'> {
   name: string;
