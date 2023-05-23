@@ -1,7 +1,7 @@
-import { ComponentProps, useEffect, useRef, useState } from 'react';
 import { useCombobox } from 'downshift';
-import TextInput from './TextInput';
+import { ComponentProps, useEffect, useState } from 'react';
 import { Icon } from './Icon';
+import TextInput from './TextInput';
 
 export interface AutocompleteItem {
   label: string;
