@@ -50,11 +50,6 @@ export default function AutocompleteInput({
     itemToString(item) {
       return item?.label ?? '';
     },
-    onStateChange({ inputValue }) {
-      if (inputValue != undefined) {
-        updateMeasuredWidth();
-      }
-    },
     onSelectedItemChange({ selectedItem }) {
       if (selectedItem?.value === '_create') {
         onCreate?.(selectedItem.label);
@@ -100,35 +95,13 @@ export default function AutocompleteInput({
     selectItem(items.find((item) => item.value === value) ?? null);
   }, [value, selectItem, items]);
 
-  // The width of textMeasureElement allows us to measure the width of the input text.
-  // That width is used to size the overall component.
-  const textMeasureElement = useRef(null);
-  const [measuredWidth, setMeasuredWidth] = useState(0);
-  function updateMeasuredWidth() {
-    if (textMeasureElement.current) {
-      setMeasuredWidth((textMeasureElement.current as HTMLElement).clientWidth);
-    }
-  }
-  useEffect(() => updateMeasuredWidth(), [textMeasureElement]);
-
   return (
-    // The extra 56 pixel give room for the dropdown button.
-    <div className="relative" style={{ width: measuredWidth + 56 + 'px' }}>
-      <div className="flex flex-col">
-        <TextInput
-          {...props}
-          {...getInputProps()}
-          className={`pr-10 w-full ${isOpen ? 'rounded-b-none' : ''}`}
-        />
-        {/* This invisible element is used to calculate the width of the input text. */}
-        <div
-          ref={textMeasureElement}
-          style={{ width: 'auto' }}
-          className="absolute invisible h-auto whitespace-nowrap "
-        >
-          {inputValue}
-        </div>
-      </div>
+    <div className="relative">
+      <TextInput
+        {...props}
+        {...getInputProps()}
+        className={`w-full pr-10 ${isOpen ? 'rounded-b-none' : ''}`}
+      />
       <button
         aria-label="toggle menu"
         className="absolute px-2 top-0 right-0 w-10 h-10"

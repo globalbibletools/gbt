@@ -1,7 +1,8 @@
 import { useTranslation } from 'react-i18next';
+import AutocompleteInput from '../../shared/components/AutocompleteInput';
 import { Icon } from '../../shared/components/Icon';
 import InputHelpText from '../../shared/components/InputHelpText';
-import AutocompleteInput from '../../shared/components/AutocompleteInput';
+import { useTextWidth } from '../../shared/hooks/useTextWidth';
 import { capitalize } from '../../shared/utils';
 
 export interface TranslateWordProps {
@@ -24,6 +25,7 @@ export default function TranslateWord({
   onGlossChange,
 }: TranslateWordProps) {
   const { t } = useTranslation();
+  const width = useTextWidth(gloss ?? '');
 
   return (
     <li className="mx-2 mb-4">
@@ -47,6 +49,8 @@ export default function TranslateWord({
       <AutocompleteInput
         value={gloss}
         items={previousGlosses.map((gloss) => ({ label: gloss, value: gloss }))}
+        // The extra 56 pixel give room for the dropdown button.
+        style={{ width: width + 56 }}
         aria-describedby={`word-help-${word.id}`}
         aria-labelledby={`word-${word.id}`}
         onChange={(newGloss) => {
