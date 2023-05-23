@@ -8,29 +8,30 @@ import { useEffect, useRef, useState } from 'react';
 // TODO: allow the font information to be passed in, so that we can take
 //       into account things like font family, font size, and font weight.
 export function useTextWidth(text: string): number {
-  let textElement: HTMLElement;
+  const el = useRef<HTMLDivElement>();
 
   useEffect(() => {
-    textElement = document.createElement('span');
-    textElement.style.width = 'auto';
-    textElement.style.height = '0';
-    textElement.style.maxHeight = '0';
-    textElement.style.visibility = 'hidden';
-    textElement.style.position = 'absolute';
+    const div = document.createElement('div');
+    div.style.width = 'auto';
+    div.style.height = '0';
+    div.style.maxHeight = '0';
+    div.style.visibility = 'hidden';
+    div.style.position = 'absolute';
     // This seems hacky, but it gets the elements completely off the screen, so
     // that they don't affect the scroll bar.
-    textElement.style.top = '-9999px';
-    textElement.style.left = '-9999px';
-    document.body.appendChild(textElement);
-    return () => textElement.remove();
+    div.style.top = '-9999px';
+    div.style.left = '-9999px';
+    document.body.appendChild(div);
+    el.current = div;
+    return () => div.remove();
   }, []);
 
   const [width, setWidth] = useState(0);
 
   useEffect(() => {
-    if (textElement) {
-      textElement.innerText = text;
-      setWidth(textElement.clientWidth);
+    if (el.current) {
+      el.current.innerText = text;
+      setWidth(el.current.clientWidth);
     }
   }, [text]);
 

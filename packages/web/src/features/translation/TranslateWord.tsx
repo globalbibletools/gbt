@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import AutocompleteInput from '../../shared/components/AutocompleteInput';
 import { Icon } from '../../shared/components/Icon';
@@ -25,7 +26,8 @@ export default function TranslateWord({
   onGlossChange,
 }: TranslateWordProps) {
   const { t } = useTranslation();
-  const width = useTextWidth(gloss ?? '');
+  const [text, setText] = useState(gloss ?? '');
+  const width = useTextWidth(text);
 
   return (
     <li className="mx-2 mb-4">
@@ -56,11 +58,13 @@ export default function TranslateWord({
         onChange={(newGloss) => {
           if (newGloss !== gloss) {
             onGlossChange(newGloss);
+            setText(newGloss ?? '');
           }
         }}
         onCreate={(newGloss) => {
           if (newGloss !== gloss) {
             onGlossChange(newGloss);
+            setText(newGloss ?? '');
           }
         }}
       />
