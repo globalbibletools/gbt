@@ -24,7 +24,11 @@ const SelectInput = forwardRef<HTMLSelectElement, SelectInputProps>(
         className={`
           rounded border py-2 px-3 shadow-inner h-10
           focus:outline focus:outline-2 focus:outline-blue-600
-          ${hasErrors ? 'border-red-700 shadow-red-100' : 'border-slate-400'}
+          ${
+            hasErrors
+              ? 'border-red-700 shadow-red-100 focus:outline-red-700'
+              : 'border-slate-400 focus:outline-blue-600'
+          }
           ${className}
         `}
         {...props}
