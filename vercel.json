@@ -1,25 +1,5 @@
 {
   "rewrites": [
-    {
-      "source": "/api/:path*",
-      "has": [
-        {
-          "type": "host",
-          "value": "gloss-translation.vercel.app"
-        }
-      ],
-      "destination": "https://gloss-translation-api.vercel.app/api/:path*"
-    },
-    {
-      "source": "/api/:path*",
-      "has": [
-        {
-          "type": "host",
-          "value": "gloss-translation-git-(?<host>.*).vercel.app"
-        }
-      ],
-      "destination": "https://gloss-translation-api-git-:host.vercel.app/api/:path*"
-    },
     { 
       "source": "/([^.]+)",
       "has": [

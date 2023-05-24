@@ -20,7 +20,7 @@ export function VerseSelector({ verseId, onVerseChange }: VerseSelectorProps) {
   const verseInfo = parseVerseId(verseId);
 
   const onKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key == 'Enter') {
+    if (e.key === 'Enter') {
       const newReference = e.currentTarget.value;
       e.currentTarget.value = '';
       const newVerseId = parseReference(newReference, t);
