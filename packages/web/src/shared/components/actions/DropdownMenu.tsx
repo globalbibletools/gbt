@@ -1,7 +1,7 @@
 import { FocusEvent, ReactNode, useRef, useState } from 'react';
 import { Link, LinkProps } from 'react-router-dom';
-import useCssId from '../cssId';
-import { Icon } from './Icon';
+import useCssId from '../../hooks/cssId';
+import { Icon } from '../Icon';
 
 export interface DropdownProps {
   className?: string;

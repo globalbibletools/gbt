@@ -2,7 +2,7 @@ import { forwardRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import Dialog, { DialogRef } from '../shared/components/Dialog';
 import { Icon } from '../shared/components/Icon';
-import SelectInput from '../shared/components/SelectInput';
+import SelectInput from '../shared/components/form/SelectInput';
 import languages from './languages.json';
 
 const LanguageDialog = forwardRef<DialogRef>((_, ref) => {
@@ -16,6 +16,7 @@ const LanguageDialog = forwardRef<DialogRef>((_, ref) => {
       </h1>
 
       <SelectInput
+        name="language"
         className="block min-w-[150px]"
         value={i18n.resolvedLanguage}
         onChange={(e) => i18n.changeLanguage(e.currentTarget.value)}

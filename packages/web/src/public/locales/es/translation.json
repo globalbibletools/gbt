@@ -10,12 +10,14 @@
   "update": "Actualizar",
   "create": "Crear",
   "name": "nombre",
+  "email": "correo electrónico",
   "code": "código",
   "select_verse": "Seleccionar verso",
   "previous_verse": "Verso anterior",
   "next_verse": "Siguiente verso",
   "saving": "guardando",
   "saved": "guardado",
+  "submitting": "Sumisión",
   "log_in": "Acceso",
   "log_out": "Cerrar sesión"
 }

@@ -1,7 +1,7 @@
 import { KeyboardEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Icon } from '../../shared/components/Icon';
-import TextInput from '../../shared/components/TextInput';
+import TextInput from '../../shared/components/form/TextInput';
 import {
   decrementVerseId,
   generateReference,
@@ -36,6 +36,7 @@ export function VerseSelector({ verseId, onVerseChange }: VerseSelectorProps) {
   return (
     <div className="flex flex-row gap-4 items-center">
       <TextInput
+        name="verseReference"
         autoComplete="off"
         placeholder={generateReference(verseInfo, t)}
         onKeyDown={onKeyDown}

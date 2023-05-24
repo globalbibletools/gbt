@@ -6,7 +6,7 @@ import DropdownMenu, {
   DropdownMenuButton,
   DropdownMenuLink,
   DropdownMenuSubmenu,
-} from '../shared/components/DropdownMenu';
+} from '../shared/components/actions/DropdownMenu';
 import { Icon } from '../shared/components/Icon';
 import LanguageDialog from './LanguageDialog';
 import interfaceLanguages from './languages.json';

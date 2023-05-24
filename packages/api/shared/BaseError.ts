@@ -8,7 +8,7 @@ export default class BaseError extends Error {
 
   constructor() {
     super();
-    this.code = this.name.replace(/Error$/, '');
+    this.code = this.constructor.name.replace(/Error$/, '');
     this.message = this.code;
   }
 
