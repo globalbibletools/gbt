@@ -23,5 +23,7 @@
   "close": "cerrar",
   "language_exists": "Ya existe un idioma con el código \"{{code}}\"",
   "language_created": "¡Idioma creado!",
-  "language_updated": "¡Idioma actualizado!"
+  "language_updated": "¡Idioma actualizado!",
+  "error": "Error",
+  "success": "Éxito"
 }

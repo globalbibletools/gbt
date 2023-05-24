@@ -3,11 +3,20 @@ import {
   ReactNode,
   useCallback,
   useContext,
+  useMemo,
   useState,
 } from 'react';
 import { Transition } from '@headlessui/react';
 import { Icon } from '../components/Icon';
 import { useTranslation } from 'react-i18next';
+
+// Flash messages have several states that help make their lifecycle easier to manage:
+// unshown - This message has been added, but not yet displayed.
+//           A message in this state will animate into view.
+// shown - This message has been added and displayed
+//         A message in this state will not reanimate if a message on top of it is dismissed.
+// dismissed - This message has been dismissed either by the user or by a timeout.
+//             A message in this state will animate out of view, and then be removed from the list.
 
 type FlashMessageType = 'error' | 'success';
 interface FlashMessage {
@@ -20,9 +29,18 @@ interface FlashMessage {
 }
 
 interface FlashContextValue {
+  /**
+   * Display an error message to the user.
+   * @param message The message to display.
+   */
   error(message: string): void;
+  /**
+   * Display a success message to the user.
+   * @param message Display a success message to the user.
+   * @param timeout How long the message should remain visible. Defaults to three seconds.
+   */
   success(message: string, timeout?: number): void;
-  remove(id: string): void;
+  /** Clear all displayed messages.  */
   clear(): void;
 }
 const FlashContext = createContext<FlashContextValue | null>(null);
@@ -36,17 +54,15 @@ function generateId() {
 }
 
 export function FlashProvider({ children }: FlashProviderProps) {
-  const { t } = useTranslation(['error', 'translation']);
-
   const [messages, setMessages] = useState<FlashMessage[]>([]);
 
+  // These helper functions all have useCallback so that `useFlash` never triggers a render of components that use it.
   const error = useCallback((message: string) => {
     setMessages((messages) => [
       { id: generateId(), message, level: 'error', state: 'unshown' },
       ...messages,
     ]);
   }, []);
-
   const remove = useCallback((id: string) => {
     setMessages((messages) =>
       messages.map((message) =>
@@ -54,7 +70,6 @@ export function FlashProvider({ children }: FlashProviderProps) {
       )
     );
   }, []);
-
   const success = useCallback(
     (message: string, timeout = 3000) => {
       const id = generateId();
@@ -74,13 +89,20 @@ export function FlashProvider({ children }: FlashProviderProps) {
     },
     [remove]
   );
-
   const clear = useCallback(() => {
     setMessages([]);
   }, []);
 
+  // We memoize the context value so that `useFlash` never triggers a rerender in components that use it.
+  const contextValue = useMemo(
+    () => ({ error, success, clear }),
+    [error, success, clear]
+  );
+
+  const { t } = useTranslation();
+
   return (
-    <FlashContext.Provider value={{ error, success, remove, clear }}>
+    <FlashContext.Provider value={contextValue}>
       {children}
       <div className="fixed top-0 w-full flex justify-center items-start z-10 pointer-events-none">
         {messages.slice(0, 1).map((message) => {
@@ -155,6 +177,13 @@ export function FlashProvider({ children }: FlashProviderProps) {
   );
 }
 
+/**
+ * Enables the ability to send flash messages from any component.
+ *
+ * Use `flash.success('message')` or `flash.error('message') to show a message with the appropriate styling.
+ * Success messages will clear themselves after a few seconds,
+ * while error messages must be dismissed by the user.
+ */
 export function useFlash() {
   const context = useContext(FlashContext);
   if (!context) {

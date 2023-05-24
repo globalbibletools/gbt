@@ -23,5 +23,7 @@
   "close": "close",
   "language_exists": "A language with code \"{{code}}\" already exists",
   "language_created": "Language created!",
-  "language_updated": "Language updated!"
+  "language_updated": "Language updated!",
+  "error": "Error",
+  "success": "Success"
 }
