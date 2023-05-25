@@ -1,6 +1,6 @@
 import { useCombobox } from 'downshift';
 import { ComponentProps, useEffect, useState } from 'react';
-import { Icon } from './Icon';
+import { Icon } from '../Icon';
 import TextInput from './TextInput';
 
 export interface AutocompleteItem {

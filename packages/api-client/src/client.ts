@@ -1,4 +1,4 @@
-import type { ErrorResponse } from '@translation/api-types';
+import type { ErrorResponse, GetSessionResponse } from '@translation/api-types';
 import Languages from './languages';
 import Verses from './verses';
 import Words from './words';
@@ -77,7 +77,7 @@ export default class ApiClient {
 
     const request = new Request(url, {
       method,
-      credentials: 'same-origin',
+      credentials: 'include',
       mode: 'cors',
       headers,
       body: formattedBody,
@@ -106,5 +106,11 @@ export default class ApiClient {
 
   async patch<Response>(request: ApiClientPatchOptions): Promise<Response> {
     return await this.request({ ...request, method: 'PATCH' });
+  }
+
+  getSession(): Promise<GetSessionResponse> {
+    return this.get({
+      path: '/api/auth/session',
+    });
   }
 }

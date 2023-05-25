@@ -8,6 +8,14 @@ info:
 servers:
   - url: /api
 paths:
+  /auth/signin/{provider}:
+    $ref: ./paths/auth.yml#login
+  /auth/signout:
+    $ref: ./paths/auth.yml#logout
+  /auth/csrf:
+    $ref: ./paths/auth.yml#csrf
+  /auth/session:
+    $ref: ./paths/auth.yml#session
   /verses/{verseId}:
     $ref: ./paths/verse.yml
   /languages:

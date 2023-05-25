@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import AutocompleteInput from '../../shared/components/AutocompleteInput';
 import { Icon } from '../../shared/components/Icon';
-import InputHelpText from '../../shared/components/InputHelpText';
+import AutocompleteInput from '../../shared/components/form/AutocompleteInput';
+import InputHelpText from '../../shared/components/form/InputHelpText';
 import { useTextWidth } from '../../shared/hooks/useTextWidth';
 import { capitalize } from '../../shared/utils';
 

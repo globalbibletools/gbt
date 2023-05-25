@@ -1,7 +1,7 @@
 import { FocusEvent, ReactNode, useRef, useState } from 'react';
 import { Link, LinkProps } from 'react-router-dom';
-import useCssId from '../cssId';
-import { Icon } from './Icon';
+import useCssId from '../../hooks/cssId';
+import { Icon } from '../Icon';
 
 export interface DropdownProps {
   className?: string;
@@ -59,16 +59,22 @@ export interface DropdownMenuLinkProps {
   to: LinkProps['to'];
 }
 
+const className =
+  'focus:outline-none focus:underline hover:underline whitespace-nowrap px-4 py-1 text-left w-full';
+
 export function DropdownMenuLink({ children, to }: DropdownMenuLinkProps) {
   return (
     <li>
-      <Link
-        type="button"
-        className="focus:outline-none focus:underline hover:underline whitespace-nowrap px-4 py-1 text-left w-full"
-        to={to}
-      >
-        {children}
-      </Link>
+      {/* If we want to link to external URLs, we have use a standard anchor element. */}
+      {typeof to === 'string' && to.startsWith('http') ? (
+        <a className={className} href={to}>
+          {children}
+        </a>
+      ) : (
+        <Link className={className} to={to}>
+          {children}
+        </Link>
+      )}
     </li>
   );
 }

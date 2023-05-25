@@ -6,11 +6,12 @@ import DropdownMenu, {
   DropdownMenuButton,
   DropdownMenuLink,
   DropdownMenuSubmenu,
-} from '../shared/components/DropdownMenu';
+} from '../shared/components/actions/DropdownMenu';
 import { Icon } from '../shared/components/Icon';
 import LanguageDialog from './LanguageDialog';
 import interfaceLanguages from './languages.json';
 import apiClient from '../shared/apiClient';
+import useSession from '../shared/useSession';
 
 export interface HeaderProps {
   language: string;
@@ -18,7 +19,7 @@ export interface HeaderProps {
 }
 
 export default function Header({ language, onLanguageChange }: HeaderProps) {
-  const userName = 'Joe Translator';
+  const session = useSession();
   const languageDialog = useRef<DialogRef>(null);
   const { t, i18n } = useTranslation();
 
@@ -55,22 +56,38 @@ export default function Header({ language, onLanguageChange }: HeaderProps) {
             </DropdownMenuLink>
           </DropdownMenu>
         )}
-        <DropdownMenu text={userName}>
-          <DropdownMenuLink to={'#'}>
-            <Icon icon="user" className="mr-2" />
-            Profile
-          </DropdownMenuLink>
-          <DropdownMenuButton
-            onClick={() => {
-              languageDialog.current?.open();
-            }}
+        {session.status === 'authenticated' && (
+          <DropdownMenu text={session.user.name ?? ''}>
+            <DropdownMenuLink to={'#'}>
+              <Icon icon="user" className="mr-2" fixedWidth />
+              Profile
+            </DropdownMenuLink>
+            <DropdownMenuButton
+              onClick={() => {
+                languageDialog.current?.open();
+              }}
+            >
+              <Icon icon="earth" className="mr-2" fixedWidth />
+              {(interfaceLanguages as { [code: string]: string })[
+                i18n.resolvedLanguage
+              ] ?? t('language', { count: 100 })}
+            </DropdownMenuButton>
+            <DropdownMenuLink
+              to={`${process.env.API_URL}/api/auth/signout?callbackUrl=${window.location.href}`}
+            >
+              <Icon icon="right-from-bracket" className="mr-2" fixedWidth />
+              {t('log_out')}
+            </DropdownMenuLink>
+          </DropdownMenu>
+        )}
+        {session.status === 'unauthenticated' && (
+          <a
+            href={`${process.env.API_URL}/api/auth/signin?callbackUrl=${window.location.href}`}
+            className="focus:outline-none hover:underline focus:underline"
           >
-            <Icon icon="earth" className="mr-2" />
-            {(interfaceLanguages as { [code: string]: string })[
-              i18n.resolvedLanguage
-            ] ?? t('language', { count: 100 })}
-          </DropdownMenuButton>
-        </DropdownMenu>
+            {t('log_in')}
+          </a>
+        )}
       </nav>
       <LanguageDialog ref={languageDialog} />
     </header>
