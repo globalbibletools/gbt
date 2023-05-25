@@ -56,13 +56,13 @@ export default function TranslateWord({
         style={{ width: width + 56 }}
         aria-describedby={`word-help-${word.id}`}
         aria-labelledby={`word-${word.id}`}
-        onChange={(newGloss) => {
+        onChange={(newGloss: string | undefined) => {
           if (newGloss !== gloss) {
             onGlossChange(newGloss);
             setText(newGloss ?? '');
           }
         }}
-        onCreate={(newGloss) => {
+        onCreate={(newGloss: string | undefined) => {
           if (newGloss !== gloss) {
             onGlossChange(newGloss);
             setText(newGloss ?? '');
