@@ -1,7 +1,7 @@
-import { ComponentProps, useEffect, useState } from 'react';
 import { useCombobox } from 'downshift';
-import TextInput from './TextInput';
+import { ComponentProps, useEffect, useState } from 'react';
 import { Icon } from '../Icon';
+import TextInput from './TextInput';
 
 export interface AutocompleteItem {
   label: string;
@@ -97,11 +97,13 @@ export default function AutocompleteInput({
   }, [value, selectItem, items]);
 
   return (
-    <div className={`relative ${className}`}>
+    <div className="relative">
       <TextInput
         {...props}
         {...getInputProps()}
-        className={`w-full pr-10 ${isOpen ? 'rounded-b-none' : ''}`}
+        className={`w-full pr-10 ${
+          isOpen ? 'rounded-b-none' : ''
+        } ${className}`}
       />
       <button
         aria-label="toggle menu"
@@ -113,8 +115,9 @@ export default function AutocompleteInput({
       </button>
       <ul
         className={`
-          absolute w-full bg-white shadow-md max-h-80 overflow-y-scroll p-0
-          border-slate-300 border border-t-0 rounded-b z-10
+          absolute bg-white shadow-md max-h-80 overflow-y-auto p-0
+          border-slate-300 border rounded-b z-10
+          min-w-full max-w-[300px] w-max
           ${!(isOpen && filteredItems.length) && 'hidden'}
         `}
         {...getMenuProps()}

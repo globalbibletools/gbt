@@ -1,7 +1,9 @@
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Icon } from '../../shared/components/Icon';
-import InputHelpText from '../../shared/components/form/InputHelpText';
 import AutocompleteInput from '../../shared/components/form/AutocompleteInput';
+import InputHelpText from '../../shared/components/form/InputHelpText';
+import { useTextWidth } from '../../shared/hooks/useTextWidth';
 import { capitalize } from '../../shared/utils';
 
 export interface TranslateWordProps {
@@ -24,31 +26,46 @@ export default function TranslateWord({
   onGlossChange,
 }: TranslateWordProps) {
   const { t } = useTranslation();
+  const [text, setText] = useState(gloss ?? '');
+  const width = useTextWidth(text);
 
   return (
-    <li className="mx-2 mb-4 w-36">
+    <li className="mx-2 mb-4">
       <div
         id={`word-${word.id}`}
         className={`font-serif mb-2 ${
-          originalLanguage === 'hebrew' ? 'text-2xl text-right' : 'text-lg'
+          originalLanguage === 'hebrew'
+            ? 'text-2xl text-right'
+            : 'text-lg text-left'
         }`}
       >
         {word.text}
       </div>
-      <div className="mb-2">{referenceGloss}</div>
+      <div
+        className={`mb-2 ${
+          originalLanguage === 'hebrew' ? 'text-right' : 'text-left'
+        }`}
+      >
+        {referenceGloss}
+      </div>
       <AutocompleteInput
+        className="min-w-[80px]"
         value={gloss}
         items={previousGlosses.map((gloss) => ({ label: gloss, value: gloss }))}
+        // The extra 56 pixel give room for the dropdown button.
+        style={{ width: width + 56 }}
         aria-describedby={`word-help-${word.id}`}
         aria-labelledby={`word-${word.id}`}
-        onChange={(newGloss) => {
+        onChange={(newGloss: string | undefined) => {
           if (newGloss !== gloss) {
             onGlossChange(newGloss);
+            setText(newGloss ?? '');
           }
         }}
-        onCreate={(newGloss) => {
+        onCreate={(newGloss: string | undefined) => {
           if (newGloss !== gloss) {
             onGlossChange(newGloss);
+            setText(newGloss ?? '');
           }
         }}
       />
