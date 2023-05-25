@@ -49,6 +49,7 @@ export default function TranslateWord({
         {referenceGloss}
       </div>
       <AutocompleteInput
+        className="min-w-[80px]"
         value={gloss}
         items={previousGlosses.map((gloss) => ({ label: gloss, value: gloss }))}
         // The extra 56 pixel give room for the dropdown button.
