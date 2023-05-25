@@ -48,8 +48,6 @@ export default function InviteUserView() {
       }
       throw error;
     }
-
-    reset();
   };
 
   return (
