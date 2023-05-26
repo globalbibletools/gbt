@@ -16,6 +16,7 @@ const SelectInput = forwardRef<HTMLSelectElement, SelectInputProps>(
       onChange: props.onChange,
       onBlur: props.onBlur,
     });
+
     return (
       <select
         className={`
