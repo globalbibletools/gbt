@@ -9,7 +9,9 @@ import { GetLanguageResponseBody } from '@translation/api-types';
 import { useTranslation } from 'react-i18next';
 import Form from '../../shared/components/form/Form';
 import InputError from '../../shared/components/form/InputError';
-import SubmitButton from '../../shared/components/form/SubmitButton';
+import { useFlash } from '../../shared/hooks/flash';
+import SubmittingIndicator from '../../shared/components/form/SubmittingIndicator';
+import Button from '../../shared/components/actions/Button';
 
 export async function manageLanguageViewLoader({ params }: LoaderFunctionArgs) {
   return apiClient.languages.findByCode(params.code ?? 'unknown');
@@ -21,14 +23,20 @@ interface FormData {
 
 export default function ManageLanguageView() {
   const language = useLoaderData() as GetLanguageResponseBody;
+  const flash = useFlash();
 
   const { t } = useTranslation();
 
   const formContext = useForm<FormData>();
   async function onSubmit(data: FormData) {
-    await apiClient.languages.update(language.data.code, {
-      name: data.name,
-    });
+    try {
+      await apiClient.languages.update(language.data.code, {
+        name: data.name,
+      });
+      flash.success(t('language_updated'));
+    } catch (error) {
+      flash.error(`${error}`);
+    }
   }
 
   return (
@@ -51,7 +59,8 @@ export default function ManageLanguageView() {
             <InputError id="name-error" name="name" context="name" />
           </div>
           <div>
-            <SubmitButton>{t('update')}</SubmitButton>
+            <Button type="submit">{t('update')}</Button>
+            <SubmittingIndicator className="ml-3" />
           </div>
         </Form>
       </div>

@@ -21,5 +21,11 @@
   "log_in": "Acceso",
   "log_out": "Cerrar sesión",
   "invite": "Invitar",
-  "invite_user": "Invitar Usuario"
+  "invite_user": "Invitar Usuario",
+  "close": "cerrar",
+  "language_exists": "Ya existe un idioma con el código \"{{code}}\"",
+  "language_created": "¡Idioma creado!",
+  "language_updated": "¡Idioma actualizado!",
+  "error": "Error",
+  "success": "Éxito"
 }

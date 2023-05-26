@@ -7,13 +7,13 @@ export interface TextInputProps extends Omit<ComponentProps<'input'>, 'name'> {
 }
 
 const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
-  ({ className = '', name, onChange, onBlur, required, ...props }, ref) => {
+  ({ className = '', required, ...props }, ref) => {
     const context = useFormContext();
-    const hasErrors = !!context?.formState.errors[name];
-    const registerProps = context?.register(name, {
+    const hasErrors = !!context?.formState.errors[props.name];
+    const registerProps = context?.register(props.name, {
       required,
-      onChange,
-      onBlur,
+      onChange: props.onChange,
+      onBlur: props.onBlur,
     });
 
     return (

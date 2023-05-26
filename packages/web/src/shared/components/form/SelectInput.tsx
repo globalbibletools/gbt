@@ -8,17 +8,15 @@ export interface SelectInputProps
 }
 
 const SelectInput = forwardRef<HTMLSelectElement, SelectInputProps>(
-  (
-    { className = '', name, onChange, onBlur, required, children, ...props },
-    ref
-  ) => {
+  ({ className = '', required, children, ...props }, ref) => {
     const context = useFormContext();
-    const hasErrors = !!context?.formState.errors[name];
-    const registerProps = context?.register(name, {
+    const hasErrors = !!context?.formState.errors[props.name];
+    const registerProps = context?.register(props.name, {
       required,
-      onChange,
-      onBlur,
+      onChange: props.onChange,
+      onBlur: props.onBlur,
     });
+
     return (
       <select
         className={`
