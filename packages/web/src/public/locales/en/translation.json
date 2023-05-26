@@ -22,6 +22,7 @@
   "log_out": "Log Out",
   "invite": "Invite",
   "invite_user": "Invite User",
+  "user_invited": "User invited!",
   "close": "close",
   "language_exists": "A language with code \"{{code}}\" already exists",
   "language_created": "Language created!",

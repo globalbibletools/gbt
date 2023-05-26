@@ -12,6 +12,7 @@ import { useForm } from 'react-hook-form';
 import SubmittingIndicator from '../../shared/components/form/SubmittingIndicator';
 import Button from '../../shared/components/actions/Button';
 import { useFlash } from '../../shared/hooks/flash';
+import Card from '../../shared/components/Card';
 
 export interface FormData {
   code: string;
@@ -50,17 +51,16 @@ export default function NewLanguageView() {
   }
 
   return (
-    <View fitToScreen>
-      <div className="m-auto w-fit">
+    <View fitToScreen className="flex justify-center items-start">
+      <Card className="mx-4 mt-4 w-96 flex-shrink p-6">
         <ViewTitle>{t('new_language')}</ViewTitle>
-
         <Form context={formContext} onSubmit={onSubmit}>
           <div className="mb-2">
             <FormLabel htmlFor="code">{t('code').toUpperCase()}</FormLabel>
             <TextInput
               id="code"
               name="code"
-              className="block"
+              className="w-full"
               autoComplete="off"
               required
               aria-describedby="code-error"
@@ -72,7 +72,7 @@ export default function NewLanguageView() {
             <TextInput
               id="name"
               name="name"
-              className="block"
+              className="w-full"
               autoComplete="off"
               required
               aria-describedby="name-error"
@@ -84,7 +84,7 @@ export default function NewLanguageView() {
             <SubmittingIndicator className="ml-3" />
           </div>
         </Form>
-      </div>
+      </Card>
     </View>
   );
 }

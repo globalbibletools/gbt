@@ -9,7 +9,9 @@ import ViewTitle from '../../shared/components/ViewTitle';
 import apiClient from '../../shared/apiClient';
 import Form, { SubmitHandler } from '../../shared/components/form/Form';
 import InputError from '../../shared/components/form/InputError';
-import SubmitButton from '../../shared/components/form/SubmitButton';
+import Button from '../../shared/components/actions/Button';
+import SubmittingIndicator from '../../shared/components/form/SubmittingIndicator';
+import { useFlash } from '../../shared/hooks/flash';
 
 export interface FormData {
   email: string;
@@ -18,6 +20,7 @@ export interface FormData {
 
 export default function InviteUserView() {
   const { t } = useTranslation();
+  const flash = useFlash();
 
   const formContext = useForm<FormData>();
   const onSubmit: SubmitHandler<FormData> = async (
@@ -35,6 +38,7 @@ export default function InviteUserView() {
         json: 'true',
       });
 
+      flash.success(t('user_invited'));
       reset();
     } catch (error) {
       if (error instanceof ApiClientError && error.status === 409) {
@@ -42,17 +46,17 @@ export default function InviteUserView() {
           (error) => error.code === 'AlreadyExists'
         );
         if (alreadyExistsError) {
-          alert(`User with email "${email}" has already been invited.`);
+          flash.error(`User with email "${email}" has already been invited.`);
           return;
         }
       }
-      throw error;
+      flash.error(`${error}`);
     }
   };
 
   return (
     <View fitToScreen className="flex justify-center items-start">
-      <Card className="mx-4 w-96 flex-shrink p-6">
+      <Card className="mx-4 mt-4 w-96 flex-shrink p-6">
         <ViewTitle>{t('invite_user')}</ViewTitle>
         <Form context={formContext} onSubmit={onSubmit}>
           <div className="mb-2">
@@ -67,7 +71,7 @@ export default function InviteUserView() {
             />
             <InputError id="name-error" name="name" context="name" />
           </div>
-          <div className="mb-2">
+          <div className="mb-4">
             <FormLabel htmlFor="email">{t('email').toUpperCase()}</FormLabel>
             <TextInput
               id="email"
@@ -80,7 +84,8 @@ export default function InviteUserView() {
             <InputError id="email-error" name="email" context="email" />
           </div>
           <div>
-            <SubmitButton>{t('invite')}</SubmitButton>
+            <Button type="submit">{t('invite')}</Button>
+            <SubmittingIndicator className="ml-3" />
           </div>
         </Form>
       </Card>
