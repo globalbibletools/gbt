@@ -5,9 +5,15 @@ import {
 import { client, Prisma } from '../../../../shared/db';
 import { languageSchema } from '../schemas';
 import createRoute from '../../../../shared/Route';
+import { authorize } from '../../../../shared/access-control/authorize';
 
 export default createRoute<{ code: string }>()
   .get<void, GetLanguageResponseBody>({
+    authorize: authorize((req) => ({
+      action: 'read',
+      subject: 'Language',
+      subjectId: req.query.code,
+    })),
     async handler(req, res) {
       const language = await client.language.findUnique({
         where: {
@@ -28,6 +34,11 @@ export default createRoute<{ code: string }>()
     },
   })
   .patch<PatchLanguageRequestBody, void>({
+    authorize: authorize((req) => ({
+      action: 'translate',
+      subject: 'Language',
+      subjectId: req.query.code,
+    })),
     schema: languageSchema.omit({ code: true }).partial(),
     async handler(req, res) {
       const data: Prisma.LanguageUpdateInput = {};

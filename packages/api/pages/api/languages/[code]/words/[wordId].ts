@@ -2,12 +2,18 @@ import * as z from 'zod';
 import { PatchWordGlossRequestBody } from '@translation/api-types';
 import createRoute from '../../../../../shared/Route';
 import { client } from '../../../../../shared/db';
+import { authorize } from '../../../../../shared/access-control/authorize';
 
 export default createRoute<{ code: string; wordId: string }>()
   .patch<PatchWordGlossRequestBody, void>({
     schema: z.object({
       gloss: z.string().optional(),
     }),
+    authorize: authorize((req) => ({
+      action: 'translate',
+      subject: 'Language',
+      subjectId: req.query.code,
+    })),
     async handler(req, res) {
       const language = await client.language.findUnique({
         where: {

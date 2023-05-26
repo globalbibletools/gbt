@@ -1,5 +1,5 @@
 import { RouteObject } from 'react-router-dom';
-import LanguageView, { languagesViewLoader } from './LanguageView';
+import LanguageView, { languagesViewLoader } from './LanguagesView';
 import ManageLanguageView, {
   manageLanguageViewLoader,
 } from './ManageLanguageView';
