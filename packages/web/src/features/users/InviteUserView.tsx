@@ -46,7 +46,7 @@ export default function InviteUserView() {
           (error) => error.code === 'AlreadyExists'
         );
         if (alreadyExistsError) {
-          flash.error(`User with email "${email}" has already been invited.`);
+          flash.error(t('user_exists', { email }));
           return;
         }
       }

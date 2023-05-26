@@ -23,6 +23,7 @@
   "invite": "Invitar",
   "invite_user": "Invitar Usuario",
   "user_invited": "¡Usuario invitado!",
+  "user_exists": "Ya existe un usuario con correo electrónico \"{{email}}\"",
   "close": "cerrar",
   "language_exists": "Ya existe un idioma con el código \"{{code}}\"",
   "language_created": "¡Idioma creado!",
