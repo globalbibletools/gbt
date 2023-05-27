@@ -1,22 +1,55 @@
-invite:
-  post:
-    summary: Invite a new user.
-    requestBody:
-      required: true
+get:
+  summary: Get all users in the system.
+  responses:
+    200:
+      description: Ok
       content:
         application/json:
           schema:
             type: object
             properties:
-              name:
-                type: string
-                example: Example User
-                required: true
-              email:
-                type: string
-                format: email
-                example: 'user@example.com'
-                required: true
-    responses:
-      201:
-        description: Created
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      example: 01885a1d-3e97-3e1d-3435-6e1dcbba84a3
+                      description: The unique ID of the user.
+                    name:
+                      type: string
+                      example: Joe Translator
+                      description: The name of the user.
+                    email:
+                      type: string
+                      format: email
+                      example: joe.translator@example.com
+                      description: The user's email address used for login and communication.
+                    systemRoles:
+                      type: array
+                      description: The list of roles the user has in the system.
+                      example: ['ADMIN']
+                      items:
+                        type: string
+post:
+  summary: Invite a new user.
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            name:
+              type: string
+              example: Example User
+              required: true
+            email:
+              type: string
+              format: email
+              example: 'user@example.com'
+              required: true
+  responses:
+    201:
+      description: Created

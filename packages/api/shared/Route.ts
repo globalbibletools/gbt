@@ -6,12 +6,13 @@ import { authOptions } from '../pages/api/auth/[...nextauth]';
 import { Prisma } from '../prisma/client';
 import { cors } from './cors';
 import * as Errors from './errors';
+import { createPolicyFor, Policy } from './access-control/policy';
 
-export interface RouteRequest<Params, Body>
-  extends Omit<NextApiRequest, 'query' | 'body'> {
+export interface RouteRequest<Params, Body> {
   query: Params;
   body: Body;
   session?: Session;
+  policy: Policy;
 }
 
 export interface ResponseHelper<Body> {
@@ -116,7 +117,9 @@ export interface RouteBuilder<Params> {
  * The result of `build()` is exported and consumed by nextjs.
  * @template Params The type of the URL parameters as defined in the nextjs file names.
  */
-export default function createRoute<Params>(): RouteBuilder<Params> {
+export default function createRoute<
+  Params extends { [key: string]: string }
+>(): RouteBuilder<Params> {
   const handlers: { [method: string]: NextApiHandler } = {};
 
   function createHandler<RequestBody, ResponseBody>(
@@ -153,26 +156,33 @@ export default function createRoute<Params>(): RouteBuilder<Params> {
       };
 
       try {
+        let body: RequestBody;
         if ('schema' in definition) {
           const parseResult = definition.schema.safeParse(req.body);
           if (parseResult.success) {
-            req.body = parseResult.data;
+            body = parseResult.data;
           } else {
             throw new Errors.InvalidRequestShapeError();
           }
         } else {
-          req.body = {};
+          // We have to cast this because typescript can't determine that this request has no body.
+          body = undefined as RequestBody;
         }
 
-        const retypedReq = req as RouteRequest<Params, RequestBody>;
-
-        retypedReq.session =
+        const session =
           (await getServerSession(req, res, authOptions)) ?? undefined;
 
-        await definition.authorize?.(retypedReq);
+        const request: RouteRequest<Params, RequestBody> = {
+          query: req.query as Params,
+          body,
+          session,
+          policy: createPolicyFor(session?.user),
+        };
+
+        await definition.authorize?.(request);
 
         try {
-          await definition.handler(retypedReq, responseHelper);
+          await definition.handler(request, responseHelper);
         } catch (error) {
           if (error instanceof Prisma.PrismaClientKnownRequestError) {
             switch (error.code) {

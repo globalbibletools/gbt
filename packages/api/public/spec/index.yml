@@ -17,7 +17,7 @@ paths:
   /auth/session:
     $ref: ./paths/auth.yml#session
   /users:
-    $ref: ./paths/users.yml#invite
+    $ref: ./paths/users.yml
   /verses/{verseId}:
     $ref: ./paths/verse.yml
   /languages:

@@ -6,17 +6,25 @@ export interface ErrorResponse {
   errors: ErrorDetail[];
 }
 
-export enum SystemRole {
-  Admin = 'ADMIN',
+export const SystemRole = {
+  Admin: 'ADMIN',
+};
+
+export type SystemRole = typeof SystemRole[keyof typeof SystemRole];
+
+export interface User {
+  id: string;
+  name?: string;
+  email?: string;
+  systemRoles: SystemRole[];
 }
 
 export interface GetSessionResponse {
-  user?: {
-    id: string;
-    email?: string;
-    name?: string;
-    systemRoles: SystemRole[];
-  };
+  user?: User;
+}
+
+export interface GetUsersResponseBody {
+  data: User[];
 }
 
 export interface InviteUserRequestBody {
