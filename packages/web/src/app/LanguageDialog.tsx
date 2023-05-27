@@ -9,9 +9,9 @@ const LanguageDialog = forwardRef<DialogRef>((_, ref) => {
   const { i18n } = useTranslation();
 
   return (
-    <Dialog ref={ref} className="fixed bottom-4 right-4 m-0">
+    <Dialog ref={ref} className="fixed bottom-4 end-4 m-0">
       <h1 className="text-lg mb-4">
-        <Icon icon="earth" className="mr-2" />
+        <Icon icon="earth" className="me-2" />
         Language
       </h1>
 

@@ -17,7 +17,6 @@ export interface VerseSelectorProps {
 
 export function VerseSelector({ verseId, onVerseChange }: VerseSelectorProps) {
   const { t, i18n } = useTranslation(['translation', 'bible']);
-  const isRtl = i18n.dir() == 'rtl';
   const verseInfo = parseVerseId(verseId);
 
   const onKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
@@ -35,11 +34,7 @@ export function VerseSelector({ verseId, onVerseChange }: VerseSelectorProps) {
   };
 
   return (
-    <div
-      className={`flex gap-4 items-center ${
-        isRtl ? 'flex-row-reverse' : 'flex-row'
-      }`}
-    >
+    <div className="flex gap-4 items-center flex-row">
       <TextInput
         autoComplete="off"
         placeholder={generateReference(verseInfo, t)}

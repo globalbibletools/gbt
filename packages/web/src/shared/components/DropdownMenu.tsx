@@ -43,7 +43,7 @@ export default function DropdownMenu({
       <ul
         id={`${cssId}-menu`}
         className={`
-          absolute right-0 border border-slate-300 shadow-md py-2 rounded bg-white
+          absolute end-0 border border-slate-300 shadow-md py-2 rounded bg-white
           ${isOpen ? '' : 'hidden'}
         `}
         onClick={() => setIsOpen(false)}
@@ -60,7 +60,7 @@ export interface DropdownMenuLinkProps {
 }
 
 const className =
-  'focus:outline-none focus:underline hover:underline whitespace-nowrap px-4 py-1 text-left w-full';
+  'focus:outline-none focus:underline hover:underline whitespace-nowrap px-4 py-1 text-start w-full';
 
 export function DropdownMenuLink({ children, to }: DropdownMenuLinkProps) {
   return (
@@ -92,7 +92,7 @@ export function DropdownMenuButton({
     <li>
       <button
         type="button"
-        className="focus:outline-none focus:underline hover:underline whitespace-nowrap px-4 py-1 text-left w-full"
+        className="focus:outline-none focus:underline hover:underline whitespace-nowrap px-4 py-1 text-start w-full"
         onClick={onClick}
       >
         {children}
@@ -127,7 +127,7 @@ export function DropdownMenuSubmenu({
   return (
     <li ref={root} className="relative" onBlur={onBlur}>
       <button
-        className="focus:outline-none focus:underline hover:underline whitespace-nowrap px-4 py-1 text-left w-full"
+        className="focus:outline-none focus:underline hover:underline whitespace-nowrap px-4 py-1 text-start w-full"
         type="button"
         onClick={(e) => {
           e.stopPropagation();
@@ -142,7 +142,7 @@ export function DropdownMenuSubmenu({
       <ul
         id={`${cssId}-menu`}
         className={`
-          absolute right-0 border border-slate-300 shadow-md py-2 rounded bg-white
+          absolute end-0 border border-slate-300 shadow-md py-2 rounded bg-white
           ${isOpen ? '' : 'hidden'}
         `}
         onClick={() => setIsOpen(false)}

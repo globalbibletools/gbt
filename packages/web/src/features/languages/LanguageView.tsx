@@ -39,7 +39,7 @@ export default function LanguagesView() {
           </ListHeader>
           <ListRowAction colSpan={2}>
             <Link to="./new">
-              <Icon icon="plus" className="mr-1" />
+              <Icon icon="plus" className="me-1" />
               {t('add_language')}
             </Link>
           </ListRowAction>
