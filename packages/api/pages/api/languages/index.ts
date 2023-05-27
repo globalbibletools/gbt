@@ -22,7 +22,7 @@ export default createRoute<void>()
   })
   .post<PostLanguageRequestBody, void>({
     schema: languageSchema,
-    authorize: authorize({ action: 'create', subject: 'User' }),
+    authorize: authorize({ action: 'create', subject: 'Language' }),
     async handler(req, res) {
       await client.language.create({
         data: {
