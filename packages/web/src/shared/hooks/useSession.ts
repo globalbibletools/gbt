@@ -1,15 +1,13 @@
 import { useQuery } from '@tanstack/react-query';
-import apiClient from './apiClient';
+import { GetSessionResponse } from '@translation/api-types';
+import apiClient from '../apiClient';
 
 export type UseSessionResponse =
   | {
       status: 'authenticated';
-      user: {
-        email?: string;
-        name?: string;
-      };
+      user: Required<GetSessionResponse>['user'];
     }
-  | { status: 'unauthenticated' | 'loading' };
+  | { status: 'unauthenticated' | 'loading'; user?: undefined };
 
 export default function useSession(): UseSessionResponse {
   const { data, status } = useQuery(['session'], async () =>
