@@ -28,6 +28,8 @@ These are the major technologies we are using. Familiarity with most of these wi
 
 ## Development Environment
 
+- We use bash and zsh as our main terminal. Other terminals may work as well, but haven't been tested.
+
 - In VSCode, the [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) and [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) extensions will help enforce consistent formatting and linting rules. You can set VSCode up to use prettier as the formatter when saving a file.
 
 - When you commit, your code will be automatically linted and formatted. Please address issues this process flags.
