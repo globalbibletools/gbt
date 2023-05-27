@@ -2,12 +2,17 @@ import * as z from 'zod';
 import createRoute from '../../../shared/Route';
 import { client } from '../../../shared/db';
 import { InviteUserRequestBody } from '@translation/api-types';
+import { authorize } from '../../../shared/access-control/authorize';
 
 export default createRoute()
   .post<InviteUserRequestBody, void>({
     schema: z.object({
       email: z.string(),
       name: z.string(),
+    }),
+    authorize: authorize({
+      action: 'create',
+      subject: 'User',
     }),
     async handler(req, res) {
       const user = await client.user.create({
