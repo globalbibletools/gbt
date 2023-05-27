@@ -12,6 +12,7 @@ import InputError from '../../shared/components/form/InputError';
 import { useFlash } from '../../shared/hooks/flash';
 import SubmittingIndicator from '../../shared/components/form/SubmittingIndicator';
 import Button from '../../shared/components/actions/Button';
+import Card from '../../shared/components/Card';
 
 export async function manageLanguageViewLoader({ params }: LoaderFunctionArgs) {
   return apiClient.languages.findByCode(params.code ?? 'unknown');
@@ -40,17 +41,16 @@ export default function ManageLanguageView() {
   }
 
   return (
-    <View fitToScreen>
-      <div className="m-auto w-fit">
+    <View fitToScreen className="flex justify-center items-start">
+      <Card className="mx-4 mt-4 w-96 flex-shrink p-6">
         <ViewTitle>{language.data.name}</ViewTitle>
-
         <Form context={formContext} onSubmit={onSubmit}>
-          <div className="mb-4">
+          <div className="mb-2">
             <FormLabel htmlFor="name">{t('name').toUpperCase()}</FormLabel>
             <TextInput
               id="name"
               name="name"
-              className="block"
+              className="w-full"
               autoComplete="off"
               defaultValue={language.data.name}
               required
@@ -58,12 +58,16 @@ export default function ManageLanguageView() {
             />
             <InputError id="name-error" name="name" context="name" />
           </div>
+          <div className="mb-4">
+            <FormLabel>{t('code').toUpperCase()}</FormLabel>
+            <div>{language.data.code}</div>
+          </div>
           <div>
             <Button type="submit">{t('update')}</Button>
             <SubmittingIndicator className="ml-3" />
           </div>
         </Form>
-      </div>
+      </Card>
     </View>
   );
 }

@@ -1,5 +1,6 @@
 import type { ErrorResponse, GetSessionResponse } from '@translation/api-types';
 import Languages from './languages';
+import Users from './users';
 import Verses from './verses';
 import Words from './words';
 
@@ -55,11 +56,13 @@ export default class ApiClient {
   readonly languages: Languages;
   readonly verses: Verses;
   readonly words: Words;
+  readonly users: Users;
 
   constructor(private options: ApiClientOptions = { baseUrl: '' }) {
     this.languages = new Languages(this);
     this.verses = new Verses(this);
     this.words = new Words(this);
+    this.users = new Users(this);
   }
 
   async request({ path, query, body, method }: ApiClientRequestOptions) {
