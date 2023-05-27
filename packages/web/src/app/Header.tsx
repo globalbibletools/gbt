@@ -22,6 +22,7 @@ export default function Header({ language, onLanguageChange }: HeaderProps) {
   const session = useSession();
   const languageDialog = useRef<DialogRef>(null);
   const { t, i18n } = useTranslation();
+  const isRtl = i18n.dir() == 'rtl';
 
   const languagesQuery = useQuery(['languages'], () =>
     apiClient.languages.findAll()
@@ -32,7 +33,11 @@ export default function Header({ language, onLanguageChange }: HeaderProps) {
   );
 
   return (
-    <header className="p-2 flex items-baseline z-10">
+    <header
+      className={`p-2 flex items-baseline flex-row z-10 ${
+        isRtl ? 'flex-row-reverse' : 'flex-row'
+      }`}
+    >
       <h1 className="font-bold text-lg">Gloss Translation</h1>
       <div className="flex-grow" />
       <nav className="flex items-baseline" aria-label="primary">

@@ -16,7 +16,8 @@ export interface VerseSelectorProps {
 }
 
 export function VerseSelector({ verseId, onVerseChange }: VerseSelectorProps) {
-  const { t } = useTranslation(['translation', 'bible']);
+  const { t, i18n } = useTranslation(['translation', 'bible']);
+  const isRtl = i18n.dir() == 'rtl';
   const verseInfo = parseVerseId(verseId);
 
   const onKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
@@ -34,21 +35,29 @@ export function VerseSelector({ verseId, onVerseChange }: VerseSelectorProps) {
   };
 
   return (
-    <div className="flex flex-row gap-4 items-center">
+    <div
+      className={`flex gap-4 items-center ${
+        isRtl ? 'flex-row-reverse' : 'flex-row'
+      }`}
+    >
       <TextInput
         autoComplete="off"
         placeholder={generateReference(verseInfo, t)}
         onKeyDown={onKeyDown}
         arial-label={t('select_verse')}
       />
-      <button onClick={() => onVerseChange(decrementVerseId(verseId))}>
-        <Icon icon="arrow-left" />
-        <span className="sr-only">{t('previous_verse')}</span>
-      </button>
-      <button onClick={() => onVerseChange(incrementVerseId(verseId))}>
-        <Icon icon="arrow-right" />
-        <span className="sr-only">{t('next_verse')}</span>
-      </button>
+      {/* The buttons are in a separate flex-row, so that their order isn't
+          affected by rtl. */}
+      <div className="flex flex-row gap-4">
+        <button onClick={() => onVerseChange(decrementVerseId(verseId))}>
+          <Icon icon="arrow-left" />
+          <span className="sr-only">{t('previous_verse')}</span>
+        </button>
+        <button onClick={() => onVerseChange(incrementVerseId(verseId))}>
+          <Icon icon="arrow-right" />
+          <span className="sr-only">{t('next_verse')}</span>
+        </button>
+      </div>
     </div>
   );
 }
