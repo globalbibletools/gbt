@@ -41,9 +41,9 @@ export function VerseSelector({ verseId, onVerseChange }: VerseSelectorProps) {
         onKeyDown={onKeyDown}
         arial-label={t('select_verse')}
       />
-      {/* The buttons are in a separate flex-row, so that their order isn't
-          affected by rtl. */}
-      <div className="flex flex-row gap-4">
+      {/* Use flex-row-reverse on rtl, so that the previous button is always
+          to the left of the next button. */}
+      <div className="flex ltr:flex-row rtl:flex-row-reverse gap-4">
         <button onClick={() => onVerseChange(decrementVerseId(verseId))}>
           <Icon icon="arrow-left" />
           <span className="sr-only">{t('previous_verse')}</span>

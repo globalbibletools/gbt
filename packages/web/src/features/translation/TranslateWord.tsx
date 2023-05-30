@@ -57,14 +57,14 @@ export default function TranslateWord({
           if (status === 'saving') {
             return (
               <>
-                <Icon icon="arrows-rotate" className="mr-1" />
+                <Icon icon="arrows-rotate" className="me-1" />
                 {capitalize(t('saving'))}
               </>
             );
           } else if (status === 'saved') {
             return (
               <>
-                <Icon icon="check" className="mr-1" />
+                <Icon icon="check" className="me-1" />
                 {capitalize(t('saved'))}
               </>
             );
