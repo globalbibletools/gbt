@@ -9,12 +9,20 @@
   "update": "Actualizar",
   "create": "Crear",
   "name": "nombre",
+  "email": "correo electrónico",
   "code": "código",
   "select_verse": "Seleccionar verso",
   "previous_verse": "Verso anterior",
   "next_verse": "Siguiente verso",
   "saving": "guardando",
   "saved": "guardado",
+  "submitting": "Sumisión",
   "log_in": "Acceso",
-  "log_out": "Cerrar sesión"
+  "log_out": "Cerrar sesión",
+  "close": "cerrar",
+  "language_exists": "Ya existe un idioma con el código \"{{code}}\"",
+  "language_created": "¡Idioma creado!",
+  "language_updated": "¡Idioma actualizado!",
+  "error": "Error",
+  "success": "Éxito"
 }

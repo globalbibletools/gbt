@@ -1,10 +1,11 @@
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { StrictMode } from 'react';
 import * as ReactDOM from 'react-dom/client';
-import { RouterProvider } from 'react-router-dom';
-import router from './app/router';
-import './app/i18n';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
+import { RouterProvider } from 'react-router-dom';
+import './app/i18n';
+import router from './app/router';
+import { FlashProvider } from './shared/hooks/flash';
 
 function App() {
   const { i18n } = useTranslation();
@@ -12,7 +13,9 @@ function App() {
   return (
     <StrictMode>
       <QueryClientProvider client={queryClient}>
-        <RouterProvider router={router} />
+        <FlashProvider>
+          <RouterProvider router={router} />
+        </FlashProvider>
       </QueryClientProvider>
     </StrictMode>
   );

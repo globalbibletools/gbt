@@ -108,8 +108,6 @@ export default function createRoute<Params>(): RouteBuilder<Params> {
     definition: RouteDefinition<Params, RequestBody, ResponseBody>
   ): NextApiHandler {
     return async (req, res) => {
-      await cors(req, res);
-
       const responseHelper: ResponseHelper<ResponseBody> = {
         ok(body?: ResponseBody) {
           if (body) {
@@ -205,6 +203,8 @@ export default function createRoute<Params>(): RouteBuilder<Params> {
     },
     build() {
       return async (req: NextApiRequest, res: NextApiResponse) => {
+        await cors(req, res);
+
         const handler = handlers[req.method ?? ''];
         if (handler) {
           await handler(req, res);

@@ -1,6 +1,6 @@
 import { Suspense, useMemo } from 'react';
 import { Outlet, useOutletContext } from 'react-router-dom';
-import useLocalStorageState from '../shared/useLocalStorageState';
+import useLocalStorageState from '../shared/hooks/useLocalStorageState';
 import Header from './Header';
 
 export interface LayoutContext {
