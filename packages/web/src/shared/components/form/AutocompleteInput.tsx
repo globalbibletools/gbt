@@ -55,7 +55,9 @@ export default function AutocompleteInput({
       if (selectedItem?.value === '_create') {
         onCreate?.(selectedItem.label);
       } else {
-        onChange(selectedItem?.value);
+        if (selectedItem?.value !== value) {
+          onChange(selectedItem?.value);
+        }
       }
     },
   });

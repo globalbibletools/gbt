@@ -13,20 +13,56 @@ import {
 } from '../../shared/components/List';
 import View from '../../shared/components/View';
 import ViewTitle from '../../shared/components/ViewTitle';
-import { useLoaderData } from 'react-router-dom';
 import { GetUsersResponseBody, SystemRole } from '@translation/api-types';
 import { capitalize } from '../../shared/utils';
-import useSession from '../../shared/hooks/useSession';
-
-export function usersViewLoader() {
-  return apiClient.users.findAll();
-}
+import useAuth from '../../shared/hooks/useAuth';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import SelectInput from '../../shared/components/form/SelectInput';
 
 export default function UsersView() {
   const session = useSession();
-  const users = useLoaderData() as GetUsersResponseBody;
 
   const { t } = useTranslation();
+
+  const usersQuery = useQuery(['users'], () => apiClient.users.findAll());
+  const queryClient = useQueryClient();
+  const userMutation = useMutation({
+    mutationFn: (variables: { id: string; systemRoles: SystemRole[] }) =>
+      apiClient.users.update(variables),
+    onMutate: async ({ id, systemRoles }) => {
+      const queryKey = ['users'];
+      await queryClient.cancelQueries({ queryKey });
+      const previousUsers = queryClient.getQueryData(queryKey);
+      queryClient.setQueryData<GetUsersResponseBody>(queryKey, (old) => {
+        if (old) {
+          const users = old.data.slice();
+          const index = users.findIndex((u) => u.id === id);
+          if (index >= 0) {
+            const doc = users[index];
+            users.splice(index, 1, {
+              ...doc,
+              systemRoles: systemRoles,
+            });
+            return {
+              data: users,
+            };
+          }
+        }
+        return old;
+      });
+      return { previousUsers };
+    },
+    onError: (_, __, context) => {
+      queryClient.setQueryData(['users'], context?.previousUsers);
+
+      alert('Unknown error occurred.');
+    },
+    onSettled: (_, __, ___, context) => {
+      queryClient.invalidateQueries({
+        queryKey: ['users'],
+      });
+    },
+  });
 
   return (
     <View fitToScreen>
@@ -53,12 +89,27 @@ export default function UsersView() {
             </ListRowAction>
           )}
           <ListBody>
-            {users.data.map((user) => (
+            {usersQuery.data?.data.map((user) => (
               <ListRow key={user.id}>
                 <ListCell header>{user.name}</ListCell>
                 <ListCell>{user.email}</ListCell>
                 <ListCell>
-                  {user.systemRoles.map((role) => role.toLowerCase())}
+                  <SelectInput
+                    className="w-32"
+                    name="userRole"
+                    value={user.systemRoles[0] ?? ''}
+                    onChange={(e) =>
+                      userMutation.mutate({
+                        id: user.id,
+                        systemRoles: e.currentTarget.value
+                          ? [e.currentTarget.value as SystemRole]
+                          : [],
+                      })
+                    }
+                  >
+                    <option></option>
+                    <option value={SystemRole.Admin}>Admin</option>
+                  </SelectInput>
                 </ListCell>
               </ListRow>
             ))}
