@@ -1,3 +1,9 @@
+// Prisma handles enums differently according to this issue in typescript:
+// https://github.com/microsoft/TypeScript/issues/3192#issuecomment-261720275
+function makeEnum<T extends { [index: string]: U }, U extends string>(x: T) {
+  return x;
+}
+
 export interface ErrorDetail {
   code: string;
 }
@@ -6,10 +12,9 @@ export interface ErrorResponse {
   errors: ErrorDetail[];
 }
 
-export const SystemRole = {
+export const SystemRole = makeEnum({
   Admin: 'ADMIN',
-};
-
+});
 export type SystemRole = typeof SystemRole[keyof typeof SystemRole];
 
 export interface User {
@@ -30,6 +35,10 @@ export interface GetUsersResponseBody {
 export interface InviteUserRequestBody {
   email: string;
   name: string;
+}
+
+export interface UpdateUserRequestBody {
+  systemRoles?: SystemRole[];
 }
 
 export interface Language {

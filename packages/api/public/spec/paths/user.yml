@@ -1,0 +1,20 @@
+patch:
+  summary: Update an existing user.
+  parameters:
+    - $ref: '../schemas/parameters.yml#userId'
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            systemRoles:
+              type: array
+              description: The list of roles to grant to the user. Replaces all existing roles.
+              example: ['ADMIN']
+              items:
+                type: string
+  responses:
+    201:
+      description: Created

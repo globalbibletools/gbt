@@ -22,3 +22,11 @@ wordId:
   schema:
     type: string
   example: '0201400101'
+userId:
+  name: userId
+  in: path
+  description: The UUID of a user in the system.
+  required: true
+  schema:
+    type: string
+  example: '123e4567-e89b-12d3-a456-426614174000'
