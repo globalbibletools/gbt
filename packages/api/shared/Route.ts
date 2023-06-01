@@ -1,15 +1,26 @@
 import { ErrorDetail } from '@translation/api-types';
 import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 import { ZodType } from 'zod';
+import { getServerSession, Session } from 'next-auth';
+import { authOptions } from '../pages/api/auth/[...nextauth]';
 import { Prisma } from '../prisma/client';
 import { cors } from './cors';
 import * as Errors from './errors';
+
+export interface RouteRequest<Params, Body>
+  extends Omit<NextApiRequest, 'query' | 'body'> {
+  query: Params;
+  body: Body;
+  session?: Session;
+}
 
 export interface ResponseHelper<Body> {
   /** Returns 200 or 204 dependening on whether there is a response body to send. */
   ok(data?: Body): void;
   /** Returns 201 created with the contents of the new resource. */
   created(location: string): void;
+  /** Returns 403 with a list of errors. By default it will have a single error with code Forbidden. */
+  forbidden(errors?: ErrorDetail[]): void;
   /** Returns 404 with a list of errors. By default it will have a single error with code NotFound. */
   notFound(errors?: ErrorDetail[]): void;
   /** Returns 409 with a list of errors. */
@@ -22,16 +33,20 @@ export interface ResponseHelper<Body> {
 
 export type RouteDefinition<Params, RequestBody, ResponseBody> = {
   /**
+   * Determines whether the user is authorized to access the route.
+   * If this function returns, the user is authorized to proceed.
+   * When this is called, `req.body` will have been parsed and should match the `RequestBody` type.
+   * @param req The nextjs request object with typed query and body.
+   */
+  authorize?(req: RouteRequest<Params, RequestBody>): Promise<void>;
+  /**
    * Defines the implementation of the route.
    * When this is called, `req.body` will have been parsed and should match the `RequestBody` type.
    * @param req The nextjs request object with typed query and body.
    * @param res The response helper wrapper around the nextjs response object.
    */
   handler(
-    req: Omit<NextApiRequest, 'query' | 'body'> & {
-      query: Params;
-      body: RequestBody;
-    },
+    req: RouteRequest<Params, RequestBody>,
     res: ResponseHelper<ResponseBody>
   ): Promise<void>;
 } & (RequestBody extends void
@@ -120,6 +135,9 @@ export default function createRoute<Params>(): RouteBuilder<Params> {
           res.setHeader('Location', location);
           res.status(201).end();
         },
+        forbidden(errors: ErrorDetail[] = [{ code: 'Forbidden' }]) {
+          res.status(403).json({ errors });
+        },
         notFound(errors: ErrorDetail[] = [{ code: 'NotFound' }]) {
           res.status(404).json({ errors });
         },
@@ -146,11 +164,15 @@ export default function createRoute<Params>(): RouteBuilder<Params> {
           req.body = {};
         }
 
+        const retypedReq = req as RouteRequest<Params, RequestBody>;
+
+        retypedReq.session =
+          (await getServerSession(req, res, authOptions)) ?? undefined;
+
+        await definition.authorize?.(retypedReq);
+
         try {
-          await definition.handler(
-            req as NextApiRequest & { query: Params; body: RequestBody },
-            responseHelper
-          );
+          await definition.handler(retypedReq, responseHelper);
         } catch (error) {
           if (error instanceof Prisma.PrismaClientKnownRequestError) {
             switch (error.code) {
@@ -169,6 +191,8 @@ export default function createRoute<Params>(): RouteBuilder<Params> {
           return responseHelper.conflict([error.toErrorDetail()]);
         } else if (error instanceof Errors.InvalidRequestShapeError) {
           return responseHelper.invalid([error.toErrorDetail()]);
+        } else if (error instanceof Errors.ForbiddenError) {
+          return responseHelper.forbidden([error.toErrorDetail()]);
         }
         console.error(error);
         res.status(500).end();

@@ -6,11 +6,22 @@ export interface ErrorResponse {
   errors: ErrorDetail[];
 }
 
+export enum SystemRole {
+  Admin = 'ADMIN',
+}
+
 export interface GetSessionResponse {
   user?: {
+    id: string;
     email?: string;
     name?: string;
+    systemRoles: SystemRole[];
   };
+}
+
+export interface InviteUserRequestBody {
+  email: string;
+  name: string;
 }
 
 export interface Language {

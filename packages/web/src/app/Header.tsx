@@ -11,7 +11,7 @@ import { Icon } from '../shared/components/Icon';
 import LanguageDialog from './LanguageDialog';
 import interfaceLanguages from './languages.json';
 import apiClient from '../shared/apiClient';
-import useSession from '../shared/useSession';
+import useSession from '../shared/hooks/useSession';
 
 export interface HeaderProps {
   language: string;

@@ -6,6 +6,7 @@ import {
 import { client } from '../../../shared/db';
 import { languageSchema } from './schemas';
 import createRoute from '../../../shared/Route';
+import { authorize } from '../../../shared/access-control/authorize';
 
 export default createRoute<void>()
   .get<void, GetLanguagesResponseBody>({
@@ -21,6 +22,7 @@ export default createRoute<void>()
   })
   .post<PostLanguageRequestBody, void>({
     schema: languageSchema,
+    authorize: authorize({ action: 'create', subject: 'Language' }),
     async handler(req, res) {
       await client.language.create({
         data: {

@@ -14,14 +14,16 @@ import {
 import View from '../../shared/components/View';
 import ViewTitle from '../../shared/components/ViewTitle';
 import { useLoaderData } from 'react-router-dom';
-import { GetLanguagesResponseBody } from '@translation/api-types';
+import { GetLanguagesResponseBody, SystemRole } from '@translation/api-types';
 import { capitalize } from '../../shared/utils';
+import useSession from '../../shared/hooks/useSession';
 
 export function languagesViewLoader() {
   return apiClient.languages.findAll();
 }
 
 export default function LanguagesView() {
+  const session = useSession();
   const languages = useLoaderData() as GetLanguagesResponseBody;
 
   const { t } = useTranslation();
@@ -37,12 +39,14 @@ export default function LanguagesView() {
             </ListHeaderCell>
             <ListHeaderCell />
           </ListHeader>
-          <ListRowAction colSpan={2}>
-            <Link to="./new">
-              <Icon icon="plus" className="me-1" />
-              {t('add_language')}
-            </Link>
-          </ListRowAction>
+          {session.user?.systemRoles.includes(SystemRole.Admin) && (
+            <ListRowAction colSpan={2}>
+              <Link to="./new">
+                <Icon icon="plus" className="me-1" />
+                {t('add_language')}
+              </Link>
+            </ListRowAction>
+          )}
           <ListBody>
             {languages.data.map((language) => (
               <ListRow key={language.code}>

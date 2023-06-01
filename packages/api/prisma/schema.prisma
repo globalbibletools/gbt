@@ -17,13 +17,46 @@ datasource db {
 /// A user who can authenticate into the system.
 model User {
   /// The ID of the user.
-  id            String    @id @default(dbgenerated("generate_ulid()")) @db.Uuid
+  id            String           @id @default(dbgenerated("generate_ulid()")) @db.Uuid
   /// The display name of the user.
   name          String?
   /// The email address for logging in and notifications.
-  email         String?   @unique
+  email         String?          @unique
   /// The time that the email was last verified.
   emailVerified DateTime?
+  /// The list of system roles this user has
+  systemRoles   UserSystemRole[]
+  /// The list of sessions for the user.
+  sessions      Session[]
+}
+
+/// A authenticated session for a user.
+model Session {
+  id           String   @id @default(dbgenerated("generate_ulid()")) @db.Uuid
+  /// The session token from the cookie.
+  sessionToken String   @unique
+  /// The date the session expires.
+  expires      DateTime
+  /// The user the session is associated with.
+  user         User     @relation(fields: [userId], references: [id])
+  /// The ID of the user the session is associated with.
+  userId       String   @db.Uuid
+}
+
+enum SystemRole {
+  ADMIN
+}
+
+/// A system level role for a user.
+model UserSystemRole {
+  /// The user with the role.
+  user   User       @relation(fields: [userId], references: [id])
+  /// The ID of the user with the role.
+  userId String     @db.Uuid
+  /// The role given to the user.
+  role   SystemRole
+
+  @@id([userId, role])
 }
 
 /// A token sent in an email for logging in.
@@ -100,7 +133,7 @@ model LemmaForm {
   word    Word[]
 }
 
-/// The lemma as defined by strongs numbers.
+/// A lemma as defined by strongs numbers.
 model Lemma {
   /// The ID of the lemma in the format `[H|G]<strongs>`. Examples: H243, G1243
   id    String      @id
@@ -138,6 +171,7 @@ model VerseTranslation {
   @@id([verseId, languageId])
 }
 
+/// A gloss of a word in a particular language.
 model Gloss {
   // The word being glossed.
   word       Word     @relation(fields: [wordId], references: [id])
