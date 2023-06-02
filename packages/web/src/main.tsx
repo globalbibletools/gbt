@@ -10,10 +10,9 @@ import { FlashProvider } from './shared/hooks/flash';
 function App() {
   useEffect(() => {
     function handler() {
-      console.log('DIR:', i18next.dir());
       document.body.dir = i18next.dir();
     }
-    i18next.on('initialized', handler);
+    handler();
     i18next.on('languageChanged', handler);
   }, [i18next.dir, i18next.on]);
 
