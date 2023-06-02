@@ -9,6 +9,7 @@ import { FlashProvider } from './shared/hooks/flash';
 
 function App() {
   const { i18n } = useTranslation();
+  console.log('DIR:', i18n.dir());
   document.body.dir = i18n.dir();
   return (
     <StrictMode>
