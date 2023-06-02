@@ -15,7 +15,7 @@ import View from '../../shared/components/View';
 import ViewTitle from '../../shared/components/ViewTitle';
 import { GetUsersResponseBody, SystemRole } from '@translation/api-types';
 import { capitalize } from '../../shared/utils';
-import useAuth from '../../shared/hooks/useAuth';
+import useSession from '../../shared/hooks/useSession';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import SelectInput from '../../shared/components/form/SelectInput';
 
