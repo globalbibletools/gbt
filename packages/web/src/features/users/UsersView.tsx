@@ -20,7 +20,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import SelectInput from '../../shared/components/form/SelectInput';
 
 export default function UsersView() {
-  const session = useSession();
+  const session = useAuth({ systemRoles: [SystemRole.Admin] });
 
   const { t } = useTranslation();
 

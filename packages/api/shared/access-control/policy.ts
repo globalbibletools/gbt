@@ -20,9 +20,10 @@ export interface Actor {
 export function createPolicyFor(user?: Actor) {
   const { can, build } = new AbilityBuilder<Policy>(createPrismaAbility);
 
+  can('read', 'Language');
+
   if (user) {
     can('translate', 'Language');
-    can('read', 'Language');
 
     can('read', 'User', { id: user.id });
 

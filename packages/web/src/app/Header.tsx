@@ -11,7 +11,7 @@ import { Icon } from '../shared/components/Icon';
 import LanguageDialog from './LanguageDialog';
 import interfaceLanguages from './languages.json';
 import apiClient from '../shared/apiClient';
-import useSession from '../shared/hooks/useSession';
+import useAuth from '../shared/hooks/useAuth';
 
 export interface HeaderProps {
   language: string;
@@ -19,7 +19,7 @@ export interface HeaderProps {
 }
 
 export default function Header({ language, onLanguageChange }: HeaderProps) {
-  const session = useSession();
+  const session = useAuth();
   const languageDialog = useRef<DialogRef>(null);
   const { t, i18n } = useTranslation();
 

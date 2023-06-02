@@ -5,7 +5,7 @@ import { LoaderFunctionArgs, useLoaderData } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import TextInput from '../../shared/components/form/TextInput';
 import FormLabel from '../../shared/components/form/FormLabel';
-import { GetLanguageResponseBody } from '@translation/api-types';
+import { GetLanguageResponseBody, SystemRole } from '@translation/api-types';
 import { useTranslation } from 'react-i18next';
 import Form from '../../shared/components/form/Form';
 import InputError from '../../shared/components/form/InputError';
@@ -13,6 +13,7 @@ import { useFlash } from '../../shared/hooks/flash';
 import SubmittingIndicator from '../../shared/components/form/SubmittingIndicator';
 import Button from '../../shared/components/actions/Button';
 import Card from '../../shared/components/Card';
+import useAuth from '../../shared/hooks/useAuth';
 
 export async function manageLanguageViewLoader({ params }: LoaderFunctionArgs) {
   return apiClient.languages.findByCode(params.code ?? 'unknown');
@@ -23,6 +24,7 @@ interface FormData {
 }
 
 export default function ManageLanguageView() {
+  useAuth({ systemRoles: [SystemRole.Admin] });
   const language = useLoaderData() as GetLanguageResponseBody;
   const flash = useFlash();
 

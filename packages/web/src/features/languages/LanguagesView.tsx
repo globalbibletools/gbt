@@ -16,14 +16,14 @@ import ViewTitle from '../../shared/components/ViewTitle';
 import { useLoaderData } from 'react-router-dom';
 import { GetLanguagesResponseBody, SystemRole } from '@translation/api-types';
 import { capitalize } from '../../shared/utils';
-import useSession from '../../shared/hooks/useSession';
+import useAuth from '../../shared/hooks/useAuth';
 
 export function languagesViewLoader() {
   return apiClient.languages.findAll();
 }
 
 export default function LanguagesView() {
-  const session = useSession();
+  const session = useAuth({ systemRoles: [SystemRole.Admin] });
   const languages = useLoaderData() as GetLanguagesResponseBody;
 
   const { t } = useTranslation();
