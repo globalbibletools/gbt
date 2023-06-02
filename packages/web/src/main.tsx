@@ -1,16 +1,22 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { StrictMode } from 'react';
+import i18next from 'i18next';
+import { StrictMode, useEffect } from 'react';
 import * as ReactDOM from 'react-dom/client';
-import { useTranslation } from 'react-i18next';
 import { RouterProvider } from 'react-router-dom';
 import './app/i18n';
 import router from './app/router';
 import { FlashProvider } from './shared/hooks/flash';
 
 function App() {
-  const { i18n } = useTranslation();
-  console.log('DIR:', i18n.dir());
-  document.body.dir = i18n.dir();
+  useEffect(() => {
+    function handler() {
+      console.log('DIR:', i18next.dir());
+      document.body.dir = i18next.dir();
+    }
+    i18next.on('initialized', handler);
+    i18next.on('languageChanged', handler);
+  }, [i18next.dir, i18next.on]);
+
   return (
     <StrictMode>
       <QueryClientProvider client={queryClient}>
