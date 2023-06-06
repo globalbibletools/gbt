@@ -12,7 +12,7 @@ module.exports = composePlugins(withNx(), withReact(), (config) => {
           ? `https://gloss-translation-api-git-${process.env.VERCEL_GIT_COMMIT_REF.replace(
               '/',
               '-'
-            )}-${process.env.VERCEL_GIT_COMMIT_AUTHOR_LOGIN}.vercel.app`
+            )}-${process.env.VERCEL_GIT_REPO_OWNER}.vercel.app`
           : process.env.API_URL
       ),
     })
