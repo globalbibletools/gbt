@@ -29,6 +29,8 @@ export default function useAuth({
     if (status === 'success') {
       const { user } = data;
       if (user) {
+        // A page is off-limits for users that don't have one of the accepted
+        // roles.
         if (
           authenticated === false ||
           (systemRoles &&
@@ -40,6 +42,8 @@ export default function useAuth({
           });
         }
       } else {
+        // The user is not authenticated, so a page is off limits when it
+        // requires authentication and/or a specific system role.
         if (authenticated === true || (systemRoles?.length ?? 0) > 0) {
           setTimeout(() => {
             navigate('/', { replace: true });
