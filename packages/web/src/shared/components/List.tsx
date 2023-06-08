@@ -33,7 +33,7 @@ export function ListHeaderCell({
   return (
     <th
       className={`
-        border-b-2 border-slate-700 text-left text-sm px-2 first:pl-0 last:pr-0
+        border-b-2 border-slate-700 text-start text-sm px-2 first:ps-0 last:pe-0
         ${className}
       `}
     >
@@ -89,14 +89,14 @@ export function ListCell({
   if (header) {
     return (
       <th
-        className={`text-left font-bold px-2 first:pl-0 last:pr-0 ${className}`}
+        className={`text-start font-bold px-2 first:ps-0 last:pe-0 ${className}`}
       >
         {children}
       </th>
     );
   } else {
     return (
-      <td className={`text-left px-2 first:pl-0 last:pr-0 ${className}`}>
+      <td className={`text-start px-2 first:ps-0 last:pe-0 ${className}`}>
         {children}
       </td>
     );

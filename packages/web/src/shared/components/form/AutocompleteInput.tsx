@@ -101,13 +101,13 @@ export default function AutocompleteInput({
       <TextInput
         {...props}
         {...getInputProps()}
-        className={`w-full pr-10 ${
+        className={`w-full pe-10 ${
           isOpen ? 'rounded-b-none' : ''
         } ${className}`}
       />
       <button
         aria-label="toggle menu"
-        className="absolute px-2 top-0 right-0 w-10 h-10"
+        className="absolute px-2 top-0 end-0 w-10 h-10"
         type="button"
         {...getToggleButtonProps()}
       >
