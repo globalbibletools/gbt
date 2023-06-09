@@ -110,7 +110,11 @@ export default function TranslationView() {
         verseId={verse.id}
         onVerseChange={(verseId) => navigate('../translate/' + verseId)}
       />
-      <ol className={`flex flex-wrap ${isHebrew ? 'flex-row-reverse' : ''}`}>
+      <ol
+        className={`flex flex-wrap ${
+          isHebrew ? 'ltr:flex-row-reverse' : 'rtl:flex-row-reverse'
+        }`}
+      >
         {verse.words.map((word, i) => {
           const targetGloss = targetGlosses[i]?.approvedGloss;
           const isSaving = glossRequests.some(

@@ -64,7 +64,7 @@ export default function ManageLanguageView() {
           </div>
           <div>
             <Button type="submit">{t('update')}</Button>
-            <SubmittingIndicator className="ml-3" />
+            <SubmittingIndicator className="ms-3" />
           </div>
         </Form>
       </Card>
