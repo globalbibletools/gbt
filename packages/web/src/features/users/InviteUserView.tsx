@@ -21,7 +21,7 @@ export interface FormData {
 }
 
 export default function InviteUserView() {
-  useAuth({ systemRoles: [SystemRole.Admin] });
+  useAuth({ requireRole: [SystemRole.Admin] });
 
   const { t } = useTranslation();
   const flash = useFlash();

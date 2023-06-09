@@ -4,10 +4,16 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import apiClient from '../apiClient';
 
-export interface UseAuthOptions {
-  authenticated?: boolean;
-  systemRoles?: SystemRole[];
-}
+export type UseAuthOptions =
+  | {
+      requireAuthenticated: true;
+    }
+  | {
+      requireUnauthenticated: true;
+    }
+  | {
+      requireRole: SystemRole[];
+    };
 
 export type UseAuthResult =
   | {
@@ -16,42 +22,45 @@ export type UseAuthResult =
     }
   | { status: 'unauthenticated' | 'loading'; user?: undefined };
 
-export default function useAuth({
-  authenticated,
-  systemRoles,
-}: UseAuthOptions = {}): UseAuthResult {
+/**
+ * This will return the authentication `status` of the session, and if authenticated, the profile of the user.
+ *
+ * Additionally, you can pass one of the following to restrict the view to certain users:
+ * - `requireAuthenticated = true`: The user must be authenticated to access the page.
+ * This is most useful in situations where you don't care which roles a user has, but they must be authenticated.
+ * - `requireUnauthenticated = true`: The user must be not be authenticated to access the page.
+ * This is most useful for views like login where authenticated users don't need to access.
+ * - `requireRole`: If the user has at least one of these roles, they can access the page.
+ * This assumes the user is authenticated.
+ */
+export default function useAuth(options?: UseAuthOptions): UseAuthResult {
   const navigate = useNavigate();
   const { data, status } = useQuery(['session'], async () =>
     apiClient.getSession()
   );
 
   useEffect(() => {
-    if (status === 'success') {
+    if (status === 'success' && options) {
       const { user } = data;
-      if (user) {
-        // A page is off-limits for users that don't have one of the accepted
-        // roles.
-        if (
-          authenticated === false ||
-          (systemRoles &&
-            !systemRoles.some((role) => user.systemRoles.includes(role)))
-        ) {
-          // I'm not sure why we need a timeout, but without it, we get a recursion bug from react updates.
-          setTimeout(() => {
-            navigate('/', { replace: true });
-          });
-        }
-      } else {
-        // The user is not authenticated, so a page is off limits when it
-        // requires authentication and/or a specific system role.
-        if (authenticated === true || (systemRoles?.length ?? 0) > 0) {
-          setTimeout(() => {
-            navigate('/', { replace: true });
-          });
-        }
+      let canAccess = true;
+
+      if ('requireRole' in options) {
+        canAccess =
+          !!user &&
+          options.requireRole.some((role) => user.systemRoles.includes(role));
+      } else if ('requireAuthenticated' in options) {
+        canAccess = !!user;
+      } else if ('requireUnauthenticated' in options) {
+        canAccess = !user;
+      }
+
+      if (!canAccess) {
+        setTimeout(() => {
+          navigate('/', { replace: true });
+        });
       }
     }
-  }, [navigate, authenticated, systemRoles, data, status]);
+  }, [navigate, options, data, status]);
 
   if (status === 'success') {
     const { user } = data;

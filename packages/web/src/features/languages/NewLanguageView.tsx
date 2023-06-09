@@ -22,7 +22,7 @@ export interface FormData {
 }
 
 export default function NewLanguageView() {
-  useAuth({ systemRoles: [SystemRole.Admin] });
+  useAuth({ requireRole: [SystemRole.Admin] });
   const navigate = useNavigate();
 
   const flash = useFlash();

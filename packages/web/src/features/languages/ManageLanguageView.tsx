@@ -24,7 +24,7 @@ interface FormData {
 }
 
 export default function ManageLanguageView() {
-  useAuth({ systemRoles: [SystemRole.Admin] });
+  useAuth({ requireRole: [SystemRole.Admin] });
   const language = useLoaderData() as GetLanguageResponseBody;
   const flash = useFlash();
 

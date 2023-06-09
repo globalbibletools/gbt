@@ -23,7 +23,7 @@ export function languagesViewLoader() {
 }
 
 export default function LanguagesView() {
-  const session = useAuth({ systemRoles: [SystemRole.Admin] });
+  const session = useAuth({ requireRole: [SystemRole.Admin] });
   const languages = useLoaderData() as GetLanguagesResponseBody;
 
   const { t } = useTranslation();
