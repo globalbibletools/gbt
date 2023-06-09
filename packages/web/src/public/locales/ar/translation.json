@@ -28,5 +28,9 @@
   "language_created": "لغة خلقت!",
   "language_updated": "اللغة المحدثة!",
   "error": "خطأ",
-  "success": "نجاح"
+  "success": "نجاح",
+  "role_other": "الأدوار",
+  "role": "دور",
+  "role_admin": "مدير",
+  "user_role_changed": "تم تحديث دور المستخدم"
 }
