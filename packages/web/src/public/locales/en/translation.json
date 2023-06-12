@@ -28,5 +28,9 @@
   "language_created": "Language created!",
   "language_updated": "Language updated!",
   "error": "Error",
-  "success": "Success"
+  "success": "Success",
+  "role_other": "Roles",
+  "role": "Role",
+  "role_admin": "Admin",
+  "user_role_changed": "User role updated!"
 }

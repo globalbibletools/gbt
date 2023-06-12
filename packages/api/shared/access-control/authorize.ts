@@ -2,7 +2,7 @@ import { subject as buildSubject } from '@casl/ability';
 import type { RouteRequest } from '../Route';
 import { client } from '../db';
 import { ForbiddenError, NotFoundError } from '../errors';
-import { Action, createPolicyFor, RawSubject, Subject } from './policy';
+import { Action, RawSubject, Subject } from './policy';
 
 interface AuthorizeOptions {
   action: Action;
@@ -23,8 +23,6 @@ export function authorize<Params, Body>(
 ): (req: RouteRequest<Params, Body>) => Promise<void> {
   return async (req: RouteRequest<Params, Body>) => {
     const config = typeof options === 'object' ? options : options(req);
-
-    const policy = createPolicyFor(req.session?.user);
 
     let subject: Subject | undefined = undefined;
     if ('subjectId' in config && config.subjectId) {
@@ -57,7 +55,7 @@ export function authorize<Params, Body>(
       // but normal users shouldn't be able to differentiate between resources that don't exist and ones that they don't have access to.
       if (!subject) {
         if (
-          policy
+          req.policy
             .rulesFor(config.action, config.subject)
             .some((rule) => !!rule.conditions)
         ) {
@@ -70,7 +68,7 @@ export function authorize<Params, Body>(
       subject = config.subject;
     }
 
-    if (!policy.can(config.action, subject)) {
+    if (!req.policy.can(config.action, subject)) {
       throw new ForbiddenError();
     }
   };

@@ -1,4 +1,3 @@
-import * as z from 'zod';
 import {
   GetLanguagesResponseBody,
   PostLanguageRequestBody,
@@ -8,7 +7,7 @@ import { languageSchema } from './schemas';
 import createRoute from '../../../shared/Route';
 import { authorize } from '../../../shared/access-control/authorize';
 
-export default createRoute<void>()
+export default createRoute()
   .get<void, GetLanguagesResponseBody>({
     async handler(req, res) {
       const languages = await client.language.findMany();
