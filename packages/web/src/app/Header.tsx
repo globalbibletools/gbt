@@ -12,6 +12,7 @@ import LanguageDialog from './LanguageDialog';
 import interfaceLanguages from './languages.json';
 import apiClient from '../shared/apiClient';
 import useAuth from '../shared/hooks/useAuth';
+import { SystemRole } from '@translation/api-types';
 
 export interface HeaderProps {
   language: string;
@@ -51,9 +52,11 @@ export default function Header({ language, onLanguageChange }: HeaderProps) {
                 </DropdownMenuButton>
               ))}
             </DropdownMenuSubmenu>
-            <DropdownMenuLink to={'/languages'}>
-              {t('manage_languages')}
-            </DropdownMenuLink>
+            {session.user?.systemRoles.includes(SystemRole.Admin) && (
+              <DropdownMenuLink to={'/languages'}>
+                {t('manage_languages')}
+              </DropdownMenuLink>
+            )}
           </DropdownMenu>
         )}
         {session.status === 'authenticated' && (
