@@ -27,6 +27,8 @@ export function createPolicyFor(user?: Actor) {
 
     can('read', 'User', { id: user.id });
 
+    can('read', 'User', { id: user.id });
+
     if (user.systemRoles.includes(SystemRole.ADMIN)) {
       can('create', 'Language');
       can('create', 'User');

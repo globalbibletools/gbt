@@ -5,7 +5,7 @@
   "projectType": "application",
   "targets": {
     "build": {
-      "executor": "@nrwl/webpack:webpack",
+      "executor": "@nx/webpack:webpack",
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
@@ -17,7 +17,11 @@
         "tsConfig": "packages/web/tsconfig.app.json",
         "assets": [
           "packages/web/src/favicon.ico",
-          { "input": "packages/web/src/public", "glob": "**/*", "output": "/" }
+          {
+            "input": "packages/web/src/public",
+            "glob": "**/*",
+            "output": "/"
+          }
         ],
         "styles": ["packages/web/src/styles.css"],
         "scripts": [],
@@ -49,7 +53,7 @@
       }
     },
     "serve": {
-      "executor": "@nrwl/webpack:dev-server",
+      "executor": "@nx/webpack:dev-server",
       "defaultConfiguration": "development",
       "options": {
         "buildTarget": "web:build",
@@ -67,7 +71,7 @@
       }
     },
     "lint": {
-      "executor": "@nrwl/linter:eslint",
+      "executor": "@nx/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
         "lintFilePatterns": ["packages/web/**/*.{ts,tsx,js,jsx}"]

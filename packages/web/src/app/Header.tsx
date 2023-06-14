@@ -32,14 +32,14 @@ export default function Header({ language, onLanguageChange }: HeaderProps) {
   );
 
   return (
-    <header className="p-2 flex items-baseline z-10">
+    <header className="p-2 flex items-baseline flex-row z-10">
       <h1 className="font-bold text-lg">Gloss Translation</h1>
       <div className="flex-grow" />
       <nav className="flex items-baseline" aria-label="primary">
         {translationLanguages.length > 0 && (
           <DropdownMenu
             text={selectedLanguage?.name ?? 'Language'}
-            className="mr-4"
+            className="me-4"
           >
             <DropdownMenuSubmenu text={t('switch_language')}>
               {translationLanguages.map((language) => (
@@ -59,7 +59,7 @@ export default function Header({ language, onLanguageChange }: HeaderProps) {
         {session.status === 'authenticated' && (
           <DropdownMenu text={session.user.name ?? ''}>
             <DropdownMenuLink to={'#'}>
-              <Icon icon="user" className="mr-2" fixedWidth />
+              <Icon icon="user" className="me-2" fixedWidth />
               Profile
             </DropdownMenuLink>
             <DropdownMenuButton
@@ -67,7 +67,7 @@ export default function Header({ language, onLanguageChange }: HeaderProps) {
                 languageDialog.current?.open();
               }}
             >
-              <Icon icon="earth" className="mr-2" fixedWidth />
+              <Icon icon="earth" className="me-2" fixedWidth />
               {(interfaceLanguages as { [code: string]: string })[
                 i18n.resolvedLanguage
               ] ?? t('language', { count: 100 })}
@@ -75,7 +75,7 @@ export default function Header({ language, onLanguageChange }: HeaderProps) {
             <DropdownMenuLink
               to={`${process.env.API_URL}/api/auth/signout?callbackUrl=${window.location.href}`}
             >
-              <Icon icon="right-from-bracket" className="mr-2" fixedWidth />
+              <Icon icon="right-from-bracket" className="me-2" fixedWidth />
               {t('log_out')}
             </DropdownMenuLink>
           </DropdownMenu>

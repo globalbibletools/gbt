@@ -1,6 +1,16 @@
 {
   "rewrites": [
-    { 
+    {
+      "source": "/([^.]+)",
+      "has": [
+        {
+          "type": "host",
+          "value": "interlinear.globalbibletools.com"
+        }
+      ],
+      "destination": "/"
+    },
+    {
       "source": "/([^.]+)",
       "has": [
         {

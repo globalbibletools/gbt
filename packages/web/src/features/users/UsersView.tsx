@@ -15,6 +15,7 @@ import View from '../../shared/components/View';
 import ViewTitle from '../../shared/components/ViewTitle';
 import { GetUsersResponseBody, SystemRole } from '@translation/api-types';
 import { capitalize } from '../../shared/utils';
+import { useFlash } from '../../shared/hooks/flash';
 import useAuth from '../../shared/hooks/useAuth';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import SelectInput from '../../shared/components/form/SelectInput';
@@ -23,6 +24,7 @@ export default function UsersView() {
   const session = useAuth({ requireRole: [SystemRole.Admin] });
 
   const { t } = useTranslation();
+  const flash = useFlash();
 
   const usersQuery = useQuery(['users'], () => apiClient.users.findAll());
   const queryClient = useQueryClient();
@@ -57,6 +59,9 @@ export default function UsersView() {
 
       alert('Unknown error occurred.');
     },
+    onSuccess() {
+      flash.success(t('user_role_changed'));
+    },
     onSettled: (_, __, ___, context) => {
       queryClient.invalidateQueries({
         queryKey: ['users'],
@@ -77,7 +82,7 @@ export default function UsersView() {
               {t('email').toUpperCase()}
             </ListHeaderCell>
             <ListHeaderCell className="min-w-[80px]">
-              {t('roles').toUpperCase()}
+              {t('role', { count: 100 }).toUpperCase()}
             </ListHeaderCell>
           </ListHeader>
           {session.user?.systemRoles.includes(SystemRole.Admin) && (
@@ -95,9 +100,10 @@ export default function UsersView() {
                 <ListCell>{user.email}</ListCell>
                 <ListCell>
                   <SelectInput
-                    className="w-32"
+                    className="w-42"
                     name="userRole"
                     value={user.systemRoles[0] ?? ''}
+                    aria-label={t('role') ?? ''}
                     onChange={(e) =>
                       userMutation.mutate({
                         id: user.id,
@@ -108,7 +114,7 @@ export default function UsersView() {
                     }
                   >
                     <option></option>
-                    <option value={SystemRole.Admin}>Admin</option>
+                    <option value={SystemRole.Admin}>{t('role_admin')}</option>
                   </SelectInput>
                 </ListCell>
               </ListRow>

@@ -1,5 +1,4 @@
 {
-  "translationView": "la interfaz de traducción está en proceso",
   "language_one": "idioma",
   "language_other": "idiomas",
   "add_language": "Agregar Idioma",
@@ -29,5 +28,8 @@
   "language_created": "¡Idioma creado!",
   "language_updated": "¡Idioma actualizado!",
   "error": "Error",
-  "success": "Éxito"
+  "success": "Éxito",
+  "role": "Roles",
+  "role_admin": "Administrador",
+  "user_role_changed": "¡Rol de usuario actualizado!"
 }

@@ -6,7 +6,6 @@ import {
   InviteUserRequestBody,
 } from '@translation/api-types';
 import { authorize } from '../../../shared/access-control/authorize';
-import { createPolicyFor } from '../../../shared/access-control/policy';
 import { accessibleBy } from '../../../prisma/casl';
 
 export default createRoute()
@@ -16,10 +15,8 @@ export default createRoute()
       subject: 'User',
     }),
     async handler(req, res) {
-      const policy = createPolicyFor(req.session?.user);
-
       const users = await client.user.findMany({
-        where: accessibleBy(policy).User,
+        where: accessibleBy(req.policy).User,
         include: {
           systemRoles: true,
         },

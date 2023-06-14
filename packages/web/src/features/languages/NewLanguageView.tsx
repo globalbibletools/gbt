@@ -84,7 +84,7 @@ export default function NewLanguageView() {
           </div>
           <div>
             <Button type="submit">{t('create')}</Button>
-            <SubmittingIndicator className="ml-3" />
+            <SubmittingIndicator className="ms-3" />
           </div>
         </Form>
       </Card>

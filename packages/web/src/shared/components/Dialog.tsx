@@ -31,7 +31,7 @@ const Dialog = forwardRef<DialogRef, DialogProps>(
       >
         {children}
         <button
-          className="absolute -right-1 -top-1 w-8 h-8 pt-2 pr-2"
+          className="absolute end-0 -top-1 w-8 h-8 pt-2 pe-1"
           type="button"
           onClick={() => dialog.current?.close()}
         >
