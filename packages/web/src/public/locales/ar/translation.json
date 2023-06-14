@@ -32,5 +32,6 @@
   "role_other": "الأدوار",
   "role": "دور",
   "role_admin": "مدير",
-  "user_role_changed": "تم تحديث دور المستخدم"
+  "user_role_changed": "تم تحديث دور المستخدم",
+  "app_name": "ترجمة لمعان"
 }
