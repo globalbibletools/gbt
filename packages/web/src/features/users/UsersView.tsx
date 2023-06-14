@@ -15,13 +15,13 @@ import View from '../../shared/components/View';
 import ViewTitle from '../../shared/components/ViewTitle';
 import { GetUsersResponseBody, SystemRole } from '@translation/api-types';
 import { capitalize } from '../../shared/utils';
-import useSession from '../../shared/hooks/useSession';
+import { useFlash } from '../../shared/hooks/flash';
+import useAuth from '../../shared/hooks/useAuth';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import SelectInput from '../../shared/components/form/SelectInput';
-import { useFlash } from '../../shared/hooks/flash';
 
 export default function UsersView() {
-  const session = useSession();
+  const session = useAuth({ requireRole: [SystemRole.Admin] });
 
   const { t } = useTranslation();
   const flash = useFlash();
