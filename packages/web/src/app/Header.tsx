@@ -13,6 +13,7 @@ import interfaceLanguages from './languages.json';
 import apiClient from '../shared/apiClient';
 import useAuth from '../shared/hooks/useAuth';
 import { SystemRole } from '@translation/api-types';
+import { Link } from 'react-router-dom';
 
 export interface HeaderProps {
   language: string;
@@ -34,7 +35,9 @@ export default function Header({ language, onLanguageChange }: HeaderProps) {
 
   return (
     <header className="p-2 flex items-baseline flex-row z-10">
-      <h1 className="font-bold text-lg">Gloss Translation</h1>
+      <Link className="font-bold text-lg" to="/">
+        {t('app_name')}
+      </Link>
       <div className="flex-grow" />
       <nav className="flex items-baseline" aria-label="primary">
         {translationLanguages.length > 0 && (
