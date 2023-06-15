@@ -4,19 +4,23 @@ import { DialogRef } from '../shared/components/Dialog';
 import { Icon } from '../shared/components/Icon';
 import LanguageDialog from './LanguageDialog';
 import interfaceLanguages from './languages.json';
+import useLocalStorageState from '../shared/hooks/useLocalStorageState';
 
 export default function Footer() {
-  const i18nextLanguage = localStorage.getItem('i18nextLng');
+  const [isFirstLoad, setIsFirstLoad] = useLocalStorageState<boolean>(
+    'needs-language-dialog',
+    true
+  );
 
   const languageDialog = useRef<DialogRef>(null);
   const { t, i18n } = useTranslation();
 
   useEffect(() => {
-    if (i18nextLanguage == null) {
-      // This never occurs.
+    if (isFirstLoad) {
+      setIsFirstLoad(false);
       languageDialog.current?.open();
     }
-  }, [languageDialog]);
+  }, [isFirstLoad, languageDialog]);
 
   return (
     <div className="p-2 flex flex-row z-10 justify-end">
