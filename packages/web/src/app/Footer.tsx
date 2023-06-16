@@ -3,27 +3,21 @@ import { useTranslation } from 'react-i18next';
 import { DialogRef } from '../shared/components/Dialog';
 import { Icon } from '../shared/components/Icon';
 import LanguageDialog from './LanguageDialog';
+import { initialLanguageChosen } from './i18n';
 import interfaceLanguages from './languages.json';
-import useLocalStorageState from '../shared/hooks/useLocalStorageState';
 
 export default function Footer() {
-  const [isFirstLoad, setIsFirstLoad] = useLocalStorageState<boolean>(
-    'needs-language-dialog',
-    true
-  );
-
   const languageDialog = useRef<DialogRef>(null);
   const { t, i18n } = useTranslation();
 
   useEffect(() => {
-    if (isFirstLoad) {
-      setIsFirstLoad(false);
+    if (!initialLanguageChosen) {
       languageDialog.current?.open();
     }
-  }, [isFirstLoad, languageDialog]);
+  }, []);
 
   return (
-    <div className="p-2 flex flex-row z-10 justify-end">
+    <footer className="p-2 flex flex-row z-10 justify-end">
       <button
         type="button"
         onClick={() => {
@@ -36,6 +30,6 @@ export default function Footer() {
         ] ?? t('language', { count: 100 })}
       </button>
       <LanguageDialog ref={languageDialog} />
-    </div>
+    </footer>
   );
 }
