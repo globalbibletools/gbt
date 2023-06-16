@@ -1,0 +1,17 @@
+patch:
+  summary: Updates a members permissions on a language.
+  parameters:
+    - $ref: '../schemas/parameters.yml#languageCode'
+    - $ref: '../schemas/parameters.yml#userId'
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          description: The new set of permissions on the language to grant to the user.
+          permissions:
+            type: string
+            enum: ['ADMIN', 'EDIT', 'VIEW']
+  responses:
+    '204':
+      description: No Content

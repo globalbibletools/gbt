@@ -30,3 +30,7 @@ paths:
     $ref: ./paths/verse-glosses.yml
   /languages/{code}/words/{wordId}:
     $ref: ./paths/language-words.yml
+  /languages/{code}/members:
+    $ref: ./paths/language-members.yml
+  /languages/{code}/members/{userId}:
+    $ref: ./paths/language-member.yml
