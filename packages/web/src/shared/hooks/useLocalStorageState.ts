@@ -2,7 +2,7 @@ import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
 export default function useLocalStorageState<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  S extends number | string | Record<string, any>
+  S extends boolean | number | string | Record<string, any>
 >(key: string, initialState?: S | (() => S)): [S, Dispatch<SetStateAction<S>>] {
   const [state, setState] = useState<S>(() => {
     const storageItem = localStorage.getItem(key);
@@ -14,7 +14,7 @@ export default function useLocalStorageState<
   });
 
   useEffect(() => {
-    if (state) {
+    if (state != null) {
       localStorage.setItem(key, JSON.stringify(state));
     } else {
       localStorage.removeItem(key);

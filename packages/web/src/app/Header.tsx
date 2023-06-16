@@ -23,7 +23,7 @@ export interface HeaderProps {
 export default function Header({ language, onLanguageChange }: HeaderProps) {
   const session = useAuth();
   const languageDialog = useRef<DialogRef>(null);
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
 
   const languagesQuery = useQuery(['languages'], () =>
     apiClient.languages.findAll()
@@ -68,16 +68,6 @@ export default function Header({ language, onLanguageChange }: HeaderProps) {
               <Icon icon="user" className="me-2" fixedWidth />
               Profile
             </DropdownMenuLink>
-            <DropdownMenuButton
-              onClick={() => {
-                languageDialog.current?.open();
-              }}
-            >
-              <Icon icon="earth" className="me-2" fixedWidth />
-              {(interfaceLanguages as { [code: string]: string })[
-                i18n.resolvedLanguage
-              ] ?? t('language', { count: 100 })}
-            </DropdownMenuButton>
             <DropdownMenuLink
               to={`${process.env.API_URL}/api/auth/signout?callbackUrl=${window.location.href}`}
             >

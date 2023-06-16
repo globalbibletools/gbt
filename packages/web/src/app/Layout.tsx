@@ -2,6 +2,7 @@ import { Suspense, useMemo } from 'react';
 import { Outlet, useOutletContext } from 'react-router-dom';
 import useLocalStorageState from '../shared/hooks/useLocalStorageState';
 import Header from './Header';
+import Footer from './Footer';
 
 export interface LayoutContext {
   language: string;
@@ -29,6 +30,7 @@ export function Layout() {
         <div className="flex-grow relative">
           <Outlet context={outletContext} />
         </div>
+        <Footer />
       </div>
     </Suspense>
   );
