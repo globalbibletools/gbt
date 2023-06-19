@@ -12,19 +12,29 @@ export interface SessionUser {
   id: string;
   systemRoles: SystemRole[];
 }
+export interface Session {
+  id: string;
+  user?: SessionUser;
+}
 
 export interface RouteRequest<Params, Body> {
   query: Params;
   body: Body;
-  session?: { user?: SessionUser };
+  session?: Session;
   policy: Policy;
 }
 
 export interface ResponseHelper<Body> {
+  /** Set a header on the response. */
+  setHeader(header: string, value: string): void;
   /** Returns 200 or 204 dependening on whether there is a response body to send. */
   ok(data?: Body): void;
   /** Returns 201 created with the contents of the new resource. */
   created(location: string): void;
+  /** Returns 302 with the location of the redirect. */
+  redirect(location: string): void;
+  /** Returns 401 with a list of errors. By default it will have a single error with code Unauthorized. */
+  unauthorized(errors?: ErrorDetail[]): void;
   /** Returns 403 with a list of errors. By default it will have a single error with code Forbidden. */
   forbidden(errors?: ErrorDetail[]): void;
   /** Returns 404 with a list of errors. By default it will have a single error with code NotFound. */
@@ -132,6 +142,9 @@ export default function createRoute<
   ): NextApiHandler {
     return async (req, res) => {
       const responseHelper: ResponseHelper<ResponseBody> = {
+        setHeader(header: string, value: string) {
+          res.setHeader(header, value);
+        },
         ok(body?: ResponseBody) {
           if (body) {
             res.status(200).json(body);
@@ -142,6 +155,13 @@ export default function createRoute<
         created(location: string) {
           res.setHeader('Location', location);
           res.status(201).end();
+        },
+        redirect(location: string) {
+          res.setHeader('Location', location);
+          res.status(302).end();
+        },
+        unauthorized(errors: ErrorDetail[] = [{ code: 'Unauthorized' }]) {
+          res.status(403).json({ errors });
         },
         forbidden(errors: ErrorDetail[] = [{ code: 'Forbidden' }]) {
           res.status(403).json({ errors });
@@ -163,7 +183,9 @@ export default function createRoute<
       try {
         let body: RequestBody;
         if ('schema' in definition) {
-          const parseResult = definition.schema.safeParse(req.body);
+          const parseResult = definition.schema.safeParse(
+            req.method === 'GET' ? req.query : req.body
+          );
           if (parseResult.success) {
             body = parseResult.data;
           } else {
@@ -174,15 +196,16 @@ export default function createRoute<
           body = undefined as RequestBody;
         }
 
-        const authRequest = auth.handleRequest({ req, res });
-        const session = await authRequest.validate();
-        let user: SessionUser | undefined;
-
         // If the session is valid, load the user's auth information.
-        if (session) {
+        const authRequest = auth.handleRequest({ req, res });
+        const sessionData = await authRequest.validate();
+        let session: Session | undefined;
+        if (sessionData) {
+          session = { id: sessionData.sessionId };
+
           const userData = await client.authUser.findUnique({
             where: {
-              id: session.userId,
+              id: sessionData.userId,
             },
             include: {
               systemRoles: true,
@@ -190,7 +213,7 @@ export default function createRoute<
           });
 
           if (userData) {
-            user = {
+            session.user = {
               id: userData.id,
               systemRoles: userData.systemRoles.map(({ role }) => role),
             };
@@ -200,8 +223,8 @@ export default function createRoute<
         const request: RouteRequest<Params, RequestBody> = {
           query: req.query as Params,
           body,
-          session: { user },
-          policy: createPolicyFor(user),
+          session,
+          policy: createPolicyFor(session?.user),
         };
 
         await definition.authorize?.(request);

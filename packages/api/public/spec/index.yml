@@ -8,7 +8,7 @@ info:
 servers:
   - url: /api
 paths:
-  /auth/signin/{provider}:
+  /auth/login:
     $ref: ./paths/auth.yml#login
   /auth/signout:
     $ref: ./paths/auth.yml#logout

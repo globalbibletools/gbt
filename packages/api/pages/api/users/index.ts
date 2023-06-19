@@ -43,10 +43,15 @@ export default createRoute()
       subject: 'User',
     }),
     async handler(req, res) {
+      const email = req.body.email.toLowerCase();
       const user = await auth.createUser({
-        primaryKey: null,
+        primaryKey: {
+          providerId: 'username',
+          providerUserId: email,
+          password: null,
+        },
         attributes: {
-          email: req.body.email,
+          email,
           name: req.body.name,
         },
       });

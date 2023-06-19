@@ -34,14 +34,6 @@ export default function InviteUserView() {
     try {
       await apiClient.users.invite({ email, name });
 
-      // NextAuth doesn't provide a way to send a login link from the server,
-      // so we will do that here.
-      await apiClient.users.sendInvite({
-        email,
-        callbackUrl: window.location.origin,
-        json: 'true',
-      });
-
       flash.success(t('user_invited'));
       reset();
     } catch (error) {

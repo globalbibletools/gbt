@@ -28,6 +28,16 @@ export interface GetSessionResponse {
   user?: User;
 }
 
+export interface PostLoginRequest {
+  email: string;
+  redirectUrl: string;
+}
+
+export interface GetLoginRequest {
+  token: string;
+  redirectUrl: string;
+}
+
 export interface GetUsersResponseBody {
   data: User[];
 }
