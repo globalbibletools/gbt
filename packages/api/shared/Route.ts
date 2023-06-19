@@ -1,17 +1,22 @@
 import { ErrorDetail } from '@translation/api-types';
 import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 import { ZodType } from 'zod';
-import { getServerSession, Session } from 'next-auth';
-import { authOptions } from '../pages/api/auth/[...nextauth]';
-import { Prisma } from '../prisma/client';
+import { Prisma, SystemRole } from '../prisma/client';
 import { cors } from './cors';
 import * as Errors from './errors';
 import { createPolicyFor, Policy } from './access-control/policy';
+import { auth } from './auth';
+import { client } from './db';
+
+export interface SessionUser {
+  id: string;
+  systemRoles: SystemRole[];
+}
 
 export interface RouteRequest<Params, Body> {
   query: Params;
   body: Body;
-  session?: Session;
+  session?: { user?: SessionUser };
   policy: Policy;
 }
 
@@ -169,14 +174,34 @@ export default function createRoute<
           body = undefined as RequestBody;
         }
 
-        const session =
-          (await getServerSession(req, res, authOptions)) ?? undefined;
+        const authRequest = auth.handleRequest({ req, res });
+        const session = await authRequest.validate();
+        let user: SessionUser | undefined;
+
+        // If the session is valid, load the user's auth information.
+        if (session) {
+          const userData = await client.authUser.findUnique({
+            where: {
+              id: session.userId,
+            },
+            include: {
+              systemRoles: true,
+            },
+          });
+
+          if (userData) {
+            user = {
+              id: userData.id,
+              systemRoles: userData.systemRoles.map(({ role }) => role),
+            };
+          }
+        }
 
         const request: RouteRequest<Params, RequestBody> = {
           query: req.query as Params,
           body,
-          session,
-          policy: createPolicyFor(session?.user),
+          session: { user },
+          policy: createPolicyFor(user),
         };
 
         await definition.authorize?.(request);

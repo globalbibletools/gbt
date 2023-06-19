@@ -37,7 +37,7 @@ export function authorize<Params, Body>(
           break;
         }
         case 'User': {
-          const user = await client.user.findUnique({
+          const user = await client.authUser.findUnique({
             where: { id: config.subjectId },
           });
           if (user) {

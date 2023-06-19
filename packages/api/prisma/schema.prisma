@@ -15,7 +15,7 @@ datasource db {
 }
 
 /// A user who can authenticate into the system.
-model User {
+model AuthUser {
   /// The ID of the user.
   id            String           @id @default(dbgenerated("generate_ulid()")) @db.Uuid
   /// The display name of the user.
@@ -27,20 +27,34 @@ model User {
   /// The list of system roles this user has
   systemRoles   UserSystemRole[]
   /// The list of sessions for the user.
-  sessions      Session[]
+  auth_session  AuthSession[]
+  AuthKey       AuthKey[]
+
+  @@map("User")
 }
 
 /// A authenticated session for a user.
-model Session {
-  id           String   @id @default(dbgenerated("generate_ulid()")) @db.Uuid
-  /// The session token from the cookie.
-  sessionToken String   @unique
-  /// The date the session expires.
-  expires      DateTime
-  /// The user the session is associated with.
-  user         User     @relation(fields: [userId], references: [id])
-  /// The ID of the user the session is associated with.
-  userId       String   @db.Uuid
+model AuthSession {
+  id             String   @id @unique
+  user_id        String   @db.Uuid
+  active_expires BigInt
+  idle_expires   BigInt
+  auth_user      AuthUser @relation(references: [id], fields: [user_id], onDelete: Cascade)
+
+  @@index([user_id])
+  @@map("Session")
+}
+
+model AuthKey {
+  id              String   @id @unique
+  hashed_password String?
+  user_id         String   @db.Uuid
+  primary_key     Boolean
+  expires         BigInt?
+  auth_user       AuthUser @relation(references: [id], fields: [user_id], onDelete: Cascade)
+
+  @@index([user_id])
+  @@map("UserAuthentication")
 }
 
 enum SystemRole {
@@ -50,25 +64,13 @@ enum SystemRole {
 /// A system level role for a user.
 model UserSystemRole {
   /// The user with the role.
-  user   User       @relation(fields: [userId], references: [id])
+  user   AuthUser   @relation(fields: [userId], references: [id])
   /// The ID of the user with the role.
   userId String     @db.Uuid
   /// The role given to the user.
   role   SystemRole
 
   @@id([userId, role])
-}
-
-/// A token sent in an email for logging in.
-model VerificationToken {
-  /// The email address associated with the user logging in.
-  identifier String
-  /// The token's value.
-  token      String   @unique
-  /// The time after which the token will no longer be usable.
-  expires    DateTime
-
-  @@unique([identifier, token])
 }
 
 /// A book of the Bible.

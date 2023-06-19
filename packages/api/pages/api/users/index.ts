@@ -7,6 +7,7 @@ import {
 } from '@translation/api-types';
 import { authorize } from '../../../shared/access-control/authorize';
 import { accessibleBy } from '../../../prisma/casl';
+import { auth } from '../../../shared/auth';
 
 export default createRoute()
   .get<void, GetUsersResponseBody>({
@@ -15,8 +16,8 @@ export default createRoute()
       subject: 'User',
     }),
     async handler(req, res) {
-      const users = await client.user.findMany({
-        where: accessibleBy(req.policy).User,
+      const users = await client.authUser.findMany({
+        where: accessibleBy(req.policy).AuthUser,
         include: {
           systemRoles: true,
         },
@@ -42,16 +43,15 @@ export default createRoute()
       subject: 'User',
     }),
     async handler(req, res) {
-      const user = await client.user.create({
-        data: {
-          email: req.body.email.toLowerCase(),
+      const user = await auth.createUser({
+        primaryKey: null,
+        attributes: {
+          email: req.body.email,
           name: req.body.name,
         },
       });
 
-      // In the future, we will want to send an invite email,
-      // but for now the frontend can send the standard login email.
-      // NextAuth doesn't provide a way to initiate login from the server.
+      // TODO: send invite email
 
       res.created(`/api/users/${user.id}`);
     },

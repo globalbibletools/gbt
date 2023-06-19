@@ -1,11 +1,11 @@
-import { Language, User, SystemRole } from '../../prisma/client';
+import { Language, AuthUser, SystemRole } from '../../prisma/client';
 import { PureAbility, AbilityBuilder } from '@casl/ability';
 import { Subjects } from '@casl/prisma';
 import { createPrismaAbility, PrismaQuery } from '../../prisma/casl';
 
 export type Subject = Subjects<{
   Language: Language;
-  User: User;
+  User: AuthUser;
 }>;
 export type RawSubject = Extract<Subject, string>;
 export type Action = 'create' | 'read' | 'translate' | 'administer';

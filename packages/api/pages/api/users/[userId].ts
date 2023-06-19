@@ -18,7 +18,7 @@ export default createRoute<{ userId: string }>()
       subject: 'User',
     }),
     async handler(req, res) {
-      const user = await client.user.findUnique({
+      const user = await client.authUser.findUnique({
         where: {
           id: req.query.userId,
         },
