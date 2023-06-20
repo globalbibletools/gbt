@@ -35,25 +35,9 @@ login:
 logout:
   post:
     summary: Log out of session
-    requestBody:
-      required: true
-      content:
-        application/x-www-form-urlencoded:
-          schema:
-            type: object
-            properties:
-              csrfToken:
-                type: string
-                required: true
     responses:
-      302:
-        description: Redirect
-csrf:
-  get:
-    summary: Get the CSRF token
-    responses:
-      200:
-        description: OK
+      204:
+        description: No Content
 session:
   get:
     summary: Get the current session data

@@ -25,6 +25,10 @@ export interface RouteRequest<Params, Body> {
 }
 
 export interface ResponseHelper<Body> {
+  /** Set the user on the session. */
+  login(userId: string): Promise<void>;
+  /** Invalidate the session. */
+  logout(): Promise<void>;
   /** Set a header on the response. */
   setHeader(header: string, value: string): void;
   /** Returns 200 or 204 dependening on whether there is a response body to send. */
@@ -141,7 +145,20 @@ export default function createRoute<
     definition: RouteDefinition<Params, RequestBody, ResponseBody>
   ): NextApiHandler {
     return async (req, res) => {
+      const authRequest = auth.handleRequest({ req, res });
+
       const responseHelper: ResponseHelper<ResponseBody> = {
+        async login(userId: string) {
+          if (authRequest.storedSessionId) {
+            await auth.invalidateSession(authRequest.storedSessionId);
+          }
+          authRequest.setSession(await auth.createSession(userId));
+        },
+        async logout() {
+          if (authRequest.storedSessionId) {
+            await auth.invalidateSession(authRequest.storedSessionId);
+          }
+        },
         setHeader(header: string, value: string) {
           res.setHeader(header, value);
         },
@@ -197,7 +214,6 @@ export default function createRoute<
         }
 
         // If the session is valid, load the user's auth information.
-        const authRequest = auth.handleRequest({ req, res });
         const sessionData = await authRequest.validate();
         let session: Session | undefined;
         if (sessionData) {

@@ -13,15 +13,8 @@ export default createRoute()
     async handler(req, res) {
       const key = await auth.getKey('email-verification', req.body.token);
       if (key) {
-        if (req.session?.id) {
-          await auth.invalidateSession(req.session.id);
-        }
         await auth.deleteKey('email-verification', req.body.token);
-        const newSession = await auth.createSession(key.userId);
-        res.setHeader(
-          'Set-Cookie',
-          auth.createSessionCookie(newSession).serialize().toString()
-        );
+        await res.login(key.userId);
         res.redirect(req.body.redirectUrl);
       } else {
         res.unauthorized();
