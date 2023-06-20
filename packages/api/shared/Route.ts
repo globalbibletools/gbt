@@ -146,18 +146,20 @@ export default function createRoute<
   ): NextApiHandler {
     return async (req, res) => {
       const authRequest = auth.handleRequest({ req, res });
+      const sessionData = await authRequest.validate();
 
       const responseHelper: ResponseHelper<ResponseBody> = {
         async login(userId: string) {
-          if (authRequest.storedSessionId) {
-            await auth.invalidateSession(authRequest.storedSessionId);
+          if (sessionData) {
+            await auth.invalidateSession(sessionData.sessionId);
           }
           authRequest.setSession(await auth.createSession(userId));
         },
         async logout() {
-          if (authRequest.storedSessionId) {
-            await auth.invalidateSession(authRequest.storedSessionId);
+          if (sessionData) {
+            await auth.invalidateSession(sessionData.sessionId);
           }
+          authRequest.setSession(null);
         },
         setHeader(header: string, value: string) {
           res.setHeader(header, value);
@@ -214,7 +216,6 @@ export default function createRoute<
         }
 
         // If the session is valid, load the user's auth information.
-        const sessionData = await authRequest.validate();
         let session: Session | undefined;
         if (sessionData) {
           session = { id: sessionData.sessionId };

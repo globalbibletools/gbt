@@ -8,6 +8,8 @@ export const auth = lucia({
   adapter: prisma(client),
   env: process.env.NODE_ENV === 'production' ? 'PROD' : 'DEV',
   middleware: nextjs(),
+  // TODO: extract to env vars
+  origin: ['http://localhost:4300', 'http://localhost:4200'],
   generateCustomUserId() {
     return ulid();
   },
