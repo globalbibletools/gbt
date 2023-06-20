@@ -1,0 +1,9 @@
+{
+  "executors": {
+    "prisma": {
+      "implementation": "./src/executors/prisma/executor",
+      "schema": "./src/executors/prisma/schema.json",
+      "description": "prisma executor"
+    }
+  }
+}
