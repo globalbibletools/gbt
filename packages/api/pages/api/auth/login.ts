@@ -3,6 +3,7 @@ import createRoute from '../../../shared/Route';
 import { PostLoginRequest, GetLoginRequest } from '@translation/api-types';
 import { auth } from '../../../shared/auth';
 import { randomBytes } from 'crypto';
+import mailer from '../../../shared/mailer';
 
 export default createRoute()
   .get<GetLoginRequest, void>({
@@ -43,9 +44,12 @@ export default createRoute()
         url.searchParams.append('token', token);
         url.searchParams.append('redirectUrl', req.body.redirectUrl);
 
-        console.log(url.toString());
-
-        // TODO: send login email
+        await mailer.sendEmail({
+          to: key.providerUserId,
+          subject: 'GlobalBibleTools Login',
+          text: `Log in to globalbibletools.com:\n${url.toString()}`,
+          html: `<p>Log in to globalbibletools.com:</p><p><a href="${url.toString()}">Log In</a></p>`,
+        });
       }
 
       res.ok();

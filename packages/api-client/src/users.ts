@@ -1,6 +1,6 @@
 import type {
   GetUsersResponseBody,
-  InviteUserRequestBody,
+  PostUserRequestBody,
   UpdateUserRequestBody,
 } from '@translation/api-types';
 import ApiClient from './client';
@@ -14,7 +14,7 @@ export default class Users {
     });
   }
 
-  invite(body: InviteUserRequestBody): Promise<void> {
+  invite(body: PostUserRequestBody): Promise<void> {
     return this.client.post({
       path: `/api/users`,
       body,

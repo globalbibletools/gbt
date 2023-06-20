@@ -42,9 +42,10 @@ export interface GetUsersResponseBody {
   data: User[];
 }
 
-export interface InviteUserRequestBody {
+export interface PostUserRequestBody {
   email: string;
   name: string;
+  redirectUrl: string;
 }
 
 export interface UpdateUserRequestBody {
