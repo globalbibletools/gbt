@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "postinstall": "nx run-many --target=prisma-generate --all",
+    "postinstall": "nx run-many --target=prisma --all generate",
     "prepare": "husky install || true"
   },
   "private": true,
