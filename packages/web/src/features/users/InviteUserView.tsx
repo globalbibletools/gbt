@@ -32,7 +32,13 @@ export default function InviteUserView() {
     { reset }
   ) => {
     try {
-      await apiClient.users.invite({ email, name });
+      const redirectUrl = new URL(window.location.href);
+      redirectUrl.pathname = '/';
+      await apiClient.users.invite({
+        email,
+        name,
+        redirectUrl: redirectUrl.toString(),
+      });
 
       flash.success(t('user_invited'));
       reset();
