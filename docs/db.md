@@ -14,13 +14,13 @@ Our database is postgresql@14.7 with prisma to manage the schema and migrations.
 
 ## Seed and Reset Data
 
-In order to reset the database to the current schema and clear all data, run the command:
+In order to reset the database to the current schema and clear all data, run the following command. It may take a few minutes to remove any existing data and build out the database schema.
 
 ```
 nx prisma api migrate reset
 ```
 
-Then you can seed the database with static verse data:
+Then you can seed the database with static verse data. This will take a few minutes to run.
 
 ```
 nx seed api
