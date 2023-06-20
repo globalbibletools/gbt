@@ -18,7 +18,6 @@
     "fuzzysort": "2.0.4",
     "lucia-auth": "1.8.0",
     "next": "13.3.0",
-    "next-auth": "4.22.1",
     "nextjs-cors": "2.1.2",
     "nodemailer": "6.9.2",
     "prisma": "4.11.0",
