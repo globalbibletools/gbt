@@ -1,15 +1,11 @@
-import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
-import { DialogRef } from '../shared/components/Dialog';
 import DropdownMenu, {
   DropdownMenuButton,
   DropdownMenuLink,
   DropdownMenuSubmenu,
 } from '../shared/components/actions/DropdownMenu';
 import { Icon } from '../shared/components/Icon';
-import LanguageDialog from './LanguageDialog';
-import interfaceLanguages from './languages.json';
 import apiClient from '../shared/apiClient';
 import useAuth from '../shared/hooks/useAuth';
 import { SystemRole } from '@translation/api-types';
@@ -22,7 +18,6 @@ export interface HeaderProps {
 
 export default function Header({ language, onLanguageChange }: HeaderProps) {
   const session = useAuth();
-  const languageDialog = useRef<DialogRef>(null);
   const { t } = useTranslation();
 
   const languagesQuery = useQuery(['languages'], () =>
@@ -84,7 +79,6 @@ export default function Header({ language, onLanguageChange }: HeaderProps) {
           </Link>
         )}
       </nav>
-      <LanguageDialog ref={languageDialog} />
     </header>
   );
 }
