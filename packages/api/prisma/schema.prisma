@@ -28,29 +28,42 @@ model AuthUser {
   systemRoles   UserSystemRole[]
   /// The list of sessions for the user.
   auth_session  AuthSession[]
-  AuthKey       AuthKey[]
+  /// The list of auth keys for the user
+  auth_key      AuthKey[]
 
   @@map("User")
 }
 
 /// A authenticated session for a user.
 model AuthSession {
+  /// The ID of the session as stored in the cookie.
   id             String   @id @unique
+  /// The id of the authenticated user
   user_id        String   @db.Uuid
+  /// The time that the session will expire.
   active_expires BigInt
+  /// The time that the session will become idle.
   idle_expires   BigInt
+  /// The authenticated user.
   auth_user      AuthUser @relation(references: [id], fields: [user_id], onDelete: Cascade)
 
   @@index([user_id])
   @@map("Session")
 }
 
+/// A authentication method for a user.
 model AuthKey {
+  /// The ID of the key, will usually contain a key type and value.
   id              String   @id @unique
+  /// The encrypted password, if the key supports it.
   hashed_password String?
+  /// The ID of the user the key is for.
   user_id         String   @db.Uuid
+  /// Whether this is the primary key that cannot be deleted.
   primary_key     Boolean
+  /// The date that the key is no longer valid
   expires         BigInt?
+  /// The user the key is for.
   auth_user       AuthUser @relation(references: [id], fields: [user_id], onDelete: Cascade)
 
   @@index([user_id])
