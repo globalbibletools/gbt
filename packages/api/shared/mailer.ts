@@ -12,9 +12,5 @@ export default {
       from: process.env['FROM_EMAIL'],
       ...email,
     });
-
-    const rejectedAddresses = [...response.pending, ...response.rejected].map(
-      (addr) => addr.toString()
-    );
   },
 };
