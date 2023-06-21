@@ -14,7 +14,7 @@ function App() {
     }
     handler();
     i18next.on('languageChanged', handler);
-  }, [i18next.dir, i18next.on]);
+  }, []);
 
   return (
     <StrictMode>

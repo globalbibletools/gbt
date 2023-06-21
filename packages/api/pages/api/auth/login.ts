@@ -12,13 +12,15 @@ export default createRoute()
       redirectUrl: z.string(),
     }),
     async handler(req, res) {
-      const key = await auth.getKey('email-verification', req.body.token);
-      if (key) {
+      try {
+        const key = await auth.getKey('email-verification', req.body.token);
         await auth.deleteKey('email-verification', req.body.token);
         await res.login(key.userId);
         res.redirect(req.body.redirectUrl);
-      } else {
-        res.unauthorized();
+      } catch {
+        const url = new URL(req.body.redirectUrl);
+        url.searchParams.append('error', 'invalid-token');
+        res.redirect(url.toString());
       }
     },
   })
@@ -28,7 +30,12 @@ export default createRoute()
       redirectUrl: z.string(),
     }),
     async handler(req, res) {
-      const key = await auth.getKey('username', req.body.email.toLowerCase());
+      let key;
+      try {
+        key = await auth.getKey('username', req.body.email.toLowerCase());
+      } catch {
+        // We don't want the user to know that we couldn't find the key, so we return 204 in all cases.
+      }
 
       if (key) {
         const token = randomBytes(12).toString('hex');

@@ -12,7 +12,9 @@ import Button from '../../shared/components/actions/Button';
 import SubmittingIndicator from '../../shared/components/form/SubmittingIndicator';
 import { useFlash } from '../../shared/hooks/flash';
 import useAuth from '../../shared/hooks/useAuth';
-import { useState } from 'react';
+import { useLayoutEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { Link } from '../../shared/components/actions/Link';
 
 export interface FormData {
   email: string;
@@ -25,10 +27,21 @@ export default function InviteUserView() {
   const { t } = useTranslation();
   const flash = useFlash();
 
-  const [step, setStep] = useState<'email' | 'final'>('email');
+  const [step, setStep] = useState<'email' | 'final' | 'error'>('email');
+
+  // This allows the API to redirect a login link with an error,
+  // and for the error message to link back to the first login step.
+  const [search] = useSearchParams();
+  useLayoutEffect(() => {
+    if (search.get('error') === 'invalid-token') {
+      setStep('error');
+    } else {
+      setStep('email');
+    }
+  }, [search]);
 
   const formContext = useForm<FormData>();
-  const onSubmit: SubmitHandler<FormData> = async ({ email }, { reset }) => {
+  const onSubmit: SubmitHandler<FormData> = async ({ email }) => {
     try {
       const redirectUrl = new URL(window.location.href);
       redirectUrl.pathname = '/';
@@ -67,6 +80,12 @@ export default function InviteUserView() {
           </Form>
         )}
         {step === 'final' && <p>{t('login_message')}</p>}
+        {step === 'error' && (
+          <>
+            <p>{t('login_error_message')}</p>
+            <Link to="/login">{t('log_in')}</Link>
+          </>
+        )}
       </Card>
     </View>
   );
