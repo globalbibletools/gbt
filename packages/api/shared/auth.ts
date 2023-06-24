@@ -3,15 +3,22 @@ import { nextjs } from 'lucia-auth/middleware';
 import prisma from '@lucia-auth/adapter-prisma';
 import { client, ulid } from './db';
 import 'lucia-auth/polyfill/node';
+import { CookieOption } from 'lucia-auth/auth/cookie';
+import { originAllowlist } from './env';
 
 export const auth = lucia({
   adapter: prisma(client),
   env: process.env.NODE_ENV === 'production' ? 'PROD' : 'DEV',
   middleware: nextjs(),
-  // TODO: extract to env vars
-  origin: ['http://localhost:4300', 'http://localhost:4200'],
+  origin: originAllowlist,
   generateCustomUserId() {
     return ulid();
+  },
+  sessionCookie: {
+    // Lucia typings don't allow for same site none cookies, but we need them for vercel preview apps.
+    sameSite: (process.env.VERCEL_ENV === 'preview'
+      ? 'none'
+      : 'lax') as CookieOption['sameSite'],
   },
 });
 

@@ -4,6 +4,7 @@ import { PostLoginRequest, GetLoginRequest } from '@translation/api-types';
 import { auth } from '../../../shared/auth';
 import { randomBytes } from 'crypto';
 import mailer from '../../../shared/mailer';
+import { origin } from '../../../shared/env';
 
 export default createRoute()
   .get<GetLoginRequest, void>({
@@ -47,7 +48,7 @@ export default createRoute()
           expiresIn: 60 * 60,
         });
 
-        const url = new URL('http://localhost:4300/api/auth/login');
+        const url = new URL(`${origin}/api/auth/login`);
         url.searchParams.append('token', token);
         url.searchParams.append('redirectUrl', req.body.redirectUrl);
 
