@@ -15,7 +15,7 @@ export default createRoute()
   .get<void, GetUsersResponseBody>({
     authorize: authorize({
       action: 'read',
-      subject: 'User',
+      subject: 'AuthUser',
     }),
     async handler(req, res) {
       const users = await client.authUser.findMany({
@@ -43,7 +43,7 @@ export default createRoute()
     }),
     authorize: authorize({
       action: 'create',
-      subject: 'User',
+      subject: 'AuthUser',
     }),
     async handler(req, res) {
       const email = req.body.email.toLowerCase();

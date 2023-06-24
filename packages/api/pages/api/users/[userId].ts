@@ -15,7 +15,7 @@ export default createRoute<{ userId: string }>()
     }),
     authorize: authorize({
       action: 'administer',
-      subject: 'User',
+      subject: 'AuthUser',
     }),
     async handler(req, res) {
       const user = await client.authUser.findUnique({
