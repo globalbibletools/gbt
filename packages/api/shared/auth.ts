@@ -19,6 +19,7 @@ export const auth = lucia({
     sameSite: (process.env.VERCEL_ENV === 'preview'
       ? 'none'
       : 'lax') as CookieOption['sameSite'],
+    path: '/',
   },
 });
 
