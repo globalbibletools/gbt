@@ -10,6 +10,7 @@ import { authorize } from '../../../shared/access-control/authorize';
 import { accessibleBy } from '../../../prisma/casl';
 import { auth } from '../../../shared/auth';
 import { randomBytes } from 'crypto';
+import { origin } from '../../../shared/env';
 
 export default createRoute()
   .get<void, GetUsersResponseBody>({
@@ -68,7 +69,7 @@ export default createRoute()
         expiresIn: 60 * 60,
       });
 
-      const url = new URL('http://localhost:4300/api/auth/login');
+      const url = new URL(`${origin}/api/auth/login`);
       url.searchParams.append('token', token);
       url.searchParams.append('redirectUrl', req.body.redirectUrl);
 
