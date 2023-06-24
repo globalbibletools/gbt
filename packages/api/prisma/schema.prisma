@@ -17,21 +17,21 @@ datasource db {
 /// A user who can authenticate into the system.
 model AuthUser {
   /// The ID of the user.
-  id                 String               @id @default(dbgenerated("generate_ulid()")) @db.Uuid
+  id            String               @id @default(dbgenerated("generate_ulid()")) @db.Uuid
   /// The display name of the user.
-  name               String?
+  name          String?
   /// The email address for logging in and notifications.
-  email              String?              @unique
+  email         String?              @unique
   /// The time that the email was last verified.
-  emailVerified      DateTime?
+  emailVerified DateTime?
   /// The list of system roles this user has
-  systemRoles        UserSystemRole[]
+  systemRoles   UserSystemRole[]
   /// The list of sessions for the user.
-  auth_session       AuthSession[]
+  auth_session  AuthSession[]
   /// The list of auth keys for the user
-  auth_key           AuthKey[]
+  auth_key      AuthKey[]
   /// The roles for this user on all languages.
-  LanguageMemberRole LanguageMemberRole[]
+  languageRoles LanguageMemberRole[]
 
   @@map("User")
 }

@@ -30,6 +30,9 @@ export function authorize<Params, Body>(
         case 'Language': {
           const language = await client.language.findUnique({
             where: { code: config.subjectId },
+            include: {
+              roles: true,
+            },
           });
           if (language) {
             subject = buildSubject(config.subject, language);
