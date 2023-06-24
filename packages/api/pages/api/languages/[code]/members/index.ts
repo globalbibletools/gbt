@@ -4,7 +4,7 @@ import {
   LanguageRole,
   PostLanguageMemberRequestBody,
 } from '@translation/api-types';
-import { client } from '../../../../../shared/db';
+import { client, PrismaTypes } from '../../../../../shared/db';
 import createRoute from '../../../../../shared/Route';
 import { authorize } from '../../../../../shared/access-control/authorize';
 import { NotFoundError } from '../../../../../shared/errors';
@@ -49,7 +49,12 @@ export default createRoute<{ code: string }>()
             userId: user.id,
             name: user.name ?? undefined,
             email: user.email ?? undefined,
-            roles: user.languageRoles.map((role) => role.role),
+            roles: user.languageRoles
+              .map((role) => role.role)
+              .filter(
+                (role): role is LanguageRole =>
+                  role !== PrismaTypes.LanguageRole.VIEWER
+              ),
           })),
         });
       } else {
@@ -125,11 +130,13 @@ export default createRoute<{ code: string }>()
       }
 
       await client.languageMemberRole.createMany({
-        data: [...req.body.roles, LanguageRole.Viewer].map((role) => ({
-          languageId: language.id,
-          userId: userId,
-          role,
-        })),
+        data: [...req.body.roles, PrismaTypes.LanguageRole.VIEWER].map(
+          (role) => ({
+            languageId: language.id,
+            userId: userId,
+            role,
+          })
+        ),
       });
 
       res.ok();

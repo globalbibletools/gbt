@@ -1,4 +1,5 @@
 import type {
+  GetLanguageMembersResponseBody,
   GetLanguageResponseBody,
   GetLanguagesResponseBody,
   PatchLanguageRequestBody,
@@ -42,6 +43,12 @@ export default class Languages {
     await this.client.patch({
       path: `/api/languages/${code}`,
       body: language,
+    });
+  }
+
+  findMembers(code: string): Promise<GetLanguageMembersResponseBody> {
+    return this.client.get({
+      path: `/api/languages/${code}/members`,
     });
   }
 }

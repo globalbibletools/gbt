@@ -72,7 +72,6 @@ export type PatchLanguageRequestBody = Partial<Omit<Language, 'code'>>;
 export const LanguageRole = makeEnum({
   Admin: 'ADMIN',
   Translator: 'TRANSLATOR',
-  Viewer: 'VIEWER',
 });
 export type LanguageRole = typeof LanguageRole[keyof typeof LanguageRole];
 
