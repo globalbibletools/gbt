@@ -9,7 +9,7 @@ export default {
   async sendEmail(email: SendMailOptions) {
     // TODO: handle email verification
     const response = await this.transporter.sendMail({
-      from: process.env['FROM_EMAIL'],
+      from: process.env['EMAIL_FROM'],
       ...email,
     });
   },
