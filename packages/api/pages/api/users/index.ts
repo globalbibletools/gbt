@@ -61,7 +61,7 @@ export default createRoute()
       });
 
       const token = randomBytes(12).toString('hex');
-      await auth.createKey(user.id, {
+      await auth.createKey(user.userId, {
         type: 'single_use',
         providerId: 'email-verification',
         providerUserId: token,
@@ -74,13 +74,13 @@ export default createRoute()
       url.searchParams.append('redirectUrl', req.body.redirectUrl);
 
       await mailer.sendEmail({
-        to: user.email,
+        to: email,
         subject: 'GlobalBibleTools Invite',
         text: `You've been invited to globalbibletools.com:\n${url.toString()}`,
         html: `<p>You've been invited to globalbibletools.com:</p><p><a href="${url.toString()}">Log In</a></p>`,
       });
 
-      res.created(`/api/users/${user.id}`);
+      res.created(`/api/users/${user.userId}`);
     },
   })
   .build();

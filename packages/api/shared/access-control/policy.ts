@@ -25,8 +25,6 @@ export interface Actor {
 export function createPolicyFor(user?: Actor) {
   const { can, build } = new AbilityBuilder<Policy>(createPrismaAbility);
 
-  console.log(user);
-
   if (user) {
     can('read', 'Language', {
       roles: {

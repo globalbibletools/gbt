@@ -26,6 +26,8 @@ import {
   ListRow,
   ListRowAction,
 } from '../../shared/components/List';
+import { Link } from '../../shared/components/actions/Link';
+import { Icon } from '../../shared/components/Icon';
 
 export async function manageLanguageViewLoader({ params }: LoaderFunctionArgs) {
   const language = await apiClient.languages.findByCode(
@@ -103,14 +105,12 @@ export default function ManageLanguageView() {
             </ListHeaderCell>
             <ListHeaderCell />
           </ListHeader>
-          {/* {session.user?.systemRoles.includes(SystemRole.Admin) && (
-            <ListRowAction colSpan={2}>
-              <Link to="./new">
-                <Icon icon="plus" className="me-1" />
-                {t('add_language')}
-              </Link>
-            </ListRowAction>
-          )} */}
+          <ListRowAction colSpan={4}>
+            <Link to="./invite">
+              <Icon icon="plus" className="me-1" />
+              {t('invite_user')}
+            </Link>
+          </ListRowAction>
           <ListBody>
             {members.data.map((member) => (
               <ListRow key={member.userId}>

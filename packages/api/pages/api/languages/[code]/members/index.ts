@@ -11,6 +11,7 @@ import { NotFoundError } from '../../../../../shared/errors';
 import { auth } from '../../../../../shared/auth';
 import mailer from '../../../../../shared/mailer';
 import { randomBytes } from 'crypto';
+import { origin } from '../../../../../shared/env';
 
 export default createRoute<{ code: string }>()
   .get<void, GetLanguageMembersResponseBody>({
@@ -30,7 +31,7 @@ export default createRoute<{ code: string }>()
         const users = await client.authUser.findMany({
           where: {
             languageRoles: {
-              every: {
+              some: {
                 languageId: language.id,
               },
             },
@@ -107,7 +108,7 @@ export default createRoute<{ code: string }>()
         });
 
         const token = randomBytes(12).toString('hex');
-        await auth.createKey(user.id, {
+        await auth.createKey(user.userId, {
           type: 'single_use',
           providerId: 'email-verification',
           providerUserId: token,
@@ -120,13 +121,13 @@ export default createRoute<{ code: string }>()
         url.searchParams.append('redirectUrl', req.body.redirectUrl);
 
         await mailer.sendEmail({
-          to: user.email,
+          to: email,
           subject: 'GlobalBibleTools Invite',
           text: `You've been invited to globalbibletools.com:\n${url.toString()}`,
           html: `<p>You've been invited to globalbibletools.com:</p><p><a href="${url.toString()}">Log In</a></p>`,
         });
 
-        userId = user.id;
+        userId = user.userId;
       }
 
       await client.languageMemberRole.createMany({
@@ -139,7 +140,7 @@ export default createRoute<{ code: string }>()
         ),
       });
 
-      res.ok();
+      res.created(`/api/languages/${req.query.code}/members/${userId}`);
     },
   })
   .build();
