@@ -1,5 +1,7 @@
 login:
   post:
+    tags:
+      - Authentication
     summary: Login with email and password
     parameters:
       - name: provider
@@ -30,6 +32,8 @@ login:
         description: Redirect
 logout:
   post:
+    tags:
+      - Authentication
     summary: Log out of session
     requestBody:
       required: true
@@ -46,12 +50,16 @@ logout:
         description: Redirect
 csrf:
   get:
+    tags:
+      - Authentication
     summary: Get the CSRF token
     responses:
       200:
         description: OK
 session:
   get:
+    tags:
+      - Authentication
     summary: Get the current session data
     responses:
       200:
@@ -73,4 +81,3 @@ session:
                 expires:
                   type: string
                   format: date-time
-

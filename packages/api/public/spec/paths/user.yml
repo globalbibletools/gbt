@@ -1,4 +1,6 @@
 patch:
+  tags:
+    - Users
   summary: Update an existing user.
   parameters:
     - $ref: '../schemas/parameters.yml#userId'

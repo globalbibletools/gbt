@@ -1,4 +1,6 @@
 get:
+  tags:
+    - Users
   summary: Get all users in the system.
   responses:
     200:
@@ -33,6 +35,8 @@ get:
                       items:
                         type: string
 post:
+  tags:
+    - Users
   summary: Invite a new user.
   requestBody:
     required: true
