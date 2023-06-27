@@ -14,5 +14,5 @@ module.exports = {
   theme: {
     extend: {},
   },
-  plugins: [utilities],
+  plugins: [utilities, require('@headlessui/tailwindcss')],
 };

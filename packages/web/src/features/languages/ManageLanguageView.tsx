@@ -116,7 +116,11 @@ export default function ManageLanguageView() {
               <ListRow key={member.userId}>
                 <ListCell header>{member.name}</ListCell>
                 <ListCell>{member.email}</ListCell>
-                <ListCell>{member.roles.join(', ')}</ListCell>
+                <ListCell>
+                  {member.roles
+                    .map((role) => t('role', { context: role.toLowerCase() }))
+                    .join(', ')}
+                </ListCell>
                 <ListCell></ListCell>
               </ListRow>
             ))}

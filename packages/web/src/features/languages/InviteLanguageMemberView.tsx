@@ -14,10 +14,12 @@ import Button from '../../shared/components/actions/Button';
 import { useFlash } from '../../shared/hooks/flash';
 import Card from '../../shared/components/Card';
 import useAuth from '../../shared/hooks/useAuth';
-import { SystemRole } from '@translation/api-types';
+import { LanguageRole, SystemRole } from '@translation/api-types';
+import MultiselectInput from '../../shared/components/form/MultiselectInput';
 
 export interface FormData {
   email: string;
+  roles: LanguageRole[];
 }
 
 export default function NewLanguageView() {
@@ -36,7 +38,7 @@ export default function NewLanguageView() {
       await apiClient.languages.inviteMember(code, {
         email: data.email,
         redirectUrl: redirectUrl.toString(),
-        roles: [],
+        roles: data.roles,
       });
 
       flash.success(t('user_invited'));
@@ -61,7 +63,7 @@ export default function NewLanguageView() {
       <Card className="mx-4 mt-4 w-96 flex-shrink p-6">
         <ViewTitle>{t('invite_user')}</ViewTitle>
         <Form context={formContext} onSubmit={onSubmit}>
-          <div className="mb-4">
+          <div className="mb-2">
             <FormLabel htmlFor="email">{t('email').toUpperCase()}</FormLabel>
             <TextInput
               id="email"
@@ -73,6 +75,20 @@ export default function NewLanguageView() {
               aria-describedby="email-error"
             />
             <InputError id="email-error" name="email" context="email" />
+          </div>
+          <div className="mb-4">
+            <FormLabel htmlFor="roles">
+              {t('role', { count: 100 }).toUpperCase()}
+            </FormLabel>
+            <MultiselectInput
+              className="w-full"
+              name="roles"
+              defaultValue={[LanguageRole.Translator]}
+              items={[
+                { label: t('role_admin'), value: LanguageRole.Admin },
+                { label: t('role_translator'), value: LanguageRole.Translator },
+              ]}
+            />
           </div>
           <div>
             <Button type="submit">{t('invite')}</Button>
