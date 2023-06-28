@@ -50,7 +50,7 @@ export default function TranslateWord({
         {referenceGloss}
       </div>
       <Autocomplete
-        // className="min-w-[80px]"
+        className="min-w-[80px]"
         value={gloss}
         options={previousGlosses}
         onChange={(v) => console.log('selected', v)}
