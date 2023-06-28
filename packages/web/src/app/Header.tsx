@@ -1,15 +1,11 @@
-import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
-import { DialogRef } from '../shared/components/Dialog';
 import DropdownMenu, {
   DropdownMenuButton,
   DropdownMenuLink,
   DropdownMenuSubmenu,
 } from '../shared/components/actions/DropdownMenu';
 import { Icon } from '../shared/components/Icon';
-import LanguageDialog from './LanguageDialog';
-import interfaceLanguages from './languages.json';
 import apiClient from '../shared/apiClient';
 import useAuth from '../shared/hooks/useAuth';
 import { SystemRole } from '@translation/api-types';
@@ -22,7 +18,6 @@ export interface HeaderProps {
 
 export default function Header({ language, onLanguageChange }: HeaderProps) {
   const session = useAuth();
-  const languageDialog = useRef<DialogRef>(null);
   const { t } = useTranslation();
 
   const languagesQuery = useQuery(['languages'], () =>
@@ -64,28 +59,26 @@ export default function Header({ language, onLanguageChange }: HeaderProps) {
         )}
         {session.status === 'authenticated' && (
           <DropdownMenu text={session.user.name ?? ''}>
-            <DropdownMenuLink to={'#'}>
-              <Icon icon="user" className="me-2" fixedWidth />
-              Profile
-            </DropdownMenuLink>
-            <DropdownMenuLink
-              to={`${process.env.API_URL}/api/auth/signout?callbackUrl=${window.location.href}`}
+            <DropdownMenuButton
+              onClick={async () => {
+                await apiClient.auth.logout();
+                window.location.href = '/';
+              }}
             >
               <Icon icon="right-from-bracket" className="me-2" fixedWidth />
               {t('log_out')}
-            </DropdownMenuLink>
+            </DropdownMenuButton>
           </DropdownMenu>
         )}
         {session.status === 'unauthenticated' && (
-          <a
-            href={`${process.env.API_URL}/api/auth/signin?callbackUrl=${window.location.href}`}
+          <Link
+            to={'/login'}
             className="focus:outline-none hover:underline focus:underline"
           >
             {t('log_in')}
-          </a>
+          </Link>
         )}
       </nav>
-      <LanguageDialog ref={languageDialog} />
     </header>
   );
 }

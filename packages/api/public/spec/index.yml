@@ -8,12 +8,10 @@ info:
 servers:
   - url: /api
 paths:
-  /auth/signin/{provider}:
+  /auth/login:
     $ref: ./paths/auth.yml#login
-  /auth/signout:
+  /auth/logout:
     $ref: ./paths/auth.yml#logout
-  /auth/csrf:
-    $ref: ./paths/auth.yml#csrf
   /auth/session:
     $ref: ./paths/auth.yml#session
   /users:

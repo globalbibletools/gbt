@@ -8,11 +8,9 @@
 
 `EMAIL_FROM` (required) - The from email address for all outgoing emails from the server.
 
-`ORIGIN_MATCH` - The regex to use to match Origin headers for CORS.
+`ORIGIN_ALLOWLIST` - A comma separeted list of origins to match Origin headers for CORS as CSRF protection.
 
-`NEXTAUTH_SECRET` (required) - The key used to sign JWTs.
-
-`NEXTAUTH_URL` - The base URL for authentication routes.
+`ORIGIN` - The origin to use when generate URLs that point to the api server.
 
 ## Web
 

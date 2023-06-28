@@ -32,5 +32,7 @@
   "role": "Roles",
   "role_admin": "Administrador",
   "user_role_changed": "¡Rol de usuario actualizado!",
-  "app_name": "Traducción de brillo"
+  "app_name": "Traducción de brillo",
+  "login_message": "Por favor revise su correo electrónico. Si existe un usuario con esta dirección, le enviaremos un correo electrónico con un enlace de inicio de sesión único.",
+  "login_error_message": "Su enlace de inicio de sesión ha caducado o ya se ha utilizado. Inicie sesión de nuevo."
 }
