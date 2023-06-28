@@ -1,7 +1,9 @@
 get:
+  tags:
+    - Languages
   summary: Get all languages being translated.
   responses:
-    "200":
+    '200':
       description: Ok
       content:
         application/json:
@@ -12,20 +14,22 @@ get:
                 allOf:
                   - type: array
                     items:
-                      $ref: "../schemas/language.yml"
+                      $ref: '../schemas/language.yml'
                   - example:
-                    - code: es 
-                      name: Español
-                    - code: en 
-                      name: English
+                      - code: es
+                        name: Español
+                      - code: en
+                        name: English
 post:
+  tags:
+    - Languages
   summary: Create a new language to translate.
   requestBody:
     required: true
     content:
       application/json:
         schema:
-          $ref: "../schemas/language.yml"
+          $ref: '../schemas/language.yml'
   responses:
     201:
       description: Created
@@ -34,4 +38,3 @@ post:
           schema:
             type: string
           description: URL to new language.
-      
