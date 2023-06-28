@@ -5,6 +5,7 @@ import AutocompleteInput from '../../shared/components/form/AutocompleteInput';
 import InputHelpText from '../../shared/components/form/InputHelpText';
 import { useTextWidth } from '../../shared/hooks/useTextWidth';
 import { capitalize } from '../../shared/utils';
+import Autocomplete from '../../shared/components/form/Autocomplete';
 
 export interface TranslateWordProps {
   word: { id: string; text: string };
@@ -48,7 +49,15 @@ export default function TranslateWord({
       >
         {referenceGloss}
       </div>
-      <AutocompleteInput
+      <Autocomplete
+        // className="min-w-[80px]"
+        value={gloss}
+        options={previousGlosses}
+        onChange={(v) => console.log('selected', v)}
+        // The extra 56 pixel give room for the dropdown button.
+        style={{ width: width + 56 }}
+      />
+      {/* <AutocompleteInput
         className="min-w-[80px]"
         value={gloss}
         items={previousGlosses.map((gloss) => ({ label: gloss, value: gloss }))}
@@ -68,7 +77,7 @@ export default function TranslateWord({
             setText(newGloss ?? '');
           }
         }}
-      />
+      /> */}
       <InputHelpText id={`word-help-${word.id}`}>
         {(() => {
           if (status === 'saving') {
