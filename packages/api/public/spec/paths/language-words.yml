@@ -1,4 +1,6 @@
 patch:
+  tags:
+    - Glosses
   summary: Update the gloss of a word for a language.
   parameters:
     - $ref: '../schemas/parameters.yml#languageCode'
@@ -15,5 +17,5 @@ patch:
               example: Hablaba
               description: The new gloss to use for the word.
   responses:
-    "204":
+    '204':
       description: No Content
