@@ -1,6 +1,8 @@
 login:
   get:
     summary: Validate magic link token
+    tags:
+      - Authentication
     parameters:
       - name: token
         in: query
@@ -13,6 +15,8 @@ login:
         description: Redirect
   post:
     summary: Login with magic link
+    tags:
+      - Authentication
     requestBody:
       required: true
       content:
@@ -34,12 +38,16 @@ login:
         description: No Content
 logout:
   post:
+    tags:
+      - Authentication
     summary: Log out of session
     responses:
       204:
         description: No Content
 session:
   get:
+    tags:
+      - Authentication
     summary: Get the current session data
     responses:
       200:
