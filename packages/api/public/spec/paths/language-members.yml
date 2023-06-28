@@ -1,5 +1,7 @@
 get:
   summary: Get all members of a language.
+  tags:
+    - Languages
   parameters:
     - $ref: '../schemas/parameters.yml#languageCode'
   responses:
