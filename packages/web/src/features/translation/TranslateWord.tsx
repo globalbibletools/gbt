@@ -60,8 +60,8 @@ export default function TranslateWord({
             setText(newGloss ?? '');
           }
         }}
-        // The extra 56 pixel give room for the dropdown button.
-        // style={{ width: width + 56 }}
+        // The extra 24 pixel give room for the padding.
+        style={{ width: width + 24 }}
       />
       {/* <AutocompleteInput
         className="min-w-[80px]"

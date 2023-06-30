@@ -1,9 +1,9 @@
-import { Combobox, Listbox, Transition } from '@headlessui/react';
-import { ComponentProps, Fragment, useState } from 'react';
+import { Combobox } from '@headlessui/react';
+import { ComponentProps, useState } from 'react';
 import { Icon } from '../Icon';
-import TextInput from './TextInput';
 
-export interface AutocompleteProps {
+export interface AutocompleteProps
+  extends Omit<ComponentProps<'input'>, 'value' | 'onChange' | 'ref'> {
   className?: string;
   value?: string;
   onBlur?(): void;
@@ -22,6 +22,7 @@ const Autocomplete = ({
   onBlur,
   items,
   name,
+  ...props
 }: AutocompleteProps) => {
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -46,6 +47,7 @@ const Autocomplete = ({
           `}
         >
           <Combobox.Input
+            {...props}
             onChange={(event) => setSearchQuery(event.target.value)}
             onBlur={onBlur}
             className="w-full py-2 px-3 h-10 rounded-b flex-grow focus:outline-none bg-transparent rounded"
