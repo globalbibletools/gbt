@@ -29,7 +29,7 @@ nx seed api
 This seed script runs fine when the database is on the local machine, but for remote databases, it is quite slow. In these situations, use this command:
 
 ```
-pg_restore -Fc --file=data/seed.dump --format=custom --dbname=<connection-string>
+pg_restore -Fc --format=custom --dbname=<connection-string> data/seed.dump
 ```
 
 Generate a new seed file from your local database with:

@@ -1,13 +1,10 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import NextCors from 'nextjs-cors';
-
-const origin = process.env.ORIGIN_MATCH
-  ? new RegExp(process.env.ORIGIN_MATCH)
-  : '*';
+import { originAllowlist } from './env';
 
 export async function cors(req: NextApiRequest, res: NextApiResponse) {
   await NextCors(req, res, {
-    origin,
+    origin: originAllowlist,
     credentials: true,
   });
 }

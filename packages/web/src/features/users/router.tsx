@@ -1,6 +1,7 @@
 import { RouteObject } from 'react-router-dom';
 import InviteUserView from './InviteUserView';
 import UsersView from './UsersView';
+import LoginView from './LoginView';
 
 const routes: RouteObject[] = [
   {
@@ -10,6 +11,10 @@ const routes: RouteObject[] = [
   {
     path: 'users/invite',
     element: <InviteUserView />,
+  },
+  {
+    path: 'login',
+    element: <LoginView />,
   },
 ];
 

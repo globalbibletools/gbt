@@ -1,22 +1,26 @@
 import * as z from 'zod';
 import createRoute from '../../../shared/Route';
 import { client } from '../../../shared/db';
+import mailer from '../../../shared/mailer';
 import {
   GetUsersResponseBody,
-  InviteUserRequestBody,
+  PostUserRequestBody,
 } from '@translation/api-types';
 import { authorize } from '../../../shared/access-control/authorize';
 import { accessibleBy } from '../../../prisma/casl';
+import { auth } from '../../../shared/auth';
+import { randomBytes } from 'crypto';
+import { origin } from '../../../shared/env';
 
 export default createRoute()
   .get<void, GetUsersResponseBody>({
     authorize: authorize({
       action: 'read',
-      subject: 'User',
+      subject: 'AuthUser',
     }),
     async handler(req, res) {
-      const users = await client.user.findMany({
-        where: accessibleBy(req.policy).User,
+      const users = await client.authUser.findMany({
+        where: accessibleBy(req.policy).AuthUser,
         include: {
           systemRoles: true,
         },
@@ -32,28 +36,51 @@ export default createRoute()
       });
     },
   })
-  .post<InviteUserRequestBody, void>({
+  .post<PostUserRequestBody, void>({
     schema: z.object({
       email: z.string(),
       name: z.string(),
+      redirectUrl: z.string(),
     }),
     authorize: authorize({
       action: 'create',
-      subject: 'User',
+      subject: 'AuthUser',
     }),
     async handler(req, res) {
-      const user = await client.user.create({
-        data: {
-          email: req.body.email.toLowerCase(),
+      const email = req.body.email.toLowerCase();
+      const user = await auth.createUser({
+        primaryKey: {
+          providerId: 'username',
+          providerUserId: email,
+          password: null,
+        },
+        attributes: {
+          email,
           name: req.body.name,
         },
       });
 
-      // In the future, we will want to send an invite email,
-      // but for now the frontend can send the standard login email.
-      // NextAuth doesn't provide a way to initiate login from the server.
+      const token = randomBytes(12).toString('hex');
+      await auth.createKey(user.userId, {
+        type: 'single_use',
+        providerId: 'email-verification',
+        providerUserId: token,
+        password: null,
+        expiresIn: 60 * 60,
+      });
 
-      res.created(`/api/users/${user.id}`);
+      const url = new URL(`${origin}/api/auth/login`);
+      url.searchParams.append('token', token);
+      url.searchParams.append('redirectUrl', req.body.redirectUrl);
+
+      await mailer.sendEmail({
+        to: email,
+        subject: 'GlobalBibleTools Invite',
+        text: `You've been invited to globalbibletools.com:\n${url.toString()}`,
+        html: `<p>You've been invited to globalbibletools.com:</p><p><a href="${url.toString()}">Log In</a></p>`,
+      });
+
+      res.created(`/api/users/${user.userId}`);
     },
   })
   .build();

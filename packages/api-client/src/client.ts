@@ -1,4 +1,5 @@
-import type { ErrorResponse, GetSessionResponse } from '@translation/api-types';
+import type { ErrorResponse } from '@translation/api-types';
+import Auth from './auth';
 import Languages from './languages';
 import Users from './users';
 import Verses from './verses';
@@ -57,12 +58,14 @@ export default class ApiClient {
   readonly verses: Verses;
   readonly words: Words;
   readonly users: Users;
+  readonly auth: Auth;
 
   constructor(private options: ApiClientOptions = { baseUrl: '' }) {
     this.languages = new Languages(this);
     this.verses = new Verses(this);
     this.words = new Words(this);
     this.users = new Users(this);
+    this.auth = new Auth(this);
   }
 
   async request({ path, query, body, method }: ApiClientRequestOptions) {
@@ -109,11 +112,5 @@ export default class ApiClient {
 
   async patch<Response>(request: ApiClientPatchOptions): Promise<Response> {
     return await this.request({ ...request, method: 'PATCH' });
-  }
-
-  getSession(): Promise<GetSessionResponse> {
-    return this.get({
-      path: '/api/auth/session',
-    });
   }
 }

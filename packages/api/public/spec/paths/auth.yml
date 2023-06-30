@@ -1,21 +1,26 @@
 login:
-  post:
+  get:
+    summary: Validate magic link token
     tags:
       - Authentication
-    summary: Login with email and password
     parameters:
-      - name: provider
-        in: path
-        description: The login strategy
-        required: true
-        schema:
-          type: string
-          enum: ['email']
-        example: email
+      - name: token
+        in: query
+        description: the single use token
+      - name: redirectUrl
+        in: query
+        description: where to redirect to when login succeeds.
+    responses:
+      302:
+        description: Redirect
+  post:
+    summary: Login with magic link
+    tags:
+      - Authentication
     requestBody:
       required: true
       content:
-        application/x-www-form-urlencoded:
+        application/json:
           schema:
             type: object
             properties:
@@ -24,38 +29,21 @@ login:
                 format: email
                 example: 'user@example.com'
                 required: true
-              csrfToken:
+              redirectUrl:
                 type: string
+                format: url
                 required: true
     responses:
-      302:
-        description: Redirect
+      204:
+        description: No Content
 logout:
   post:
     tags:
       - Authentication
     summary: Log out of session
-    requestBody:
-      required: true
-      content:
-        application/x-www-form-urlencoded:
-          schema:
-            type: object
-            properties:
-              csrfToken:
-                type: string
-                required: true
     responses:
-      302:
-        description: Redirect
-csrf:
-  get:
-    tags:
-      - Authentication
-    summary: Get the CSRF token
-    responses:
-      200:
-        description: OK
+      204:
+        description: No Content
 session:
   get:
     tags:

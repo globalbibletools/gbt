@@ -36,7 +36,7 @@ export type UseAuthResult =
 export default function useAuth(options?: UseAuthOptions): UseAuthResult {
   const navigate = useNavigate();
   const { data, status } = useQuery(['session'], async () =>
-    apiClient.getSession()
+    apiClient.auth.session()
   );
 
   useEffect(() => {
