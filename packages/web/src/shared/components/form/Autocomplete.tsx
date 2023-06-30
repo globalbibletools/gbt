@@ -63,14 +63,7 @@ const Autocomplete = ({
               key={item.value}
               value={item.value}
             >
-              {({ selected }) => (
-                <>
-                  <span className="inline-block w-6">
-                    {selected && <Icon icon="check" />}
-                  </span>
-                  {item.label}
-                </>
-              )}
+              {item.label}
             </Combobox.Option>
           ))}
         </Combobox.Options>
