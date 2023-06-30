@@ -50,12 +50,13 @@ export default function TranslateWord({
         {referenceGloss}
       </div>
       <Autocomplete
+        name="gloss"
         className="min-w-[80px]"
         value={gloss}
-        options={previousGlosses}
+        items={previousGlosses.map((gloss) => ({ label: gloss, value: gloss }))}
         onChange={(v) => console.log('selected', v)}
         // The extra 56 pixel give room for the dropdown button.
-        style={{ width: width + 56 }}
+        // style={{ width: width + 56 }}
       />
       {/* <AutocompleteInput
         className="min-w-[80px]"
