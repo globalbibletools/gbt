@@ -16,15 +16,13 @@ export interface AutocompleteProps {
 
 const Autocomplete = ({
   className = '',
+  hasErrors,
   value,
-  items,
   onChange,
   onBlur,
-  hasErrors,
+  items,
+  name,
 }: AutocompleteProps) => {
-  const [selectedOption, setSelectedOption] = useState<string | null>(
-    value ?? null
-  );
   const [searchQuery, setSearchQuery] = useState('');
 
   const filteredItems = items.filter((item) =>
@@ -36,7 +34,7 @@ const Autocomplete = ({
 
   return (
     <div className={`${className}  group/autocomplete relative`}>
-      <Combobox value={value} onChange={setSelectedOption}>
+      <Combobox value={value} onChange={onChange} name={name}>
         <div
           className={`border rounded shadow-inner flex group-focus-within/autocomplete:outline group-focus-within/autocomplete:outline-2
             

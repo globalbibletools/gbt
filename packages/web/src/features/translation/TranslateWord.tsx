@@ -54,7 +54,12 @@ export default function TranslateWord({
         className="min-w-[80px]"
         value={gloss}
         items={previousGlosses.map((gloss) => ({ label: gloss, value: gloss }))}
-        onChange={(v) => console.log('selected', v)}
+        onChange={(newGloss: string | undefined) => {
+          if (newGloss !== gloss) {
+            onGlossChange(newGloss);
+            setText(newGloss ?? '');
+          }
+        }}
         // The extra 56 pixel give room for the dropdown button.
         // style={{ width: width + 56 }}
       />
