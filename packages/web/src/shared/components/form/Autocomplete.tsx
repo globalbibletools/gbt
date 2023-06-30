@@ -56,7 +56,7 @@ const Autocomplete = ({
             {({ open }) => <Icon icon={open ? 'caret-up' : 'caret-down'} />}
           </Combobox.Button>
         </div>
-        <Combobox.Options className="absolute w-full bg-white mt-1 rounded border border-slate-400 shadow">
+        <Combobox.Options className="absolute w-full max-h-80 bg-white overflow-auto mt-1 rounded border border-slate-400 shadow">
           {filteredItems.map((item) => (
             <Combobox.Option
               className="px-3 py-2 ui-active:bg-blue-400"
