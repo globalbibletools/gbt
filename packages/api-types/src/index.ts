@@ -38,6 +38,19 @@ export interface GetLoginRequest {
   redirectUrl: string;
 }
 
+export interface GetInviteRequestQuery {
+  token: string;
+}
+
+export interface GetInviteResponseBody {
+  email: string;
+}
+
+export interface PostInviteRequestBody {
+  token: string;
+  name: string;
+}
+
 export interface GetUsersResponseBody {
   data: User[];
 }

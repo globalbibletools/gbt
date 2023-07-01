@@ -21,6 +21,13 @@ export const auth = lucia({
       : 'lax') as CookieOption['sameSite'],
     path: '/',
   },
+  transformDatabaseUser(user) {
+    return {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+    };
+  },
 });
 
 export type Auth = typeof auth;

@@ -1,6 +1,6 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { GetSessionResponse, SystemRole } from '@translation/api-types';
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import apiClient from '../apiClient';
 
@@ -15,12 +15,13 @@ export type UseAuthOptions =
       requireRole: SystemRole[];
     };
 
-export type UseAuthResult =
+export type UseAuthResult = { refreshAuth(): void } & (
   | {
       status: 'authenticated';
       user: Required<GetSessionResponse>['user'];
     }
-  | { status: 'unauthenticated' | 'loading'; user?: undefined };
+  | { status: 'unauthenticated' | 'loading'; user?: undefined }
+);
 
 /**
  * This will return the authentication `status` of the session, and if authenticated, the profile of the user.
@@ -38,6 +39,11 @@ export default function useAuth(options?: UseAuthOptions): UseAuthResult {
   const { data, status } = useQuery(['session'], async () =>
     apiClient.auth.session()
   );
+
+  const queryClient = useQueryClient();
+  const refreshAuth = useCallback(() => {
+    queryClient.invalidateQueries(['session']);
+  }, [queryClient]);
 
   useEffect(() => {
     if (status === 'success' && options) {
@@ -66,14 +72,16 @@ export default function useAuth(options?: UseAuthOptions): UseAuthResult {
     const { user } = data;
     if (user) {
       return {
+        refreshAuth: refreshAuth,
         status: 'authenticated',
         user,
       };
     } else {
-      return { status: 'unauthenticated' };
+      return { refreshAuth: refreshAuth, status: 'unauthenticated' };
     }
   } else {
     return {
+      refreshAuth,
       status: 'loading',
     };
   }
