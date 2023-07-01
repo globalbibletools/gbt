@@ -44,7 +44,6 @@ export interface GetUsersResponseBody {
 
 export interface PostUserRequestBody {
   email: string;
-  name: string;
   redirectUrl: string;
 }
 

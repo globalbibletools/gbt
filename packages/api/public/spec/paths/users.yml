@@ -45,10 +45,6 @@ post:
         schema:
           type: object
           properties:
-            name:
-              type: string
-              example: Example User
-              required: true
             email:
               type: string
               format: email

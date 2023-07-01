@@ -10,7 +10,6 @@ import { authorize } from '../../../shared/access-control/authorize';
 import { accessibleBy } from '../../../prisma/casl';
 import { auth } from '../../../shared/auth';
 import { randomBytes } from 'crypto';
-import { origin } from '../../../shared/env';
 
 export default createRoute()
   .get<void, GetUsersResponseBody>({
@@ -39,7 +38,6 @@ export default createRoute()
   .post<PostUserRequestBody, void>({
     schema: z.object({
       email: z.string(),
-      name: z.string(),
       redirectUrl: z.string(),
     }),
     authorize: authorize({
@@ -56,22 +54,20 @@ export default createRoute()
         },
         attributes: {
           email,
-          name: req.body.name,
         },
       });
 
       const token = randomBytes(12).toString('hex');
-      await auth.createKey(user.userId, {
+      await auth.createKey(user.id, {
         type: 'single_use',
-        providerId: 'email-verification',
+        providerId: 'invite-verification',
         providerUserId: token,
         password: null,
         expiresIn: 60 * 60,
       });
 
-      const url = new URL(`${origin}/api/auth/login`);
+      const url = new URL(req.body.redirectUrl);
       url.searchParams.append('token', token);
-      url.searchParams.append('redirectUrl', req.body.redirectUrl);
 
       await mailer.sendEmail({
         to: email,
@@ -80,7 +76,7 @@ export default createRoute()
         html: `<p>You've been invited to globalbibletools.com:</p><p><a href="${url.toString()}">Log In</a></p>`,
       });
 
-      res.created(`/api/users/${user.userId}`);
+      res.created(`/api/users/${user.id}`);
     },
   })
   .build();
