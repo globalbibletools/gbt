@@ -11,6 +11,10 @@ export default {
     const response = await this.transporter.sendMail({
       from: process.env['EMAIL_FROM'],
       ...email,
+      to:
+        process.env.NODE_ENV === 'production'
+          ? email.to
+          : process.env.TEST_EMAIL,
     });
   },
 };
