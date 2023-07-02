@@ -9,10 +9,11 @@ export default createRoute()
       switch (messageType) {
         case 'Notification': {
           console.log('Notification', req.body);
+          // TODO: handle complaints
           break;
         }
         case 'SubscriptionConfirmation': {
-          console.log('SNS Confirmation', req.body);
+          console.log('SNS Confirmation', req.body.SubscribeURL);
           break;
         }
         default:
