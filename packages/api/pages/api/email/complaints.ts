@@ -12,7 +12,7 @@ export default createRoute()
           break;
         }
         case 'SubscriptionConfirmation': {
-          console.log('SNS Confirmation', req.body, typeof req.body);
+          console.log('SNS Confirmation', req.body);
           break;
         }
         default:

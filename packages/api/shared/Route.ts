@@ -205,6 +205,7 @@ export default function createRoute<
       try {
         let body: RequestBody;
         if ('schema' in definition) {
+          console.log(req.headers['content-type']);
           const parseResult = definition.schema.safeParse(
             req.method === 'GET' ? req.query : req.body
           );
