@@ -13,8 +13,7 @@ export default createRoute()
       }),
       z.object({
         Type: z.literal('Notification'),
-        Subject: z.string(),
-        Message: z.any(),
+        Message: z.string(),
         TopicArn: z.string(),
       }),
     ]),
