@@ -134,7 +134,7 @@ export interface PatchWordGlossRequestBody {
 }
 
 export interface SNSConfirmSubscriptionMessage {
-  Type: 'ConfirmSubscription';
+  Type: 'SubscriptionConfirmation';
   SubscribeURL: string;
   Token: string;
   TopicArn: string;

@@ -26,7 +26,7 @@ export default createRoute()
   .post<SNSMessage, void>({
     schema: z.discriminatedUnion('Type', [
       z.object({
-        Type: z.literal('ConfirmSubscription'),
+        Type: z.literal('SubscriptionConfirmation'),
         SubscribeURL: z.string(),
         Token: z.string(),
         TopicArn: z.string(),
@@ -69,7 +69,7 @@ export default createRoute()
           }
           break;
         }
-        case 'ConfirmSubscription': {
+        case 'SubscriptionConfirmation': {
           console.log('SNS Confirmation', req.body.SubscribeURL);
           break;
         }
