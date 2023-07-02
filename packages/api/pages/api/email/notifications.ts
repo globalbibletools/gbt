@@ -1,4 +1,6 @@
 import { SNSMessage } from '@translation/api-types';
+import { EmailStatus } from '../../../prisma/client';
+import { auth } from '../../../shared/auth';
 import * as z from 'zod';
 import createRoute from '../../../shared/Route';
 
@@ -47,23 +49,39 @@ export default createRoute()
             const message = parseResult.data;
             switch (message.notificationType) {
               case 'Bounce': {
-                const emails = message.bounce.bouncedRecipients.map(
-                  (r) => r.emailAddress
+                await Promise.all(
+                  message.bounce.bouncedRecipients.map(
+                    async ({ emailAddress }) => {
+                      try {
+                        console.log(`Email bounced: ${emailAddress}`);
+                        const key = await auth.getKey('username', emailAddress);
+                        await auth.updateUserAttributes(key.userId, {
+                          emailStatus: EmailStatus.BOUNCED,
+                        });
+                      } catch {
+                        // If a user doesn't exist, continue.
+                      }
+                    }
+                  )
                 );
-                console.log(`Email bounced: ${emails.join(',')}`);
-
-                // TODO: mark as bounced
-
                 break;
               }
               case 'Complaint': {
-                const emails = message.complaint.complainedRecepients.map(
-                  (r) => r.emailAddress
+                await Promise.all(
+                  message.complaint.complainedRecepients.map(
+                    async ({ emailAddress }) => {
+                      try {
+                        console.log(`Email complaint: ${emailAddress}`);
+                        const key = await auth.getKey('username', emailAddress);
+                        await auth.updateUserAttributes(key.userId, {
+                          emailStatus: EmailStatus.COMPLAINED,
+                        });
+                      } catch {
+                        // If a user doesn't exist, continue.
+                      }
+                    }
+                  )
                 );
-                console.log(`Email complaint: ${emails.join(',')}`);
-
-                // TODO: mark as complained
-
                 break;
               }
             }
