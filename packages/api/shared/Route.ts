@@ -8,6 +8,7 @@ import { createPolicyFor, Policy } from './access-control/policy';
 import { auth } from './auth';
 import { client } from './db';
 import { ForbiddenError } from '@casl/ability';
+import { IncomingHttpHeaders } from 'http';
 
 export interface SessionUser {
   id: string;
@@ -23,6 +24,7 @@ export interface RouteRequest<Params, Body> {
   body: Body;
   session?: Session;
   policy: Policy;
+  headers: IncomingHttpHeaders;
 }
 
 export interface ResponseHelper<Body> {
@@ -243,6 +245,7 @@ export default function createRoute<
           body,
           session,
           policy: createPolicyFor(session?.user),
+          headers: req.headers,
         };
 
         await definition.authorize?.(request);
