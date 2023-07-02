@@ -15,7 +15,7 @@
       "has": [
         {
           "type": "host",
-          "value": "gloss-translation(?<host>-(?!api).*|).vercel.app"
+          "value": "interlinear-git-(?<branch>.*)-global-bible-tools.vercel.app"
         }
       ],
       "destination": "/"
