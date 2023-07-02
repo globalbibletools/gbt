@@ -210,6 +210,7 @@ export default function createRoute<
           );
           if (parseResult.success) {
             body = parseResult.data;
+            console.log(body, req.body);
           } else {
             throw new Errors.InvalidRequestShapeError();
           }
