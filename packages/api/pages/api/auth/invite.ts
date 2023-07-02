@@ -41,6 +41,7 @@ export default createRoute()
 
       await auth.updateUserAttributes(key.userId, {
         name: req.body.name,
+        emailVerified: new Date(),
       });
       await res.login(key.userId);
 

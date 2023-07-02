@@ -70,10 +70,9 @@ export default createRoute()
       url.searchParams.append('token', token);
 
       await mailer.sendEmail({
-        to: email,
+        userId: user.id,
         subject: 'GlobalBibleTools Invite',
         text: `You've been invited to globalbibletools.com:\n${url.toString()}`,
-        html: `<p>You've been invited to globalbibletools.com:</p><p><a href="${url.toString()}">Log In</a></p>`,
       });
 
       res.created(`/api/users/${user.id}`);

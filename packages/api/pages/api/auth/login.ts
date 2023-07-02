@@ -53,10 +53,9 @@ export default createRoute()
         url.searchParams.append('redirectUrl', req.body.redirectUrl);
 
         await mailer.sendEmail({
-          to: key.providerUserId,
+          userId: key.userId,
           subject: 'GlobalBibleTools Login',
           text: `Log in to globalbibletools.com:\n${url.toString()}`,
-          html: `<p>Log in to globalbibletools.com:</p><p><a href="${url.toString()}">Log In</a></p>`,
         });
       }
 
