@@ -7,7 +7,7 @@ const messageSchema = z.discriminatedUnion('notificationType', [
     notificationType: z.literal('Bounce'),
     bounce: z.object({
       bounceType: z.enum(['Undetermined', 'Permanent', 'Transient']),
-      bounceRecipients: z.array(z.object({ emailAddress: z.string() })),
+      bouncedRecipients: z.array(z.object({ emailAddress: z.string() })),
     }),
   }),
   z.object({
@@ -38,15 +38,15 @@ export default createRoute()
       }),
     ]),
     async handler(req, res) {
-      console.log(req.body);
       switch (req.body.Type) {
         case 'Notification': {
+          console.log(req.body.Message);
           const parseResult = messageSchema.safeParse(req.body.Message);
           if (parseResult.success) {
             const message = parseResult.data;
             switch (message.notificationType) {
               case 'Bounce': {
-                const emails = message.bounce.bounceRecipients.map(
+                const emails = message.bounce.bouncedRecipients.map(
                   (r) => r.emailAddress
                 );
                 console.log(`Email bounced: ${emails.join(',')}`);
