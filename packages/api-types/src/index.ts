@@ -143,7 +143,7 @@ export interface SNSConfirmSubscriptionMessage {
 export interface SNSNotificationMessage {
   Type: 'Notification';
   TopicArn: string;
-  Message?: any;
+  Message: string;
 }
 
 export type SNSMessage = SNSConfirmSubscriptionMessage | SNSNotificationMessage;

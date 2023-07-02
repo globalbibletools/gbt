@@ -14,6 +14,13 @@ datasource db {
   extensions = [pgcrypto]
 }
 
+enum EmailStatus {
+  UNVERIFIED
+  VERIFIED
+  BOUNCED
+  COMPLAINED
+}
+
 /// A user who can authenticate into the system.
 model AuthUser {
   /// The ID of the user.
@@ -22,8 +29,8 @@ model AuthUser {
   name          String?
   /// The email address for logging in and notifications.
   email         String?              @unique
-  /// The time that the email was last verified.
-  emailVerified DateTime?
+  /// The status of the email (whether we can send emails or not).
+  status        EmailStatus          @default(UNVERIFIED)
   /// The list of system roles this user has
   systemRoles   UserSystemRole[]
   /// The list of sessions for the user.

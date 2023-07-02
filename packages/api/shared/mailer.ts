@@ -1,4 +1,5 @@
-import { createTransport, SendMailOptions } from 'nodemailer';
+import { createTransport } from 'nodemailer';
+import { EmailStatus } from '../prisma/client';
 import { auth } from './auth';
 
 const transporter = createTransport({
@@ -38,7 +39,7 @@ export default {
     }
 
     if (!primaryKey) throw new MissingEmailAddressError(userId);
-    if (!user.emailVerified)
+    if (user.emailStatus !== EmailStatus.VERIFIED)
       throw new EmailNotVerifiedError(primaryKey?.providerUserId);
 
     const email = primaryKey.providerUserId;

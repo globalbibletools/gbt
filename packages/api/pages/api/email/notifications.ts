@@ -40,8 +40,9 @@ export default createRoute()
     async handler(req, res) {
       switch (req.body.Type) {
         case 'Notification': {
-          console.log(req.body.Message);
-          const parseResult = messageSchema.safeParse(req.body.Message);
+          const parseResult = messageSchema.safeParse(
+            JSON.parse(req.body.Message)
+          );
           if (parseResult.success) {
             const message = parseResult.data;
             switch (message.notificationType) {

@@ -7,6 +7,7 @@ import {
 } from '@translation/api-types';
 import { auth } from '../../../shared/auth';
 import { NotFoundError } from '../../../shared/errors';
+import { EmailStatus } from '../../../prisma/client';
 
 export default createRoute()
   .get<GetInviteRequestQuery, GetInviteResponseBody>({
@@ -41,7 +42,7 @@ export default createRoute()
 
       await auth.updateUserAttributes(key.userId, {
         name: req.body.name,
-        emailVerified: new Date(),
+        emailStatus: EmailStatus.VERIFIED,
       });
       await res.login(key.userId);
 

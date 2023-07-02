@@ -4,6 +4,6 @@ declare namespace Lucia {
   type UserAttributes = {
     email?: string;
     name?: string;
-    emailVerified?: Date;
+    emailStatus?: import('.prisma/client').EmailStatus;
   };
 }
