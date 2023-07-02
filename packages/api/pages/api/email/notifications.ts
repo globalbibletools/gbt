@@ -1,0 +1,81 @@
+import { SNSMessage } from '@translation/api-types';
+import * as z from 'zod';
+import createRoute from '../../../shared/Route';
+
+const messageSchema = z.discriminatedUnion('notificationType', [
+  z.object({
+    notificationType: z.literal('Bounce'),
+    bounce: z.object({
+      bounceType: z.enum(['Undetermined', 'Permanent', 'Transient']),
+      bounceRecipients: z.array(z.object({ emailAddress: z.string() })),
+    }),
+  }),
+  z.object({
+    notificationType: z.literal('Complaint'),
+    complaint: z.object({
+      complainedRecepients: z.array(z.object({ emailAddress: z.string() })),
+    }),
+  }),
+  z.object({
+    notificationType: z.literal('Delivery'),
+    delivery: z.object({}),
+  }),
+]);
+
+export default createRoute()
+  .post<SNSMessage, void>({
+    schema: z.discriminatedUnion('Type', [
+      z.object({
+        Type: z.literal('ConfirmSubscription'),
+        SubscribeURL: z.string(),
+        Token: z.string(),
+        TopicArn: z.string(),
+      }),
+      z.object({
+        Type: z.literal('Notification'),
+        Message: z.string(),
+        TopicArn: z.string(),
+      }),
+    ]),
+    async handler(req, res) {
+      console.log(req.body);
+      switch (req.body.Type) {
+        case 'Notification': {
+          const parseResult = messageSchema.safeParse(req.body.Message);
+          if (parseResult.success) {
+            const message = parseResult.data;
+            switch (message.notificationType) {
+              case 'Bounce': {
+                const emails = message.bounce.bounceRecipients.map(
+                  (r) => r.emailAddress
+                );
+                console.log(`Email bounced: ${emails.join(',')}`);
+
+                // TODO: mark as bounced
+
+                break;
+              }
+              case 'Complaint': {
+                const emails = message.complaint.complainedRecepients.map(
+                  (r) => r.emailAddress
+                );
+                console.log(`Email complaint: ${emails.join(',')}`);
+
+                // TODO: mark as complained
+
+                break;
+              }
+            }
+          }
+          break;
+        }
+        case 'ConfirmSubscription': {
+          console.log('SNS Confirmation', req.body.SubscribeURL);
+          break;
+        }
+      }
+
+      res.ok();
+    },
+  })
+  .build();
