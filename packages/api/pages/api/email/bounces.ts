@@ -1,23 +1,35 @@
+import { SNSMessage } from '@translation/api-types';
 import * as z from 'zod';
 import createRoute from '../../../shared/Route';
 
 export default createRoute()
-  .post<any, void>({
-    schema: z.any(),
+  .post<SNSMessage, void>({
+    schema: z.discriminatedUnion('Type', [
+      z.object({
+        Type: z.literal('ConfirmSubscription'),
+        SubscribeURL: z.string(),
+        Token: z.string(),
+        TopicArn: z.string(),
+      }),
+      z.object({
+        Type: z.literal('Notification'),
+        Subject: z.string(),
+        Message: z.any(),
+        TopicArn: z.string(),
+      }),
+    ]),
     async handler(req, res) {
-      const messageType = req.headers['x-amz-sns-message-type'];
-      switch (messageType) {
+      console.log(req.body);
+      switch (req.body.Type) {
         case 'Notification': {
-          console.log('Notification', req.body);
+          console.log('Notification', req.body.Message);
           // TODO: handle bounces
           break;
         }
-        case 'SubscriptionConfirmation': {
+        case 'ConfirmSubscription': {
           console.log('SNS Confirmation', req.body.SubscribeURL);
           break;
         }
-        default:
-          throw new Error(`unknown message type: ${messageType}`);
       }
 
       res.ok();

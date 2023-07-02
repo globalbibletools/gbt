@@ -132,3 +132,19 @@ export interface GetVerseGlossesResponseBody {
 export interface PatchWordGlossRequestBody {
   gloss?: string;
 }
+
+export interface SNSConfirmSubscriptionMessage {
+  Type: 'ConfirmSubscription';
+  SubscribeURL: string;
+  Token: string;
+  TopicArn: string;
+}
+
+export interface SNSNotificationMessage {
+  Type: 'Notification';
+  TopicArn: string;
+  Subject: string;
+  Message?: any;
+}
+
+export type SNSMessage = SNSConfirmSubscriptionMessage | SNSNotificationMessage;
