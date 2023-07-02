@@ -30,7 +30,7 @@ model AuthUser {
   /// The email address for logging in and notifications.
   email         String?              @unique
   /// The status of the email (whether we can send emails or not).
-  status        EmailStatus          @default(UNVERIFIED)
+  emailStatus   EmailStatus          @default(UNVERIFIED)
   /// The list of system roles this user has
   systemRoles   UserSystemRole[]
   /// The list of sessions for the user.

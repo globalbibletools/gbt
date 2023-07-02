@@ -9,4 +9,4 @@ CREATE TYPE "EmailStatus" AS ENUM ('UNVERIFIED', 'VERIFIED', 'BOUNCED', 'COMPLAI
 
 -- AlterTable
 ALTER TABLE "User" DROP COLUMN "emailVerified",
-ADD COLUMN     "status" "EmailStatus" NOT NULL DEFAULT 'UNVERIFIED';
+ADD COLUMN     "emailStatus" "EmailStatus" NOT NULL DEFAULT 'UNVERIFIED';
