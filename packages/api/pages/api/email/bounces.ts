@@ -1,7 +1,9 @@
+import * as z from 'zod';
 import createRoute from '../../../shared/Route';
 
 export default createRoute()
-  .post<void, void>({
+  .post<any, void>({
+    schema: z.any(),
     async handler(req, res) {
       const messageType = req.headers['x-amz-sns-message-type'];
       switch (messageType) {
@@ -10,7 +12,7 @@ export default createRoute()
           break;
         }
         case 'SubscriptionConfirmation': {
-          console.log('SNS Confirmation', req.body);
+          console.log('SNS Confirmation', req.body.SubscribeURL);
           break;
         }
         default:
