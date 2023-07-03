@@ -15,7 +15,7 @@ const messageSchema = z.discriminatedUnion('notificationType', [
   z.object({
     notificationType: z.literal('Complaint'),
     complaint: z.object({
-      complainedRecepients: z.array(z.object({ emailAddress: z.string() })),
+      complainedRecipients: z.array(z.object({ emailAddress: z.string() })),
     }),
   }),
   z.object({
@@ -42,7 +42,6 @@ export default createRoute()
     async handler(req, res) {
       switch (req.body.Type) {
         case 'Notification': {
-          console.log(req.body.Message);
           const parseResult = messageSchema.safeParse(
             JSON.parse(req.body.Message)
           );
@@ -69,7 +68,7 @@ export default createRoute()
               }
               case 'Complaint': {
                 await Promise.all(
-                  message.complaint.complainedRecepients.map(
+                  message.complaint.complainedRecipients.map(
                     async ({ emailAddress }) => {
                       try {
                         console.log(`Email complaint: ${emailAddress}`);
