@@ -27,8 +27,6 @@ model AuthUser {
   id            String               @id @default(dbgenerated("generate_ulid()")) @db.Uuid
   /// The display name of the user.
   name          String?
-  /// The email address for logging in and notifications.
-  email         String?              @unique
   /// The status of the email (whether we can send emails or not).
   emailStatus   EmailStatus          @default(UNVERIFIED)
   /// The list of system roles this user has

@@ -17,10 +17,17 @@ export default createRoute()
     async handler(req, res) {
       try {
         const key = await auth.getKey('invite-verification', req.body.token);
-        const user = await auth.getUser(key.userId);
-        res.ok({
-          email: user.email,
-        });
+        const keys = await auth.getAllUserKeys(key.userId);
+        const primary = keys.find(
+          (key) => key.type === 'persistent' && key.primary
+        );
+        if (primary) {
+          res.ok({
+            email: primary.providerUserId,
+          });
+        } else {
+          throw new NotFoundError();
+        }
       } catch {
         throw new NotFoundError();
       }

@@ -28,7 +28,14 @@ export class MissingEmailAddressError extends Error {
 
 export default {
   transporter,
-  async sendEmail({ userId, subject, text }: EmailOptions) {
+  /**
+   * Send a transactional email to a user.
+   * @param email - The email to send along with the intended user.
+   * @param force - Send to unverified users. Should only be used to send invites.
+   * @throws `EmailNotVerifiedError` - If the user's email is not verified or has previously bounced or complained.
+   * @throws `MissingEmailAddressError` - If the user does not have an email address.
+   */
+  async sendEmail({ userId, subject, text }: EmailOptions, force = false) {
     let user, primaryKey;
     try {
       user = await auth.getUser(userId);
@@ -39,12 +46,11 @@ export default {
     }
 
     if (!primaryKey) throw new MissingEmailAddressError(userId);
-    if (user.emailStatus !== EmailStatus.VERIFIED)
+    if (user.emailStatus !== EmailStatus.VERIFIED && !force)
       throw new EmailNotVerifiedError(primaryKey?.providerUserId);
 
     const email = primaryKey.providerUserId;
 
-    // TODO: handle email verification
     await this.transporter.sendMail({
       from: process.env['EMAIL_FROM'],
       subject,

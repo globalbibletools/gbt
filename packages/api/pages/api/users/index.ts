@@ -22,6 +22,11 @@ export default createRoute()
         where: accessibleBy(req.policy).AuthUser,
         include: {
           systemRoles: true,
+          auth_key: {
+            where: {
+              primary_key: true,
+            },
+          },
         },
       });
 
@@ -29,7 +34,7 @@ export default createRoute()
         data: users.map((user) => ({
           id: user.id,
           name: user.name ?? undefined,
-          email: user.email ?? undefined,
+          email: user.auth_key[0]?.user_id.split(':')[1] ?? undefined,
           systemRoles: user.systemRoles.map(({ role }) => role),
         })),
       });
@@ -52,9 +57,7 @@ export default createRoute()
           providerUserId: email,
           password: null,
         },
-        attributes: {
-          email,
-        },
+        attributes: {},
       });
 
       const token = randomBytes(12).toString('hex');
@@ -69,11 +72,14 @@ export default createRoute()
       const url = new URL(req.body.redirectUrl);
       url.searchParams.append('token', token);
 
-      await mailer.sendEmail({
-        userId: user.id,
-        subject: 'GlobalBibleTools Invite',
-        text: `You've been invited to globalbibletools.com:\n${url.toString()}`,
-      });
+      await mailer.sendEmail(
+        {
+          userId: user.id,
+          subject: 'GlobalBibleTools Invite',
+          text: `You've been invited to globalbibletools.com:\n${url.toString()}`,
+        },
+        true
+      );
 
       res.created(`/api/users/${user.id}`);
     },

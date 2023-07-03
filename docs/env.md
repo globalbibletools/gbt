@@ -12,6 +12,8 @@
 
 `ORIGIN` - The origin to use when generate URLs that point to the api server.
 
+`TEST_EMAIL` - The email address to send all emails to in development.
+
 ## Web
 
 `API_URL` (required) - The URL to send API requests to.
