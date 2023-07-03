@@ -22,7 +22,7 @@ export interface FormData {
   roles: LanguageRole[];
 }
 
-export default function NewLanguageView() {
+export default function InviteLanguageMemberView() {
   const { code = '' } = useParams<'code'>();
   useAuth({ requireRole: [SystemRole.Admin] });
   const navigate = useNavigate();
