@@ -49,21 +49,26 @@ export default createRoute()
             const message = parseResult.data;
             switch (message.notificationType) {
               case 'Bounce': {
-                await Promise.all(
-                  message.bounce.bouncedRecipients.map(
-                    async ({ emailAddress }) => {
-                      try {
-                        console.log(`Email bounced: ${emailAddress}`);
-                        const key = await auth.getKey('username', emailAddress);
-                        await auth.updateUserAttributes(key.userId, {
-                          emailStatus: EmailStatus.BOUNCED,
-                        });
-                      } catch {
-                        // If a user doesn't exist, continue.
+                if (message.bounce.bounceType === 'Permanent') {
+                  await Promise.all(
+                    message.bounce.bouncedRecipients.map(
+                      async ({ emailAddress }) => {
+                        try {
+                          console.log(`Email bounced: ${emailAddress}`);
+                          const key = await auth.getKey(
+                            'username',
+                            emailAddress
+                          );
+                          await auth.updateUserAttributes(key.userId, {
+                            emailStatus: EmailStatus.BOUNCED,
+                          });
+                        } catch {
+                          // If a user doesn't exist, continue.
+                        }
                       }
-                    }
-                  )
-                );
+                    )
+                  );
+                }
                 break;
               }
               case 'Complaint': {
