@@ -13,7 +13,7 @@ CREATE TYPE "EmailStatus" AS ENUM (
 );
 -- AlterTable
 ALTER TABLE "User" DROP COLUMN "emailVerified",
-  "email"
-ADD COLUMN "emailStatus" "EmailStatus" NOT NULL DEFAULT 'UNVERIFIED';
+  DROP COLUMN "email",
+  ADD COLUMN "emailStatus" "EmailStatus" NOT NULL DEFAULT 'UNVERIFIED';
 UPDATE "User"
-SET emailStatus = "VERIFIED";
+SET "emailStatus" = 'VERIFIED';
