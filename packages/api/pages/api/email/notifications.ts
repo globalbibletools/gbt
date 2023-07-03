@@ -24,6 +24,8 @@ const messageSchema = z.discriminatedUnion('notificationType', [
   }),
 ]);
 
+// This route exists to receive notifications from AWS that an email bounced or was complained about.
+// In these situations, we remove the validated email status from the user so they no longer receive email from us.
 export default createRoute()
   .post<SNSMessage, void>({
     schema: z.discriminatedUnion('Type', [
