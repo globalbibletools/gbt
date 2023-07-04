@@ -1,7 +1,9 @@
 import type {
+  GetLanguageMembersResponseBody,
   GetLanguageResponseBody,
   GetLanguagesResponseBody,
   PatchLanguageRequestBody,
+  PostLanguageMemberRequestBody,
   PostLanguageRequestBody,
 } from '@translation/api-types';
 import type ApiClient from './client';
@@ -42,6 +44,22 @@ export default class Languages {
     await this.client.patch({
       path: `/api/languages/${code}`,
       body: language,
+    });
+  }
+
+  findMembers(code: string): Promise<GetLanguageMembersResponseBody> {
+    return this.client.get({
+      path: `/api/languages/${code}/members`,
+    });
+  }
+
+  inviteMember(
+    code: string,
+    request: PostLanguageMemberRequestBody
+  ): Promise<void> {
+    return this.client.post({
+      path: `/api/languages/${code}/members`,
+      body: request,
     });
   }
 }

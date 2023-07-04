@@ -2,6 +2,7 @@ import { PrismaClient, Prisma } from '../prisma/client';
 import { randomBytes } from 'crypto';
 
 export { Prisma };
+export * as PrismaTypes from '../prisma/client';
 
 export const client = new PrismaClient();
 

@@ -32,6 +32,7 @@
   "role_other": "Roles",
   "role": "Role",
   "role_admin": "Admin",
+  "role_translator": "Translator",
   "user_role_changed": "User role updated!",
   "app_name": "Gloss Translation",
   "login_message": "Please check your email. If a user with this address exists, we will send you an email with a one time login link.",

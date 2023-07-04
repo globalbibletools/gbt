@@ -69,6 +69,29 @@ export type PostLanguageRequestBody = Language;
 
 export type PatchLanguageRequestBody = Partial<Omit<Language, 'code'>>;
 
+export const LanguageRole = makeEnum({
+  Admin: 'ADMIN',
+  Translator: 'TRANSLATOR',
+});
+export type LanguageRole = typeof LanguageRole[keyof typeof LanguageRole];
+
+export interface LanguageMember {
+  userId: string;
+  name?: string;
+  email?: string;
+  roles: LanguageRole[];
+}
+
+export interface GetLanguageMembersResponseBody {
+  data: LanguageMember[];
+}
+
+export interface PostLanguageMemberRequestBody {
+  email: string;
+  roles: LanguageRole[];
+  redirectUrl: string;
+}
+
 export interface VerseWord {
   id: string;
   text: string;

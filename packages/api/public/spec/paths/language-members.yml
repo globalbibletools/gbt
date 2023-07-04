@@ -1,0 +1,63 @@
+get:
+  summary: Get all members of a language.
+  tags:
+    - Languages
+  parameters:
+    - $ref: '../schemas/parameters.yml#languageCode'
+  responses:
+    '200':
+      description: Ok
+      content:
+        application/json:
+          type: object
+          properties:
+            data:
+              type: array,
+              items:
+                type: object
+                properties:
+                  userId:
+                    description: The unique ID of the user.
+                    type: string
+                  email:
+                    description: The user's email address.
+                    type: string
+                  name:
+                    description: The user's name.
+                    type: string
+                  permissions:
+                    description: The user's permissions on the language.
+                    type: array
+                    items:
+                      type: 'string'
+                      enum: ['ADMIN', 'EDIT', 'VIEW']
+post:
+  summary: Invite a new member to a language.
+  parameters:
+    - $ref: '../schemas/parameters.yml#languageCode'
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            email:
+              description: The email of the user to invite.
+              type: string
+            permissions:
+              description: The permissions to grant to the user.
+              type: array
+              items:
+                type: string
+                enum: ['ADMIN', 'EDIT', 'VIEW']
+  responses:
+    '201':
+      description: Created - This response is given to platform admins.
+      headers:
+        Location:
+          schema:
+            type: string
+          description: URL to new language.
+    '204':
+      description: No Content - This response is given to language admins to obscure who is and isn't on the platform.

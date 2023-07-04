@@ -17,11 +17,11 @@ datasource db {
 /// A user who can authenticate into the system.
 model AuthUser {
   /// The ID of the user.
-  id            String           @id @default(dbgenerated("generate_ulid()")) @db.Uuid
+  id            String               @id @default(dbgenerated("generate_ulid()")) @db.Uuid
   /// The display name of the user.
   name          String?
   /// The email address for logging in and notifications.
-  email         String?          @unique
+  email         String?              @unique
   /// The time that the email was last verified.
   emailVerified DateTime?
   /// The list of system roles this user has
@@ -30,6 +30,8 @@ model AuthUser {
   auth_session  AuthSession[]
   /// The list of auth keys for the user
   auth_key      AuthKey[]
+  /// The roles for this user on all languages.
+  languageRoles LanguageMemberRole[]
 
   @@map("User")
 }
@@ -159,15 +161,39 @@ model Lemma {
 /// A language use for translation.
 model Language {
   /// The ID of the language. This is distinct from the IETF language code.
-  id                String             @id @default(dbgenerated("generate_ulid()")) @db.Uuid
+  id                String               @id @default(dbgenerated("generate_ulid()")) @db.Uuid
   /// The IETF language code.
-  code              String             @unique
+  code              String               @unique
   /// The localized name of the language.
   name              String
   /// This list of verse translation in this language.
   verseTranslations VerseTranslation[]
   /// The list of glosses of different words for this language.
   glosses           Gloss[]
+  /// The list of roles for members of this language.
+  roles             LanguageMemberRole[]
+}
+
+enum LanguageRole {
+  ADMIN
+  TRANSLATOR
+  VIEWER
+}
+
+/// A role given to a user for a language.
+model LanguageMemberRole {
+  /// The user who is granted the role for the language.
+  user       AuthUser     @relation(fields: [userId], references: [id])
+  /// The ID of the user who is granted the role for the language.
+  userId     String       @db.Uuid
+  /// The language the user is given the role for.
+  language   Language     @relation(fields: [languageId], references: [id])
+  /// The ID of the language the user is given the role for.
+  languageId String       @db.Uuid
+  /// The role given to the user for the language.
+  role       LanguageRole
+
+  @@id([languageId, userId, role])
 }
 
 /// A natural translation for a verse.
