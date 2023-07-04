@@ -28,7 +28,7 @@ export function createPolicyFor(user?: Actor) {
   if (user) {
     can('read', 'Language', {
       roles: {
-        every: {
+        some: {
           userId: user.id,
           role: LanguageRole.VIEWER,
         },
@@ -36,7 +36,7 @@ export function createPolicyFor(user?: Actor) {
     });
     can('translate', 'Language', {
       roles: {
-        every: {
+        some: {
           userId: user.id,
           role: LanguageRole.TRANSLATOR,
         },
@@ -44,7 +44,7 @@ export function createPolicyFor(user?: Actor) {
     });
     can('administer', 'Language', {
       roles: {
-        every: {
+        some: {
           userId: user.id,
           role: LanguageRole.ADMIN,
         },
