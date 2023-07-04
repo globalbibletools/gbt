@@ -54,10 +54,17 @@ export default function TranslateWord({
         className="min-w-[80px]"
         value={gloss}
         items={previousGlosses.map((gloss) => ({ label: gloss, value: gloss }))}
-        onChange={(newGloss: string | undefined) => {
+        onChange={(newGloss: string) => {
           if (newGloss !== gloss) {
             onGlossChange(newGloss);
-            setText(newGloss ?? '');
+            setText(newGloss);
+          }
+        }}
+        onCreate={(newGloss: string) => {
+          console.log('BRAND NEW GLOSS:', newGloss);
+          if (newGloss !== gloss) {
+            onGlossChange(newGloss);
+            setText(newGloss);
           }
         }}
         // The extra 24 pixel give room for the padding.

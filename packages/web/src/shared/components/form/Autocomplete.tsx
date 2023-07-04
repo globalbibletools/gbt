@@ -1,6 +1,11 @@
 import { Combobox } from '@headlessui/react';
-import { ComponentProps, useState } from 'react';
+import { ComponentProps, useEffect, useState } from 'react';
 import { Icon } from '../Icon';
+
+export interface AutocompleteItem {
+  label: string;
+  value: string;
+}
 
 export interface AutocompleteProps
   extends Omit<ComponentProps<'input'>, 'value' | 'onChange' | 'ref'> {
@@ -8,7 +13,8 @@ export interface AutocompleteProps
   value?: string;
   onBlur?(): void;
   onChange?(value: string): void;
-  items: { label: string; value: string }[];
+  onCreate?(text?: string): void;
+  items: AutocompleteItem[];
   defaultValue?: string[];
   name: string;
   hasErrors?: boolean;
@@ -19,23 +25,54 @@ const Autocomplete = ({
   hasErrors,
   value,
   onChange,
+  onCreate,
   onBlur,
   items,
   name,
   ...props
 }: AutocompleteProps) => {
-  const [searchQuery, setSearchQuery] = useState('');
+  const [normalizedInputValue, setNormalizedInputValue] = useState('');
+  const [filteredItems, setFilteredItems] = useState<AutocompleteItem[]>(items);
 
-  const filteredItems = items.filter((item) =>
-    item.label
-      .normalize()
-      .toLowerCase()
-      .includes(searchQuery.normalize().toLowerCase())
-  );
+  // If none of the items matches the input value exactly,
+  // then we want to give the option of creating a new item.
+  useEffect(() => {
+    if (normalizedInputValue) {
+      const filteredItems = items.filter((item) =>
+        item.label
+          .normalize()
+          .toLowerCase()
+          .includes(normalizedInputValue.toLowerCase())
+      );
+      const noExactMatch = filteredItems.every(
+        (item) => item.label.normalize() !== normalizedInputValue
+      );
+      if (noExactMatch && !!onCreate) {
+        setFilteredItems([
+          { value: '_create', label: normalizedInputValue },
+          ...filteredItems,
+        ]);
+      } else {
+        setFilteredItems(items);
+      }
+    } else {
+      setFilteredItems(items);
+    }
+  }, [items, normalizedInputValue, onCreate]);
+
+  function onSelectedItemChange(newValue: string) {
+    if (newValue === '_create') {
+      onCreate?.(normalizedInputValue);
+    } else {
+      if (newValue !== value) {
+        onChange?.(newValue);
+      }
+    }
+  }
 
   return (
     <div className={`${className}  group/autocomplete relative`}>
-      <Combobox value={value} onChange={onChange} name={name}>
+      <Combobox value={value} onChange={onSelectedItemChange} name={name}>
         <div
           className={`border rounded shadow-inner flex group-focus-within/autocomplete:outline group-focus-within/autocomplete:outline-2
             
@@ -48,7 +85,9 @@ const Autocomplete = ({
         >
           <Combobox.Input
             {...props}
-            onChange={(event) => setSearchQuery(event.target.value)}
+            onChange={(event) =>
+              setNormalizedInputValue(event.target.value.normalize())
+            }
             onBlur={onBlur}
             className="w-full py-2 px-3 h-10 rounded-b flex-grow focus:outline-none bg-transparent rounded"
           />
@@ -56,14 +95,21 @@ const Autocomplete = ({
             {({ open }) => <Icon icon={open ? 'caret-up' : 'caret-down'} />}
           </Combobox.Button>
         </div>
-        <Combobox.Options className="absolute w-full max-h-80 bg-white overflow-auto mt-1 rounded border border-slate-400 shadow">
+        <Combobox.Options className="z-10 absolute min-w-[160px] w-full max-h-80 bg-white overflow-auto mt-1 rounded border border-slate-400 shadow">
           {filteredItems.map((item) => (
             <Combobox.Option
               className="px-3 py-2 ui-active:bg-blue-400"
               key={item.value}
               value={item.value}
             >
-              {item.label}
+              {item.value === '_create' ? (
+                <>
+                  <Icon icon="add" /> "
+                  <span className="italic">{item.label}</span>"
+                </>
+              ) : (
+                item.label
+              )}
             </Combobox.Option>
           ))}
         </Combobox.Options>
