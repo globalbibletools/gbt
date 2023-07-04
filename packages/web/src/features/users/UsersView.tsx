@@ -81,12 +81,15 @@ export default function UsersView() {
             <ListHeaderCell className="min-w-[120px]">
               {t('email').toUpperCase()}
             </ListHeaderCell>
+            <ListHeaderCell className="min-w-[60px]">
+              {t('email_status').toUpperCase()}
+            </ListHeaderCell>
             <ListHeaderCell className="min-w-[80px]">
               {t('role', { count: 100 }).toUpperCase()}
             </ListHeaderCell>
           </ListHeader>
           {session.user?.systemRoles.includes(SystemRole.Admin) && (
-            <ListRowAction colSpan={3}>
+            <ListRowAction colSpan={4}>
               <Link to="./invite">
                 <Icon icon="plus" className="mr-1" />
                 {t('invite_user')}
@@ -99,10 +102,16 @@ export default function UsersView() {
                 <ListCell header>{user.name}</ListCell>
                 <ListCell>{user.email}</ListCell>
                 <ListCell>
+                  {user.emailStatus &&
+                    t('email_status', {
+                      context: user.emailStatus.toLowerCase(),
+                    })}
+                </ListCell>
+                <ListCell>
                   <SelectInput
                     className="w-42"
                     name="userRole"
-                    value={user.systemRoles[0] ?? ''}
+                    value={user.systemRoles?.[0] ?? ''}
                     aria-label={t('role') ?? ''}
                     onChange={(e) =>
                       userMutation.mutate({

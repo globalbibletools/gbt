@@ -17,15 +17,21 @@ export const SystemRole = makeEnum({
 });
 export type SystemRole = typeof SystemRole[keyof typeof SystemRole];
 
-export interface User {
-  id: string;
-  name?: string;
-  email?: string;
-  systemRoles: SystemRole[];
-}
+export const EmailStatus = makeEnum({
+  Unverified: 'UNVERIFIED',
+  Verified: 'VERIFIED',
+  Bounced: 'BOUNCED',
+  Complained: 'COMPLAINED',
+});
+export type EmailStatus = typeof EmailStatus[keyof typeof EmailStatus];
 
 export interface GetSessionResponse {
-  user?: User;
+  user?: {
+    id: string;
+    name?: string;
+    email?: string;
+    systemRoles: SystemRole[];
+  };
 }
 
 export interface PostLoginRequest {
@@ -52,7 +58,13 @@ export interface PostInviteRequestBody {
 }
 
 export interface GetUsersResponseBody {
-  data: User[];
+  data: {
+    id: string;
+    name?: string;
+    email?: string;
+    systemRoles?: SystemRole[];
+    emailStatus?: EmailStatus;
+  }[];
 }
 
 export interface PostUserRequestBody {

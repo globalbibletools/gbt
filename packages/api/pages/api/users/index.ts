@@ -10,6 +10,7 @@ import { authorize } from '../../../shared/access-control/authorize';
 import { accessibleBy } from '../../../prisma/casl';
 import { auth } from '../../../shared/auth';
 import { randomBytes } from 'crypto';
+import { SystemRole } from '../../../prisma/client';
 
 export default createRoute()
   .get<void, GetUsersResponseBody>({
@@ -34,8 +35,11 @@ export default createRoute()
         data: users.map((user) => ({
           id: user.id,
           name: user.name ?? undefined,
-          email: user.auth_key[0]?.user_id.split(':')[1] ?? undefined,
-          systemRoles: user.systemRoles.map(({ role }) => role),
+          email: user.auth_key[0]?.id.split(':')[1] ?? undefined,
+          ...(req.session?.user?.systemRoles.includes(SystemRole.ADMIN) && {
+            systemRoles: user.systemRoles.map(({ role }) => role),
+            emailStatus: user.emailStatus,
+          }),
         })),
       });
     },
