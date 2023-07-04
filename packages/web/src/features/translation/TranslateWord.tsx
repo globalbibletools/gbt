@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Icon } from '../../shared/components/Icon';
-import AutocompleteInput from '../../shared/components/form/AutocompleteInput';
 import InputHelpText from '../../shared/components/form/InputHelpText';
 import { useTextWidth } from '../../shared/hooks/useTextWidth';
 import { capitalize } from '../../shared/utils';
@@ -54,6 +53,10 @@ export default function TranslateWord({
         className="min-w-[80px]"
         value={gloss}
         items={previousGlosses.map((gloss) => ({ label: gloss, value: gloss }))}
+        // The extra 24 pixel give room for the padding around the text.
+        style={{ width: width + 24 }}
+        aria-describedby={`word-help-${word.id}`}
+        aria-labelledby={`word-${word.id}`}
         onChange={(newGloss: string) => {
           if (newGloss !== gloss) {
             onGlossChange(newGloss);
@@ -61,36 +64,12 @@ export default function TranslateWord({
           }
         }}
         onCreate={(newGloss: string) => {
-          console.log('BRAND NEW GLOSS:', newGloss);
           if (newGloss !== gloss) {
             onGlossChange(newGloss);
             setText(newGloss);
           }
         }}
-        // The extra 24 pixel give room for the padding.
-        style={{ width: width + 24 }}
       />
-      {/* <AutocompleteInput
-        className="min-w-[80px]"
-        value={gloss}
-        items={previousGlosses.map((gloss) => ({ label: gloss, value: gloss }))}
-        // The extra 56 pixel give room for the dropdown button.
-        style={{ width: width + 56 }}
-        aria-describedby={`word-help-${word.id}`}
-        aria-labelledby={`word-${word.id}`}
-        onChange={(newGloss: string | undefined) => {
-          if (newGloss !== gloss) {
-            onGlossChange(newGloss);
-            setText(newGloss ?? '');
-          }
-        }}
-        onCreate={(newGloss: string | undefined) => {
-          if (newGloss !== gloss) {
-            onGlossChange(newGloss);
-            setText(newGloss ?? '');
-          }
-        }}
-      /> */}
       <InputHelpText id={`word-help-${word.id}`}>
         {(() => {
           if (status === 'saving') {

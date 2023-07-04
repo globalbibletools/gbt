@@ -2,6 +2,8 @@ import { Combobox } from '@headlessui/react';
 import { ComponentProps, useEffect, useState } from 'react';
 import { Icon } from '../Icon';
 
+const CREATE_TAG = '_create';
+
 export interface AutocompleteItem {
   label: string;
   value: string;
@@ -49,7 +51,7 @@ const Autocomplete = ({
       );
       if (noExactMatch && !!onCreate) {
         setFilteredItems([
-          { value: '_create', label: normalizedInputValue },
+          { value: CREATE_TAG, label: normalizedInputValue },
           ...filteredItems,
         ]);
       } else {
@@ -60,8 +62,8 @@ const Autocomplete = ({
     }
   }, [items, normalizedInputValue, onCreate]);
 
-  function onSelectedItemChange(newValue: string) {
-    if (newValue === '_create') {
+  function onComboboxChange(newValue: string) {
+    if (newValue === CREATE_TAG) {
       onCreate?.(normalizedInputValue);
     } else {
       if (newValue !== value) {
@@ -72,7 +74,7 @@ const Autocomplete = ({
 
   return (
     <div className={`${className}  group/autocomplete relative`}>
-      <Combobox value={value} onChange={onSelectedItemChange} name={name}>
+      <Combobox value={value} onChange={onComboboxChange} name={name}>
         <div
           className={`border rounded shadow-inner flex group-focus-within/autocomplete:outline group-focus-within/autocomplete:outline-2
             
@@ -102,7 +104,7 @@ const Autocomplete = ({
               key={item.value}
               value={item.value}
             >
-              {item.value === '_create' ? (
+              {item.value === CREATE_TAG ? (
                 <>
                   <Icon icon="add" /> "
                   <span className="italic">{item.label}</span>"
