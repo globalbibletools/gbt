@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Icon } from '../../shared/components/Icon';
+import AutocompleteInput from '../../shared/components/form/AutocompleteInput';
 import InputHelpText from '../../shared/components/form/InputHelpText';
 import { useTextWidth } from '../../shared/hooks/useTextWidth';
 import { capitalize } from '../../shared/utils';
-import Autocomplete from '../../shared/components/form/Autocomplete';
 
 export interface TranslateWordProps {
   word: { id: string; text: string };
@@ -48,7 +48,7 @@ export default function TranslateWord({
       >
         {referenceGloss}
       </div>
-      <Autocomplete
+      <AutocompleteInput
         name="gloss"
         className="min-w-[80px]"
         value={gloss}

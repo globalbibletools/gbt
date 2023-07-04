@@ -22,7 +22,7 @@ export interface AutocompleteProps
   hasErrors?: boolean;
 }
 
-const Autocomplete = ({
+const AutocompleteInput = ({
   className = '',
   hasErrors,
   value,
@@ -120,4 +120,4 @@ const Autocomplete = ({
   );
 };
 
-export default Autocomplete;
+export default AutocompleteInput;
