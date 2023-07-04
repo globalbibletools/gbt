@@ -1,80 +1,57 @@
-import { useCombobox } from 'downshift';
+import { Combobox } from '@headlessui/react';
 import { ComponentProps, useEffect, useState } from 'react';
 import { Icon } from '../Icon';
-import TextInput from './TextInput';
+
+const CREATE_TAG = '_create';
 
 export interface AutocompleteItem {
   label: string;
   value: string;
 }
 
-export interface AutocompleteInputProps
-  extends Omit<ComponentProps<'input'>, 'value' | 'onChange'> {
+export interface AutocompleteProps
+  extends Omit<ComponentProps<'input'>, 'value' | 'onChange' | 'ref'> {
+  className?: string;
   value?: string;
-  items: AutocompleteItem[];
-  onChange(value?: string): void;
+  onBlur?(): void;
+  onChange?(value: string): void;
   onCreate?(text?: string): void;
+  items: AutocompleteItem[];
+  defaultValue?: string[];
+  name: string;
+  hasErrors?: boolean;
 }
 
-/**
- * Text input with autocomplete suggestions.
- *
- * Suggestions have the shape of `{ label: string; value: string; }`.
- * When an item is selected, its value will be passed to the `onChange` event.
- *
- * To support the creation of new items, attach the `onCreate` event.
- * The text value will be passed to the event.
- */
-export default function AutocompleteInput({
+const AutocompleteInput = ({
   className = '',
-  items,
+  hasErrors,
   value,
   onChange,
   onCreate,
+  onBlur,
+  items,
+  name,
   ...props
-}: AutocompleteInputProps) {
+}: AutocompleteProps) => {
+  const [normalizedInputValue, setNormalizedInputValue] = useState('');
   const [filteredItems, setFilteredItems] = useState<AutocompleteItem[]>(items);
-
-  const {
-    inputValue,
-    isOpen,
-    getToggleButtonProps,
-    getMenuProps,
-    getInputProps,
-    highlightedIndex,
-    getItemProps,
-    selectedItem,
-    selectItem,
-    setHighlightedIndex,
-  } = useCombobox({
-    items: filteredItems,
-    itemToString(item) {
-      return item?.label ?? '';
-    },
-    onSelectedItemChange({ selectedItem }) {
-      if (selectedItem?.value === '_create') {
-        onCreate?.(selectedItem.label);
-      } else {
-        if (selectedItem?.value !== value) {
-          onChange(selectedItem?.value);
-        }
-      }
-    },
-  });
 
   // If none of the items matches the input value exactly,
   // then we want to give the option of creating a new item.
   useEffect(() => {
-    if (inputValue) {
+    if (normalizedInputValue) {
       const filteredItems = items.filter((item) =>
-        item.label.includes(inputValue)
+        item.label
+          .normalize()
+          .toLowerCase()
+          .includes(normalizedInputValue.toLowerCase())
       );
-      if (
-        filteredItems.every((item) => item.label !== inputValue) &&
-        !!onCreate
-      ) {
+      const noExactMatch = filteredItems.every(
+        (item) => item.label.normalize() !== normalizedInputValue
+      );
+      if (noExactMatch && !!onCreate) {
         setFilteredItems([
-          { value: '_create', label: inputValue },
+          { value: CREATE_TAG, label: normalizedInputValue },
           ...filteredItems,
         ]);
       } else {
@@ -83,71 +60,64 @@ export default function AutocompleteInput({
     } else {
       setFilteredItems(items);
     }
-  }, [items, inputValue, onCreate]);
+  }, [items, normalizedInputValue, onCreate]);
 
-  // In order to make this smooth, we want to make sure an item is always highlighted
-  // so you can immediately tab out of the control to select a new value.
-  useEffect(() => {
-    if (highlightedIndex < 0) {
-      setHighlightedIndex(0);
+  function onComboboxChange(newValue: string) {
+    if (newValue === CREATE_TAG) {
+      onCreate?.(normalizedInputValue);
+    } else {
+      if (newValue !== value) {
+        onChange?.(newValue);
+      }
     }
-  }, [highlightedIndex, setHighlightedIndex]);
-
-  // We need to keep the state of the dropdown in sync with the value prop.
-  useEffect(() => {
-    selectItem(items.find((item) => item.value === value) ?? null);
-  }, [value, selectItem, items]);
+  }
 
   return (
-    <div className="relative">
-      <TextInput
-        {...props}
-        {...getInputProps()}
-        className={`w-full pe-10 ${
-          isOpen ? 'rounded-b-none' : ''
-        } ${className}`}
-      />
-      <button
-        aria-label="toggle menu"
-        className="absolute px-2 top-0 end-0 w-10 h-10"
-        type="button"
-        {...getToggleButtonProps()}
-      >
-        <Icon icon={isOpen ? 'caret-up' : 'caret-down'} />
-      </button>
-      <ul
-        className={`
-          absolute bg-white shadow-md max-h-80 overflow-y-auto p-0
-          border-slate-300 border rounded-b z-10
-          min-w-full max-w-[300px] w-max
-          ${!(isOpen && filteredItems.length) && 'hidden'}
-        `}
-        {...getMenuProps()}
-      >
-        {isOpen &&
-          filteredItems.map((item, index) => {
-            return (
-              <li
-                className={`
-                    ${highlightedIndex === index ? 'bg-blue-300' : ''}
-                    ${selectedItem === item ? 'font-bold' : ''}
-                    py-2 px-3
-                  `}
-                key={`${item.value}-${index}`}
-                {...getItemProps({ item, index })}
-              >
-                {item.value === '_create' ? (
-                  <>
-                    <Icon icon="add" /> "
-                    <span className="italic">{item.label}</span>"
-                  </>
-                ) : (
-                  item.label
-                )}
-              </li>
-            );
-          })}
-      </ul>
+    <div className={`${className}  group/autocomplete relative`}>
+      <Combobox value={value} onChange={onComboboxChange} name={name}>
+        <div
+          className={`border rounded shadow-inner flex group-focus-within/autocomplete:outline group-focus-within/autocomplete:outline-2
+            
+            ${
+              hasErrors
+                ? 'border-red-700 shadow-red-100 group-focus-within/autocomplete:outline-red-700'
+                : 'border-slate-400 group-focus-within/autocomplete:outline-blue-600'
+            }
+          `}
+        >
+          <Combobox.Input
+            {...props}
+            onChange={(event) =>
+              setNormalizedInputValue(event.target.value.normalize())
+            }
+            onBlur={onBlur}
+            className="w-full py-2 px-3 h-10 rounded-b flex-grow focus:outline-none bg-transparent rounded"
+          />
+          <Combobox.Button className="w-8">
+            {({ open }) => <Icon icon={open ? 'caret-up' : 'caret-down'} />}
+          </Combobox.Button>
+        </div>
+        <Combobox.Options className="z-10 absolute min-w-[160px] w-full max-h-80 bg-white overflow-auto mt-1 rounded border border-slate-400 shadow">
+          {filteredItems.map((item) => (
+            <Combobox.Option
+              className="px-3 py-2 ui-active:bg-blue-400"
+              key={item.value}
+              value={item.value}
+            >
+              {item.value === CREATE_TAG ? (
+                <>
+                  <Icon icon="add" /> "
+                  <span className="italic">{item.label}</span>"
+                </>
+              ) : (
+                item.label
+              )}
+            </Combobox.Option>
+          ))}
+        </Combobox.Options>
+      </Combobox>
     </div>
   );
-}
+};
+
+export default AutocompleteInput;

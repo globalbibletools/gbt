@@ -49,23 +49,24 @@ export default function TranslateWord({
         {referenceGloss}
       </div>
       <AutocompleteInput
+        name="gloss"
         className="min-w-[80px]"
         value={gloss}
         items={previousGlosses.map((gloss) => ({ label: gloss, value: gloss }))}
-        // The extra 56 pixel give room for the dropdown button.
-        style={{ width: width + 56 }}
+        // The extra 24 pixel give room for the padding around the text.
+        style={{ width: width + 24 }}
         aria-describedby={`word-help-${word.id}`}
         aria-labelledby={`word-${word.id}`}
-        onChange={(newGloss: string | undefined) => {
+        onChange={(newGloss: string) => {
           if (newGloss !== gloss) {
             onGlossChange(newGloss);
-            setText(newGloss ?? '');
+            setText(newGloss);
           }
         }}
-        onCreate={(newGloss: string | undefined) => {
+        onCreate={(newGloss: string) => {
           if (newGloss !== gloss) {
             onGlossChange(newGloss);
-            setText(newGloss ?? '');
+            setText(newGloss);
           }
         }}
       />
