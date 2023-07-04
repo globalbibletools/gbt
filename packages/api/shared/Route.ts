@@ -7,6 +7,7 @@ import * as Errors from './errors';
 import { createPolicyFor, Policy } from './access-control/policy';
 import { auth } from './auth';
 import { client } from './db';
+import { ForbiddenError } from '@casl/ability';
 
 export interface SessionUser {
   id: string;
@@ -256,6 +257,8 @@ export default function createRoute<
               case 'P2002':
                 throw new Errors.AlreadyExistsError();
             }
+          } else if (error instanceof ForbiddenError) {
+            throw new Errors.ForbiddenError();
           }
           throw error;
         }

@@ -1,4 +1,5 @@
 import { RouteObject } from 'react-router-dom';
+import InviteLanguageMemberView from './InviteLanguageMemberView';
 import LanguageView, { languagesViewLoader } from './LanguagesView';
 import ManageLanguageView, {
   manageLanguageViewLoader,
@@ -19,6 +20,10 @@ const routes: RouteObject[] = [
     path: 'languages/:code',
     loader: manageLanguageViewLoader,
     element: <ManageLanguageView />,
+  },
+  {
+    path: 'languages/:code/invite',
+    element: <InviteLanguageMemberView />,
   },
 ];
 

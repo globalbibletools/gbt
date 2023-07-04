@@ -9,10 +9,10 @@ module.exports = composePlugins(withNx(), withReact(), (config) => {
       // Generate the API_URL for vercel preview environments since these are unique for each branch.
       'process.env.API_URL': JSON.stringify(
         process.env.VERCEL_ENV === 'preview'
-          ? `https://gloss-translation-api-git-${process.env.VERCEL_GIT_COMMIT_REF.replace(
+          ? `https://api-git-${process.env.VERCEL_GIT_COMMIT_REF.replace(
               '/',
               '-'
-            )}-${process.env.VERCEL_GIT_REPO_OWNER}.vercel.app`
+            )}-global-bible-tools.vercel.app`
           : process.env.API_URL
       ),
     })

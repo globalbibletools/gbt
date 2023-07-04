@@ -1,4 +1,9 @@
-import { Language, AuthUser, SystemRole } from '../../prisma/client';
+import {
+  Language,
+  AuthUser,
+  SystemRole,
+  LanguageRole,
+} from '../../prisma/client';
 import { PureAbility, AbilityBuilder } from '@casl/ability';
 import { Subjects } from '@casl/prisma';
 import { createPrismaAbility, PrismaQuery } from '../../prisma/casl';
@@ -20,17 +25,39 @@ export interface Actor {
 export function createPolicyFor(user?: Actor) {
   const { can, build } = new AbilityBuilder<Policy>(createPrismaAbility);
 
-  can('read', 'Language');
-
   if (user) {
-    can('translate', 'Language');
-
-    can('read', 'AuthUser', { id: user.id });
+    can('read', 'Language', {
+      roles: {
+        some: {
+          userId: user.id,
+          role: LanguageRole.VIEWER,
+        },
+      },
+    });
+    can('translate', 'Language', {
+      roles: {
+        some: {
+          userId: user.id,
+          role: LanguageRole.TRANSLATOR,
+        },
+      },
+    });
+    can('administer', 'Language', {
+      roles: {
+        some: {
+          userId: user.id,
+          role: LanguageRole.ADMIN,
+        },
+      },
+    });
 
     can('read', 'AuthUser', { id: user.id });
 
     if (user.systemRoles.includes(SystemRole.ADMIN)) {
       can('create', 'Language');
+      can('read', 'Language');
+      can('administer', 'Language');
+
       can('create', 'AuthUser');
       can('read', 'AuthUser');
       can('administer', 'AuthUser');
