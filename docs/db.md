@@ -40,10 +40,16 @@ pg_dump -Fc --data-only --exclude-table _prisma_migrations <db-name> > data/seed
 
 ## Migrations
 
+To apply existing migrations to your local database, run the command:
+
+```
+nx prisma api migrate dev
+```
+
 To migrate the database schema, first update the prisma schema, and then run the command:
 
 ```
-nx prisma api migrate --name migration_name
+nx prisma api migrate dev --name migration_name
 ```
 
 This will generate a SQL script to modify the database which will be automatically run in preview and production on release.
