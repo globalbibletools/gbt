@@ -42,6 +42,11 @@ export default createRoute<{ code: string }>()
                 languageId: language.id,
               },
             },
+            auth_key: {
+              where: {
+                primary_key: true,
+              },
+            },
           },
         });
 
@@ -49,7 +54,7 @@ export default createRoute<{ code: string }>()
           data: users.map((user) => ({
             userId: user.id,
             name: user.name ?? undefined,
-            email: user.email ?? undefined,
+            email: user.auth_key[0]?.id.split(':')[1] ?? undefined,
             roles: user.languageRoles
               .map((role) => role.role)
               .filter(
@@ -102,13 +107,11 @@ export default createRoute<{ code: string }>()
             providerUserId: email,
             password: null,
           },
-          attributes: {
-            email,
-          },
+          attributes: {},
         });
 
         const token = randomBytes(12).toString('hex');
-        await auth.createKey(user.userId, {
+        await auth.createKey(user.id, {
           type: 'single_use',
           providerId: 'email-verification',
           providerUserId: token,
@@ -121,13 +124,12 @@ export default createRoute<{ code: string }>()
         url.searchParams.append('redirectUrl', req.body.redirectUrl);
 
         await mailer.sendEmail({
-          to: email,
+          userId: user.id,
           subject: 'GlobalBibleTools Invite',
           text: `You've been invited to globalbibletools.com:\n${url.toString()}`,
-          html: `<p>You've been invited to globalbibletools.com:</p><p><a href="${url.toString()}">Log In</a></p>`,
         });
 
-        userId = user.userId;
+        userId = user.id;
       }
 
       await client.languageMemberRole.createMany({
