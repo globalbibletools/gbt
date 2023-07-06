@@ -52,12 +52,17 @@ export default createRoute()
         url.searchParams.append('token', token);
         url.searchParams.append('redirectUrl', req.body.redirectUrl);
 
-        await mailer.sendEmail({
-          userId: key.userId,
-          subject: 'GlobalBibleTools Login',
-          text: `Click the link below to log in to globalbibletools.com.\n\n${url.toString()}`,
-          html: `<a href="${url.toString()}">Log in<a> to globalbibletools.com`,
-        });
+        try {
+          await mailer.sendEmail({
+            userId: key.userId,
+            subject: 'GlobalBibleTools Login',
+            text: `Click the link below to log in to globalbibletools.com.\n\n${url.toString()}`,
+            html: `<a href="${url.toString()}">Log in<a> to globalbibletools.com`,
+          });
+        } catch (error) {
+          // We have to swallow errors here so that attackers don't know that a users email is unverified.
+          console.log(`Error sending login email: ${error}`);
+        }
       }
 
       res.ok();
