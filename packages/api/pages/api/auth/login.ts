@@ -55,7 +55,8 @@ export default createRoute()
         await mailer.sendEmail({
           userId: key.userId,
           subject: 'GlobalBibleTools Login',
-          text: `Log in to globalbibletools.com:\n${url.toString()}`,
+          text: `Click the link below to log in to globalbibletools.com.\n\n${url.toString()}`,
+          html: `<a href="${url.toString()}">Log in<a> to globalbibletools.com`,
         });
       }
 

@@ -1,15 +1,24 @@
-import { createTransport } from 'nodemailer';
+import { createTransport, SendMailOptions } from 'nodemailer';
 import { EmailStatus } from '../prisma/client';
 import { auth } from './auth';
 
-const transporter = createTransport({
-  url: process.env['EMAIL_SERVER'],
-});
+const transporter = process.env['EMAIL_SERVER']
+  ? createTransport({
+      url: process.env['EMAIL_SERVER'],
+    })
+  : {
+      async sendMail(options: SendMailOptions): Promise<void> {
+        console.log(
+          `Sending email to ${options.to}:\n${options.text ?? options.html}`
+        );
+      },
+    };
 
 export interface EmailOptions {
   userId: string;
   subject: string;
   text: string;
+  html: string;
 }
 
 export class EmailNotVerifiedError extends Error {
@@ -35,7 +44,10 @@ export default {
    * @throws `EmailNotVerifiedError` - If the user's email is not verified or has previously bounced or complained.
    * @throws `MissingEmailAddressError` - If the user does not have an email address.
    */
-  async sendEmail({ userId, subject, text }: EmailOptions, force = false) {
+  async sendEmail(
+    { userId, subject, text, html }: EmailOptions,
+    force = false
+  ) {
     let user, primaryKey;
     try {
       user = await auth.getUser(userId);
@@ -55,10 +67,8 @@ export default {
       from: process.env['EMAIL_FROM'],
       subject,
       text,
-      to:
-        process.env.NODE_ENV === 'production'
-          ? email
-          : process.env.TEST_EMAIL ?? email,
+      html,
+      to: email,
     });
   },
 };

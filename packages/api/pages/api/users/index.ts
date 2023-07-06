@@ -80,7 +80,8 @@ export default createRoute()
         {
           userId: user.id,
           subject: 'GlobalBibleTools Invite',
-          text: `You've been invited to globalbibletools.com:\n${url.toString()}`,
+          text: `You've been invited to globalbibletools.com. Click the following to accept your invite and get started.\n\n${url.toString()}`,
+          html: `You've been invited to globalbibletools.com. <a href="${url.toString()}">Click here<a/> to accept your invite and get started.`,
         },
         true
       );
