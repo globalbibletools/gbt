@@ -26,6 +26,8 @@ export default createRoute<{ code: string; wordId: string }>()
         return;
       }
 
+      const normalizedGloss = req.body.gloss?.normalize('NFD');
+
       await client.gloss.upsert({
         where: {
           wordId_languageId: {
@@ -34,12 +36,12 @@ export default createRoute<{ code: string; wordId: string }>()
           },
         },
         update: {
-          gloss: req.body.gloss,
+          gloss: normalizedGloss,
         },
         create: {
           wordId: req.query.wordId,
           languageId: language.id,
-          gloss: req.body.gloss,
+          gloss: normalizedGloss,
         },
       });
 
