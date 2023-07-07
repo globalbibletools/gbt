@@ -41,13 +41,14 @@ const AutocompleteInput = ({
   useEffect(() => {
     if (normalizedInputValue) {
       const filteredItems = items.filter((item) =>
-        item.label
-          .normalize('NFD')
-          .toLowerCase()
-          .includes(normalizedInputValue.toLowerCase())
+        ignoreDiacritics(item.label.normalize('NFD').toLowerCase()).includes(
+          normalizedInputValue.toLowerCase()
+        )
       );
       const noExactMatch = filteredItems.every(
-        (item) => item.label.normalize('NFD') !== normalizedInputValue
+        (item) =>
+          ignoreDiacritics(item.label.normalize('NFD')) !==
+          ignoreDiacritics(normalizedInputValue)
       );
       if (noExactMatch && !!onCreate) {
         setFilteredItems([
@@ -119,5 +120,9 @@ const AutocompleteInput = ({
     </div>
   );
 };
+
+function ignoreDiacritics(word: string) {
+  return word.normalize('NFD').replace(/\p{Diacritic}/gu, '');
+}
 
 export default AutocompleteInput;
