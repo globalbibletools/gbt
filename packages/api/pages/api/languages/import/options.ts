@@ -25,6 +25,7 @@ export default createRoute()
             .filter((name: string) => name.length > 0);
           // Return the options.
           res.ok({ data: languageNames });
+          return;
         }
       } catch (error) {
         console.error('Error retrieving options:', error);
