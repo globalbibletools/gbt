@@ -42,12 +42,12 @@ const AutocompleteInput = ({
     if (normalizedInputValue) {
       const filteredItems = items.filter((item) =>
         item.label
-          .normalize()
+          .normalize('NFD')
           .toLowerCase()
           .includes(normalizedInputValue.toLowerCase())
       );
       const noExactMatch = filteredItems.every(
-        (item) => item.label.normalize() !== normalizedInputValue
+        (item) => item.label.normalize('NFD') !== normalizedInputValue
       );
       if (noExactMatch && !!onCreate) {
         setFilteredItems([
@@ -88,7 +88,7 @@ const AutocompleteInput = ({
           <Combobox.Input
             {...props}
             onChange={(event) =>
-              setNormalizedInputValue(event.target.value.normalize())
+              setNormalizedInputValue(event.target.value.normalize('NFD'))
             }
             onBlur={onBlur}
             className="w-full py-2 px-3 h-10 rounded-b flex-grow focus:outline-none bg-transparent rounded"
