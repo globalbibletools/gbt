@@ -22,6 +22,8 @@ paths:
     $ref: ./paths/verse.yml
   /languages:
     $ref: ./paths/languages.yml
+  /languages/import/options:
+    $ref: ./paths/languages/import/options.yml
   /languages/{code}:
     $ref: ./paths/language.yml
   /languages/{code}/verses/{verseId}/translation:
