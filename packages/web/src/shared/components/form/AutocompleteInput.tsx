@@ -46,9 +46,7 @@ const AutocompleteInput = ({
         )
       );
       const noExactMatch = filteredItems.every(
-        (item) =>
-          ignoreDiacritics(item.label.normalize('NFD')) !==
-          ignoreDiacritics(normalizedInputValue)
+        (item) => item.label.normalize('NFD') !== normalizedInputValue
       );
       if (noExactMatch && !!onCreate) {
         setFilteredItems([
