@@ -42,7 +42,7 @@ const AutocompleteInput = ({
     if (normalizedInputValue) {
       const filteredItems = items.filter((item) =>
         ignoreDiacritics(item.label.normalize('NFD').toLowerCase()).includes(
-          normalizedInputValue.toLowerCase()
+          ignoreDiacritics(normalizedInputValue.toLowerCase())
         )
       );
       const noExactMatch = filteredItems.every(
@@ -121,7 +121,11 @@ const AutocompleteInput = ({
   );
 };
 
+/**
+ * Return a version of the word where all diacritics have been removed.
+ */
 function ignoreDiacritics(word: string) {
+  // From https://stackoverflow.com/a/37511463
   return word.normalize('NFD').replace(/\p{Diacritic}/gu, '');
 }
 
