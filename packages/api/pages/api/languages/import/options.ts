@@ -1,15 +1,10 @@
 import { GetLanguageImportOptionsResponseBody } from '@translation/api-types';
 import createRoute from '../../../../shared/Route';
-import { authorize } from '../../../../shared/access-control/authorize';
 
 const IMPORT_SERVER = 'https://hebrewgreekbible.online';
 
 export default createRoute()
   .get<void, GetLanguageImportOptionsResponseBody>({
-    authorize: authorize({
-      action: 'read',
-      subject: 'AuthUser',
-    }),
     async handler(req, res) {
       try {
         // Request the server root page.
