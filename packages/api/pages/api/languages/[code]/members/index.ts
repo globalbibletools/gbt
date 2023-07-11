@@ -123,12 +123,15 @@ export default createRoute<{ code: string }>()
         url.searchParams.append('token', token);
         url.searchParams.append('redirectUrl', req.body.redirectUrl);
 
-        await mailer.sendEmail({
-          userId: user.id,
-          subject: 'GlobalBibleTools Invite',
-          text: `You've been invited to globalbibletools.com. Click the following to accept your invite and get started.\n\n${url.toString()}`,
-          html: `You've been invited to globalbibletools.com. <a href="${url.toString()}">Click here<a/> to accept your invite and get started.`,
-        });
+        await mailer.sendEmail(
+          {
+            userId: user.id,
+            subject: 'GlobalBibleTools Invite',
+            text: `You've been invited to globalbibletools.com. Click the following to accept your invite and get started.\n\n${url.toString()}`,
+            html: `You've been invited to globalbibletools.com. <a href="${url.toString()}">Click here<a/> to accept your invite and get started.`,
+          },
+          true
+        );
 
         userId = user.id;
       }
