@@ -60,7 +60,7 @@ export default createRoute()
             html: `<a href="${url.toString()}">Log in<a> to globalbibletools.com`,
           });
         } catch (error) {
-          // We have to swallow errors here so that attackers don't know that a users email is unverified.
+          // We have to swallow errors here so that attackers don't know that a user's email is unverified.
           console.log(`Error sending login email: ${error}`);
         }
       }
