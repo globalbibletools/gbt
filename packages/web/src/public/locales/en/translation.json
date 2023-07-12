@@ -41,5 +41,7 @@
   "email_status_verified": "Verified",
   "email_status_unverified": "Unverified",
   "email_status_bounced": "Bounced",
-  "email_status_complained": "Complained"
+  "email_status_complained": "Complained",
+  "accept": "Accept",
+  "invitation": "Invitation"
 }

@@ -40,5 +40,7 @@
   "email_status_verified": "Verificado",
   "email_status_unverified": "Inconfirmado",
   "email_status_bounced": "Rebotado",
-  "email_status_complained": "Quejado"
+  "email_status_complained": "Quejado",
+  "accept": "Aceptar",
+  "invitation": "Invitación"
 }

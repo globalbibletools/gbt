@@ -83,7 +83,7 @@ export default function AcceptInviteView() {
   return (
     <View fitToScreen className="flex justify-center items-start">
       <Card className="mx-4 mt-4 w-96 flex-shrink p-6">
-        <ViewTitle>{t('invite_user')}</ViewTitle>
+        <ViewTitle>{t('invitation')}</ViewTitle>
         <Form context={formContext} onSubmit={onSubmit}>
           <div className="mb-4">
             <FormLabel htmlFor="email">{t('email').toUpperCase()}</FormLabel>
@@ -102,7 +102,7 @@ export default function AcceptInviteView() {
             <InputError id="name-error" name="name" context="name" />
           </div>
           <div>
-            <Button type="submit">{t('invite')}</Button>
+            <Button type="submit">{t('accept')}</Button>
             <SubmittingIndicator className="ms-3" />
           </div>
         </Form>
