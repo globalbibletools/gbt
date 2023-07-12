@@ -113,15 +113,14 @@ export default createRoute<{ code: string }>()
         const token = randomBytes(12).toString('hex');
         await auth.createKey(user.id, {
           type: 'single_use',
-          providerId: 'email-verification',
+          providerId: 'invite-verification',
           providerUserId: token,
           password: null,
           expiresIn: 60 * 60,
         });
 
-        const url = new URL(`${origin}/api/auth/login`);
+        const url = new URL(req.body.redirectUrl);
         url.searchParams.append('token', token);
-        url.searchParams.append('redirectUrl', req.body.redirectUrl);
 
         await mailer.sendEmail(
           {
