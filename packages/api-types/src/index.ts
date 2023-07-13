@@ -69,6 +69,10 @@ export type PostLanguageRequestBody = Language;
 
 export type PatchLanguageRequestBody = Partial<Omit<Language, 'code'>>;
 
+export interface GetLanguageImportOptionsResponseBody {
+  data: string[];
+}
+
 export const LanguageRole = makeEnum({
   Admin: 'ADMIN',
   Translator: 'TRANSLATOR',

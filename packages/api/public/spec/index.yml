@@ -34,3 +34,5 @@ paths:
     $ref: ./paths/language-members.yml
   /languages/{code}/members/{userId}:
     $ref: ./paths/language-member.yml
+  /import/languages:
+    $ref: ./paths/import/languages.yml
