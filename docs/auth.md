@@ -7,7 +7,7 @@ Presently, only magic links sent via an email are supported. We may add password
 
 ## Login in Dev Environments
 
-In local environments, we use [Ethereal Email](https://ethereal.email/) to capture emails without sending them. You can use the credentials in the EMAIL_SERVER env var in [packages/api/.env](../packages/api/.env) to log in and view sent emails.
+In local environments, emails are just logged to the terminal rather than sending to an SMTP server. To log in, copy and paste the link that would have been sent in the email.
 
 ## Authentication Flow
 

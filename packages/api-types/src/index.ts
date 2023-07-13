@@ -17,15 +17,21 @@ export const SystemRole = makeEnum({
 });
 export type SystemRole = typeof SystemRole[keyof typeof SystemRole];
 
-export interface User {
-  id: string;
-  name?: string;
-  email?: string;
-  systemRoles: SystemRole[];
-}
+export const EmailStatus = makeEnum({
+  Unverified: 'UNVERIFIED',
+  Verified: 'VERIFIED',
+  Bounced: 'BOUNCED',
+  Complained: 'COMPLAINED',
+});
+export type EmailStatus = typeof EmailStatus[keyof typeof EmailStatus];
 
 export interface GetSessionResponse {
-  user?: User;
+  user?: {
+    id: string;
+    name?: string;
+    email?: string;
+    systemRoles: SystemRole[];
+  };
 }
 
 export interface PostLoginRequest {
@@ -38,13 +44,31 @@ export interface GetLoginRequest {
   redirectUrl: string;
 }
 
+export interface GetInviteRequestQuery {
+  token: string;
+}
+
+export interface GetInviteResponseBody {
+  email: string;
+}
+
+export interface PostInviteRequestBody {
+  token: string;
+  name: string;
+}
+
 export interface GetUsersResponseBody {
-  data: User[];
+  data: {
+    id: string;
+    name?: string;
+    email?: string;
+    systemRoles?: SystemRole[];
+    emailStatus?: EmailStatus;
+  }[];
 }
 
 export interface PostUserRequestBody {
   email: string;
-  name: string;
   redirectUrl: string;
 }
 
@@ -124,3 +148,18 @@ export interface GetVerseGlossesResponseBody {
 export interface PatchWordGlossRequestBody {
   gloss?: string;
 }
+
+export interface SNSConfirmSubscriptionMessage {
+  Type: 'SubscriptionConfirmation';
+  SubscribeURL: string;
+  Token: string;
+  TopicArn: string;
+}
+
+export interface SNSNotificationMessage {
+  Type: 'Notification';
+  TopicArn: string;
+  Message: string;
+}
+
+export type SNSMessage = SNSConfirmSubscriptionMessage | SNSNotificationMessage;

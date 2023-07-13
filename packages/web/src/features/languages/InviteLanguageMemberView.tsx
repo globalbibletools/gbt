@@ -34,7 +34,7 @@ export default function InviteLanguageMemberView() {
   async function onSubmit(data: FormData) {
     try {
       const redirectUrl = new URL(window.location.href);
-      redirectUrl.pathname = '/';
+      redirectUrl.pathname = '/invite';
       await apiClient.languages.inviteMember(code, {
         email: data.email,
         redirectUrl: redirectUrl.toString(),

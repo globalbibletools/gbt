@@ -10,7 +10,7 @@ import { authorize } from '../../../shared/access-control/authorize';
 import { accessibleBy } from '../../../prisma/casl';
 import { auth } from '../../../shared/auth';
 import { randomBytes } from 'crypto';
-import { origin } from '../../../shared/env';
+import { SystemRole } from '../../../prisma/client';
 
 export default createRoute()
   .get<void, GetUsersResponseBody>({
@@ -23,6 +23,11 @@ export default createRoute()
         where: accessibleBy(req.policy).AuthUser,
         include: {
           systemRoles: true,
+          auth_key: {
+            where: {
+              primary_key: true,
+            },
+          },
         },
       });
 
@@ -30,8 +35,11 @@ export default createRoute()
         data: users.map((user) => ({
           id: user.id,
           name: user.name ?? undefined,
-          email: user.email ?? undefined,
-          systemRoles: user.systemRoles.map(({ role }) => role),
+          email: user.auth_key[0]?.id.split(':')[1] ?? undefined,
+          ...(req.session?.user?.systemRoles.includes(SystemRole.ADMIN) && {
+            systemRoles: user.systemRoles.map(({ role }) => role),
+            emailStatus: user.emailStatus,
+          }),
         })),
       });
     },
@@ -39,7 +47,6 @@ export default createRoute()
   .post<PostUserRequestBody, void>({
     schema: z.object({
       email: z.string(),
-      name: z.string(),
       redirectUrl: z.string(),
     }),
     authorize: authorize({
@@ -54,33 +61,32 @@ export default createRoute()
           providerUserId: email,
           password: null,
         },
-        attributes: {
-          email,
-          name: req.body.name,
-        },
+        attributes: {},
       });
 
       const token = randomBytes(12).toString('hex');
-      await auth.createKey(user.userId, {
+      await auth.createKey(user.id, {
         type: 'single_use',
-        providerId: 'email-verification',
+        providerId: 'invite-verification',
         providerUserId: token,
         password: null,
         expiresIn: 60 * 60,
       });
 
-      const url = new URL(`${origin}/api/auth/login`);
+      const url = new URL(req.body.redirectUrl);
       url.searchParams.append('token', token);
-      url.searchParams.append('redirectUrl', req.body.redirectUrl);
 
-      await mailer.sendEmail({
-        to: email,
-        subject: 'GlobalBibleTools Invite',
-        text: `You've been invited to globalbibletools.com:\n${url.toString()}`,
-        html: `<p>You've been invited to globalbibletools.com:</p><p><a href="${url.toString()}">Log In</a></p>`,
-      });
+      await mailer.sendEmail(
+        {
+          userId: user.id,
+          subject: 'GlobalBibleTools Invite',
+          text: `You've been invited to globalbibletools.com. Click the following to accept your invite and get started.\n\n${url.toString()}`,
+          html: `You've been invited to globalbibletools.com. <a href="${url.toString()}">Click here<a/> to accept your invite and get started.`,
+        },
+        true
+      );
 
-      res.created(`/api/users/${user.userId}`);
+      res.created(`/api/users/${user.id}`);
     },
   })
   .build();
