@@ -17,7 +17,7 @@ import useAuth from '../../shared/hooks/useAuth';
 import { SystemRole } from '@translation/api-types';
 
 interface FormData {
-  importLanguage?: string;
+  import?: string;
   code: string;
   name: string;
 }
@@ -34,7 +34,7 @@ export default function NewLanguageView(props: { import?: boolean }) {
     try {
       if (props.import) {
         await apiClient.languages.import({
-          importLanguage: data.importLanguage!,
+          import: data.import!,
           code: data.code,
           name: data.name,
         });
@@ -74,7 +74,7 @@ export default function NewLanguageView(props: { import?: boolean }) {
               </FormLabel>
               <TextInput
                 id="import-language"
-                name="importLanguage"
+                name="import"
                 className="w-full"
                 autoComplete="off"
                 required

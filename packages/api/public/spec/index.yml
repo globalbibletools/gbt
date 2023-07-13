@@ -22,8 +22,12 @@ paths:
     $ref: ./paths/user.yml
   /verses/{verseId}:
     $ref: ./paths/verse.yml
+  /import/languages:
+    $ref: ./paths/import/languages.yml
   /languages:
     $ref: ./paths/languages.yml
+  /languages/import:
+    $ref: ./paths/languages/import.yml
   /languages/{code}:
     $ref: ./paths/language.yml
   /languages/{code}/verses/{verseId}/translation:
@@ -36,5 +40,3 @@ paths:
     $ref: ./paths/language-members.yml
   /languages/{code}/members/{userId}:
     $ref: ./paths/language-member.yml
-  /import/languages:
-    $ref: ./paths/import/languages.yml

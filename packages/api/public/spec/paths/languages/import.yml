@@ -1,0 +1,18 @@
+post:
+  tags:
+    - Language Import
+  summary: Create a new language to translate, with glossing data from hebrewgreekbible.online.
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../schemas/import-language.yml'
+  responses:
+    201:
+      description: Created
+      headers:
+        Location:
+          schema:
+            type: string
+          description: URL to new language.

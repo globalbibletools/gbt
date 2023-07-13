@@ -7,9 +7,9 @@ import { client } from '../../../shared/db';
 export default createRoute()
   .post<PostLanguageImportRequestBody, void>({
     schema: z.object({
+      import: z.string(),
       code: z.string(),
       name: z.string(),
-      importLanguage: z.string(),
     }),
     authorize: authorize({ action: 'create', subject: 'Language' }),
     async handler(req, res) {
@@ -20,7 +20,7 @@ export default createRoute()
         },
       });
       // TODO: implement import logic.
-      console.log('import language:', req.body.importLanguage);
+      console.log('import language:', req.body.import);
 
       res.created(`/api/languages/${req.body.code}`);
     },
