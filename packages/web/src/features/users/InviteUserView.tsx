@@ -17,7 +17,6 @@ import { SystemRole } from '@translation/api-types';
 
 export interface FormData {
   email: string;
-  name: string;
 }
 
 export default function InviteUserView() {
@@ -27,16 +26,12 @@ export default function InviteUserView() {
   const flash = useFlash();
 
   const formContext = useForm<FormData>();
-  const onSubmit: SubmitHandler<FormData> = async (
-    { email, name },
-    { reset }
-  ) => {
+  const onSubmit: SubmitHandler<FormData> = async ({ email }, { reset }) => {
     try {
       const redirectUrl = new URL(window.location.href);
-      redirectUrl.pathname = '/';
+      redirectUrl.pathname = '/invite';
       await apiClient.users.invite({
         email,
-        name,
         redirectUrl: redirectUrl.toString(),
       });
 
@@ -61,18 +56,6 @@ export default function InviteUserView() {
       <Card className="mx-4 mt-4 w-96 flex-shrink p-6">
         <ViewTitle>{t('invite_user')}</ViewTitle>
         <Form context={formContext} onSubmit={onSubmit}>
-          <div className="mb-2">
-            <FormLabel htmlFor="name">{t('name').toUpperCase()}</FormLabel>
-            <TextInput
-              id="name"
-              name="name"
-              className="w-full"
-              autoComplete="off"
-              required
-              aria-describedby="name-error"
-            />
-            <InputError id="name-error" name="name" context="name" />
-          </div>
           <div className="mb-4">
             <FormLabel htmlFor="email">{t('email').toUpperCase()}</FormLabel>
             <TextInput

@@ -69,3 +69,47 @@ session:
                 expires:
                   type: string
                   format: date-time
+invite:
+  get:
+    summary: Get an invite
+    tags:
+      - Authentication
+    parameters:
+      - name: token
+        in: query
+        description: the single use token
+    responses:
+      200:
+        description: Ok
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    email:
+                      type: string
+                      example: 'joe@example.com'
+  post:
+    summary: Accept an invite
+    tags:
+      - Authentication
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              token:
+                type: string
+                description: the single use token
+                example: a29j3bad34
+              name:
+                type: string
+                example: 'Joe Translator'
+    responses:
+      204:
+        description: No Content

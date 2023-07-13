@@ -2,8 +2,10 @@ import { RouteObject } from 'react-router-dom';
 import InviteUserView from './InviteUserView';
 import UsersView from './UsersView';
 import LoginView from './LoginView';
+import AcceptInviteView, { acceptInviteLoader } from './AcceptInviteView';
+import { QueryClient } from '@tanstack/query-core';
 
-const routes: RouteObject[] = [
+export default (queryClient: QueryClient): RouteObject[] => [
   {
     path: 'users',
     element: <UsersView />,
@@ -16,6 +18,9 @@ const routes: RouteObject[] = [
     path: 'login',
     element: <LoginView />,
   },
+  {
+    path: 'invite',
+    loader: acceptInviteLoader(queryClient),
+    element: <AcceptInviteView />,
+  },
 ];
-
-export default routes;

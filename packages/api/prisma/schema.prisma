@@ -14,16 +14,21 @@ datasource db {
   extensions = [pgcrypto]
 }
 
+enum EmailStatus {
+  UNVERIFIED
+  VERIFIED
+  BOUNCED
+  COMPLAINED
+}
+
 /// A user who can authenticate into the system.
 model AuthUser {
   /// The ID of the user.
   id            String               @id @default(dbgenerated("generate_ulid()")) @db.Uuid
   /// The display name of the user.
   name          String?
-  /// The email address for logging in and notifications.
-  email         String?              @unique
-  /// The time that the email was last verified.
-  emailVerified DateTime?
+  /// The status of the email (whether we can send emails or not).
+  emailStatus   EmailStatus          @default(UNVERIFIED)
   /// The list of system roles this user has
   systemRoles   UserSystemRole[]
   /// The list of sessions for the user.
@@ -79,7 +84,7 @@ enum SystemRole {
 /// A system level role for a user.
 model UserSystemRole {
   /// The user with the role.
-  user   AuthUser   @relation(fields: [userId], references: [id])
+  user   AuthUser   @relation(fields: [userId], references: [id], onDelete: Cascade)
   /// The ID of the user with the role.
   userId String     @db.Uuid
   /// The role given to the user.

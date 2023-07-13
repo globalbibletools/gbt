@@ -8,6 +8,7 @@ import { createPolicyFor, Policy } from './access-control/policy';
 import { auth } from './auth';
 import { client } from './db';
 import { ForbiddenError } from '@casl/ability';
+import { IncomingHttpHeaders } from 'http';
 
 export interface SessionUser {
   id: string;
@@ -23,6 +24,7 @@ export interface RouteRequest<Params, Body> {
   body: Body;
   session?: Session;
   policy: Policy;
+  headers: IncomingHttpHeaders;
 }
 
 export interface ResponseHelper<Body> {
@@ -70,26 +72,23 @@ export type RouteDefinition<Params, RequestBody, ResponseBody> = {
     req: RouteRequest<Params, RequestBody>,
     res: ResponseHelper<ResponseBody>
   ): Promise<void>;
-} & (RequestBody extends void
-  ? // eslint-disable-next-line @typescript-eslint/ban-types
-    {}
-  : {
-      /**
-       * The `zod` schema used to parse the request body.
-       * This schema should produce an object that matches the `RequestType`.
-       * If `RequestBody` is `void` then a schema is not required.
-       *
-       * Note that there are some schemas that typescript is unable to catch.
-       * The most common examples are:
-       * - Not adding optional properties to the schema.
-       * This won't return an error, but when those fields are provided, they won't be operated on.
-       * - Treating a property as required in the schema that is optional in the type.
-       * This will result in 422 errors if the field isn't provided.
-       * - Adding extra properties to the schema that aren't in the type.
-       * This could lead to unexpected 422 errors as well.
-       */
-      schema: ZodType<RequestBody>;
-    });
+
+  /**
+   * The `zod` schema used to parse the request body.
+   * This schema should produce an object that matches the `RequestType`.
+   * If `RequestBody` is `void` then a schema is not required.
+   *
+   * Note that there are some schemas that typescript is unable to catch.
+   * The most common examples are:
+   * - Not adding optional properties to the schema.
+   * This won't return an error, but when those fields are provided, they won't be operated on.
+   * - Treating a property as required in the schema that is optional in the type.
+   * This will result in 422 errors if the field isn't provided.
+   * - Adding extra properties to the schema that aren't in the type.
+   * This could lead to unexpected 422 errors as well.
+   */
+  schema?: ZodType<RequestBody>;
+};
 
 export interface RouteBuilder<Params> {
   /**
@@ -202,7 +201,7 @@ export default function createRoute<
 
       try {
         let body: RequestBody;
-        if ('schema' in definition) {
+        if (definition.schema) {
           const parseResult = definition.schema.safeParse(
             req.method === 'GET' ? req.query : req.body
           );
@@ -243,6 +242,7 @@ export default function createRoute<
           body,
           session,
           policy: createPolicyFor(session?.user),
+          headers: req.headers,
         };
 
         await definition.authorize?.(request);

@@ -2,10 +2,18 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import i18next from 'i18next';
 import { StrictMode, useEffect } from 'react';
 import * as ReactDOM from 'react-dom/client';
-import { RouterProvider } from 'react-router-dom';
+import {
+  RouterProvider,
+  createBrowserRouter,
+  redirect,
+} from 'react-router-dom';
 import './app/i18n';
-import router from './app/router';
 import { FlashProvider } from './shared/hooks/flash';
+import translationRoutes from './features/translation/router';
+import languagesRoutes from './features/languages/router';
+import userRoutes from './features/users/router';
+import Layout from './app/Layout';
+import NotFound from './app/NotFound';
 
 function App() {
   useEffect(() => {
@@ -32,5 +40,32 @@ const root = ReactDOM.createRoot(
 );
 
 const queryClient = new QueryClient();
+
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <Layout />,
+    errorElement: <NotFound />,
+    children: [
+      {
+        index: true,
+        loader() {
+          return redirect('/translate/01001001');
+        },
+      },
+      ...userRoutes(queryClient),
+      ...translationRoutes,
+      ...languagesRoutes,
+    ],
+  },
+]);
+
+// If we land on the app from the server and there was an issue with the token,
+// we redirect to the error view.
+const location = new URL(window.location.href);
+const error = location.searchParams.get('error');
+if (error === 'invalid-token') {
+  router.navigate('/login?error=invalid-token');
+}
 
 root.render(<App />);

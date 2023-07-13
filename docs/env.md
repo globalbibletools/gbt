@@ -4,7 +4,7 @@
 
 `DATABASE_URL` (required) - The connection string to the postgres database.
 
-`EMAIL_SERVER` (required) - The smtp connection string for sending emails.
+`EMAIL_SERVER` - The smtp connection string for sending emails. If not provided, emails will just be logged.
 
 `EMAIL_FROM` (required) - The from email address for all outgoing emails from the server.
 

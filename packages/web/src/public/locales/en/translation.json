@@ -36,5 +36,12 @@
   "user_role_changed": "User role updated!",
   "app_name": "Gloss Translation",
   "login_message": "Please check your email. If a user with this address exists, we will send you an email with a one time login link.",
-  "login_error_message": "Your login link is either expired or has already been used. Please log in again."
+  "login_error_message": "Your login link is either expired or has already been used. Please log in again.",
+  "email_status": "Status",
+  "email_status_verified": "Verified",
+  "email_status_unverified": "Unverified",
+  "email_status_bounced": "Bounced",
+  "email_status_complained": "Complained",
+  "accept": "Accept",
+  "invitation": "Invitation"
 }

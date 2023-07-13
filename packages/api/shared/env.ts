@@ -5,7 +5,7 @@ const originSuffix = `${process.env.VERCEL_GIT_COMMIT_REF?.replace(
 
 export const origin =
   process.env.VERCEL_ENV === 'preview'
-    ? `https://gloss-translation-api-git-${originSuffix}`
+    ? `https://api-git-${originSuffix}`
     : process.env.API_ORIGIN;
 export const originAllowlist =
   process.env.VERCEL_ENV === 'preview'

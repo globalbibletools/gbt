@@ -10,6 +10,13 @@ export default createRoute()
           where: {
             id: req.session.user.id,
           },
+          include: {
+            auth_key: {
+              where: {
+                primary_key: true,
+              },
+            },
+          },
         });
 
         if (user) {
@@ -17,7 +24,7 @@ export default createRoute()
             user: {
               id: user.id,
               name: user.name ?? undefined,
-              email: user.email ?? undefined,
+              email: user.auth_key[0]?.user_id.split(':')[1] ?? undefined,
               systemRoles: req.session.user.systemRoles,
             },
           });
