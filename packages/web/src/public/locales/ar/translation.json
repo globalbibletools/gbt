@@ -43,5 +43,6 @@
   "email_status_bounced": "ارتد",
   "email_status_complained": "اشتكى",
   "accept": "يقبل",
-  "invitation": "دعوة"
+  "invitation": "دعوة",
+  "import_language": "استيراد لغة"
 }

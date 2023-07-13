@@ -91,6 +91,10 @@ export interface GetLanguageResponseBody {
 
 export type PostLanguageRequestBody = Language;
 
+export type PostLanguageImportRequestBody = Language & {
+  importLanguage: string;
+};
+
 export type PatchLanguageRequestBody = Partial<Omit<Language, 'code'>>;
 
 export interface GetLanguageImportOptionsResponseBody {

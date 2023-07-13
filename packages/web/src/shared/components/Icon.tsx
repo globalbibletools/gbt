@@ -16,5 +16,6 @@ library.add(
   FaSolid.faArrowLeft,
   FaSolid.faArrowRight,
   FaSolid.faRightFromBracket,
-  FaSolid.faExclamationTriangle
+  FaSolid.faExclamationTriangle,
+  FaSolid.faFileImport
 );

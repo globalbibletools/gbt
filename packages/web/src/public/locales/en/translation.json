@@ -43,5 +43,6 @@
   "email_status_bounced": "Bounced",
   "email_status_complained": "Complained",
   "accept": "Accept",
-  "invitation": "Invitation"
+  "invitation": "Invitation",
+  "import_language": "Import Language"
 }

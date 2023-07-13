@@ -42,5 +42,6 @@
   "email_status_bounced": "Rebotado",
   "email_status_complained": "Quejado",
   "accept": "Aceptar",
-  "invitation": "Invitación"
+  "invitation": "Invitación",
+  "import_language": "Lenguaje de importación"
 }
