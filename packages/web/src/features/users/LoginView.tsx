@@ -16,7 +16,7 @@ import { useLayoutEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Link } from '../../shared/components/actions/Link';
 
-export interface FormData {
+interface FormData {
   email: string;
   name: string;
 }

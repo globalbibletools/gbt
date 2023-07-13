@@ -17,7 +17,7 @@ import useAuth from '../../shared/hooks/useAuth';
 import { LanguageRole, SystemRole } from '@translation/api-types';
 import MultiselectInput from '../../shared/components/form/MultiselectInput';
 
-export interface FormData {
+interface FormData {
   email: string;
   roles: LanguageRole[];
 }

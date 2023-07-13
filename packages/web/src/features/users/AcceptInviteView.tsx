@@ -44,7 +44,7 @@ const useInviteQuery = (token?: string) => {
   });
 };
 
-export interface FormData {
+interface FormData {
   name: string;
 }
 

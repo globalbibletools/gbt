@@ -15,7 +15,7 @@ import { useFlash } from '../../shared/hooks/flash';
 import useAuth from '../../shared/hooks/useAuth';
 import { SystemRole } from '@translation/api-types';
 
-export interface FormData {
+interface FormData {
   email: string;
 }
 
