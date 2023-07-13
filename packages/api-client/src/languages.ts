@@ -3,6 +3,7 @@ import type {
   GetLanguageResponseBody,
   GetLanguagesResponseBody,
   PatchLanguageRequestBody,
+  PostLanguageImportRequestBody,
   PostLanguageMemberRequestBody,
   PostLanguageRequestBody,
 } from '@translation/api-types';
@@ -28,6 +29,13 @@ export default class Languages {
     await this.client.post({
       path: '/api/languages',
       body: language,
+    });
+  }
+
+  async import(body: PostLanguageImportRequestBody): Promise<void> {
+    await this.client.post({
+      path: '/api/languages',
+      body,
     });
   }
 
