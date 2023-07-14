@@ -26,10 +26,10 @@ paths:
     $ref: ./paths/import/languages.yml
   /languages:
     $ref: ./paths/languages.yml
-  /languages/import:
-    $ref: ./paths/languages/import.yml
   /languages/{code}:
     $ref: ./paths/language.yml
+  /languages/{code}/import:
+    $ref: ./paths/languages/import.yml
   /languages/{code}/verses/{verseId}/translation:
     $ref: ./paths/translations.yml
   /languages/{code}/verses/{verseId}/glosses:

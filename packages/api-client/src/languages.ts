@@ -14,6 +14,7 @@ export {
   GetLanguagesResponseBody,
   PatchLanguageRequestBody,
   PostLanguageRequestBody,
+  PostLanguageImportRequestBody,
 };
 
 export default class Languages {
@@ -32,9 +33,12 @@ export default class Languages {
     });
   }
 
-  async import(body: PostLanguageImportRequestBody): Promise<void> {
+  async import(
+    code: string,
+    body: PostLanguageImportRequestBody
+  ): Promise<void> {
     await this.client.post({
-      path: '/api/languages',
+      path: `/api/languages/${code}/import`,
       body,
     });
   }

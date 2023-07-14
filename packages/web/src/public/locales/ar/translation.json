@@ -45,5 +45,8 @@
   "accept": "يقبل",
   "invitation": "دعوة",
   "import_language": "استيراد لغة",
-  "import_glosses": "استيراد اللمعان"
+  "import_glosses": "استيراد اللمعان",
+  "import_glosses_success": "اللمعان المستورد بنجاح!",
+  "import_glosses_error": "خطأ في استيراد اللمعان",
+  "import_description": "حدد لغة لاستيراد اللمعان من <1>hebrewgreekbible.online</1>."
 }

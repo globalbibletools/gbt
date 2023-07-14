@@ -1,4 +1,7 @@
 import { RouteObject } from 'react-router-dom';
+import ImportLanguageGlossesView, {
+  importLanguageGlossesLoader,
+} from './ImportLanguageGlossesView';
 import InviteLanguageMemberView from './InviteLanguageMemberView';
 import LanguageView, { languagesViewLoader } from './LanguagesView';
 import ManageLanguageView, {
@@ -24,6 +27,11 @@ const routes: RouteObject[] = [
   {
     path: 'languages/:code/invite',
     element: <InviteLanguageMemberView />,
+  },
+  {
+    path: 'languages/:code/import',
+    loader: importLanguageGlossesLoader,
+    element: <ImportLanguageGlossesView />,
   },
 ];
 
