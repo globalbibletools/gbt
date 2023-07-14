@@ -42,7 +42,7 @@ export default function LanguagesView() {
           {session.user?.systemRoles.includes(SystemRole.Admin) && (
             <ListRowAction colSpan={2}>
               <Link to="./new">
-                <Icon icon="plus" className="me-2 w-4" />
+                <Icon icon="plus" className="me-1" />
                 {t('add_language')}
               </Link>
             </ListRowAction>
