@@ -17,12 +17,11 @@ import useAuth from '../../shared/hooks/useAuth';
 import { SystemRole } from '@translation/api-types';
 
 interface FormData {
-  import?: string;
   code: string;
   name: string;
 }
 
-export default function NewLanguageView(props: { import?: boolean }) {
+export default function NewLanguageView() {
   useAuth({ requireRole: [SystemRole.Admin] });
   const navigate = useNavigate();
 
@@ -32,18 +31,10 @@ export default function NewLanguageView(props: { import?: boolean }) {
   const formContext = useForm<FormData>();
   async function onSubmit(data: FormData) {
     try {
-      if (props.import) {
-        await apiClient.languages.import({
-          import: data.import!,
-          code: data.code,
-          name: data.name,
-        });
-      } else {
-        await apiClient.languages.create({
-          code: data.code,
-          name: data.name,
-        });
-      }
+      await apiClient.languages.create({
+        code: data.code,
+        name: data.name,
+      });
 
       flash.success(t('language_created'));
 
@@ -67,26 +58,6 @@ export default function NewLanguageView(props: { import?: boolean }) {
       <Card className="mx-4 mt-4 w-96 flex-shrink p-6">
         <ViewTitle>{t('new_language')}</ViewTitle>
         <Form context={formContext} onSubmit={onSubmit}>
-          {props.import && (
-            <div className="mb-2">
-              <FormLabel htmlFor="import-language">
-                {t('import_language').toUpperCase()}
-              </FormLabel>
-              <TextInput
-                id="import-language"
-                name="import"
-                className="w-full"
-                autoComplete="off"
-                required
-                aria-describedby="import-language-error"
-              />
-              <InputError
-                id="import-language-error"
-                name="import-language"
-                context="import-language"
-              />
-            </div>
-          )}
           <div className="mb-2">
             <FormLabel htmlFor="code">{t('code').toUpperCase()}</FormLabel>
             <TextInput

@@ -14,11 +14,7 @@ const routes: RouteObject[] = [
   },
   {
     path: 'languages/new',
-    element: <NewLanguageView import={false} />,
-  },
-  {
-    path: 'languages/import',
-    element: <NewLanguageView import={true} />,
+    element: <NewLanguageView />,
   },
   {
     path: 'languages/:code',
