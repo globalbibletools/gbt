@@ -44,5 +44,6 @@
   "email_status_complained": "Complained",
   "accept": "Accept",
   "invitation": "Invitation",
-  "import_language": "Import Language"
+  "import_language": "Import Language",
+  "import_glosses": "Import Glosses"
 }

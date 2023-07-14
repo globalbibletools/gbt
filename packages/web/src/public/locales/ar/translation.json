@@ -44,5 +44,6 @@
   "email_status_complained": "اشتكى",
   "accept": "يقبل",
   "invitation": "دعوة",
-  "import_language": "استيراد لغة"
+  "import_language": "استيراد لغة",
+  "import_glosses": "استيراد اللمعان"
 }

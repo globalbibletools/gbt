@@ -43,5 +43,6 @@
   "email_status_complained": "Quejado",
   "accept": "Aceptar",
   "invitation": "Invitación",
-  "import_language": "Lenguaje de importación"
+  "import_language": "Lenguaje de importación",
+  "import_glosses": "Importar glosas"
 }
