@@ -21,7 +21,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import SelectInput from '../../shared/components/form/SelectInput';
 
 export default function UsersView() {
-  const session = useAuth({ requireRole: [SystemRole.Admin] });
+  const session = useAuth();
 
   const { t } = useTranslation();
   const flash = useFlash();

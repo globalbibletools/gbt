@@ -11,7 +11,6 @@ import InputError from '../../shared/components/form/InputError';
 import Button from '../../shared/components/actions/Button';
 import SubmittingIndicator from '../../shared/components/form/SubmittingIndicator';
 import { useFlash } from '../../shared/hooks/flash';
-import useAuth from '../../shared/hooks/useAuth';
 import { useLayoutEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Link } from '../../shared/components/actions/Link';
@@ -22,8 +21,6 @@ export interface FormData {
 }
 
 export default function InviteUserView() {
-  useAuth({ requireUnauthenticated: true });
-
   const { t } = useTranslation();
   const flash = useFlash();
 

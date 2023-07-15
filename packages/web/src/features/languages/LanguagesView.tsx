@@ -14,16 +14,15 @@ import {
 import View from '../../shared/components/View';
 import ViewTitle from '../../shared/components/ViewTitle';
 import { useLoaderData } from 'react-router-dom';
-import { GetLanguagesResponseBody, SystemRole } from '@translation/api-types';
+import { GetLanguagesResponseBody } from '@translation/api-types';
 import { capitalize } from '../../shared/utils';
-import useAuth from '../../shared/hooks/useAuth';
+import { UserCan } from '../../shared/accessControl';
 
 export function languagesViewLoader() {
   return apiClient.languages.findAll();
 }
 
 export default function LanguagesView() {
-  const session = useAuth({ requireRole: [SystemRole.Admin] });
   const languages = useLoaderData() as GetLanguagesResponseBody;
 
   const { t } = useTranslation();
@@ -39,20 +38,25 @@ export default function LanguagesView() {
             </ListHeaderCell>
             <ListHeaderCell />
           </ListHeader>
-          {session.user?.systemRoles.includes(SystemRole.Admin) && (
+          <UserCan action="create" subject="Language">
             <ListRowAction colSpan={2}>
               <Link to="./new">
                 <Icon icon="plus" className="me-1" />
                 {t('add_language')}
               </Link>
             </ListRowAction>
-          )}
+          </UserCan>
           <ListBody>
             {languages.data.map((language) => (
               <ListRow key={language.code}>
                 <ListCell header>{language.name}</ListCell>
                 <ListCell>
-                  <Link to={`./${language.code}`}>{t('manage')}</Link>
+                  <UserCan
+                    action="administer"
+                    subject={{ type: 'Language', id: language.code }}
+                  >
+                    <Link to={`./${language.code}`}>{t('manage')}</Link>
+                  </UserCan>
                 </ListCell>
               </ListRow>
             ))}

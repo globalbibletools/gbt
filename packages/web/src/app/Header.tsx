@@ -10,6 +10,7 @@ import apiClient from '../shared/apiClient';
 import useAuth from '../shared/hooks/useAuth';
 import { SystemRole } from '@translation/api-types';
 import { Link } from 'react-router-dom';
+import { UserCan } from '../shared/accessControl';
 
 export interface HeaderProps {
   language: string;
@@ -35,6 +36,12 @@ export default function Header({ language, onLanguageChange }: HeaderProps) {
       </Link>
       <div className="flex-grow" />
       <nav className="flex items-baseline" aria-label="primary">
+        <Link
+          to={'/translate'}
+          className="me-4 focus:outline-none hover:underline focus:underline"
+        >
+          {t('translate')}
+        </Link>
         {translationLanguages.length > 0 && (
           <DropdownMenu
             text={selectedLanguage?.name ?? 'Language'}
@@ -50,11 +57,11 @@ export default function Header({ language, onLanguageChange }: HeaderProps) {
                 </DropdownMenuButton>
               ))}
             </DropdownMenuSubmenu>
-            {session.user?.systemRoles.includes(SystemRole.Admin) && (
+            <UserCan action="administer" subject="Language">
               <DropdownMenuLink to={'/languages'}>
                 {t('manage_languages')}
               </DropdownMenuLink>
-            )}
+            </UserCan>
           </DropdownMenu>
         )}
         {session.status === 'authenticated' && (
