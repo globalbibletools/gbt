@@ -1,18 +1,4 @@
 login:
-  get:
-    summary: Validate magic link token
-    tags:
-      - Authentication
-    parameters:
-      - name: token
-        in: query
-        description: the single use token
-      - name: redirectUrl
-        in: query
-        description: where to redirect to when login succeeds.
-    responses:
-      302:
-        description: Redirect
   post:
     summary: Login with magic link
     tags:
@@ -29,10 +15,10 @@ login:
                 format: email
                 example: 'user@example.com'
                 required: true
-              redirectUrl:
+              password:
                 type: string
-                format: url
                 required: true
+                example: asdf1234
     responses:
       204:
         description: No Content
@@ -110,6 +96,9 @@ invite:
               name:
                 type: string
                 example: 'Joe Translator'
+              password:
+                type: string
+                example: asdf1234
     responses:
       204:
         description: No Content
