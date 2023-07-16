@@ -60,12 +60,4 @@ const router = createBrowserRouter([
   },
 ]);
 
-// If we land on the app from the server and there was an issue with the token,
-// we redirect to the error view.
-const location = new URL(window.location.href);
-const error = location.searchParams.get('error');
-if (error === 'invalid-token') {
-  router.navigate('/login?error=invalid-token');
-}
-
 root.render(<App />);
