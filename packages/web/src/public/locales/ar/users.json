@@ -1,0 +1,31 @@
+{
+  "name": "الاسم",
+  "email": "البريد الإلكتروني",
+  "log_in": "تسجيل الدخول",
+  "log_out": "تسجيل الخروج",
+  "password": "كلمة المرور",
+  "confirm_password": "تأكيد كلمة المرور",
+  "invitation": "دعوة",
+  "accept": "قبول",
+  "invite": "دعوة",
+  "invite_user": "دعوة مستخدم",
+  "email_status": "الحالة",
+  "email_status_verified": "تم التحقق",
+  "email_status_unverified": "غير محقق",
+  "email_status_bounced": "تم الارتداد",
+  "email_status_complained": "تم الشكوى",
+  "role_other": "الأدوار",
+  "role": "الدور",
+  "role_admin": "مشرف",
+  "role_translator": "مترجم",
+  "user_role_changed": "تم تحديث دور المستخدم!",
+  "user_invited": "تمت دعوة المستخدم!",
+  "errors": {
+    "user_exists": "يوجد مستخدم بالبريد الإلكتروني \"{{email}}\" بالفعل.",
+    "email_required": "يرجى إدخال عنوان البريد الإلكتروني.",
+    "password_required": "يرجى إدخال كلمة المرور.",
+    "password_format": "يجب أن تحتوي كلمة المرور على 8 أحرف على الأقل.",
+    "password_confirmation": "تأكيد كلمة المرور غير متطابق.",
+    "user_email_required": "يرجى إدخال عنوان البريد الإلكتروني للمستخدم."
+  }
+}

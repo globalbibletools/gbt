@@ -18,7 +18,7 @@ export interface HeaderProps {
 
 export default function Header({ language, onLanguageChange }: HeaderProps) {
   const session = useAuth();
-  const { t } = useTranslation();
+  const { t } = useTranslation(['translation', 'users']);
 
   const languagesQuery = useQuery(['languages'], () =>
     apiClient.languages.findAll()
@@ -66,7 +66,7 @@ export default function Header({ language, onLanguageChange }: HeaderProps) {
               }}
             >
               <Icon icon="right-from-bracket" className="me-2" fixedWidth />
-              {t('log_out')}
+              {t('users:log_out')}
             </DropdownMenuButton>
           </DropdownMenu>
         )}
@@ -75,7 +75,7 @@ export default function Header({ language, onLanguageChange }: HeaderProps) {
             to={'/login'}
             className="focus:outline-none hover:underline focus:underline"
           >
-            {t('log_in')}
+            {t('users:log_in')}
           </Link>
         )}
       </nav>

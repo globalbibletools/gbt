@@ -28,7 +28,7 @@ export default function InviteLanguageMemberView() {
   const navigate = useNavigate();
 
   const flash = useFlash();
-  const { t } = useTranslation();
+  const { t } = useTranslation('users');
 
   const formContext = useForm<FormData>();
   async function onSubmit(data: FormData) {
@@ -50,7 +50,7 @@ export default function InviteLanguageMemberView() {
           (error) => error.code === 'AlreadyExists'
         );
         if (alreadyExistsError) {
-          flash.error(t('user_exists', { email: data.email }));
+          flash.error(t('errors.user_exists', { email: data.email }));
           return;
         }
       }
@@ -74,7 +74,11 @@ export default function InviteLanguageMemberView() {
               required
               aria-describedby="email-error"
             />
-            <InputError id="email-error" name="email" context="email" />
+            <InputError
+              id="email-error"
+              name="email"
+              messages={{ required: t('errors.user_email_required') }}
+            />
           </div>
           <div className="mb-4">
             <FormLabel htmlFor="roles">

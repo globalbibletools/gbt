@@ -44,8 +44,10 @@ const useInviteQuery = (token?: string) => {
   });
 };
 
-export interface FormData {
+interface FormData {
   name: string;
+  password: string;
+  confirmPassword: string;
 }
 
 export default function AcceptInviteView() {
@@ -57,17 +59,18 @@ export default function AcceptInviteView() {
   const { data: invite } = useInviteQuery(token);
 
   const navigate = useNavigate();
-  const { t } = useTranslation();
+  const { t } = useTranslation('users');
   const flash = useFlash();
 
   const formContext = useForm<FormData>();
-  const onSubmit: SubmitHandler<FormData> = async ({ name }) => {
+  const onSubmit: SubmitHandler<FormData> = async ({ name, password }) => {
     try {
       const redirectUrl = new URL(window.location.href);
       redirectUrl.pathname = '/';
       await apiClient.auth.acceptInvite({
         name,
         token: token ?? '',
+        password,
       });
 
       flash.success(t('user_invited'));
@@ -99,7 +102,53 @@ export default function AcceptInviteView() {
               required
               aria-describedby="name-error"
             />
-            <InputError id="name-error" name="name" context="name" />
+            <InputError
+              id="name-error"
+              name="name"
+              messages={{ required: t('name_required') }}
+            />
+          </div>
+          <div className="mb-2">
+            <FormLabel htmlFor="password">
+              {t('password').toUpperCase()}
+            </FormLabel>
+            <TextInput
+              type="password"
+              id="password"
+              name="password"
+              className="w-full"
+              autoComplete="new-password"
+              required
+              minLength={8}
+              aria-describedby="password-error"
+            />
+            <InputError
+              id="password-error"
+              name="password"
+              messages={{
+                required: t('errors.password_required'),
+                minLength: t('errors.password_format'),
+              }}
+            />
+          </div>
+          <div className="mb-2">
+            <FormLabel htmlFor="confirm-password">
+              {t('confirm_password').toUpperCase()}
+            </FormLabel>
+            <TextInput
+              type="password"
+              id="confirm-password"
+              name="confirmPassword"
+              className="w-full"
+              autoComplete="new-password"
+              confirms="password"
+              aria-describedby="confirm-password-error"
+            />
+            <InputError
+              id="confirm-password-error"
+              name="confirmPassword"
+              messages={{ confirms: t('errors.password_confirmation') }}
+            />
           </div>
           <div>
             <Button type="submit">{t('accept')}</Button>

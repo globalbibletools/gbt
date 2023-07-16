@@ -85,7 +85,11 @@ export default function ManageLanguageView() {
               required
               aria-describedby="name-error"
             />
-            <InputError id="name-error" name="name" context="name" />
+            <InputError
+              id="name-error"
+              name="name"
+              messages={{ required: t('language_name_required') }}
+            />
           </div>
           <div>
             <Button type="submit">{t('update')}</Button>
