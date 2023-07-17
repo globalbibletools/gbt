@@ -90,7 +90,12 @@ export default function AcceptInviteView() {
         <Form context={formContext} onSubmit={onSubmit}>
           <div className="mb-4">
             <FormLabel htmlFor="email">{t('email').toUpperCase()}</FormLabel>
-            <div>{invite.email}</div>
+            <input
+              id="email"
+              className="block w-full"
+              readOnly
+              defaultValue={invite.email}
+            />
           </div>
           <div className="mb-2">
             <FormLabel htmlFor="name">{t('name').toUpperCase()}</FormLabel>
@@ -98,7 +103,7 @@ export default function AcceptInviteView() {
               id="name"
               name="name"
               className="w-full"
-              autoComplete="off"
+              autoComplete="name"
               required
               aria-describedby="name-error"
             />
