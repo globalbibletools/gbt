@@ -47,5 +47,9 @@
   "import_glosses": "Importar glosas",
   "import_glosses_success": "¡Gloses importados con éxito!",
   "import_glosses_error": "Error de importación de glosas",
-  "import_description": "Seleccione un idioma para importar glosas de <1>hebrewgreekbible.online</1>."
+  "import_description": "Seleccione un idioma para importar glosas de <1>hebrewgreekbible.online</1>.",
+  "import_glosses_confirmation_warning": "Esto sobrescribirá cualquier brillo asociado con el lenguaje. Puede llevar algún tiempo completar.",
+  "confirm_prompt": "Escriba '{{value}}' para confirmar su decisión.",
+  "confirm": "Confirmar",
+  "cancel": "Cancelar"
 }

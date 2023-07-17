@@ -127,10 +127,7 @@ export default function ManageLanguageView() {
               ))}
             </ListBody>
           </List>
-          <Link to="./import">
-            <Icon icon="file-import" className="me-4" />
-            {t('import_glosses')}
-          </Link>
+          <Link to="./import">{t('import_glosses')}</Link>
         </div>
       </div>
     </View>

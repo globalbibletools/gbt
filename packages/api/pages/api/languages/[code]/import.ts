@@ -18,7 +18,6 @@ export default createRoute()
       console.log('import language:', req.body.import);
       // simulate the processing time
       await new Promise<void>((resolve) => {
-        throw Error('test');
         setTimeout(() => {
           resolve();
         }, 10000);
