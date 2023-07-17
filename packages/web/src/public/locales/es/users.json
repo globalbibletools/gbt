@@ -20,6 +20,7 @@
   "role_translator": "Traductor",
   "user_role_changed": "¡Rol de usuario actualizado!",
   "user_invited": "¡Usuario invitado!",
+  "user_joined": "¡Cuenta creada exitosamente!",
   "errors": {
     "user_exists": "Ya existe un usuario con correo electrónico \"{{email}}\"",
     "email_required": "Por favor ingrese su dirección de correo electrónico.",

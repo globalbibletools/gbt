@@ -73,7 +73,7 @@ export default function AcceptInviteView() {
         password,
       });
 
-      flash.success(t('user_invited'));
+      flash.success(t('user_joined'));
 
       refreshAuth();
 

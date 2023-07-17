@@ -20,6 +20,7 @@
   "role_translator": "مترجم",
   "user_role_changed": "تم تحديث دور المستخدم!",
   "user_invited": "تمت دعوة المستخدم!",
+  "user_joined": "تم إنشاء الحساب بنجاح!",
   "errors": {
     "user_exists": "يوجد مستخدم بالبريد الإلكتروني \"{{email}}\" بالفعل.",
     "email_required": "يرجى إدخال عنوان البريد الإلكتروني.",
