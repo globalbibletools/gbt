@@ -13,6 +13,7 @@ import SubmittingIndicator from '../../shared/components/form/SubmittingIndicato
 import { useFlash } from '../../shared/hooks/flash';
 import useAuth from '../../shared/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
+import { ApiClientError } from '@translation/api-client';
 
 interface FormData {
   email: string;
@@ -33,7 +34,11 @@ export default function InviteUserView() {
       refreshAuth();
       navigate('/');
     } catch (error) {
-      flash.error(`${error}`);
+      if (error instanceof ApiClientError && error.status === 401) {
+        flash.error(t('errors.invalid_auth'));
+      } else {
+        flash.error(`${error}`);
+      }
     }
   };
 

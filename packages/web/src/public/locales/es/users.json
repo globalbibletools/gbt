@@ -26,6 +26,7 @@
     "password_required": "Por favor ingrese su contraseña.",
     "password_format": "Su contraseña debe tener al menos 8 caracteres.",
     "password_confirmation": "La confirmación de su contraseña no coincide.",
-    "user_email_required": "Por favor ingrese la dirección de correo electrónico del usuario."
+    "user_email_required": "Por favor ingrese la dirección de correo electrónico del usuario.",
+    "invalid_auth": "Tu correo electrónico o contraseña no son válidos."
   }
 }
