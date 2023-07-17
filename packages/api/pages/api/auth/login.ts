@@ -17,6 +17,10 @@ export default createRoute()
           req.body.email.toLowerCase(),
           req.body.password
         );
+        if (!key.passwordDefined) {
+          res.unauthorized();
+          return;
+        }
       } catch {
         res.unauthorized();
         return;
