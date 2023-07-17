@@ -1,6 +1,6 @@
 login:
   post:
-    summary: Login with magic link
+    summary: Login with an email and password
     tags:
       - Authentication
     requestBody:
