@@ -6,7 +6,7 @@ export { GetLanguageImportOptionsResponseBody };
 export default class Import {
   constructor(private readonly client: ApiClient) {}
 
-  languages(): Promise<GetLanguageImportOptionsResponseBody> {
+  getLanguages(): Promise<GetLanguageImportOptionsResponseBody> {
     return this.client.get({
       path: '/api/import/languages',
     });

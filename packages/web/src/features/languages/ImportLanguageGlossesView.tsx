@@ -31,7 +31,7 @@ export async function importLanguageGlossesLoader({
   const language = await apiClient.languages.findByCode(
     params.code ?? 'unknown'
   );
-  const importLanguages = await apiClient.import.languages();
+  const importLanguages = await apiClient.import.getLanguages();
   return { language, importLanguages };
 }
 
