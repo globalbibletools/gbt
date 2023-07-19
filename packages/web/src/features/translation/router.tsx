@@ -5,14 +5,14 @@ import TranslationView from './TranslationView';
 const routes: RouteObject[] = [
   {
     path: 'translate/:verseId?',
-    loader: async ({ params }) => {
+    loader: ({ params }) => {
       if (!params.verseId) {
         return redirect('/translate/01001001');
       }
       const code = JSON.parse(
         localStorage.getItem('translation-language') ?? 'en'
       );
-      await authorize('translate', { type: 'Language', id: code });
+      return authorize('translate', { type: 'Language', id: code });
     },
     element: <TranslationView />,
   },
