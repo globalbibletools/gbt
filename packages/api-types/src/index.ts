@@ -36,12 +36,7 @@ export interface GetSessionResponse {
 
 export interface PostLoginRequest {
   email: string;
-  redirectUrl: string;
-}
-
-export interface GetLoginRequest {
-  token: string;
-  redirectUrl: string;
+  password: string;
 }
 
 export interface GetInviteRequestQuery {
@@ -55,6 +50,7 @@ export interface GetInviteResponseBody {
 export interface PostInviteRequestBody {
   token: string;
   name: string;
+  password: string;
 }
 
 export interface GetUsersResponseBody {

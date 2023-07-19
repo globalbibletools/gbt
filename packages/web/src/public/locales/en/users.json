@@ -1,0 +1,33 @@
+{
+  "name": "name",
+  "email": "email",
+  "log_in": "Log In",
+  "log_out": "Log Out",
+  "password": "Password",
+  "confirm_password": "Confirm Password",
+  "invitation": "Invitation",
+  "accept": "Accept",
+  "invite": "Invite",
+  "invite_user": "Invite User",
+  "email_status": "Status",
+  "email_status_verified": "Verified",
+  "email_status_unverified": "Unverified",
+  "email_status_bounced": "Bounced",
+  "email_status_complained": "Complained",
+  "role_other": "Roles",
+  "role": "Role",
+  "role_admin": "Admin",
+  "role_translator": "Translator",
+  "user_role_changed": "User role updated!",
+  "user_invited": "User invited!",
+  "user_joined": "Account created successfully!",
+  "errors": {
+    "user_exists": "A user with email \"{{email}}\" already exists.",
+    "email_required": "Please input your email address.",
+    "password_required": "Please input your password.",
+    "password_format": "Your password should be at least 8 characters.",
+    "password_confirmation": "Your password confirmation does not match.",
+    "user_email_required": "Please enter the user's email address.",
+    "invalid_auth": "Your email or password are invalid."
+  }
+}

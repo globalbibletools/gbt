@@ -51,7 +51,7 @@ export default function ManageLanguageView() {
   };
   const flash = useFlash();
 
-  const { t } = useTranslation();
+  const { t } = useTranslation(['translation', 'users']);
 
   const formContext = useForm<FormData>();
   async function onSubmit(data: FormData) {
@@ -59,7 +59,7 @@ export default function ManageLanguageView() {
       await apiClient.languages.update(language.data.code, {
         name: data.name,
       });
-      flash.success(t('language_updated'));
+      flash.success(t('translation:language_updated'));
     } catch (error) {
       flash.error(`${error}`);
     }
@@ -75,7 +75,9 @@ export default function ManageLanguageView() {
         </ViewTitle>
         <Form context={formContext} onSubmit={onSubmit} className="mb-8">
           <div className="mb-2">
-            <FormLabel htmlFor="name">{t('name').toUpperCase()}</FormLabel>
+            <FormLabel htmlFor="name">
+              {t('translation:name').toUpperCase()}
+            </FormLabel>
             <TextInput
               id="name"
               name="name"
@@ -85,30 +87,34 @@ export default function ManageLanguageView() {
               required
               aria-describedby="name-error"
             />
-            <InputError id="name-error" name="name" context="name" />
+            <InputError
+              id="name-error"
+              name="name"
+              messages={{ required: t('translation:language_name_required') }}
+            />
           </div>
           <div>
-            <Button type="submit">{t('update')}</Button>
+            <Button type="submit">{t('translation:update')}</Button>
             <SubmittingIndicator className="ms-3" />
           </div>
         </Form>
         <List>
           <ListHeader>
             <ListHeaderCell className="min-w-[120px]">
-              {t('name').toUpperCase()}
+              {t('users:name').toUpperCase()}
             </ListHeaderCell>
             <ListHeaderCell className="min-w-[120px]">
-              {t('email').toUpperCase()}
+              {t('users:email').toUpperCase()}
             </ListHeaderCell>
             <ListHeaderCell className="min-w-[120px]">
-              {t('roles').toUpperCase()}
+              {t('users:roles').toUpperCase()}
             </ListHeaderCell>
             <ListHeaderCell />
           </ListHeader>
           <ListRowAction colSpan={4}>
             <Link to="./invite">
               <Icon icon="plus" className="me-1" />
-              {t('invite_user')}
+              {t('users:invite_user')}
             </Link>
           </ListRowAction>
           <ListBody>
@@ -118,7 +124,9 @@ export default function ManageLanguageView() {
                 <ListCell>{member.email}</ListCell>
                 <ListCell>
                   {member.roles
-                    .map((role) => t('role', { context: role.toLowerCase() }))
+                    .map((role) =>
+                      t('users:role', { context: role.toLowerCase() })
+                    )
                     .join(', ')}
                 </ListCell>
                 <ListCell></ListCell>
