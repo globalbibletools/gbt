@@ -1,11 +1,9 @@
 import { subject as subjectHelper } from '@casl/ability';
 import { AbilityBuilder, createMongoAbility, PureAbility } from '@casl/ability';
-import { useQuery } from '@tanstack/react-query';
 import { ReactNode, useMemo } from 'react';
-import apiClient from '../shared/apiClient';
 import { SystemRole, LanguageRole } from '@translation/api-types';
 import queryClient from './queryClient';
-import { redirect } from 'react-router-dom';
+import useAuth, { sessionQuery } from './hooks/useAuth';
 
 interface Actor {
   id: string;
@@ -25,7 +23,6 @@ export function createPolicyFor(user?: Actor) {
   const { can, build } = new AbilityBuilder<Policy>(createMongoAbility);
 
   if (user) {
-    console.log(user);
     can('read', 'Language', {
       id: { $in: user.languages.map((language) => language.code) },
     });
@@ -62,22 +59,25 @@ export function createPolicyFor(user?: Actor) {
   return build();
 }
 
+/**
+ * Prevents route from loading if the user does not have the proper permissions.
+ * Use in a route data loader before attempting to load any data.
+ */
 export async function authorize(
+  /** The action being performed on the subject. */
   action: Action,
+  /** The subject of the permissions.
+   * This should either the resources type,
+   * or a specific resource identified by an ID.
+   *
+   * Note that if you don't specify an ID,
+   * the user will have permissions if they have access _at least one_ resource of that type, not _every_.
+   */
   subject: SubjectType | { type: SubjectType; id: string }
 ) {
-  const session = await queryClient.fetchQuery(['session'], async () =>
-    apiClient.auth.session()
-  );
+  const session = await queryClient.fetchQuery(sessionQuery);
   const policy = createPolicyFor(session.user);
 
-  console.log(
-    action,
-    subject,
-    typeof subject === 'string'
-      ? subject
-      : subjectHelper(subject.type, { id: subject.id })
-  );
   if (
     !policy.can(
       action,
@@ -92,28 +92,35 @@ export async function authorize(
 }
 
 export interface UserCanProps {
-  subject: SubjectType | { type: SubjectType; id: string };
+  /** The action being performed on the subject. */
   action: Action;
+  /** The subject of the permissions.
+   * This should either the resources type,
+   * or a specific resource identified by an ID.
+   *
+   * Note that if you don't specify an ID,
+   * the user will have permissions if they have access _at least one_ resource of that type, not _every_.
+   */
+  subject: SubjectType | { type: SubjectType; id: string };
 }
 
+/**
+ * Renders children nodes if the user has correct permissions.
+ * This is useful for views where users of multiple permission levels can access,
+ * but some actions need to be conditionally restricted.
+ */
 export function UserCan({
   children,
   action,
   subject,
 }: UserCanProps & { children: ReactNode }) {
-  const { data, status } = useQuery(['session'], async () =>
-    apiClient.auth.session()
-  );
+  const { status, user } = useAuth();
 
   const policy = useMemo(() => {
-    if (status === 'success') {
-      if (data.user) {
-        return createPolicyFor(data.user);
-      } else {
-        return createPolicyFor();
-      }
+    if (status !== 'loading') {
+      return createPolicyFor(user);
     }
-  }, [status, data?.user]);
+  }, [status, user]);
 
   const canAccess = policy?.can(
     action,

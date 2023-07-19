@@ -11,10 +11,14 @@ export type UseAuthResult = { refreshAuth(): void } & (
   | { status: 'unauthenticated' | 'loading'; user?: undefined }
 );
 
+export const sessionQuery = {
+  queryKey: ['session'],
+  queryFn: () => apiClient.auth.session(),
+};
+
+/** Get the status and data in the current session. */
 export default function useAuth(): UseAuthResult {
-  const { data, status } = useQuery(['session'], async () =>
-    apiClient.auth.session()
-  );
+  const { data, status } = useQuery(sessionQuery);
 
   const queryClient = useQueryClient();
   const refreshAuth = useCallback(() => {
