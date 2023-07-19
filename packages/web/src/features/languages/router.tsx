@@ -10,10 +10,7 @@ import NewLanguageView from './NewLanguageView';
 const routes: RouteObject[] = [
   {
     path: 'languages',
-    loader: async () => {
-      await authorize('administer', 'Language');
-      return languagesViewLoader();
-    },
+    loader: () => authorize('administer', 'Language', languagesViewLoader),
     element: <LanguageView />,
   },
   {
@@ -23,10 +20,11 @@ const routes: RouteObject[] = [
   },
   {
     path: 'languages/:code',
-    loader: async ({ params }) => {
+    loader: ({ params }) => {
       const code = params.code as string;
-      await authorize('administer', { type: 'Language', id: code });
-      return manageLanguageViewLoader(code);
+      return authorize('administer', { type: 'Language', id: code }, () =>
+        manageLanguageViewLoader(code)
+      );
     },
     element: <ManageLanguageView />,
   },

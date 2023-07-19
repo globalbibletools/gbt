@@ -59,11 +59,13 @@ export function createPolicyFor(user?: Actor) {
   return build();
 }
 
+export class NotFoundError extends Error {}
+
 /**
  * Prevents route from loading if the user does not have the proper permissions.
  * Use in a route data loader before attempting to load any data.
  */
-export async function authorize(
+export async function authorize<Data = never>(
   /** The action being performed on the subject. */
   action: Action,
   /** The subject of the permissions.
@@ -73,7 +75,12 @@ export async function authorize(
    * Note that if you don't specify an ID,
    * the user will have permissions if they have access _at least one_ resource of that type, not _every_.
    */
-  subject: SubjectType | { type: SubjectType; id: string }
+  subject: SubjectType | { type: SubjectType; id: string },
+  /**
+   * The function to run if the user has permissions.
+   * The actual data loading should go here.
+   */
+  fn?: () => Data | Promise<Data>
 ) {
   const session = await queryClient.fetchQuery(sessionQuery);
   const policy = createPolicyFor(session.user);
@@ -86,9 +93,9 @@ export async function authorize(
         : subjectHelper(subject.type, { id: subject.id })
     )
   ) {
-    throw new Error('not authorized');
+    throw new NotFoundError();
   }
-  return null;
+  return fn?.() ?? null;
 }
 
 export interface UserCanProps {
