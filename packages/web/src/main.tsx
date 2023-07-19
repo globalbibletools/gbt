@@ -18,13 +18,13 @@ function App() {
   }, []);
 
   return (
-    // <StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <FlashProvider>
-        <RouterProvider router={router} />
-      </FlashProvider>
-    </QueryClientProvider>
-    // </StrictMode>
+    <StrictMode>
+      <QueryClientProvider client={queryClient}>
+        <FlashProvider>
+          <RouterProvider router={router} />
+        </FlashProvider>
+      </QueryClientProvider>
+    </StrictMode>
   );
 }
 
