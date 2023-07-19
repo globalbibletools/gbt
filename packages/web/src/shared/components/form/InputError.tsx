@@ -1,30 +1,19 @@
 import { useFormState } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
 
 export interface InputErrorProps {
   id: string;
   name: string;
-  context: string;
+  messages: Record<string, string>;
 }
 
-export default function InputError({ id, name, context }: InputErrorProps) {
+export default function InputError({ id, name, messages }: InputErrorProps) {
   const { errors } = useFormState({ name });
   const fieldError = errors[name];
 
-  const { t } = useTranslation('error');
-
-  if (fieldError) {
+  if (fieldError && fieldError.type) {
     return (
       <div id={id} className="text-red-700">
-        {(() => {
-          switch (fieldError.type) {
-            case 'required': {
-              return t('required', { context });
-            }
-            default:
-              return 'Unknown';
-          }
-        })()}
+        {messages[fieldError.type.toString()]}
       </div>
     );
   } else {

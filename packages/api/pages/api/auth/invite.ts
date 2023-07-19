@@ -37,16 +37,30 @@ export default createRoute()
     schema: z.object({
       token: z.string(),
       name: z.string(),
+      password: z.string(),
     }),
     async handler(req, res) {
       let key;
       try {
-        key = await auth.getKey('invite-verification', req.body.token);
+        const verificationKey = await auth.getKey(
+          'invite-verification',
+          req.body.token
+        );
+        const allKeys = await auth.getAllUserKeys(verificationKey.userId);
+        key = allKeys.find((key) => key.providerId === 'username');
+        if (!key) {
+          throw new Error('username key not found');
+        }
         await auth.deleteKey('invite-verification', req.body.token);
       } catch {
         throw new NotFoundError();
       }
 
+      await auth.updateKeyPassword(
+        'username',
+        key.providerUserId,
+        req.body.password
+      );
       await auth.updateUserAttributes(key.userId, {
         name: req.body.name,
         emailStatus: EmailStatus.VERIFIED,

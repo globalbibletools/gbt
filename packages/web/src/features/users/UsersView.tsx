@@ -23,7 +23,7 @@ import SelectInput from '../../shared/components/form/SelectInput';
 export default function UsersView() {
   const session = useAuth();
 
-  const { t } = useTranslation();
+  const { t } = useTranslation('users');
   const flash = useFlash();
 
   const usersQuery = useQuery(['users'], () => apiClient.users.findAll());

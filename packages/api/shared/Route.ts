@@ -180,7 +180,7 @@ export default function createRoute<
           res.status(302).end();
         },
         unauthorized(errors: ErrorDetail[] = [{ code: 'Unauthorized' }]) {
-          res.status(403).json({ errors });
+          res.status(401).json({ errors });
         },
         forbidden(errors: ErrorDetail[] = [{ code: 'Forbidden' }]) {
           res.status(403).json({ errors });

@@ -65,7 +65,11 @@ export default function NewLanguageView() {
               required
               aria-describedby="code-error"
             />
-            <InputError id="code-error" name="code" context="code" />
+            <InputError
+              id="code-error"
+              name="code"
+              messages={{ required: t('language_code_required') }}
+            />
           </div>
           <div className="mb-4">
             <FormLabel htmlFor="name">{t('name').toUpperCase()}</FormLabel>
@@ -77,7 +81,11 @@ export default function NewLanguageView() {
               required
               aria-describedby="name-error"
             />
-            <InputError id="name-error" name="name" context="name" />
+            <InputError
+              id="name-error"
+              name="name"
+              messages={{ required: t('language_name_required') }}
+            />
           </div>
           <div>
             <Button type="submit">{t('create')}</Button>

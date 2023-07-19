@@ -18,7 +18,7 @@ export interface FormData {
 }
 
 export default function InviteUserView() {
-  const { t } = useTranslation();
+  const { t } = useTranslation('users');
   const flash = useFlash();
 
   const formContext = useForm<FormData>();
@@ -39,7 +39,7 @@ export default function InviteUserView() {
           (error) => error.code === 'AlreadyExists'
         );
         if (alreadyExistsError) {
-          flash.error(t('user_exists', { email }));
+          flash.error(t('errors.user_exists', { email }));
           return;
         }
       }
@@ -62,7 +62,11 @@ export default function InviteUserView() {
               required
               aria-describedby="email-error"
             />
-            <InputError id="email-error" name="email" context="email" />
+            <InputError
+              id="email-error"
+              name="email"
+              messages={{ required: t('errors.user_email_required') }}
+            />
           </div>
           <div>
             <Button type="submit">{t('invite')}</Button>

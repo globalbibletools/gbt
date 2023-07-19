@@ -4,14 +4,22 @@ import useMergedRef from '../../hooks/mergeRefs';
 
 export interface TextInputProps extends Omit<ComponentProps<'input'>, 'name'> {
   name: string;
+  confirms?: string;
 }
 
 const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
-  ({ className = '', required, ...props }, ref) => {
+  ({ className = '', required, minLength, confirms, ...props }, ref) => {
     const context = useFormContext();
     const hasErrors = !!context?.formState.errors[props.name];
     const registerProps = context?.register(props.name, {
       required,
+      minLength: minLength,
+      ...(confirms && {
+        deps: confirms,
+        validate: {
+          confirms: (value) => value === context.getValues()[confirms],
+        },
+      }),
       onChange: props.onChange,
       onBlur: props.onBlur,
     });
