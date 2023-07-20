@@ -1,26 +1,47 @@
 import { Dialog, Transition } from '@headlessui/react';
-import { Fragment, useState } from 'react';
+import {
+  Fragment,
+  forwardRef,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from 'react';
+import { useTranslation } from 'react-i18next';
 import Button from './actions/Button';
 import TextInput from './form/TextInput';
-import { useTranslation } from 'react-i18next';
 
 export interface ConfirmationDialogProps {
   title: string;
   description: string;
   confirmationValue: string;
-  isOpen: boolean;
-  setIsOpen: (isOpen: boolean) => void;
-  onConfirm: VoidFunction;
 }
 
-export default function ConfirmationDialog({
-  title,
-  description,
-  confirmationValue,
-  isOpen,
-  setIsOpen,
-  onConfirm,
-}: ConfirmationDialogProps) {
+export interface ConfirmationDialogRef {
+  open(): Promise<boolean>;
+}
+
+const ConfirmationDialog = forwardRef<
+  ConfirmationDialogRef,
+  ConfirmationDialogProps
+>(({ title, description, confirmationValue }: ConfirmationDialogProps, ref) => {
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  useImperativeHandle(
+    ref,
+    () => ({
+      async open() {
+        return new Promise<boolean>((resolve) => {
+          setIsOpen(true);
+          // TODO: how do I call resolve when the confirm button is pressed, or the dialog is closed?
+
+          // setIsOpen(false);
+          // resolve(true);
+        });
+      },
+    }),
+    []
+  );
+
   const { t } = useTranslation();
   const [enableConfirmationButton, setEnableConfirmationButton] =
     useState<boolean>(false);
@@ -30,6 +51,7 @@ export default function ConfirmationDialog({
       <Dialog
         as="div"
         className="relative z-50"
+        // TODO: correctly integrate with ref
         onClose={() => setIsOpen(false)}
       >
         <Transition.Child
@@ -86,13 +108,7 @@ export default function ConfirmationDialog({
                   >
                     {t('cancel')}
                   </button>
-                  <Button
-                    disabled={!enableConfirmationButton}
-                    onClick={() => {
-                      setIsOpen(false);
-                      onConfirm();
-                    }}
-                  >
+                  <Button disabled={!enableConfirmationButton}>
                     {t('confirm')}
                   </Button>
                 </div>
@@ -103,4 +119,5 @@ export default function ConfirmationDialog({
       </Dialog>
     </Transition>
   );
-}
+});
+export default ConfirmationDialog;
