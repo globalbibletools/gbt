@@ -77,9 +77,10 @@ export default function ImportLanguageGlossesView() {
       <View fitToScreen className="flex justify-center items-start">
         <div className="mx-4 flex-shrink">
           <ViewTitle className="flex">
-            <span>{language.data.name}</span>
-            <span className="mx-2">-</span>
-            <span>{language.data.code}</span>
+            {t('import_glosses', {
+              context: 'title',
+              languageName: language.data.name,
+            })}
           </ViewTitle>
           <div className="flex flex-col gap-4">
             <div>
