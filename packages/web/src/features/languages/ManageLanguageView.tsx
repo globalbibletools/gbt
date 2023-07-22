@@ -51,7 +51,7 @@ export default function ManageLanguageView() {
   };
   const flash = useFlash();
 
-  const { t } = useTranslation();
+  const { t } = useTranslation(['translation', 'users']);
 
   const formContext = useForm<FormData>();
   async function onSubmit(data: FormData) {
@@ -59,7 +59,7 @@ export default function ManageLanguageView() {
       await apiClient.languages.update(language.data.code, {
         name: data.name,
       });
-      flash.success(t('language_updated'));
+      flash.success(t('translation:language_updated'));
     } catch (error) {
       flash.error(`${error}`);
     }
@@ -73,6 +73,7 @@ export default function ManageLanguageView() {
           <span className="mx-2">-</span>
           <span>{language.data.code}</span>
         </ViewTitle>
+<<<<<<< HEAD
         <div className="flex flex-col gap-8">
           <Form context={formContext} onSubmit={onSubmit}>
             <div className="mb-2">
@@ -134,6 +135,69 @@ export default function ManageLanguageView() {
             </Link>
           </div>
         </div>
+=======
+        <Form context={formContext} onSubmit={onSubmit} className="mb-8">
+          <div className="mb-2">
+            <FormLabel htmlFor="name">
+              {t('translation:name').toUpperCase()}
+            </FormLabel>
+            <TextInput
+              id="name"
+              name="name"
+              className="w-full"
+              autoComplete="off"
+              defaultValue={language.data.name}
+              required
+              aria-describedby="name-error"
+            />
+            <InputError
+              id="name-error"
+              name="name"
+              messages={{ required: t('translation:language_name_required') }}
+            />
+          </div>
+          <div>
+            <Button type="submit">{t('translation:update')}</Button>
+            <SubmittingIndicator className="ms-3" />
+          </div>
+        </Form>
+        <List>
+          <ListHeader>
+            <ListHeaderCell className="min-w-[120px]">
+              {t('users:name').toUpperCase()}
+            </ListHeaderCell>
+            <ListHeaderCell className="min-w-[120px]">
+              {t('users:email').toUpperCase()}
+            </ListHeaderCell>
+            <ListHeaderCell className="min-w-[120px]">
+              {t('users:roles').toUpperCase()}
+            </ListHeaderCell>
+            <ListHeaderCell />
+          </ListHeader>
+          <ListRowAction colSpan={4}>
+            <Link to="./invite">
+              <Icon icon="plus" className="me-1" />
+              {t('users:invite_user')}
+            </Link>
+          </ListRowAction>
+          <ListBody>
+            {members.data.map((member) => (
+              <ListRow key={member.userId}>
+                <ListCell header>{member.name}</ListCell>
+                <ListCell>{member.email}</ListCell>
+                <ListCell>
+                  {member.roles
+                    .map((role) =>
+                      t('users:role', { context: role.toLowerCase() })
+                    )
+                    .join(', ')}
+                </ListCell>
+                <ListCell></ListCell>
+              </ListRow>
+            ))}
+          </ListBody>
+        </List>
+>>>>>>> main
       </div>
     </View>
   );

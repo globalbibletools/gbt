@@ -1,0 +1,33 @@
+{
+  "name": "nombre",
+  "email": "correo electrónico",
+  "log_in": "Acceso",
+  "log_out": "Cerrar sesión",
+  "password": "Contraseña",
+  "confirm_password": "Confirmar Contraseña",
+  "accept": "Aceptar",
+  "invitation": "Invitación",
+  "invite": "Invitar",
+  "invite_user": "Invitar Usuario",
+  "email_status": "Estado",
+  "email_status_verified": "Verificado",
+  "email_status_unverified": "Inconfirmado",
+  "email_status_bounced": "Rebotado",
+  "email_status_complained": "Quejado",
+  "role_other": "Roles",
+  "role": "Role",
+  "role_admin": "Administrador",
+  "role_translator": "Traductor",
+  "user_role_changed": "¡Rol de usuario actualizado!",
+  "user_invited": "¡Usuario invitado!",
+  "user_joined": "¡Cuenta creada exitosamente!",
+  "errors": {
+    "user_exists": "Ya existe un usuario con correo electrónico \"{{email}}\"",
+    "email_required": "Por favor ingrese su dirección de correo electrónico.",
+    "password_required": "Por favor ingrese su contraseña.",
+    "password_format": "Su contraseña debe tener al menos 8 caracteres.",
+    "password_confirmation": "La confirmación de su contraseña no coincide.",
+    "user_email_required": "Por favor ingrese la dirección de correo electrónico del usuario.",
+    "invalid_auth": "Tu correo electrónico o contraseña no son válidos."
+  }
+}

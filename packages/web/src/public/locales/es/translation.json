@@ -9,7 +9,6 @@
   "update": "Actualizar",
   "create": "Crear",
   "name": "nombre",
-  "email": "correo electrónico",
   "code": "código",
   "select_verse": "Seleccionar verso",
   "previous_verse": "Verso anterior",
@@ -17,18 +16,13 @@
   "saving": "guardando",
   "saved": "guardado",
   "submitting": "Sumisión",
-  "log_in": "Acceso",
-  "log_out": "Cerrar sesión",
-  "invite": "Invitar",
-  "invite_user": "Invitar Usuario",
-  "user_invited": "¡Usuario invitado!",
-  "user_exists": "Ya existe un usuario con correo electrónico \"{{email}}\"",
   "close": "cerrar",
   "language_exists": "Ya existe un idioma con el código \"{{code}}\"",
   "language_created": "¡Idioma creado!",
   "language_updated": "¡Idioma actualizado!",
   "error": "Error",
   "success": "Éxito",
+<<<<<<< HEAD
   "role": "Roles",
   "role_admin": "Administrador",
   "role_translator": "Traductor",
@@ -53,4 +47,7 @@
   "confirm_prompt": "Escriba '{{value}}' para confirmar su decisión.",
   "confirm": "Confirmar",
   "cancel": "Cancelar"
+=======
+  "app_name": "Traducción de brillo"
+>>>>>>> main
 }

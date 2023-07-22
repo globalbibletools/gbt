@@ -9,7 +9,6 @@
   "update": "Update",
   "create": "Create",
   "name": "name",
-  "email": "email",
   "code": "code",
   "select_verse": "Select verse",
   "previous_verse": "Previous Verse",
@@ -17,24 +16,14 @@
   "saving": "saving",
   "saved": "saved",
   "submitting": "submitting",
-  "log_in": "Log In",
-  "log_out": "Log Out",
-  "invite": "Invite",
-  "invite_user": "Invite User",
-  "user_invited": "User invited!",
-  "user_exists": "A user with email \"{{email}}\" already exists",
   "close": "close",
   "language_exists": "A language with code \"{{code}}\" already exists",
   "language_created": "Language created!",
   "language_updated": "Language updated!",
   "error": "Error",
   "success": "Success",
-  "role_other": "Roles",
-  "role": "Role",
-  "role_admin": "Admin",
-  "role_translator": "Translator",
-  "user_role_changed": "User role updated!",
   "app_name": "Gloss Translation",
+<<<<<<< HEAD
   "login_message": "Please check your email. If a user with this address exists, we will send you an email with a one time login link.",
   "login_error_message": "Your login link is either expired or has already been used. Please log in again.",
   "email_status": "Status",
@@ -54,4 +43,8 @@
   "confirm_prompt": "Type '{{value}}' to confirm your decision.",
   "confirm": "Confirm",
   "cancel": "Cancel"
+=======
+  "language_name_required": "Please enter the language name.",
+  "language_code_required": "Please enter the language code."
+>>>>>>> main
 }

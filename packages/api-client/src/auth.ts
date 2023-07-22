@@ -15,10 +15,10 @@ export default class Auth {
     });
   }
 
-  login({ email, redirectUrl }: PostLoginRequest): Promise<void> {
+  login({ email, password }: PostLoginRequest): Promise<void> {
     return this.client.post({
       path: '/api/auth/login',
-      body: { email, redirectUrl },
+      body: { email, password },
     });
   }
 
@@ -35,10 +35,14 @@ export default class Auth {
     });
   }
 
-  acceptInvite({ token, name }: PostInviteRequestBody): Promise<void> {
+  acceptInvite({
+    token,
+    name,
+    password,
+  }: PostInviteRequestBody): Promise<void> {
     return this.client.post({
       path: '/api/auth/invite',
-      body: { token, name },
+      body: { token, name, password },
     });
   }
 }

@@ -12,46 +12,33 @@ import Button from '../../shared/components/actions/Button';
 import SubmittingIndicator from '../../shared/components/form/SubmittingIndicator';
 import { useFlash } from '../../shared/hooks/flash';
 import useAuth from '../../shared/hooks/useAuth';
-import { useLayoutEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { Link } from '../../shared/components/actions/Link';
+import { useNavigate } from 'react-router-dom';
+import { ApiClientError } from '@translation/api-client';
 
 interface FormData {
   email: string;
-  name: string;
+  password: string;
 }
 
 export default function InviteUserView() {
-  useAuth({ requireUnauthenticated: true });
+  const { refreshAuth } = useAuth({ requireUnauthenticated: true });
+  const navigate = useNavigate();
 
-  const { t } = useTranslation();
+  const { t } = useTranslation('users');
   const flash = useFlash();
 
-  const [step, setStep] = useState<'email' | 'final' | 'error'>('email');
-
-  // This allows the API to redirect a login link with an error,
-  // and for the error message to link back to the first login step.
-  const [search] = useSearchParams();
-  useLayoutEffect(() => {
-    if (search.get('error') === 'invalid-token') {
-      setStep('error');
-    } else {
-      setStep('email');
-    }
-  }, [search]);
-
   const formContext = useForm<FormData>();
-  const onSubmit: SubmitHandler<FormData> = async ({ email }) => {
+  const onSubmit: SubmitHandler<FormData> = async ({ email, password }) => {
     try {
-      const redirectUrl = new URL(window.location.href);
-      redirectUrl.pathname = '/';
-      await apiClient.auth.login({
-        email,
-        redirectUrl: redirectUrl.toString(),
-      });
-      setStep('final');
+      await apiClient.auth.login({ email, password });
+      refreshAuth();
+      navigate('/');
     } catch (error) {
-      flash.error(`${error}`);
+      if (error instanceof ApiClientError && error.status === 401) {
+        flash.error(t('errors.invalid_auth'));
+      } else {
+        flash.error(`${error}`);
+      }
     }
   };
 
@@ -59,33 +46,51 @@ export default function InviteUserView() {
     <View fitToScreen className="flex justify-center items-start">
       <Card className="mx-4 mt-4 w-96 flex-shrink p-6">
         <ViewTitle>{t('log_in')}</ViewTitle>
-        {step === 'email' && (
-          <Form context={formContext} onSubmit={onSubmit}>
-            <div className="mb-4">
-              <FormLabel htmlFor="email">{t('email').toUpperCase()}</FormLabel>
-              <TextInput
-                id="email"
-                name="email"
-                className="w-full"
-                autoComplete="off"
-                required
-                aria-describedby="email-error"
-              />
-              <InputError id="email-error" name="email" context="email" />
-            </div>
-            <div>
-              <Button type="submit">{t('log_in')}</Button>
-              <SubmittingIndicator className="ms-3" />
-            </div>
-          </Form>
-        )}
-        {step === 'final' && <p>{t('login_message')}</p>}
-        {step === 'error' && (
-          <>
-            <p>{t('login_error_message')}</p>
-            <Link to="/login">{t('log_in')}</Link>
-          </>
-        )}
+        <Form context={formContext} onSubmit={onSubmit}>
+          <div className="mb-4">
+            <FormLabel htmlFor="email">{t('email').toUpperCase()}</FormLabel>
+            <TextInput
+              id="email"
+              name="email"
+              className="w-full"
+              autoComplete="username"
+              required
+              aria-describedby="email-error"
+            />
+            <InputError
+              id="email-error"
+              name="email"
+              messages={{
+                required: t('errors.email_required'),
+              }}
+            />
+          </div>
+          <div className="mb-2">
+            <FormLabel htmlFor="password">
+              {t('password').toUpperCase()}
+            </FormLabel>
+            <TextInput
+              id="password"
+              type="password"
+              name="password"
+              className="w-full"
+              autoComplete="current-password"
+              required
+              aria-describedby="password-error"
+            />
+            <InputError
+              id="password-error"
+              name="password"
+              messages={{
+                required: t('errors.password_required'),
+              }}
+            />
+          </div>
+          <div>
+            <Button type="submit">{t('log_in')}</Button>
+            <SubmittingIndicator className="ms-3" />
+          </div>
+        </Form>
       </Card>
     </View>
   );
