@@ -16,7 +16,6 @@ import ConfirmationDialog, {
   ConfirmationDialogRef,
 } from '../../shared/components/ConfirmationDialog';
 import { Icon } from '../../shared/components/Icon';
-import LoadingSpinner from '../../shared/components/LoadingSpinner';
 import View from '../../shared/components/View';
 import ViewTitle from '../../shared/components/ViewTitle';
 import Button from '../../shared/components/actions/Button';
@@ -24,9 +23,9 @@ import Form from '../../shared/components/form/Form';
 import FormLabel from '../../shared/components/form/FormLabel';
 import InputError from '../../shared/components/form/InputError';
 import SelectInput from '../../shared/components/form/SelectInput';
+import SubmittingIndicator from '../../shared/components/form/SubmittingIndicator';
 import { useFlash } from '../../shared/hooks/flash';
 import useAuth from '../../shared/hooks/useAuth';
-import SubmittingIndicator from '../../shared/components/form/SubmittingIndicator';
 
 export async function importLanguageGlossesLoader({
   params,

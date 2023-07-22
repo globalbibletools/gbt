@@ -25,19 +25,18 @@ const ConfirmationDialog = forwardRef<
   ConfirmationDialogProps
 >(({ title, description, confirmationValue }: ConfirmationDialogProps, ref) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const resolveOpen = useRef<
+    ((value: boolean | PromiseLike<boolean>) => void) | null
+  >(null);
 
   useImperativeHandle(
     ref,
     () => ({
-      async open() {
-        return new Promise<boolean>((resolve) => {
+      open: async () =>
+        new Promise<boolean>((resolve) => {
           setIsOpen(true);
-          // TODO: how do I call resolve when the confirm button is pressed, or the dialog is closed?
-
-          // setIsOpen(false);
-          // resolve(true);
-        });
-      },
+          resolveOpen.current = resolve;
+        }),
     }),
     []
   );
@@ -46,13 +45,19 @@ const ConfirmationDialog = forwardRef<
   const [enableConfirmationButton, setEnableConfirmationButton] =
     useState<boolean>(false);
 
+  function handleResult(result: boolean) {
+    setIsOpen(false);
+    if (resolveOpen.current) {
+      resolveOpen.current(result);
+    }
+  }
+
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog
         as="div"
         className="relative z-50"
-        // TODO: correctly integrate with ref
-        onClose={() => setIsOpen(false)}
+        onClose={() => handleResult(false)}
       >
         <Transition.Child
           as={Fragment}
@@ -96,7 +101,7 @@ const ConfirmationDialog = forwardRef<
                   required
                   onChange={(event) =>
                     setEnableConfirmationButton(
-                      event.target.value == confirmationValue
+                      event.target.value === confirmationValue
                     )
                   }
                   aria-describedby="prompt"
@@ -104,11 +109,14 @@ const ConfirmationDialog = forwardRef<
                 <div className="mt-4 gap-4 flex flex-row justify-end">
                   <button
                     className="focus:underline outline-none"
-                    onClick={() => setIsOpen(false)}
+                    onClick={() => handleResult(false)}
                   >
                     {t('cancel')}
                   </button>
-                  <Button disabled={!enableConfirmationButton}>
+                  <Button
+                    disabled={!enableConfirmationButton}
+                    onClick={() => handleResult(true)}
+                  >
                     {t('confirm')}
                   </Button>
                 </div>
