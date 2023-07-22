@@ -22,22 +22,7 @@
   "language_updated": "تم تحديث اللغة!",
   "error": "خطأ",
   "success": "نجاح",
-<<<<<<< HEAD
-  "role_other": "الأدوار",
-  "role": "دور",
-  "role_admin": "مدير",
-  "role_translator": "مترجم",
-  "user_role_changed": "تم تحديث دور المستخدم",
   "app_name": "ترجمة لمعان",
-  "login_message": "تفقد بريدك الالكتروني من فضلك. إذا كان هناك مستخدم بهذا العنوان ، فسنرسل إليك بريدًا إلكترونيًا يحتوي على رابط تسجيل الدخول لمرة واحدة.",
-  "login_error_message": "إما أن رابط تسجيل الدخول الخاص بك منتهي الصلاحية أو تم استخدامه بالفعل. الرجاد الدخول على الحساب من جديد.",
-  "email_status": "حالة",
-  "email_status_verified": "تم التحقق",
-  "email_status_unverified": "لم يتم التحقق منه",
-  "email_status_bounced": "ارتد",
-  "email_status_complained": "اشتكى",
-  "accept": "يقبل",
-  "invitation": "دعوة",
   "import_language": "استيراد لغة",
   "import_glosses": "استيراد اللمعان",
   "import_glosses_success": "اللمعان المستورد بنجاح!",
@@ -47,10 +32,7 @@
   "import_glosses_confirmation_warning": "سيؤدي هذا إلى الكتابة فوق أي لمعان مرتبط باللغة.قد يستغرق الأمر بعض الوقت لإكمال.",
   "confirm_prompt": "اكتب '{{value}}' لتأكيد قرارك.",
   "confirm": "يتأكد",
-  "cancel": "يلغي"
-=======
-  "app_name": "ترجمة المصطلحات",
+  "cancel": "يلغي",
   "language_name_required": "يرجى إدخال اسم اللغة.",
   "language_code_required": "يرجى إدخال رمز اللغة."
->>>>>>> main
 }

@@ -23,16 +23,6 @@
   "error": "Error",
   "success": "Success",
   "app_name": "Gloss Translation",
-<<<<<<< HEAD
-  "login_message": "Please check your email. If a user with this address exists, we will send you an email with a one time login link.",
-  "login_error_message": "Your login link is either expired or has already been used. Please log in again.",
-  "email_status": "Status",
-  "email_status_verified": "Verified",
-  "email_status_unverified": "Unverified",
-  "email_status_bounced": "Bounced",
-  "email_status_complained": "Complained",
-  "accept": "Accept",
-  "invitation": "Invitation",
   "import_language": "Import Language",
   "import_glosses": "Import Glosses",
   "import_glosses_success": "Imported glosses successfully!",
@@ -42,9 +32,7 @@
   "import_glosses_confirmation_warning": "This will overwrite any glosses associated with the language. It may take some time to complete.",
   "confirm_prompt": "Type '{{value}}' to confirm your decision.",
   "confirm": "Confirm",
-  "cancel": "Cancel"
-=======
+  "cancel": "Cancel",
   "language_name_required": "Please enter the language name.",
   "language_code_required": "Please enter the language code."
->>>>>>> main
 }

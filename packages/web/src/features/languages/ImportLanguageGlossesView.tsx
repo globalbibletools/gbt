@@ -114,7 +114,6 @@ export default function ImportLanguageGlossesView() {
                     </option>
                   ))}
                 </SelectInput>
-                <InputError id="import-error" name="import" context="import" />
               </div>
               <div>
                 <Button type="submit" disabled={isImporting}>

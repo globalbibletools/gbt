@@ -22,21 +22,7 @@
   "language_updated": "¡Idioma actualizado!",
   "error": "Error",
   "success": "Éxito",
-<<<<<<< HEAD
-  "role": "Roles",
-  "role_admin": "Administrador",
-  "role_translator": "Traductor",
-  "user_role_changed": "¡Rol de usuario actualizado!",
   "app_name": "Traducción de brillo",
-  "login_message": "Por favor revise su correo electrónico. Si existe un usuario con esta dirección, le enviaremos un correo electrónico con un enlace de inicio de sesión único.",
-  "login_error_message": "Su enlace de inicio de sesión ha caducado o ya se ha utilizado. Inicie sesión de nuevo.",
-  "email_status": "Estado",
-  "email_status_verified": "Verificado",
-  "email_status_unverified": "Inconfirmado",
-  "email_status_bounced": "Rebotado",
-  "email_status_complained": "Quejado",
-  "accept": "Aceptar",
-  "invitation": "Invitación",
   "import_language": "Lenguaje de importación",
   "import_glosses": "Importar glosas",
   "import_glosses_success": "¡Gloses importados con éxito!",
@@ -46,8 +32,7 @@
   "import_glosses_confirmation_warning": "Esto sobrescribirá cualquier brillo asociado con el lenguaje. Puede llevar algún tiempo completar.",
   "confirm_prompt": "Escriba '{{value}}' para confirmar su decisión.",
   "confirm": "Confirmar",
-  "cancel": "Cancelar"
-=======
-  "app_name": "Traducción de brillo"
->>>>>>> main
+  "cancel": "Cancelar",
+  "language_name_required": "Ingrese el nombre del idioma.",
+  "language_code_required": "Ingrese el código de idioma."
 }

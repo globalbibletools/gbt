@@ -73,69 +73,6 @@ export default function ManageLanguageView() {
           <span className="mx-2">-</span>
           <span>{language.data.code}</span>
         </ViewTitle>
-<<<<<<< HEAD
-        <div className="flex flex-col gap-8">
-          <Form context={formContext} onSubmit={onSubmit}>
-            <div className="mb-2">
-              <FormLabel htmlFor="name">{t('name').toUpperCase()}</FormLabel>
-              <TextInput
-                id="name"
-                name="name"
-                className="w-full"
-                autoComplete="off"
-                defaultValue={language.data.name}
-                required
-                aria-describedby="name-error"
-              />
-              <InputError id="name-error" name="name" context="name" />
-            </div>
-            <div>
-              <Button type="submit">{t('update')}</Button>
-              <SubmittingIndicator className="ms-3" />
-            </div>
-          </Form>
-          <List>
-            <ListHeader>
-              <ListHeaderCell className="min-w-[120px]">
-                {t('name').toUpperCase()}
-              </ListHeaderCell>
-              <ListHeaderCell className="min-w-[120px]">
-                {t('email').toUpperCase()}
-              </ListHeaderCell>
-              <ListHeaderCell className="min-w-[120px]">
-                {t('roles').toUpperCase()}
-              </ListHeaderCell>
-              <ListHeaderCell />
-            </ListHeader>
-            <ListRowAction colSpan={4}>
-              <Link to="./invite">
-                <Icon icon="plus" className="me-1" />
-                {t('invite_user')}
-              </Link>
-            </ListRowAction>
-            <ListBody>
-              {members.data.map((member) => (
-                <ListRow key={member.userId}>
-                  <ListCell header>{member.name}</ListCell>
-                  <ListCell>{member.email}</ListCell>
-                  <ListCell>
-                    {member.roles
-                      .map((role) => t('role', { context: role.toLowerCase() }))
-                      .join(', ')}
-                  </ListCell>
-                  <ListCell></ListCell>
-                </ListRow>
-              ))}
-            </ListBody>
-          </List>
-          <div>
-            <Link to="./import" variant="button">
-              <Icon icon="file-import" className="me-4"></Icon>
-              {t('import_glosses')}
-            </Link>
-          </div>
-        </div>
-=======
         <Form context={formContext} onSubmit={onSubmit} className="mb-8">
           <div className="mb-2">
             <FormLabel htmlFor="name">
@@ -161,7 +98,7 @@ export default function ManageLanguageView() {
             <SubmittingIndicator className="ms-3" />
           </div>
         </Form>
-        <List>
+        <List className="mb-8">
           <ListHeader>
             <ListHeaderCell className="min-w-[120px]">
               {t('users:name').toUpperCase()}
@@ -197,7 +134,12 @@ export default function ManageLanguageView() {
             ))}
           </ListBody>
         </List>
->>>>>>> main
+        <div>
+          <Link to="./import" variant="button">
+            <Icon icon="file-import" className="me-4"></Icon>
+            {t('import_glosses')}
+          </Link>
+        </div>
       </div>
     </View>
   );
