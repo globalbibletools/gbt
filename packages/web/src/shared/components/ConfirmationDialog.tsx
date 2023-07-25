@@ -9,6 +9,8 @@ import {
 import { useTranslation } from 'react-i18next';
 import Button from './actions/Button';
 import TextInput from './form/TextInput';
+import Form from './form/Form';
+import { useForm } from 'react-hook-form';
 
 export interface ConfirmationDialogProps {
   title: string;
@@ -20,6 +22,10 @@ export interface ConfirmationDialogRef {
   open(): Promise<boolean>;
 }
 
+interface FormData {
+  confirm: string;
+}
+
 const ConfirmationDialog = forwardRef<
   ConfirmationDialogRef,
   ConfirmationDialogProps
@@ -28,6 +34,10 @@ const ConfirmationDialog = forwardRef<
   const resolveOpen = useRef<
     ((value: boolean | PromiseLike<boolean>) => void) | null
   >(null);
+  const { t } = useTranslation();
+  const [enableConfirmationButton, setEnableConfirmationButton] =
+    useState<boolean>(false);
+  const formContext = useForm<FormData>();
 
   useImperativeHandle(
     ref,
@@ -40,10 +50,6 @@ const ConfirmationDialog = forwardRef<
     }),
     []
   );
-
-  const { t } = useTranslation();
-  const [enableConfirmationButton, setEnableConfirmationButton] =
-    useState<boolean>(false);
 
   function handleResult(result: boolean) {
     setIsOpen(false);
@@ -93,33 +99,33 @@ const ConfirmationDialog = forwardRef<
                 <p id="prompt" className="text-sm text-gray-600">
                   {t('confirm_prompt', { value: confirmationValue })}
                 </p>
-                <TextInput
-                  id="confirm"
-                  name="confirm"
-                  className="w-full"
-                  autoComplete="off"
-                  required
-                  onChange={(event) =>
-                    setEnableConfirmationButton(
-                      event.target.value === confirmationValue
-                    )
-                  }
-                  aria-describedby="prompt"
-                />
-                <div className="mt-4 gap-4 flex flex-row justify-end">
-                  <button
-                    className="focus:underline outline-none"
-                    onClick={() => handleResult(false)}
-                  >
-                    {t('cancel')}
-                  </button>
-                  <Button
-                    disabled={!enableConfirmationButton}
-                    onClick={() => handleResult(true)}
-                  >
-                    {t('confirm')}
-                  </Button>
-                </div>
+                <Form context={formContext} onSubmit={() => handleResult(true)}>
+                  <TextInput
+                    id="confirm"
+                    name="confirm"
+                    className="w-full"
+                    autoComplete="off"
+                    required
+                    onChange={(event) =>
+                      setEnableConfirmationButton(
+                        event.target.value === confirmationValue
+                      )
+                    }
+                    aria-describedby="prompt"
+                  />
+                  <div className="mt-4 gap-4 flex flex-row justify-end">
+                    <button
+                      className="focus:underline outline-none"
+                      type="button"
+                      onClick={() => handleResult(false)}
+                    >
+                      {t('cancel')}
+                    </button>
+                    <Button disabled={!enableConfirmationButton} type="submit">
+                      {t('confirm')}
+                    </Button>
+                  </div>
+                </Form>
               </Dialog.Panel>
             </Transition.Child>
           </div>

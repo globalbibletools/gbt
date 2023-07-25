@@ -3,7 +3,7 @@ import {
   GetLanguageResponseBody,
   SystemRole,
 } from '@translation/api-types';
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import {
@@ -21,7 +21,6 @@ import ViewTitle from '../../shared/components/ViewTitle';
 import Button from '../../shared/components/actions/Button';
 import Form from '../../shared/components/form/Form';
 import FormLabel from '../../shared/components/form/FormLabel';
-import InputError from '../../shared/components/form/InputError';
 import SelectInput from '../../shared/components/form/SelectInput';
 import SubmittingIndicator from '../../shared/components/form/SubmittingIndicator';
 import { useFlash } from '../../shared/hooks/flash';
