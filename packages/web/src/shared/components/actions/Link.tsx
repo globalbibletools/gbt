@@ -2,7 +2,7 @@ import { Link as BaseLink, LinkProps as BaseLinkProps } from 'react-router-dom';
 import { buttonTailwindClasses } from './Button';
 
 type LinkProps = BaseLinkProps & {
-  variant?: 'base' | 'button';
+  variant?: 'default' | 'button';
 };
 
 export function Link({ className, variant, ...props }: LinkProps) {
