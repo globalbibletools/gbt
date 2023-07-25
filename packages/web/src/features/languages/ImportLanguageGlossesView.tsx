@@ -51,14 +51,11 @@ export default function ImportLanguageGlossesView() {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const confirmationDialog = useRef<ConfirmationDialogRef>(null);
-  // This tracks if the backend is working on importing the glosses.
-  const [isImporting, setIsImporting] = useState<boolean>(false);
 
   const formContext = useForm<FormData>();
   async function onSubmit(data: FormData) {
     const confirmed = await confirmationDialog.current?.open();
     if (confirmed) {
-      setIsImporting(true);
       try {
         await apiClient.languages.import(language.data.code, data);
         navigate(`/languages/${language.data.code}`);
@@ -67,7 +64,6 @@ export default function ImportLanguageGlossesView() {
         console.error(error);
         flash.error(t('import_glosses', { context: 'error' }));
       }
-      setIsImporting(false);
     }
   }
 
@@ -106,7 +102,6 @@ export default function ImportLanguageGlossesView() {
                   autoComplete="off"
                   required
                   aria-describedby="import-error"
-                  disabled={isImporting}
                 >
                   {importLanguages.data.map((name) => (
                     <option value={name} key={name}>
@@ -116,7 +111,7 @@ export default function ImportLanguageGlossesView() {
                 </SelectInput>
               </div>
               <div>
-                <Button type="submit" disabled={isImporting}>
+                <Button type="submit">
                   <Icon icon="file-import" className="me-4"></Icon>
                   {t('import_glosses')}
                 </Button>
