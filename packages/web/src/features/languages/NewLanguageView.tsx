@@ -16,7 +16,7 @@ import Card from '../../shared/components/Card';
 import useAuth from '../../shared/hooks/useAuth';
 import { SystemRole } from '@translation/api-types';
 
-export interface FormData {
+interface FormData {
   code: string;
   name: string;
 }

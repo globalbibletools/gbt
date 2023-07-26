@@ -2,7 +2,7 @@ import { ComponentProps } from 'react';
 import { FormProvider, FieldValues, UseFormReturn } from 'react-hook-form';
 
 export interface SubmitHandler<Data> {
-  (data: Data, options: { reset(): void }): Promise<void>;
+  (data: Data, options: { reset(): void }): Promise<void> | void;
 }
 export interface FormProps<Data extends FieldValues>
   extends Omit<ComponentProps<'form'>, 'onSubmit'> {

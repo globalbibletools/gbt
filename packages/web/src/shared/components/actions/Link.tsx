@@ -1,10 +1,16 @@
-import { Link as BaseLink, LinkProps } from 'react-router-dom';
+import { Link as BaseLink, LinkProps as BaseLinkProps } from 'react-router-dom';
+import { buttonTailwindClasses } from './Button';
 
-export function Link({ className, ...props }: LinkProps) {
-  return (
-    <BaseLink
-      className={`text-blue-600 focus:outline-none focus:underline hover:underline ${className}`}
-      {...props}
-    />
-  );
+type LinkProps = BaseLinkProps & {
+  variant?: 'default' | 'button';
+};
+
+export function Link({ className, variant, ...props }: LinkProps) {
+  let tailwindClasses =
+    'text-blue-600 focus:outline-none focus:underline hover:underline';
+  if (variant === 'button') {
+    // Copy button styling.
+    tailwindClasses = buttonTailwindClasses;
+  }
+  return <BaseLink className={`${tailwindClasses} ${className}`} {...props} />;
 }

@@ -1,0 +1,20 @@
+post:
+  tags:
+    - Language Import
+  summary: Import glossing data from hebrewgreekbible.online.
+  parameters:
+    - $ref: '../../schemas/parameters.yml#languageCode'
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            import:
+              type: string
+              example: Spanish
+              description: The language name (in English) on hebrewgreekbible.online.
+  responses:
+    204:
+      description: No Content
