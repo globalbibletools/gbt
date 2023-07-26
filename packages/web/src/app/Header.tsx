@@ -8,7 +8,6 @@ import DropdownMenu, {
 import { Icon } from '../shared/components/Icon';
 import apiClient from '../shared/apiClient';
 import useAuth from '../shared/hooks/useAuth';
-import { SystemRole } from '@translation/api-types';
 import { Link } from 'react-router-dom';
 import { UserCan } from '../shared/accessControl';
 
@@ -36,33 +35,59 @@ export default function Header({ language, onLanguageChange }: HeaderProps) {
       </Link>
       <div className="flex-grow" />
       <nav className="flex items-baseline" aria-label="primary">
-        <Link
-          to={'/translate'}
-          className="me-4 focus:outline-none hover:underline focus:underline"
-        >
-          {t('translate')}
-        </Link>
         {translationLanguages.length > 0 && (
-          <DropdownMenu
-            text={selectedLanguage?.name ?? 'Language'}
-            className="me-4"
-          >
-            <DropdownMenuSubmenu text={t('switch_language')}>
-              {translationLanguages.map((language) => (
-                <DropdownMenuButton
-                  key={language.code}
-                  onClick={() => onLanguageChange(language.code)}
-                >
-                  {language.name}
-                </DropdownMenuButton>
-              ))}
-            </DropdownMenuSubmenu>
-            <UserCan action="administer" subject="Language">
-              <DropdownMenuLink to={'/languages'}>
-                {t('manage_languages')}
-              </DropdownMenuLink>
+          <>
+            <UserCan
+              action="translate"
+              subject={{ type: 'Language', id: language }}
+            >
+              <Link
+                to={'/translate'}
+                className="me-4 focus:outline-none hover:underline focus:underline"
+              >
+                {t('translate')}
+              </Link>
             </UserCan>
-          </DropdownMenu>
+            <UserCan action="administer" subject="Language">
+              {{
+                can: (
+                  <DropdownMenu
+                    text={selectedLanguage?.name ?? 'Language'}
+                    className="me-4"
+                  >
+                    <DropdownMenuSubmenu text={t('switch_language')}>
+                      {translationLanguages.map((language) => (
+                        <DropdownMenuButton
+                          key={language.code}
+                          onClick={() => onLanguageChange(language.code)}
+                        >
+                          {language.name}
+                        </DropdownMenuButton>
+                      ))}
+                    </DropdownMenuSubmenu>
+                    <DropdownMenuLink to={'/languages'}>
+                      {t('manage_languages')}
+                    </DropdownMenuLink>
+                  </DropdownMenu>
+                ),
+                cannot: (
+                  <DropdownMenu
+                    text={selectedLanguage?.name ?? 'Language'}
+                    className="me-4"
+                  >
+                    {translationLanguages.map((language) => (
+                      <DropdownMenuButton
+                        key={language.code}
+                        onClick={() => onLanguageChange(language.code)}
+                      >
+                        {language.name}
+                      </DropdownMenuButton>
+                    ))}
+                  </DropdownMenu>
+                ),
+              }}
+            </UserCan>
+          </>
         )}
         {session.status === 'authenticated' && (
           <DropdownMenu text={session.user.name ?? ''}>

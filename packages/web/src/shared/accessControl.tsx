@@ -23,25 +23,34 @@ export function createPolicyFor(user?: Actor) {
   const { can, build } = new AbilityBuilder<Policy>(createMongoAbility);
 
   if (user) {
-    can('read', 'Language', {
-      id: { $in: user.languages.map((language) => language.code) },
-    });
-    can('translate', 'Language', {
-      id: {
-        $in: user.languages
-          .filter((language) =>
-            language.roles.includes(LanguageRole.Translator)
-          )
-          .map((language) => language.code),
-      },
-    });
-    can('administer', 'Language', {
-      id: {
-        $in: user.languages
-          .filter((language) => language.roles.includes(LanguageRole.Admin))
-          .map((language) => language.code),
-      },
-    });
+    const languages = user.languages.map((language) => language.code);
+    if (languages.length > 0) {
+      can('read', 'Language', {
+        id: { $in: languages },
+      });
+    }
+
+    const translatorLanguages = user.languages
+      .filter((language) => language.roles.includes(LanguageRole.Translator))
+      .map((language) => language.code);
+    if (translatorLanguages.length > 0) {
+      can('translate', 'Language', {
+        id: {
+          $in: translatorLanguages,
+        },
+      });
+    }
+
+    const adminLanguages = user.languages
+      .filter((language) => language.roles.includes(LanguageRole.Admin))
+      .map((language) => language.code);
+    if (adminLanguages.length > 0) {
+      can('administer', 'Language', {
+        id: {
+          $in: adminLanguages,
+        },
+      });
+    }
 
     can('read', 'User', { id: user.id });
 
@@ -99,6 +108,7 @@ export async function authorize<Data = never>(
 }
 
 export interface UserCanProps {
+  children: ReactNode | { can: ReactNode; cannot: ReactNode };
   /** The action being performed on the subject. */
   action: Action;
   /** The subject of the permissions.
@@ -116,11 +126,7 @@ export interface UserCanProps {
  * This is useful for views where users of multiple permission levels can access,
  * but some actions need to be conditionally restricted.
  */
-export function UserCan({
-  children,
-  action,
-  subject,
-}: UserCanProps & { children: ReactNode }) {
+export function UserCan({ children, action, subject }: UserCanProps) {
   const { status, user } = useAuth();
 
   const policy = useMemo(() => {
@@ -136,7 +142,10 @@ export function UserCan({
       : subjectHelper(subject.type, { id: subject.id })
   );
 
-  if (canAccess) {
+  if (children && typeof children === 'object' && 'can' in children) {
+    // eslint-disable-next-line react/jsx-no-useless-fragment
+    return canAccess ? <>{children.can}</> : <>{children.cannot}</>;
+  } else if (canAccess) {
     // eslint-disable-next-line react/jsx-no-useless-fragment
     return <>{children}</>;
   } else {
