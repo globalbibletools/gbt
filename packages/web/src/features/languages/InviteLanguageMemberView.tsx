@@ -16,7 +16,7 @@ import Card from '../../shared/components/Card';
 import { LanguageRole } from '@translation/api-types';
 import MultiselectInput from '../../shared/components/form/MultiselectInput';
 
-export interface FormData {
+interface FormData {
   email: string;
   roles: LanguageRole[];
 }

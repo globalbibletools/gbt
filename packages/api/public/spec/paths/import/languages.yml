@@ -1,7 +1,7 @@
 get:
   tags:
     - Language Import
-  summary: Get the languages that are available to import from hebrewgreek.online.
+  summary: Get the languages that are available to import from hebrewgreekbible.online.
   responses:
     '200':
       description: Ok

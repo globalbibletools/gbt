@@ -14,7 +14,7 @@ import Button from '../../shared/components/actions/Button';
 import { useFlash } from '../../shared/hooks/flash';
 import Card from '../../shared/components/Card';
 
-export interface FormData {
+interface FormData {
   code: string;
   name: string;
 }

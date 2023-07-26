@@ -23,5 +23,17 @@
   "error": "Error",
   "success": "Éxito",
   "app_name": "Traducción de brillo",
+  "import_language": "Lenguaje de importación",
+  "import_glosses": "Importar glosas",
+  "import_glosses_success": "¡Gloses importados con éxito!",
+  "import_glosses_title": "Importar Glosas: {{languageName}}",
+  "import_glosses_error": "Error de importación de glosas",
+  "import_description": "Seleccione un idioma para importar glosas de <1>hebrewgreekbible.online</1>.",
+  "import_glosses_confirmation_warning": "Esto sobrescribirá cualquier brillo asociado con el lenguaje. Puede llevar algún tiempo completar.",
+  "confirm_prompt": "Escriba '{{value}}' para confirmar su decisión.",
+  "confirm": "Confirmar",
+  "cancel": "Cancelar",
+  "language_name_required": "Ingrese el nombre del idioma.",
+  "language_code_required": "Ingrese el código de idioma.",
   "translate": "Traducir"
 }

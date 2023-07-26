@@ -1,5 +1,8 @@
 import { RouteObject } from 'react-router-dom';
 import { authorize } from '../../shared/accessControl';
+import ImportLanguageGlossesView, {
+  importLanguageGlossesLoader,
+} from './ImportLanguageGlossesView';
 import InviteLanguageMemberView from './InviteLanguageMemberView';
 import LanguageView, { languagesViewLoader } from './LanguagesView';
 import ManageLanguageView, {
@@ -33,6 +36,17 @@ const routes: RouteObject[] = [
     loader: ({ params }) =>
       authorize('administer', { type: 'Language', id: params.code as string }),
     element: <InviteLanguageMemberView />,
+  },
+  {
+    path: 'languages/:code/import',
+    loader: (options) => {
+      authorize('administer', {
+        type: 'Language',
+        id: options.params.code as string,
+      });
+      return importLanguageGlossesLoader(options);
+    },
+    element: <ImportLanguageGlossesView />,
   },
 ];
 

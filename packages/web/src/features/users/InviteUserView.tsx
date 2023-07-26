@@ -13,7 +13,7 @@ import Button from '../../shared/components/actions/Button';
 import SubmittingIndicator from '../../shared/components/form/SubmittingIndicator';
 import { useFlash } from '../../shared/hooks/flash';
 
-export interface FormData {
+interface FormData {
   email: string;
 }
 
