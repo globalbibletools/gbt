@@ -62,4 +62,10 @@ export default class Languages {
       body: request,
     });
   }
+
+  removeMember(code: string, userId: string): Promise<void> {
+    return this.client.delete({
+      path: `/api/languages/${code}/members/${userId}`,
+    });
+  }
 }

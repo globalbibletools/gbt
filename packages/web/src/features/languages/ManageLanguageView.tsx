@@ -29,6 +29,8 @@ import {
 import { Link } from '../../shared/components/actions/Link';
 import { Icon } from '../../shared/components/Icon';
 
+// TODO: add mutation to remove member from language and optimistically update the language
+
 export async function manageLanguageViewLoader({ params }: LoaderFunctionArgs) {
   const language = await apiClient.languages.findByCode(
     params.code ?? 'unknown'
@@ -129,7 +131,18 @@ export default function ManageLanguageView() {
                     )
                     .join(', ')}
                 </ListCell>
-                <ListCell></ListCell>
+                <ListCell>
+                  <Button
+                    onClick={() =>
+                      apiClient.languages.removeMember(
+                        language.data.code,
+                        member.userId
+                      )
+                    }
+                  >
+                    Remove
+                  </Button>
+                </ListCell>
               </ListRow>
             ))}
           </ListBody>

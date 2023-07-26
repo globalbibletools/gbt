@@ -113,4 +113,8 @@ export default class ApiClient {
   async patch<Response>(request: ApiClientPatchOptions): Promise<Response> {
     return await this.request({ ...request, method: 'PATCH' });
   }
+
+  async delete<Response>(request: ApiClientPatchOptions): Promise<Response> {
+    return await this.request({ ...request, method: 'DELETE' });
+  }
 }
