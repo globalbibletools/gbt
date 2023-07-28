@@ -169,7 +169,7 @@ export default function ManageLanguageView() {
             <SubmittingIndicator className="ms-3" />
           </div>
         </Form>
-        <List>
+        <List className="mb-8">
           <ListHeader>
             <ListHeaderCell className="min-w-[120px]">
               {t('users:name').toUpperCase()}
@@ -233,6 +233,12 @@ export default function ManageLanguageView() {
             ))}
           </ListBody>
         </List>
+        <div>
+          <Link to="./import" variant="button">
+            <Icon icon="file-import" className="me-4"></Icon>
+            {t('import_glosses')}
+          </Link>
+        </div>
       </div>
     </View>
   );

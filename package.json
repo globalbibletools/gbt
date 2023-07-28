@@ -81,5 +81,8 @@
     "typescript": "5.0.4",
     "url-loader": "4.1.1",
     "zod": "3.21.4"
+  },
+  "prisma": {
+    "schema": "packages/api/prisma/schema.prisma"
   }
 }

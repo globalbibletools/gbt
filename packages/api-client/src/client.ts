@@ -1,14 +1,10 @@
 import type { ErrorResponse } from '@translation/api-types';
 import Auth from './auth';
+import Import from './import';
 import Languages from './languages';
 import Users from './users';
 import Verses from './verses';
 import Words from './words';
-
-export { ErrorResponse };
-export * from './languages';
-export * from './verses';
-export * from './words';
 
 export interface ApiClientOptions {
   baseUrl: string;
@@ -55,6 +51,7 @@ export class ApiClientError extends Error {
 
 export default class ApiClient {
   readonly languages: Languages;
+  readonly import: Import;
   readonly verses: Verses;
   readonly words: Words;
   readonly users: Users;
@@ -62,6 +59,7 @@ export default class ApiClient {
 
   constructor(private options: ApiClientOptions = { baseUrl: '' }) {
     this.languages = new Languages(this);
+    this.import = new Import(this);
     this.verses = new Verses(this);
     this.words = new Words(this);
     this.users = new Users(this);
