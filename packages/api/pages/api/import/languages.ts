@@ -1,13 +1,12 @@
 import { GetLanguageImportOptionsResponseBody } from '@translation/api-types';
 import createRoute from '../../../shared/Route';
-
-const IMPORT_SERVER = 'https://hebrewgreekbible.online';
+import { importServer } from '../../../shared/env';
 
 export default createRoute()
   .get<void, GetLanguageImportOptionsResponseBody>({
     async handler(req, res) {
       // Request the server root page.
-      const response = await fetch(IMPORT_SERVER);
+      const response = await fetch(importServer);
       const html = await response.text();
       // Parse the HTML for the language options.
       const regex = /var glossLanguageNames\s*=\s*\[([\s\S]*?)\];/;

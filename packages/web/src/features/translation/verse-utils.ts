@@ -1,9 +1,9 @@
 // This file contains utility functions related to verse IDs.
 
+import { bookKeys } from '@translation/api-types';
 import fuzzysort from 'fuzzysort';
 import { TFunction } from 'i18next';
 import { clamp } from '../../shared/utils';
-import { bookKeys } from './book-keys';
 import verseCounts from './verse-counts.json';
 
 export type VerseInfo = {
@@ -130,7 +130,7 @@ export function incrementVerseId(verseId: string) {
  * @returns The translated name of the book.
  */
 export function bookName(bookId: number, t: TFunction) {
-  return t(bookKeys[bookId - 1], { ns: 'bible' });
+  return t(bookKeys[bookId - 1].toLowerCase(), { ns: 'bible' });
 }
 
 /**
@@ -171,7 +171,7 @@ export function parseReference(reference: string, t: TFunction): string | null {
   // Find the book ID.
   let bookId;
   const bookNames = bookKeys.map((k, i) => ({
-    name: t(k, { ns: 'bible' }),
+    name: t(k.toLowerCase(), { ns: 'bible' }),
     id: i + 1,
   }));
   const results = fuzzysort.go(bookStr, bookNames, { key: 'name' });

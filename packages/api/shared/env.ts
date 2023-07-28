@@ -14,3 +14,5 @@ export const originAllowlist =
         `https://interlinear-git-${originSuffix}`,
       ]
     : process.env.ORIGIN_ALLOWLIST?.split(',') ?? [];
+
+export const importServer = 'https://hebrewgreekbible.online';
