@@ -219,6 +219,7 @@ export default function ManageLanguageView() {
                 </ListCell>
                 <ListCell>
                   <Button
+                    variant="tertiary"
                     onClick={() =>
                       removeMemberMutation.mutate({
                         userId: member.userId,
