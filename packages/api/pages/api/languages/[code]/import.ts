@@ -27,6 +27,8 @@ export default createRoute()
         const jsCode = await response.text();
         const glossArray = parseGlossJs(jsCode);
         console.log(glossArray.length);
+        // TODO: delete all glosses for the book.
+        // TODO: insert all parsed glosses for the book.
       }
       res.ok();
     },
