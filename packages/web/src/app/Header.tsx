@@ -9,7 +9,7 @@ import { Icon } from '../shared/components/Icon';
 import apiClient from '../shared/apiClient';
 import useAuth from '../shared/hooks/useAuth';
 import { Link } from 'react-router-dom';
-import { UserCan } from '../shared/accessControl';
+import { useAccessControl } from '../shared/accessControl';
 
 export interface HeaderProps {
   language: string;
@@ -28,6 +28,8 @@ export default function Header({ language, onLanguageChange }: HeaderProps) {
     (l) => l.code === language
   );
 
+  const userCan = useAccessControl();
+
   return (
     <header className="p-2 flex items-baseline flex-row z-10">
       <Link className="font-bold text-lg" to="/">
@@ -37,56 +39,46 @@ export default function Header({ language, onLanguageChange }: HeaderProps) {
       <nav className="flex items-baseline" aria-label="primary">
         {translationLanguages.length > 0 && (
           <>
-            <UserCan
-              action="translate"
-              subject={{ type: 'Language', id: language }}
+            <Link
+              to={'/translate'}
+              className="me-4 focus:outline-none hover:underline focus:underline"
             >
-              <Link
-                to={'/translate'}
-                className="me-4 focus:outline-none hover:underline focus:underline"
+              {t('translate')}
+            </Link>
+            {userCan('administer', 'Language') ? (
+              <DropdownMenu
+                text={selectedLanguage?.name ?? 'Language'}
+                className="me-4"
               >
-                {t('translate')}
-              </Link>
-            </UserCan>
-            <UserCan action="administer" subject="Language">
-              {{
-                can: (
-                  <DropdownMenu
-                    text={selectedLanguage?.name ?? 'Language'}
-                    className="me-4"
+                <DropdownMenuSubmenu text={t('switch_language')}>
+                  {translationLanguages.map((language) => (
+                    <DropdownMenuButton
+                      key={language.code}
+                      onClick={() => onLanguageChange(language.code)}
+                    >
+                      {language.name}
+                    </DropdownMenuButton>
+                  ))}
+                </DropdownMenuSubmenu>
+                <DropdownMenuLink to={'/languages'}>
+                  {t('manage_languages')}
+                </DropdownMenuLink>
+              </DropdownMenu>
+            ) : (
+              <DropdownMenu
+                text={selectedLanguage?.name ?? 'Language'}
+                className="me-4"
+              >
+                {translationLanguages.map((language) => (
+                  <DropdownMenuButton
+                    key={language.code}
+                    onClick={() => onLanguageChange(language.code)}
                   >
-                    <DropdownMenuSubmenu text={t('switch_language')}>
-                      {translationLanguages.map((language) => (
-                        <DropdownMenuButton
-                          key={language.code}
-                          onClick={() => onLanguageChange(language.code)}
-                        >
-                          {language.name}
-                        </DropdownMenuButton>
-                      ))}
-                    </DropdownMenuSubmenu>
-                    <DropdownMenuLink to={'/languages'}>
-                      {t('manage_languages')}
-                    </DropdownMenuLink>
-                  </DropdownMenu>
-                ),
-                cannot: (
-                  <DropdownMenu
-                    text={selectedLanguage?.name ?? 'Language'}
-                    className="me-4"
-                  >
-                    {translationLanguages.map((language) => (
-                      <DropdownMenuButton
-                        key={language.code}
-                        onClick={() => onLanguageChange(language.code)}
-                      >
-                        {language.name}
-                      </DropdownMenuButton>
-                    ))}
-                  </DropdownMenu>
-                ),
-              }}
-            </UserCan>
+                    {language.name}
+                  </DropdownMenuButton>
+                ))}
+              </DropdownMenu>
+            )}
           </>
         )}
         {session.status === 'authenticated' && (

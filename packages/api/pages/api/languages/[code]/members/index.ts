@@ -11,7 +11,6 @@ import { NotFoundError } from '../../../../../shared/errors';
 import { auth } from '../../../../../shared/auth';
 import mailer from '../../../../../shared/mailer';
 import { randomBytes } from 'crypto';
-import { origin } from '../../../../../shared/env';
 
 export default createRoute<{ code: string }>()
   .get<void, GetLanguageMembersResponseBody>({

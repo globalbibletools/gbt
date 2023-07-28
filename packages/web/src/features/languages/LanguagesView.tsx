@@ -16,7 +16,7 @@ import ViewTitle from '../../shared/components/ViewTitle';
 import { useLoaderData } from 'react-router-dom';
 import { GetLanguagesResponseBody } from '@translation/api-types';
 import { capitalize } from '../../shared/utils';
-import { UserCan } from '../../shared/accessControl';
+import { useAccessControl } from '../../shared/accessControl';
 
 export function languagesViewLoader() {
   return apiClient.languages.findAll();
@@ -26,6 +26,7 @@ export default function LanguagesView() {
   const languages = useLoaderData() as GetLanguagesResponseBody;
 
   const { t } = useTranslation();
+  const accessControl = useAccessControl();
 
   return (
     <View fitToScreen>
@@ -38,25 +39,23 @@ export default function LanguagesView() {
             </ListHeaderCell>
             <ListHeaderCell />
           </ListHeader>
-          <UserCan action="create" subject="Language">
+          {accessControl('create', 'Language') && (
             <ListRowAction colSpan={2}>
               <Link to="./new">
                 <Icon icon="plus" className="me-1" />
                 {t('add_language')}
               </Link>
             </ListRowAction>
-          </UserCan>
+          )}
           <ListBody>
             {languages.data.map((language) => (
               <ListRow key={language.code}>
                 <ListCell header>{language.name}</ListCell>
                 <ListCell>
-                  <UserCan
-                    action="administer"
-                    subject={{ type: 'Language', id: language.code }}
-                  >
-                    <Link to={`./${language.code}`}>{t('manage')}</Link>
-                  </UserCan>
+                  {accessControl('administer', {
+                    type: 'Language',
+                    id: language.code,
+                  }) && <Link to={`./${language.code}`}>{t('manage')}</Link>}
                 </ListCell>
               </ListRow>
             ))}

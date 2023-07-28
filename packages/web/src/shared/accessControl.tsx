@@ -1,6 +1,6 @@
 import { subject as subjectHelper } from '@casl/ability';
 import { AbilityBuilder, createMongoAbility, PureAbility } from '@casl/ability';
-import { ReactNode, useMemo } from 'react';
+import { ReactNode, useCallback, useMemo } from 'react';
 import { SystemRole, LanguageRole } from '@translation/api-types';
 import queryClient from './queryClient';
 import useAuth, { sessionQuery } from './hooks/useAuth';
@@ -107,8 +107,7 @@ export async function authorize<Data = never>(
   return fn?.() ?? null;
 }
 
-export interface UserCanProps {
-  children: ReactNode | { can: ReactNode; cannot: ReactNode };
+export interface UserCanOptions {
   /** The action being performed on the subject. */
   action: Action;
   /** The subject of the permissions.
@@ -122,11 +121,11 @@ export interface UserCanProps {
 }
 
 /**
- * Renders children nodes if the user has correct permissions.
+ * Creates a function to check whether the user has correct permissions.
  * This is useful for views where users of multiple permission levels can access,
  * but some actions need to be conditionally restricted.
  */
-export function UserCan({ children, action, subject }: UserCanProps) {
+export function useAccessControl() {
   const { status, user } = useAuth();
 
   const policy = useMemo(() => {
@@ -135,20 +134,26 @@ export function UserCan({ children, action, subject }: UserCanProps) {
     }
   }, [status, user]);
 
-  const canAccess = policy?.can(
-    action,
-    typeof subject === 'string'
-      ? subject
-      : subjectHelper(subject.type, { id: subject.id })
+  return useCallback(
+    /**
+     * Determines whether the user has the correct permissions.
+     *
+     * Note that if you don't specify a subject ID,
+     * the user will have permissions if they have access _at least one_ resource of that type, not _every_.
+     *
+     * @param action The action being performed on the subject.
+     * @param subject The subject of the permissions. This should either be the resource type, or a specific resource identified by an ID.
+     */
+    (
+      action: Action,
+      subject: SubjectType | { type: SubjectType; id: string }
+    ) =>
+      policy?.can(
+        action,
+        typeof subject === 'string'
+          ? subject
+          : subjectHelper(subject.type, { id: subject.id })
+      ),
+    [policy]
   );
-
-  if (children && typeof children === 'object' && 'can' in children) {
-    // eslint-disable-next-line react/jsx-no-useless-fragment
-    return canAccess ? <>{children.can}</> : <>{children.cannot}</>;
-  } else if (canAccess) {
-    // eslint-disable-next-line react/jsx-no-useless-fragment
-    return <>{children}</>;
-  } else {
-    return null;
-  }
 }

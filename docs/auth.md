@@ -28,12 +28,13 @@ While both the api server and the web client have `Language` and `User/AuthUser`
 At present the policy is this:
 
 - Platform Admins - can do anything except translate a language
-- Language Admin - can view language translations, and manage language members
+- Language Admin - can view language translations, manage language information/members, and import glosses from the previous site
 - Language Translator - can view language translations, and translate languages
 - Language Member - can view language translations
+- Anybody - can view language translations
 
 ### Restricting access
 
 In the api server, access is handled by the `authorize` helper, which allows you to specify the action, subject type, and subject id. If the user does not have the correct permissions, a 403 status code will be returned.
 
-In the web client, a different `authorize` helper can be used in a route data loader to prevent the route from loading if the user doesn't have proper permissions. Within a view, to hide or show parts of the interface based on permissions, the <UserCan /> component can be used.
+In the web client, a different `authorize` helper can be used in a route data loader to prevent the route from loading if the user doesn't have proper permissions. Within a view, to hide or show parts of the interface based on permissions, the `useAccessControl` hook creates a function that can be used to conditionally render JSX or to pass a boolean to a component.
