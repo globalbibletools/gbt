@@ -5,8 +5,9 @@ import ManageLanguageView, {
   manageLanguageViewLoader,
 } from './ManageLanguageView';
 import NewLanguageView from './NewLanguageView';
+import { QueryClient } from '@tanstack/react-query';
 
-const routes: RouteObject[] = [
+export default (queryClient: QueryClient): RouteObject[] => [
   {
     path: 'languages',
     loader: languagesViewLoader,
@@ -18,7 +19,7 @@ const routes: RouteObject[] = [
   },
   {
     path: 'languages/:code',
-    loader: manageLanguageViewLoader,
+    loader: manageLanguageViewLoader(queryClient),
     element: <ManageLanguageView />,
   },
   {
@@ -26,5 +27,3 @@ const routes: RouteObject[] = [
     element: <InviteLanguageMemberView />,
   },
 ];
-
-export default routes;

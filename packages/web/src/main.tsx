@@ -55,7 +55,7 @@ const router = createBrowserRouter([
       },
       ...userRoutes(queryClient),
       ...translationRoutes,
-      ...languagesRoutes,
+      ...languagesRoutes(queryClient),
     ],
   },
 ]);

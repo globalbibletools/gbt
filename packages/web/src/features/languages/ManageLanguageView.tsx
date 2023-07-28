@@ -1,15 +1,11 @@
 import apiClient from '../../shared/apiClient';
 import View from '../../shared/components/View';
 import ViewTitle from '../../shared/components/ViewTitle';
-import { LoaderFunctionArgs, useLoaderData } from 'react-router-dom';
+import { LoaderFunctionArgs, useLoaderData, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import TextInput from '../../shared/components/form/TextInput';
 import FormLabel from '../../shared/components/form/FormLabel';
-import {
-  GetLanguageMembersResponseBody,
-  GetLanguageResponseBody,
-  SystemRole,
-} from '@translation/api-types';
+import { SystemRole } from '@translation/api-types';
 import { useTranslation } from 'react-i18next';
 import Form from '../../shared/components/form/Form';
 import InputError from '../../shared/components/form/InputError';
@@ -28,17 +24,64 @@ import {
 } from '../../shared/components/List';
 import { Link } from '../../shared/components/actions/Link';
 import { Icon } from '../../shared/components/Icon';
+import {
+  QueryClient,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 
-// TODO: add mutation to remove member from language and optimistically update the language
+const languageQueryKey = (code: string) => ({
+  queryKey: ['language', code],
+  queryFn: () => apiClient.languages.findByCode(code),
+});
+const languageMembersQueryKey = (code: string) => ({
+  queryKey: ['language-members', code],
+  queryFn: () => apiClient.languages.findMembers(code),
+});
 
-export async function manageLanguageViewLoader({ params }: LoaderFunctionArgs) {
-  const language = await apiClient.languages.findByCode(
-    params.code ?? 'unknown'
-  );
-  const members = await apiClient.languages.findMembers(
-    params.code ?? 'unknown'
-  );
-  return { language, members };
+export const manageLanguageViewLoader =
+  (queryClient: QueryClient) =>
+  async ({ params }: LoaderFunctionArgs) => {
+    const code = params.code ?? 'unknown';
+    const language = await queryClient.ensureQueryData(languageQueryKey(code));
+    const members = await queryClient.ensureQueryData(
+      languageMembersQueryKey(code)
+    );
+    return { language, members };
+  };
+
+function useRemoveLanguageMemberMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (variables: { userId: string; code: string }) =>
+      apiClient.languages.removeMember(variables.code, variables.userId),
+    onSettled: (_, __, { code }, context) => {
+      queryClient.invalidateQueries({
+        queryKey: languageMembersQueryKey(code).queryKey,
+      });
+    },
+  });
+}
+
+function useLicenseQuery(code: string) {
+  const loaderData = useLoaderData() as Awaited<
+    ReturnType<ReturnType<typeof manageLanguageViewLoader>>
+  >;
+  return useQuery({
+    ...languageQueryKey(code),
+    initialData: loaderData.language,
+  });
+}
+
+function useLicenseMembersQuery(code: string) {
+  const loaderData = useLoaderData() as Awaited<
+    ReturnType<ReturnType<typeof manageLanguageViewLoader>>
+  >;
+  return useQuery({
+    ...languageMembersQueryKey(code),
+    initialData: loaderData.members,
+  });
 }
 
 interface FormData {
@@ -46,14 +89,17 @@ interface FormData {
 }
 
 export default function ManageLanguageView() {
+  const params = useParams() as { code: string };
+
   useAuth({ requireRole: [SystemRole.Admin] });
-  const { language, members } = useLoaderData() as {
-    language: GetLanguageResponseBody;
-    members: GetLanguageMembersResponseBody;
-  };
   const flash = useFlash();
 
+  const { data: language } = useLicenseQuery(params.code);
+  const { data: members } = useLicenseMembersQuery(params.code);
+
   const { t } = useTranslation(['translation', 'users']);
+
+  const removeMemberMutation = useRemoveLanguageMemberMutation();
 
   const formContext = useForm<FormData>();
   async function onSubmit(data: FormData) {
@@ -134,10 +180,10 @@ export default function ManageLanguageView() {
                 <ListCell>
                   <Button
                     onClick={() =>
-                      apiClient.languages.removeMember(
-                        language.data.code,
-                        member.userId
-                      )
+                      removeMemberMutation.mutate({
+                        userId: member.userId,
+                        code: params.code,
+                      })
                     }
                   >
                     Remove
