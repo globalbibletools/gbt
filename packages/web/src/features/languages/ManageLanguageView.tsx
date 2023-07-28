@@ -5,7 +5,7 @@ import { LoaderFunctionArgs, useLoaderData, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import TextInput from '../../shared/components/form/TextInput';
 import FormLabel from '../../shared/components/form/FormLabel';
-import { SystemRole } from '@translation/api-types';
+import { LanguageRole, SystemRole } from '@translation/api-types';
 import { useTranslation } from 'react-i18next';
 import Form from '../../shared/components/form/Form';
 import InputError from '../../shared/components/form/InputError';
@@ -30,6 +30,7 @@ import {
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query';
+import MultiselectInput from '../../shared/components/form/MultiselectInput';
 
 const languageQueryKey = (code: string) => ({
   queryKey: ['language', code],
@@ -50,6 +51,27 @@ export const manageLanguageViewLoader =
     );
     return { language, members };
   };
+
+function useUpdateLanguageMemberMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (variables: {
+      userId: string;
+      code: string;
+      roles: LanguageRole[];
+    }) =>
+      apiClient.languages.updateMember(
+        variables.code,
+        variables.userId,
+        variables.roles
+      ),
+    onSettled: (_, __, { code }, context) => {
+      queryClient.invalidateQueries({
+        queryKey: languageMembersQueryKey(code).queryKey,
+      });
+    },
+  });
+}
 
 function useRemoveLanguageMemberMutation() {
   const queryClient = useQueryClient();
@@ -100,6 +122,7 @@ export default function ManageLanguageView() {
   const { t } = useTranslation(['translation', 'users']);
 
   const removeMemberMutation = useRemoveLanguageMemberMutation();
+  const updateMemberMutation = useUpdateLanguageMemberMutation();
 
   const formContext = useForm<FormData>();
   async function onSubmit(data: FormData) {
@@ -171,11 +194,28 @@ export default function ManageLanguageView() {
                 <ListCell header>{member.name}</ListCell>
                 <ListCell>{member.email}</ListCell>
                 <ListCell>
-                  {member.roles
-                    .map((role) =>
-                      t('users:role', { context: role.toLowerCase() })
-                    )
-                    .join(', ')}
+                  <MultiselectInput
+                    className="w-full"
+                    name="roles"
+                    value={member.roles}
+                    items={[
+                      {
+                        label: t('users:role_admin'),
+                        value: LanguageRole.Admin,
+                      },
+                      {
+                        label: t('users:role_translator'),
+                        value: LanguageRole.Translator,
+                      },
+                    ]}
+                    onChange={(roles) =>
+                      updateMemberMutation.mutate({
+                        code: params.code,
+                        userId: member.userId,
+                        roles: roles as LanguageRole[],
+                      })
+                    }
+                  />
                 </ListCell>
                 <ListCell>
                   <Button

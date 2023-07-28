@@ -2,6 +2,8 @@ import type {
   GetLanguageMembersResponseBody,
   GetLanguageResponseBody,
   GetLanguagesResponseBody,
+  LanguageRole,
+  PatchLanguageMemberRequestBody,
   PatchLanguageRequestBody,
   PostLanguageMemberRequestBody,
   PostLanguageRequestBody,
@@ -60,6 +62,20 @@ export default class Languages {
     return this.client.post({
       path: `/api/languages/${code}/members`,
       body: request,
+    });
+  }
+
+  updateMember(
+    code: string,
+    userId: string,
+    roles: LanguageRole[]
+  ): Promise<void> {
+    const body: PatchLanguageMemberRequestBody = {
+      roles,
+    };
+    return this.client.patch({
+      path: `/api/languages/${code}/members/${userId}`,
+      body,
     });
   }
 

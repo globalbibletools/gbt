@@ -17,3 +17,13 @@ patch:
   responses:
     '204':
       description: No Content
+delete:
+  summary: Removes a member from a language.
+  tags:
+    - Languages
+  parameters:
+    - $ref: '../schemas/parameters.yml#languageCode'
+    - $ref: '../schemas/parameters.yml#userId'
+  responses:
+    '204':
+      description: No Content

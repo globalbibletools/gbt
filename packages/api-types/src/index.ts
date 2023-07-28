@@ -116,6 +116,10 @@ export interface PostLanguageMemberRequestBody {
   redirectUrl: string;
 }
 
+export interface PatchLanguageMemberRequestBody {
+  roles: LanguageRole[];
+}
+
 export interface VerseWord {
   id: string;
   text: string;
