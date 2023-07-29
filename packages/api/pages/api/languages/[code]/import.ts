@@ -42,7 +42,7 @@ export default createRoute()
       // TODO: we only use a few book keys for testing, to avoid creating a
       //       ton of requests. use all keys when things are working
       // for (const key of bookKeys) {
-      for (const key of ['Gen', '1Ch']) {
+      for (const key of ['Gen', 'Exo', '1Ch']) {
         const importUrl = `${importServer}/${req.body.import}Glosses/${key}Gloss.js`;
         const response = await fetch(importUrl);
         const jsCode = await response.text();
@@ -70,8 +70,7 @@ export default createRoute()
                 bookId.toString().padStart(2, '0'),
                 chapterNumber.toString().padStart(3, '0'),
                 verseNumber.toString().padStart(3, '0'),
-                // TODO: the +1 is just to work around a current bug
-                (wordNumber + 1).toString().padStart(2, '0'),
+                wordNumber.toString().padStart(2, '0'),
               ].join('');
               console.log(wordId);
               const gloss = verseData[wordNumber - 1][0];
