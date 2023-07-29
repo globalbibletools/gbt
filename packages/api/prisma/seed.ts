@@ -1,4 +1,5 @@
-import data from '../../../data/morphology';
+import { bookKeys } from 'data/book-keys';
+import { morphologyData } from '../../../data/morphology';
 import { PrismaClient } from '../prisma/client';
 
 const client = new PrismaClient();
@@ -6,8 +7,6 @@ const client = new PrismaClient();
 const STRONGS_REGEX = / \[e\]/;
 
 async function run() {
-  const bookNames = Object.keys(data);
-
   const wordData = [];
   const lemmas: {
     [strongs: string]: {
@@ -15,14 +14,14 @@ async function run() {
     };
   } = {};
 
-  for (let bookIndex = 0; bookIndex < bookNames.length; bookIndex++) {
-    const bookName = bookNames[bookIndex];
-    const chapters = data[bookName];
+  for (let bookIndex = 0; bookIndex < bookKeys.length; bookIndex++) {
+    const bookKey = bookKeys[bookIndex];
+    const chapters = morphologyData[bookKey];
 
     const book = await client.book.create({
       data: {
         id: bookIndex + 1,
-        name: bookName,
+        name: bookKey,
       },
     });
 

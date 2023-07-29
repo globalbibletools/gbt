@@ -38,11 +38,7 @@ export default createRoute()
 
       const glossData = [];
 
-      const start = new Date();
-      console.log('START:', start);
-
       for (const key of bookKeys) {
-        console.log(key);
         const importUrl = `${importServer}/${req.body.import}Glosses/${key}Gloss.js`;
         const response = await fetch(importUrl);
         const jsCode = await response.text();
@@ -90,9 +86,6 @@ export default createRoute()
         }
       }
 
-      const end = new Date();
-      console.log('END:', end);
-      console.log('LENGTH:', +end - +start);
       res.ok();
     },
   })
