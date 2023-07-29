@@ -73,19 +73,18 @@ export default createRoute()
                 ].join('');
                 const gloss = verseData[wordIndex][0];
                 glossData.push({ wordId, gloss });
-                await client.gloss.create({
-                  data: {
-                    wordId,
-                    languageId: language.id,
-                    gloss,
-                  },
-                });
               }
             }
           }
         }
       }
-
+      await client.gloss.createMany({
+        data: glossData.map(({ wordId, gloss }) => ({
+          wordId,
+          languageId: language.id,
+          gloss,
+        })),
+      });
       res.ok();
     },
   })
