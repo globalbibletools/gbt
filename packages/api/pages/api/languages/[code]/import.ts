@@ -39,15 +39,19 @@ export default createRoute()
 
       const glossData = [];
 
+      const start = new Date();
+      console.log('START:', start);
       // TODO: we only use a few book keys for testing, to avoid creating a
       //       ton of requests. use all keys when things are working
-      // for (const key of bookKeys) {
-      for (const key of ['Gen', 'Exo', '1Ch']) {
+      for (const key of bookKeys) {
+        console.log(key);
         const importUrl = `${importServer}/${req.body.import}Glosses/${key}Gloss.js`;
         const response = await fetch(importUrl);
         const jsCode = await response.text();
         const bookData = parseGlossJs(jsCode);
         const bookId = bookKeys.indexOf(key) + 1;
+        const referenceData =
+          require(`../../../../../../data/morphology/${key}`) as string[][][];
         // Accumulate gloss data
         for (
           let chapterNumber = 1;
@@ -61,44 +65,38 @@ export default createRoute()
             verseNumber++
           ) {
             const verseData = chapterData[verseNumber - 1];
-            for (
-              let wordNumber = 1;
-              wordNumber <= verseData.length;
-              wordNumber++
-            ) {
-              const wordId = [
-                bookId.toString().padStart(2, '0'),
-                chapterNumber.toString().padStart(3, '0'),
-                verseNumber.toString().padStart(3, '0'),
-                wordNumber.toString().padStart(2, '0'),
-              ].join('');
-              console.log(wordId);
-              const gloss = verseData[wordNumber - 1][0];
-              glossData.push({ wordId, gloss });
-              console.log(gloss);
-              // TODO: handle situation where the gloss data has extra words.
-              await client.gloss.create({
-                data: {
-                  wordId,
-                  languageId: language.id,
-                  gloss,
-                },
-              });
+            let wordNumber = 0;
+            for (let wordIndex = 0; wordIndex < verseData.length; wordIndex++) {
+              const useWord =
+                referenceData[chapterNumber - 1][verseNumber - 1][wordIndex]
+                  .length == 6;
+              if (useWord) {
+                wordNumber += 1;
+                const wordId = [
+                  bookId.toString().padStart(2, '0'),
+                  chapterNumber.toString().padStart(3, '0'),
+                  verseNumber.toString().padStart(3, '0'),
+                  wordNumber.toString().padStart(2, '0'),
+                ].join('');
+                const gloss = verseData[wordIndex][0];
+                glossData.push({ wordId, gloss });
+                // TODO: handle situation where the gloss data has extra words.
+                await client.gloss.create({
+                  data: {
+                    wordId,
+                    languageId: language.id,
+                    gloss,
+                  },
+                });
+              }
             }
           }
         }
       }
 
-      // Actually insert all the glosses.
-      // const result = await client.gloss.createMany({
-      //   data: glossData.map(({ wordId, gloss }) => ({
-      //     wordId,
-      //     languageId: language.id,
-      //     gloss,
-      //   })),
-      // });
-      // console.log('Number of glosses imported:', result.count);
-
+      const end = new Date();
+      console.log('END:', end);
+      console.log('LENGTH:', +end - +start);
       res.ok();
     },
   })
