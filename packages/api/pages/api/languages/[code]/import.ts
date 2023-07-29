@@ -1,11 +1,11 @@
 import { PostLanguageImportRequestBody } from '@translation/api-types';
 import { z } from 'zod';
 import { bookKeys } from '../../../../../../data/book-keys';
+import { morphologyData } from '../../../../../../data/morphology';
 import createRoute from '../../../../shared/Route';
 import { authorize } from '../../../../shared/access-control/authorize';
 import { client } from '../../../../shared/db';
 import { importServer } from '../../../../shared/env';
-import { morphologyData } from 'data/morphology';
 
 export default createRoute()
   .post<PostLanguageImportRequestBody, void>({
