@@ -1,12 +1,11 @@
-import {
-  PostLanguageImportRequestBody,
-  bookKeys,
-} from '@translation/api-types';
+import { PostLanguageImportRequestBody } from '@translation/api-types';
 import { z } from 'zod';
+import { bookKeys } from '../../../../../../data/book-keys';
 import createRoute from '../../../../shared/Route';
 import { authorize } from '../../../../shared/access-control/authorize';
-import { importServer } from '../../../../shared/env';
 import { client } from '../../../../shared/db';
+import { importServer } from '../../../../shared/env';
+import { morphologyData } from 'data/morphology';
 
 export default createRoute()
   .post<PostLanguageImportRequestBody, void>({
@@ -41,8 +40,7 @@ export default createRoute()
 
       const start = new Date();
       console.log('START:', start);
-      // TODO: we only use a few book keys for testing, to avoid creating a
-      //       ton of requests. use all keys when things are working
+
       for (const key of bookKeys) {
         console.log(key);
         const importUrl = `${importServer}/${req.body.import}Glosses/${key}Gloss.js`;
@@ -50,8 +48,6 @@ export default createRoute()
         const jsCode = await response.text();
         const bookData = parseGlossJs(jsCode);
         const bookId = bookKeys.indexOf(key) + 1;
-        const referenceData =
-          require(`../../../../../../data/morphology/${key}`) as string[][][];
         // Accumulate gloss data
         for (
           let chapterNumber = 1;
@@ -68,8 +64,9 @@ export default createRoute()
             let wordNumber = 0;
             for (let wordIndex = 0; wordIndex < verseData.length; wordIndex++) {
               const useWord =
-                referenceData[chapterNumber - 1][verseNumber - 1][wordIndex]
-                  .length == 6;
+                morphologyData[key][chapterNumber - 1][verseNumber - 1][
+                  wordIndex
+                ].length == 6;
               if (useWord) {
                 wordNumber += 1;
                 const wordId = [
@@ -80,7 +77,6 @@ export default createRoute()
                 ].join('');
                 const gloss = verseData[wordIndex][0];
                 glossData.push({ wordId, gloss });
-                // TODO: handle situation where the gloss data has extra words.
                 await client.gloss.create({
                   data: {
                     wordId,

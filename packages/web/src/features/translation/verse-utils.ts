@@ -1,8 +1,7 @@
 // This file contains utility functions related to verse IDs.
-
-import { bookKeys } from '@translation/api-types';
 import fuzzysort from 'fuzzysort';
 import { TFunction } from 'i18next';
+import { bookKeys } from '../../../../../data/book-keys';
 import { clamp } from '../../shared/utils';
 import verseCounts from './verse-counts.json';
 
