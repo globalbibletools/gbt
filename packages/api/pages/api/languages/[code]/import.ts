@@ -1,7 +1,6 @@
 import { PostLanguageImportRequestBody } from '@translation/api-types';
 import { z } from 'zod';
 import { bookKeys } from '../../../../../../data/book-keys';
-import { morphologyData } from '../../../../../../data/morphology';
 import createRoute from '../../../../shared/Route';
 import { authorize } from '../../../../shared/access-control/authorize';
 import { client } from '../../../../shared/db';
@@ -24,10 +23,14 @@ export default createRoute()
         },
       });
 
-      if (!language) {
+      // Don't allow importing English glosses. They are already imported from
+      // seed data.
+      if (!language || language.code == 'en') {
         res.notFound();
         return;
       }
+
+      console.log('deleting glosses');
 
       // Delete all the glosses for the language.
       await client.gloss.deleteMany({
@@ -36,14 +39,18 @@ export default createRoute()
         },
       });
 
+      console.log('importing glosses');
+
       const glossData = [];
 
       for (const key of bookKeys) {
-        const importUrl = `${importServer}/${req.body.import}Glosses/${key}Gloss.js`;
-        const response = await fetch(importUrl);
-        const jsCode = await response.text();
-        const bookData = parseGlossJs(jsCode);
         const bookId = bookKeys.indexOf(key) + 1;
+        const glossUrl = `${importServer}/${req.body.import}Glosses/${key}Gloss.js`;
+        const bookData = await fetchGlossData(glossUrl);
+        const referenceUrl = `${importServer}/files/${key}.js`;
+        const referenceData = await fetchGlossData(referenceUrl);
+        console.log(referenceData[0][0][0]);
+
         // Accumulate gloss data
         for (
           let chapterNumber = 1;
@@ -60,9 +67,8 @@ export default createRoute()
             let wordNumber = 0;
             for (let wordIndex = 0; wordIndex < verseData.length; wordIndex++) {
               const useWord =
-                morphologyData[key][chapterNumber - 1][verseNumber - 1][
-                  wordIndex
-                ].length == 6;
+                referenceData[chapterNumber - 1][verseNumber - 1][wordIndex]
+                  .length == 6;
               if (useWord) {
                 wordNumber += 1;
                 const wordId = [
@@ -91,11 +97,28 @@ export default createRoute()
   .build();
 
 /**
+ * Fetch gloss data from a remote JS file.
+ */
+async function fetchGlossData(url: string) {
+  console.log('FETCHING', url);
+  const response = await fetch(url);
+  const jsCode = await response.text();
+  return parseGlossJs(jsCode);
+}
+
+/**
  * Parse JSON data from the JS gloss scripts.
  */
 function parseGlossJs(jsCode: string) {
+  console.log(jsCode.length);
+  const matches = /var \w+=([\s\S]+);[\s]+/gm.exec(jsCode);
+  if (!matches) {
+    return [];
+  }
+  console.log(matches.length);
+  console.log(matches[1].slice(-10));
   // Remove the var prefix.
-  jsCode = jsCode.replace('var gloss=', '');
+  jsCode = jsCode.replace(/var \w+=/gm, '');
   // Remove the comments and the final semicolon.
   jsCode = jsCode.replace(/\/\/.*|;$/gm, '');
   // Remove trailing commas.
