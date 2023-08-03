@@ -1,15 +1,9 @@
 import { GetVerseGlossesResponseBody } from '@translation/api-types';
 import { client, Prisma } from '../../../../../../shared/db';
 import createRoute from '../../../../../../shared/Route';
-import { authorize } from '../../../../../../shared/access-control/authorize';
 
 export default createRoute<{ code: string; verseId: string }>()
   .get<void, GetVerseGlossesResponseBody>({
-    authorize: authorize((req) => ({
-      action: 'read',
-      subject: 'Language',
-      subjectId: req.query.code,
-    })),
     async handler(req, res) {
       const language = await client.language.findUnique({
         where: {

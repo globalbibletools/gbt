@@ -35,7 +35,7 @@ export default createRoute<{ code: string }>()
   })
   .patch<PatchLanguageRequestBody, void>({
     authorize: authorize((req) => ({
-      action: 'translate',
+      action: 'administer',
       subject: 'Language',
       subjectId: req.query.code,
     })),

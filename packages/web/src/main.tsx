@@ -1,19 +1,12 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClientProvider } from '@tanstack/react-query';
 import i18next from 'i18next';
 import { StrictMode, useEffect } from 'react';
 import * as ReactDOM from 'react-dom/client';
-import {
-  RouterProvider,
-  createBrowserRouter,
-  redirect,
-} from 'react-router-dom';
+import { RouterProvider } from 'react-router-dom';
 import './app/i18n';
 import { FlashProvider } from './shared/hooks/flash';
-import translationRoutes from './features/translation/router';
-import languagesRoutes from './features/languages/router';
-import userRoutes from './features/users/router';
-import Layout from './app/Layout';
-import NotFound from './app/NotFound';
+import queryClient from './shared/queryClient';
+import router from './app/router';
 
 function App() {
   useEffect(() => {
@@ -38,26 +31,4 @@ function App() {
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
-
-const queryClient = new QueryClient();
-
-const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <Layout />,
-    errorElement: <NotFound />,
-    children: [
-      {
-        index: true,
-        loader() {
-          return redirect('/translate/01001001');
-        },
-      },
-      ...userRoutes(queryClient),
-      ...translationRoutes,
-      ...languagesRoutes,
-    ],
-  },
-]);
-
 root.render(<App />);

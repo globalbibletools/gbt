@@ -1,14 +1,13 @@
 import apiClient from '../../shared/apiClient';
 import View from '../../shared/components/View';
 import ViewTitle from '../../shared/components/ViewTitle';
-import { LoaderFunctionArgs, useLoaderData } from 'react-router-dom';
+import { useLoaderData } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import TextInput from '../../shared/components/form/TextInput';
 import FormLabel from '../../shared/components/form/FormLabel';
 import {
   GetLanguageMembersResponseBody,
   GetLanguageResponseBody,
-  SystemRole,
 } from '@translation/api-types';
 import { useTranslation } from 'react-i18next';
 import Form from '../../shared/components/form/Form';
@@ -16,7 +15,6 @@ import InputError from '../../shared/components/form/InputError';
 import { useFlash } from '../../shared/hooks/flash';
 import SubmittingIndicator from '../../shared/components/form/SubmittingIndicator';
 import Button from '../../shared/components/actions/Button';
-import useAuth from '../../shared/hooks/useAuth';
 import {
   List,
   ListBody,
@@ -29,13 +27,9 @@ import {
 import { Link } from '../../shared/components/actions/Link';
 import { Icon } from '../../shared/components/Icon';
 
-export async function manageLanguageViewLoader({ params }: LoaderFunctionArgs) {
-  const language = await apiClient.languages.findByCode(
-    params.code ?? 'unknown'
-  );
-  const members = await apiClient.languages.findMembers(
-    params.code ?? 'unknown'
-  );
+export async function manageLanguageViewLoader(code: string) {
+  const language = await apiClient.languages.findByCode(code);
+  const members = await apiClient.languages.findMembers(code);
   return { language, members };
 }
 
@@ -44,7 +38,6 @@ interface FormData {
 }
 
 export default function ManageLanguageView() {
-  useAuth({ requireRole: [SystemRole.Admin] });
   const { language, members } = useLoaderData() as {
     language: GetLanguageResponseBody;
     members: GetLanguageMembersResponseBody;

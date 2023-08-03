@@ -7,6 +7,7 @@ import { GetVerseGlossesResponseBody } from '@translation/api-types';
 import TranslateWord from './TranslateWord';
 import { VerseSelector } from './VerseSelector';
 import { parseVerseId } from './verse-utils';
+import { useAccessControl } from '../../shared/accessControl';
 
 export default function TranslationView() {
   const params = useParams() as { verseId: string };
@@ -85,6 +86,8 @@ export default function TranslationView() {
     },
   });
 
+  const userCan = useAccessControl();
+
   const loading =
     !verseQuery.isSuccess ||
     !referenceGlossesQuery.isSuccess ||
@@ -102,6 +105,8 @@ export default function TranslationView() {
   const targetGlosses = targetGlossesQuery.data.data;
 
   const { bookId } = parseVerseId(verse.id);
+
+  const canEdit = userCan('translate', { type: 'Language', id: language });
 
   const isHebrew = bookId < 40;
   return (
@@ -124,6 +129,7 @@ export default function TranslationView() {
           return (
             <TranslateWord
               key={word.id}
+              editable={canEdit}
               word={word}
               originalLanguage={isHebrew ? 'hebrew' : 'greek'}
               status={isSaving ? 'saving' : targetGloss ? 'saved' : 'empty'}

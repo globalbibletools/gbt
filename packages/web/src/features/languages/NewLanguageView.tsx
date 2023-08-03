@@ -13,8 +13,6 @@ import SubmittingIndicator from '../../shared/components/form/SubmittingIndicato
 import Button from '../../shared/components/actions/Button';
 import { useFlash } from '../../shared/hooks/flash';
 import Card from '../../shared/components/Card';
-import useAuth from '../../shared/hooks/useAuth';
-import { SystemRole } from '@translation/api-types';
 
 interface FormData {
   code: string;
@@ -22,7 +20,6 @@ interface FormData {
 }
 
 export default function NewLanguageView() {
-  useAuth({ requireRole: [SystemRole.Admin] });
   const navigate = useNavigate();
 
   const flash = useFlash();

@@ -52,9 +52,25 @@ session:
                     email:
                       type: string
                       example: 'joe@example.com'
-                expires:
-                  type: string
-                  format: date-time
+                    languages:
+                      type: array
+                      example:
+                        [
+                          { code: 'en', roles: ['ADMIN'] },
+                          { code: 'es', roles: ['ADMIN', 'TRANSLATOR'] },
+                        ]
+                      items:
+                        type: object
+                        properties:
+                          code:
+                            description: The code of the language.
+                            type: string
+                          roles:
+                            description: The role the user has the in language.
+                            type: array
+                            items:
+                              type: string
+                              enum: ['ADMIN', 'TRANSLATOR']
 invite:
   get:
     summary: Get an invite

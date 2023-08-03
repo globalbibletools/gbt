@@ -6,14 +6,11 @@ import { client } from '../../../shared/db';
 import { languageSchema } from './schemas';
 import createRoute from '../../../shared/Route';
 import { authorize } from '../../../shared/access-control/authorize';
-import { accessibleBy } from '../../../prisma/casl';
 
 export default createRoute()
   .get<void, GetLanguagesResponseBody>({
     async handler(req, res) {
-      const languages = await client.language.findMany({
-        where: accessibleBy(req.policy).Language,
-      });
+      const languages = await client.language.findMany();
       res.ok({
         data: languages.map((language) => ({
           code: language.code,

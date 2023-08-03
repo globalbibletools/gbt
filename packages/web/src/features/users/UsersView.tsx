@@ -16,15 +16,15 @@ import ViewTitle from '../../shared/components/ViewTitle';
 import { GetUsersResponseBody, SystemRole } from '@translation/api-types';
 import { capitalize } from '../../shared/utils';
 import { useFlash } from '../../shared/hooks/flash';
-import useAuth from '../../shared/hooks/useAuth';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import SelectInput from '../../shared/components/form/SelectInput';
+import { useAccessControl } from '../../shared/accessControl';
 
 export default function UsersView() {
-  const session = useAuth({ requireRole: [SystemRole.Admin] });
-
   const { t } = useTranslation('users');
   const flash = useFlash();
+
+  const userCan = useAccessControl();
 
   const usersQuery = useQuery(['users'], () => apiClient.users.findAll());
   const queryClient = useQueryClient();
@@ -88,7 +88,7 @@ export default function UsersView() {
               {t('role', { count: 100 }).toUpperCase()}
             </ListHeaderCell>
           </ListHeader>
-          {session.user?.systemRoles.includes(SystemRole.Admin) && (
+          {userCan('create', 'User') && (
             <ListRowAction colSpan={4}>
               <Link to="./invite">
                 <Icon icon="plus" className="mr-1" />
