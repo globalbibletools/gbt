@@ -1,8 +1,5 @@
 import { ComponentProps, forwardRef } from 'react';
 
-export const buttonTailwindClasses =
-  'bg-slate-900 text-white rounded py-2 px-3 font-bold h-10 disabled:opacity-50 focus:outline focus:outline-2 focus:outline-blue-600 focus:shadow-lg';
-
 type ButtonVariant = 'primary' | 'secondary' | 'tertiary';
 
 export interface ButtonProps extends ComponentProps<'button'> {

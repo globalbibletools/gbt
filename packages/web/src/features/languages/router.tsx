@@ -9,9 +9,8 @@ import ManageLanguageView, {
   manageLanguageViewLoader,
 } from './ManageLanguageView';
 import NewLanguageView from './NewLanguageView';
-import { QueryClient } from '@tanstack/react-query';
 
-export default (queryClient: QueryClient): RouteObject[] => [
+const routes: RouteObject[] = [
   {
     path: 'languages',
     loader: () => authorize('administer', 'Language', languagesViewLoader),
@@ -27,7 +26,7 @@ export default (queryClient: QueryClient): RouteObject[] => [
     loader: ({ params }) => {
       const code = params.code as string;
       return authorize('administer', { type: 'Language', id: code }, () =>
-        manageLanguageViewLoader(queryClient, code)
+        manageLanguageViewLoader(code)
       );
     },
     element: <ManageLanguageView />,
@@ -41,12 +40,17 @@ export default (queryClient: QueryClient): RouteObject[] => [
   {
     path: 'languages/:code/import',
     loader: (options) => {
-      authorize('administer', {
-        type: 'Language',
-        id: options.params.code as string,
-      });
-      return importLanguageGlossesLoader(options);
+      return authorize(
+        'administer',
+        {
+          type: 'Language',
+          id: options.params.code as string,
+        },
+        () => importLanguageGlossesLoader(options)
+      );
     },
     element: <ImportLanguageGlossesView />,
   },
 ];
+
+export default routes;

@@ -1,7 +1,7 @@
 import apiClient from '../../shared/apiClient';
 import View from '../../shared/components/View';
 import ViewTitle from '../../shared/components/ViewTitle';
-import { LoaderFunctionArgs, useLoaderData, useParams } from 'react-router-dom';
+import { useLoaderData, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { LanguageRole } from '@translation/api-types';
 import TextInput from '../../shared/components/form/TextInput';
@@ -23,13 +23,9 @@ import {
 } from '../../shared/components/List';
 import { Link } from '../../shared/components/actions/Link';
 import { Icon } from '../../shared/components/Icon';
-import {
-  QueryClient,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import MultiselectInput from '../../shared/components/form/MultiselectInput';
+import queryClient from '../../shared/queryClient';
 
 const languageQueryKey = (code: string) => ({
   queryKey: ['language', code],
@@ -40,10 +36,7 @@ const languageMembersQueryKey = (code: string) => ({
   queryFn: () => apiClient.languages.findMembers(code),
 });
 
-export const manageLanguageViewLoader = async (
-  queryClient: QueryClient,
-  code: string
-) => {
+export const manageLanguageViewLoader = async (code: string) => {
   const language = await queryClient.ensureQueryData(languageQueryKey(code));
   const members = await queryClient.ensureQueryData(
     languageMembersQueryKey(code)
