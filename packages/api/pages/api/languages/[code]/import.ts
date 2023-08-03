@@ -30,8 +30,6 @@ export default createRoute()
         return;
       }
 
-      console.log('deleting glosses');
-
       // Delete all the glosses for the language.
       await client.gloss.deleteMany({
         where: {
@@ -39,17 +37,13 @@ export default createRoute()
         },
       });
 
-      console.log('importing glosses');
-
       const glossData = [];
-
       for (const key of bookKeys) {
         const bookId = bookKeys.indexOf(key) + 1;
         const glossUrl = `${importServer}/${req.body.import}Glosses/${key}Gloss.js`;
         const bookData = await fetchGlossData(glossUrl);
         const referenceUrl = `${importServer}/files/${key}.js`;
         const referenceData = await fetchGlossData(referenceUrl);
-        console.log(referenceData[0][0][0]);
 
         // Accumulate gloss data
         for (
@@ -100,7 +94,6 @@ export default createRoute()
  * Fetch gloss data from a remote JS file.
  */
 async function fetchGlossData(url: string) {
-  console.log('FETCHING', url);
   const response = await fetch(url);
   const jsCode = await response.text();
   return parseGlossJs(jsCode);
@@ -110,13 +103,12 @@ async function fetchGlossData(url: string) {
  * Parse JSON data from the JS gloss scripts.
  */
 function parseGlossJs(jsCode: string) {
-  console.log(jsCode.length);
-  const matches = /var \w+=([\s\S]+);[\s]+/gm.exec(jsCode);
-  if (!matches) {
-    return [];
+  // Look for lines that start with var.
+  const varLines = jsCode.split('\n').filter((line) => line.startsWith('var '));
+  // If there are multiple var declarations, keep only the first one.
+  if (varLines.length > 1) {
+    jsCode = jsCode.substring(0, jsCode.indexOf(varLines[1]));
   }
-  console.log(matches.length);
-  console.log(matches[1].slice(-10));
   // Remove the var prefix.
   jsCode = jsCode.replace(/var \w+=/gm, '');
   // Remove the comments and the final semicolon.
