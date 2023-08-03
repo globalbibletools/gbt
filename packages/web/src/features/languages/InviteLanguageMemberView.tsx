@@ -13,8 +13,7 @@ import SubmittingIndicator from '../../shared/components/form/SubmittingIndicato
 import Button from '../../shared/components/actions/Button';
 import { useFlash } from '../../shared/hooks/flash';
 import Card from '../../shared/components/Card';
-import useAuth from '../../shared/hooks/useAuth';
-import { LanguageRole, SystemRole } from '@translation/api-types';
+import { LanguageRole } from '@translation/api-types';
 import MultiselectInput from '../../shared/components/form/MultiselectInput';
 
 interface FormData {
@@ -24,7 +23,6 @@ interface FormData {
 
 export default function InviteLanguageMemberView() {
   const { code = '' } = useParams<'code'>();
-  useAuth({ requireRole: [SystemRole.Admin] });
   const navigate = useNavigate();
 
   const flash = useFlash();

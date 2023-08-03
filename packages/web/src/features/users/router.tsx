@@ -3,15 +3,18 @@ import InviteUserView from './InviteUserView';
 import UsersView from './UsersView';
 import LoginView from './LoginView';
 import AcceptInviteView, { acceptInviteLoader } from './AcceptInviteView';
-import { QueryClient } from '@tanstack/query-core';
+import queryClient from '../../shared/queryClient';
+import { authorize } from '../../shared/accessControl';
 
-export default (queryClient: QueryClient): RouteObject[] => [
+const routes: RouteObject[] = [
   {
     path: 'users',
+    loader: () => authorize('administer', 'User'),
     element: <UsersView />,
   },
   {
     path: 'users/invite',
+    loader: () => authorize('create', 'User'),
     element: <InviteUserView />,
   },
   {
@@ -24,3 +27,5 @@ export default (queryClient: QueryClient): RouteObject[] => [
     element: <AcceptInviteView />,
   },
 ];
+
+export default routes;

@@ -51,7 +51,7 @@ interface FormData {
 }
 
 export default function AcceptInviteView() {
-  const { refreshAuth } = useAuth({ requireUnauthenticated: true });
+  const { refreshAuth } = useAuth();
 
   const [search] = useSearchParams();
   const token = search.get('token') ?? undefined;

@@ -55,7 +55,6 @@ async function run() {
         for (let wordIndex = 0; wordIndex < filteredWords.length; wordIndex++) {
           const [text, , english, grammar, rawStrongs] =
             filteredWords[wordIndex];
-          const order = wordIndex + 1;
 
           // We clean the strongs codes since the hebrew ones have some extra characters.
           // We also prefix the code with a language code based on the book.
@@ -65,7 +64,9 @@ async function run() {
           )}`;
 
           // We have to accumulate word data until we have inserted all of the lemma data.
-          const wordId = `${verseId}${(order + 1).toString().padStart(2, '0')}`;
+          const wordId = `${verseId}${(wordIndex + 1)
+            .toString()
+            .padStart(2, '0')}`;
           wordData.push({
             id: wordId,
             text,

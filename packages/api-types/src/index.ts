@@ -31,6 +31,7 @@ export interface GetSessionResponse {
     name?: string;
     email?: string;
     systemRoles: SystemRole[];
+    languages: { code: string; roles: LanguageRole[] }[];
   };
 }
 

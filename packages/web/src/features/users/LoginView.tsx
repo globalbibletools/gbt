@@ -21,7 +21,7 @@ interface FormData {
 }
 
 export default function InviteUserView() {
-  const { refreshAuth } = useAuth({ requireUnauthenticated: true });
+  const { refreshAuth } = useAuth();
   const navigate = useNavigate();
 
   const { t } = useTranslation('users');

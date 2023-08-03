@@ -34,5 +34,6 @@
   "confirm": "Confirmar",
   "cancel": "Cancelar",
   "language_name_required": "Ingrese el nombre del idioma.",
-  "language_code_required": "Ingrese el código de idioma."
+  "language_code_required": "Ingrese el código de idioma.",
+  "translate": "Traducir"
 }

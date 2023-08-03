@@ -7,6 +7,7 @@ import { useTextWidth } from '../../shared/hooks/useTextWidth';
 import { capitalize } from '../../shared/utils';
 
 export interface TranslateWordProps {
+  editable?: boolean;
   word: { id: string; text: string };
   referenceGloss?: string;
   gloss?: string;
@@ -17,6 +18,7 @@ export interface TranslateWordProps {
 }
 
 export default function TranslateWord({
+  editable = false,
   word,
   originalLanguage,
   status,
@@ -46,51 +48,58 @@ export default function TranslateWord({
           originalLanguage === 'hebrew' ? 'text-right' : 'text-left'
         }`}
       >
-        {referenceGloss}
+        {editable ? referenceGloss : gloss}
       </div>
-      <AutocompleteInput
-        name="gloss"
-        className="min-w-[80px]"
-        value={gloss}
-        items={previousGlosses.map((gloss) => ({ label: gloss, value: gloss }))}
-        // The extra 24 pixel give room for the padding around the text.
-        style={{ width: width + 24 }}
-        aria-describedby={`word-help-${word.id}`}
-        aria-labelledby={`word-${word.id}`}
-        onChange={(newGloss: string) => {
-          if (newGloss !== gloss) {
-            onGlossChange(newGloss);
-            setText(newGloss);
-          }
-        }}
-        onCreate={(newGloss: string) => {
-          if (newGloss !== gloss) {
-            onGlossChange(newGloss);
-            setText(newGloss);
-          }
-        }}
-      />
-      <InputHelpText id={`word-help-${word.id}`}>
-        {(() => {
-          if (status === 'saving') {
-            return (
-              <>
-                <Icon icon="arrows-rotate" className="me-1" />
-                {capitalize(t('saving'))}
-              </>
-            );
-          } else if (status === 'saved') {
-            return (
-              <>
-                <Icon icon="check" className="me-1" />
-                {capitalize(t('saved'))}
-              </>
-            );
-          } else {
-            return null;
-          }
-        })()}
-      </InputHelpText>
+      {editable && (
+        <>
+          <AutocompleteInput
+            name="gloss"
+            className="min-w-[80px]"
+            value={gloss}
+            items={previousGlosses.map((gloss) => ({
+              label: gloss,
+              value: gloss,
+            }))}
+            // The extra 24 pixel give room for the padding around the text.
+            style={{ width: width + 24 }}
+            aria-describedby={`word-help-${word.id}`}
+            aria-labelledby={`word-${word.id}`}
+            onChange={(newGloss: string) => {
+              if (newGloss !== gloss) {
+                onGlossChange(newGloss);
+                setText(newGloss);
+              }
+            }}
+            onCreate={(newGloss: string) => {
+              if (newGloss !== gloss) {
+                onGlossChange(newGloss);
+                setText(newGloss);
+              }
+            }}
+          />
+          <InputHelpText id={`word-help-${word.id}`}>
+            {(() => {
+              if (status === 'saving') {
+                return (
+                  <>
+                    <Icon icon="arrows-rotate" className="me-1" />
+                    {capitalize(t('saving'))}
+                  </>
+                );
+              } else if (status === 'saved') {
+                return (
+                  <>
+                    <Icon icon="check" className="me-1" />
+                    {capitalize(t('saved'))}
+                  </>
+                );
+              } else {
+                return null;
+              }
+            })()}
+          </InputHelpText>
+        </>
+      )}
     </li>
   );
 }

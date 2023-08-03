@@ -24,7 +24,6 @@ import FormLabel from '../../shared/components/form/FormLabel';
 import SelectInput from '../../shared/components/form/SelectInput';
 import SubmittingIndicator from '../../shared/components/form/SubmittingIndicator';
 import { useFlash } from '../../shared/hooks/flash';
-import useAuth from '../../shared/hooks/useAuth';
 
 export async function importLanguageGlossesLoader({
   params,
@@ -41,7 +40,6 @@ interface FormData {
 }
 
 export default function ImportLanguageGlossesView() {
-  useAuth({ requireRole: [SystemRole.Admin] });
   const { language, importLanguages } = useLoaderData() as {
     language: GetLanguageResponseBody;
     importLanguages: GetLanguageImportOptionsResponseBody;

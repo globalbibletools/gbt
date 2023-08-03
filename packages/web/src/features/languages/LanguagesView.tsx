@@ -14,19 +14,19 @@ import {
 import View from '../../shared/components/View';
 import ViewTitle from '../../shared/components/ViewTitle';
 import { useLoaderData } from 'react-router-dom';
-import { GetLanguagesResponseBody, SystemRole } from '@translation/api-types';
+import { GetLanguagesResponseBody } from '@translation/api-types';
 import { capitalize } from '../../shared/utils';
-import useAuth from '../../shared/hooks/useAuth';
+import { useAccessControl } from '../../shared/accessControl';
 
 export function languagesViewLoader() {
   return apiClient.languages.findAll();
 }
 
 export default function LanguagesView() {
-  const session = useAuth({ requireRole: [SystemRole.Admin] });
   const languages = useLoaderData() as GetLanguagesResponseBody;
 
   const { t } = useTranslation();
+  const accessControl = useAccessControl();
 
   return (
     <View fitToScreen>
@@ -39,7 +39,7 @@ export default function LanguagesView() {
             </ListHeaderCell>
             <ListHeaderCell />
           </ListHeader>
-          {session.user?.systemRoles.includes(SystemRole.Admin) && (
+          {accessControl('create', 'Language') && (
             <ListRowAction colSpan={2}>
               <Link to="./new">
                 <Icon icon="plus" className="me-1" />
@@ -52,7 +52,10 @@ export default function LanguagesView() {
               <ListRow key={language.code}>
                 <ListCell header>{language.name}</ListCell>
                 <ListCell>
-                  <Link to={`./${language.code}`}>{t('manage')}</Link>
+                  {accessControl('administer', {
+                    type: 'Language',
+                    id: language.code,
+                  }) && <Link to={`./${language.code}`}>{t('manage')}</Link>}
                 </ListCell>
               </ListRow>
             ))}

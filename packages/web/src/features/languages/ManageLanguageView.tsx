@@ -3,16 +3,15 @@ import View from '../../shared/components/View';
 import ViewTitle from '../../shared/components/ViewTitle';
 import { LoaderFunctionArgs, useLoaderData, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
+import { LanguageRole } from '@translation/api-types';
 import TextInput from '../../shared/components/form/TextInput';
 import FormLabel from '../../shared/components/form/FormLabel';
-import { LanguageRole, SystemRole } from '@translation/api-types';
 import { useTranslation } from 'react-i18next';
 import Form from '../../shared/components/form/Form';
 import InputError from '../../shared/components/form/InputError';
 import { useFlash } from '../../shared/hooks/flash';
 import SubmittingIndicator from '../../shared/components/form/SubmittingIndicator';
 import Button from '../../shared/components/actions/Button';
-import useAuth from '../../shared/hooks/useAuth';
 import {
   List,
   ListBody,
@@ -41,16 +40,16 @@ const languageMembersQueryKey = (code: string) => ({
   queryFn: () => apiClient.languages.findMembers(code),
 });
 
-export const manageLanguageViewLoader =
-  (queryClient: QueryClient) =>
-  async ({ params }: LoaderFunctionArgs) => {
-    const code = params.code ?? 'unknown';
-    const language = await queryClient.ensureQueryData(languageQueryKey(code));
-    const members = await queryClient.ensureQueryData(
-      languageMembersQueryKey(code)
-    );
-    return { language, members };
-  };
+export const manageLanguageViewLoader = async (
+  queryClient: QueryClient,
+  code: string
+) => {
+  const language = await queryClient.ensureQueryData(languageQueryKey(code));
+  const members = await queryClient.ensureQueryData(
+    languageMembersQueryKey(code)
+  );
+  return { language, members };
+};
 
 function useUpdateLanguageMemberMutation() {
   const queryClient = useQueryClient();
@@ -88,7 +87,7 @@ function useRemoveLanguageMemberMutation() {
 
 function useLicenseQuery(code: string) {
   const loaderData = useLoaderData() as Awaited<
-    ReturnType<ReturnType<typeof manageLanguageViewLoader>>
+    ReturnType<typeof manageLanguageViewLoader>
   >;
   return useQuery({
     ...languageQueryKey(code),
@@ -98,7 +97,7 @@ function useLicenseQuery(code: string) {
 
 function useLicenseMembersQuery(code: string) {
   const loaderData = useLoaderData() as Awaited<
-    ReturnType<ReturnType<typeof manageLanguageViewLoader>>
+    ReturnType<typeof manageLanguageViewLoader>
   >;
   return useQuery({
     ...languageMembersQueryKey(code),
@@ -112,8 +111,6 @@ interface FormData {
 
 export default function ManageLanguageView() {
   const params = useParams() as { code: string };
-
-  useAuth({ requireRole: [SystemRole.Admin] });
   const flash = useFlash();
 
   const { data: language } = useLicenseQuery(params.code);

@@ -12,16 +12,12 @@ import InputError from '../../shared/components/form/InputError';
 import Button from '../../shared/components/actions/Button';
 import SubmittingIndicator from '../../shared/components/form/SubmittingIndicator';
 import { useFlash } from '../../shared/hooks/flash';
-import useAuth from '../../shared/hooks/useAuth';
-import { SystemRole } from '@translation/api-types';
 
 interface FormData {
   email: string;
 }
 
 export default function InviteUserView() {
-  useAuth({ requireRole: [SystemRole.Admin] });
-
   const { t } = useTranslation('users');
   const flash = useFlash();
 
