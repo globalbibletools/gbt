@@ -5,6 +5,7 @@ import LoginView from './LoginView';
 import AcceptInviteView, { acceptInviteLoader } from './AcceptInviteView';
 import queryClient from '../../shared/queryClient';
 import { authorize } from '../../shared/accessControl';
+import UpdateProfileView from './UpdateProfileView';
 
 const routes: RouteObject[] = [
   {
@@ -20,6 +21,10 @@ const routes: RouteObject[] = [
   {
     path: 'login',
     element: <LoginView />,
+  },
+  {
+    path: 'profile',
+    element: <UpdateProfileView />,
   },
   {
     path: 'invite',

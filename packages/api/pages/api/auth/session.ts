@@ -41,7 +41,7 @@ export default createRoute()
             user: {
               id: user.id,
               name: user.name ?? undefined,
-              email: user.auth_key[0]?.user_id.split(':')[1] ?? undefined,
+              email: user.auth_key[0]?.id.split(':')[1] ?? undefined,
               systemRoles: req.session.user.systemRoles,
               languages: languages.map((language) => ({
                 code: language.code,

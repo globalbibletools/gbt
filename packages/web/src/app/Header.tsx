@@ -83,6 +83,10 @@ export default function Header({ language, onLanguageChange }: HeaderProps) {
         )}
         {session.status === 'authenticated' && (
           <DropdownMenu text={session.user.name ?? ''}>
+            <DropdownMenuLink to="/profile">
+              <Icon icon="user" className="me-2" fixedWidth />
+              {t('users:profile')}
+            </DropdownMenuLink>
             <DropdownMenuButton
               onClick={async () => {
                 await apiClient.auth.logout();
