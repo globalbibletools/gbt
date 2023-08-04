@@ -40,11 +40,14 @@ const routes: RouteObject[] = [
   {
     path: 'languages/:code/import',
     loader: (options) => {
-      authorize('administer', {
-        type: 'Language',
-        id: options.params.code as string,
-      });
-      return importLanguageGlossesLoader(options);
+      return authorize(
+        'administer',
+        {
+          type: 'Language',
+          id: options.params.code as string,
+        },
+        () => importLanguageGlossesLoader(options)
+      );
     },
     element: <ImportLanguageGlossesView />,
   },

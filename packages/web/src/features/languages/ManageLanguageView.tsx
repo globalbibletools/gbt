@@ -1,14 +1,11 @@
 import apiClient from '../../shared/apiClient';
 import View from '../../shared/components/View';
 import ViewTitle from '../../shared/components/ViewTitle';
-import { useLoaderData } from 'react-router-dom';
+import { useLoaderData, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
+import { LanguageRole } from '@translation/api-types';
 import TextInput from '../../shared/components/form/TextInput';
 import FormLabel from '../../shared/components/form/FormLabel';
-import {
-  GetLanguageMembersResponseBody,
-  GetLanguageResponseBody,
-} from '@translation/api-types';
 import { useTranslation } from 'react-i18next';
 import Form from '../../shared/components/form/Form';
 import InputError from '../../shared/components/form/InputError';
@@ -26,11 +23,79 @@ import {
 } from '../../shared/components/List';
 import { Link } from '../../shared/components/actions/Link';
 import { Icon } from '../../shared/components/Icon';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import MultiselectInput from '../../shared/components/form/MultiselectInput';
+import queryClient from '../../shared/queryClient';
 
-export async function manageLanguageViewLoader(code: string) {
-  const language = await apiClient.languages.findByCode(code);
-  const members = await apiClient.languages.findMembers(code);
+const languageQueryKey = (code: string) => ({
+  queryKey: ['language', code],
+  queryFn: () => apiClient.languages.findByCode(code),
+});
+const languageMembersQueryKey = (code: string) => ({
+  queryKey: ['language-members', code],
+  queryFn: () => apiClient.languages.findMembers(code),
+});
+
+export const manageLanguageViewLoader = async (code: string) => {
+  const language = await queryClient.ensureQueryData(languageQueryKey(code));
+  const members = await queryClient.ensureQueryData(
+    languageMembersQueryKey(code)
+  );
   return { language, members };
+};
+
+function useUpdateLanguageMemberMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (variables: {
+      userId: string;
+      code: string;
+      roles: LanguageRole[];
+    }) =>
+      apiClient.languages.updateMember(
+        variables.code,
+        variables.userId,
+        variables.roles
+      ),
+    onSettled: (_, __, { code }, context) => {
+      queryClient.invalidateQueries({
+        queryKey: languageMembersQueryKey(code).queryKey,
+      });
+    },
+  });
+}
+
+function useRemoveLanguageMemberMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (variables: { userId: string; code: string }) =>
+      apiClient.languages.removeMember(variables.code, variables.userId),
+    onSettled: (_, __, { code }, context) => {
+      queryClient.invalidateQueries({
+        queryKey: languageMembersQueryKey(code).queryKey,
+      });
+    },
+  });
+}
+
+function useLicenseQuery(code: string) {
+  const loaderData = useLoaderData() as Awaited<
+    ReturnType<typeof manageLanguageViewLoader>
+  >;
+  return useQuery({
+    ...languageQueryKey(code),
+    initialData: loaderData.language,
+  });
+}
+
+function useLicenseMembersQuery(code: string) {
+  const loaderData = useLoaderData() as Awaited<
+    ReturnType<typeof manageLanguageViewLoader>
+  >;
+  return useQuery({
+    ...languageMembersQueryKey(code),
+    initialData: loaderData.members,
+  });
 }
 
 interface FormData {
@@ -38,13 +103,16 @@ interface FormData {
 }
 
 export default function ManageLanguageView() {
-  const { language, members } = useLoaderData() as {
-    language: GetLanguageResponseBody;
-    members: GetLanguageMembersResponseBody;
-  };
+  const params = useParams() as { code: string };
   const flash = useFlash();
 
+  const { data: language } = useLicenseQuery(params.code);
+  const { data: members } = useLicenseMembersQuery(params.code);
+
   const { t } = useTranslation(['translation', 'users']);
+
+  const removeMemberMutation = useRemoveLanguageMemberMutation();
+  const updateMemberMutation = useUpdateLanguageMemberMutation();
 
   const formContext = useForm<FormData>();
   async function onSubmit(data: FormData) {
@@ -116,13 +184,42 @@ export default function ManageLanguageView() {
                 <ListCell header>{member.name}</ListCell>
                 <ListCell>{member.email}</ListCell>
                 <ListCell>
-                  {member.roles
-                    .map((role) =>
-                      t('users:role', { context: role.toLowerCase() })
-                    )
-                    .join(', ')}
+                  <MultiselectInput
+                    className="w-full"
+                    name="roles"
+                    value={member.roles}
+                    items={[
+                      {
+                        label: t('users:role_admin'),
+                        value: LanguageRole.Admin,
+                      },
+                      {
+                        label: t('users:role_translator'),
+                        value: LanguageRole.Translator,
+                      },
+                    ]}
+                    onChange={(roles) =>
+                      updateMemberMutation.mutate({
+                        code: params.code,
+                        userId: member.userId,
+                        roles: roles as LanguageRole[],
+                      })
+                    }
+                  />
                 </ListCell>
-                <ListCell></ListCell>
+                <ListCell>
+                  <Button
+                    variant="tertiary"
+                    onClick={() =>
+                      removeMemberMutation.mutate({
+                        userId: member.userId,
+                        code: params.code,
+                      })
+                    }
+                  >
+                    Remove
+                  </Button>
+                </ListCell>
               </ListRow>
             ))}
           </ListBody>
