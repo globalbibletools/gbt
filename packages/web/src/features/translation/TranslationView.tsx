@@ -92,31 +92,25 @@ export default function TranslationView() {
   const loading =
     !verseQuery.isSuccess ||
     !referenceGlossesQuery.isSuccess ||
-    !targetGlossesQuery.isSuccess ||
-    true;
+    !targetGlossesQuery.isSuccess;
+  let content;
   if (loading) {
-    return (
-      <div className="w-full flex-grow flex items-center justify-center">
+    content = (
+      <div className="flex-grow flex items-center justify-center">
         <LoadingSpinner></LoadingSpinner>
       </div>
     );
-  }
+  } else {
+    const verse = verseQuery.data.data;
+    const referenceGlosses = referenceGlossesQuery.data.data;
+    const targetGlosses = targetGlossesQuery.data.data;
 
-  const verse = verseQuery.data.data;
-  const referenceGlosses = referenceGlossesQuery.data.data;
-  const targetGlosses = targetGlossesQuery.data.data;
+    const { bookId } = parseVerseId(verse.id);
 
-  const { bookId } = parseVerseId(verse.id);
+    const canEdit = userCan('translate', { type: 'Language', id: language });
 
-  const canEdit = userCan('translate', { type: 'Language', id: language });
-
-  const isHebrew = bookId < 40;
-  return (
-    <div className="px-4 flex flex-col gap-2">
-      <VerseSelector
-        verseId={verse.id}
-        onVerseChange={(verseId) => navigate('../translate/' + verseId)}
-      />
+    const isHebrew = bookId < 40;
+    content = (
       <ol
         className={`flex flex-wrap ${
           isHebrew ? 'ltr:flex-row-reverse' : 'rtl:flex-row-reverse'
@@ -148,6 +142,15 @@ export default function TranslationView() {
           );
         })}
       </ol>
+    );
+  }
+  return (
+    <div className="px-4 flex flex-grow flex-col gap-2">
+      <VerseSelector
+        verseId={params.verseId}
+        onVerseChange={(verseId) => navigate('../translate/' + verseId)}
+      />
+      {content}
     </div>
   );
 }
