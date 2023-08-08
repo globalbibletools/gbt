@@ -8,6 +8,7 @@ import TranslateWord from './TranslateWord';
 import { VerseSelector } from './VerseSelector';
 import { parseVerseId } from './verse-utils';
 import { useAccessControl } from '../../shared/accessControl';
+import LoadingSpinner from '../../shared/components/LoadingSpinner';
 
 export default function TranslationView() {
   const params = useParams() as { verseId: string };
@@ -91,11 +92,12 @@ export default function TranslationView() {
   const loading =
     !verseQuery.isSuccess ||
     !referenceGlossesQuery.isSuccess ||
-    !targetGlossesQuery.isSuccess;
+    !targetGlossesQuery.isSuccess ||
+    true;
   if (loading) {
     return (
-      <div className="flex justify-center">
-        <span>Loading...</span>
+      <div className="w-full flex-grow flex items-center justify-center">
+        <LoadingSpinner></LoadingSpinner>
       </div>
     );
   }

@@ -27,7 +27,7 @@ export function Layout() {
     <Suspense fallback="loading">
       <div className="min-h-screen flex flex-col">
         <Header language={language} onLanguageChange={selectLanguage} />
-        <div className="flex-grow relative">
+        <div className="flex-grow relative flex flex-col">
           <Outlet context={outletContext} />
         </div>
         <Footer />
