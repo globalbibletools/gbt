@@ -35,5 +35,6 @@
   "cancel": "يلغي",
   "language_name_required": "يرجى إدخال اسم اللغة.",
   "language_code_required": "يرجى إدخال رمز اللغة.",
-  "translate": "ترجمة"
+  "translate": "ترجمة",
+  "loading": "تحميل"
 }

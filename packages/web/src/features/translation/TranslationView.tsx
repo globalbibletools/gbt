@@ -1,19 +1,21 @@
-import { useNavigate, useParams } from 'react-router-dom';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import apiClient from '../../shared/apiClient';
-import { useLayoutContext } from '../../app/Layout';
-import { useState } from 'react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { GetVerseGlossesResponseBody } from '@translation/api-types';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useLayoutContext } from '../../app/Layout';
+import { useAccessControl } from '../../shared/accessControl';
+import apiClient from '../../shared/apiClient';
+import LoadingSpinner from '../../shared/components/LoadingSpinner';
 import TranslateWord from './TranslateWord';
 import { VerseSelector } from './VerseSelector';
 import { parseVerseId } from './verse-utils';
-import { useAccessControl } from '../../shared/accessControl';
-import LoadingSpinner from '../../shared/components/LoadingSpinner';
 
 export default function TranslationView() {
   const params = useParams() as { verseId: string };
   const navigate = useNavigate();
   const { language } = useLayoutContext();
+  const { t } = useTranslation();
 
   const verseQuery = useQuery(['verse', params.verseId], () =>
     apiClient.verses.findById(params.verseId)
@@ -96,6 +98,7 @@ export default function TranslationView() {
   let content = (
     <div className="flex-grow flex items-center justify-center">
       <LoadingSpinner></LoadingSpinner>
+      <span className="sr-only">{t('loading')}</span>
     </div>
   );
   if (!loading) {
