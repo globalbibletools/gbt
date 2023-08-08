@@ -93,14 +93,12 @@ export default function TranslationView() {
     !verseQuery.isSuccess ||
     !referenceGlossesQuery.isSuccess ||
     !targetGlossesQuery.isSuccess;
-  let content;
-  if (loading) {
-    content = (
-      <div className="flex-grow flex items-center justify-center">
-        <LoadingSpinner></LoadingSpinner>
-      </div>
-    );
-  } else {
+  let content = (
+    <div className="flex-grow flex items-center justify-center">
+      <LoadingSpinner></LoadingSpinner>
+    </div>
+  );
+  if (!loading) {
     const verse = verseQuery.data.data;
     const referenceGlosses = referenceGlossesQuery.data.data;
     const targetGlosses = targetGlossesQuery.data.data;
