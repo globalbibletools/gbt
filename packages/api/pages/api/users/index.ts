@@ -11,6 +11,7 @@ import { accessibleBy } from '../../../prisma/casl';
 import { auth } from '../../../shared/auth';
 import { randomBytes } from 'crypto';
 import { SystemRole } from '../../../prisma/client';
+import { redirects } from '../../../shared/redirects';
 
 export default createRoute()
   .get<void, GetUsersResponseBody>({
@@ -47,7 +48,6 @@ export default createRoute()
   .post<PostUserRequestBody, void>({
     schema: z.object({
       email: z.string(),
-      redirectUrl: z.string(),
     }),
     authorize: authorize({
       action: 'create',
@@ -73,9 +73,7 @@ export default createRoute()
         expiresIn: 60 * 60,
       });
 
-      const url = new URL(req.body.redirectUrl);
-      url.searchParams.append('token', token);
-
+      const url = redirects.invite(token);
       await mailer.sendEmail(
         {
           userId: user.id,

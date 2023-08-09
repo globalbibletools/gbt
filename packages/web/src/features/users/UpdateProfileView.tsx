@@ -1,4 +1,3 @@
-import { ApiClientError } from '@translation/api-client';
 import { useTranslation } from 'react-i18next';
 import { useForm } from 'react-hook-form';
 import Card from '../../shared/components/Card';
@@ -43,7 +42,16 @@ export default function UpdateProfileView() {
     password,
   }) => {
     try {
-      // flash.success(t('user_invited'));
+      if (user) {
+        await apiClient.users.update({
+          id: user.id,
+          email,
+          name,
+          password,
+        });
+      }
+
+      flash.success(t('user_invited'));
     } catch (error) {
       flash.error(`${error}`);
     }

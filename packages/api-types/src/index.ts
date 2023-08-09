@@ -66,10 +66,12 @@ export interface GetUsersResponseBody {
 
 export interface PostUserRequestBody {
   email: string;
-  redirectUrl: string;
 }
 
 export interface UpdateUserRequestBody {
+  email?: string;
+  name?: string;
+  password?: string;
   systemRoles?: SystemRole[];
 }
 
@@ -118,7 +120,6 @@ export interface GetLanguageMembersResponseBody {
 export interface PostLanguageMemberRequestBody {
   email: string;
   roles: LanguageRole[];
-  redirectUrl: string;
 }
 
 export interface PatchLanguageMemberRequestBody {

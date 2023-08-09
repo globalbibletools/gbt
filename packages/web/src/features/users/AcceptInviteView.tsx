@@ -65,8 +65,6 @@ export default function AcceptInviteView() {
   const formContext = useForm<FormData>();
   const onSubmit: SubmitHandler<FormData> = async ({ name, password }) => {
     try {
-      const redirectUrl = new URL(window.location.href);
-      redirectUrl.pathname = '/';
       await apiClient.auth.acceptInvite({
         name,
         token: token ?? '',

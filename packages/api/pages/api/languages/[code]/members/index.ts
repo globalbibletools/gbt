@@ -11,6 +11,7 @@ import { NotFoundError } from '../../../../../shared/errors';
 import { auth } from '../../../../../shared/auth';
 import mailer from '../../../../../shared/mailer';
 import { randomBytes } from 'crypto';
+import { redirects } from '../../../../../shared/redirects';
 
 export default createRoute<{ code: string }>()
   .get<void, GetLanguageMembersResponseBody>({
@@ -78,7 +79,6 @@ export default createRoute<{ code: string }>()
       roles: z.array(
         z.enum(Object.values(LanguageRole) as [LanguageRole, ...LanguageRole[]])
       ),
-      redirectUrl: z.string(),
     }),
     async handler(req, res) {
       const language = await client.language.findUnique({
@@ -118,9 +118,7 @@ export default createRoute<{ code: string }>()
           expiresIn: 60 * 60,
         });
 
-        const url = new URL(req.body.redirectUrl);
-        url.searchParams.append('token', token);
-
+        const url = redirects.invite(token);
         await mailer.sendEmail(
           {
             userId: user.id,
