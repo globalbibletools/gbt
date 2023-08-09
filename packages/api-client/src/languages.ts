@@ -2,6 +2,8 @@ import type {
   GetLanguageMembersResponseBody,
   GetLanguageResponseBody,
   GetLanguagesResponseBody,
+  LanguageRole,
+  PatchLanguageMemberRequestBody,
   PatchLanguageRequestBody,
   PostLanguageImportRequestBody,
   PostLanguageMemberRequestBody,
@@ -72,6 +74,26 @@ export default class Languages {
     return this.client.post({
       path: `/api/languages/${code}/members`,
       body: request,
+    });
+  }
+
+  updateMember(
+    code: string,
+    userId: string,
+    roles: LanguageRole[]
+  ): Promise<void> {
+    const body: PatchLanguageMemberRequestBody = {
+      roles,
+    };
+    return this.client.patch({
+      path: `/api/languages/${code}/members/${userId}`,
+      body,
+    });
+  }
+
+  removeMember(code: string, userId: string): Promise<void> {
+    return this.client.delete({
+      path: `/api/languages/${code}/members/${userId}`,
     });
   }
 }
