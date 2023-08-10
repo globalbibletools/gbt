@@ -98,7 +98,6 @@ export default function TranslationView() {
   let content = (
     <div className="flex-grow flex items-center justify-center">
       <LoadingSpinner></LoadingSpinner>
-      <span className="sr-only">{t('loading')}</span>
     </div>
   );
   if (!loading) {
