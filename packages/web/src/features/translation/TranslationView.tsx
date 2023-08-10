@@ -1,7 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { GetVerseGlossesResponseBody } from '@translation/api-types';
 import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useLayoutContext } from '../../app/Layout';
 import { useAccessControl } from '../../shared/accessControl';
@@ -15,7 +14,6 @@ export default function TranslationView() {
   const params = useParams() as { verseId: string };
   const navigate = useNavigate();
   const { language } = useLayoutContext();
-  const { t } = useTranslation();
 
   const verseQuery = useQuery(['verse', params.verseId], () =>
     apiClient.verses.findById(params.verseId)
@@ -95,62 +93,69 @@ export default function TranslationView() {
     !verseQuery.isSuccess ||
     !referenceGlossesQuery.isSuccess ||
     !targetGlossesQuery.isSuccess;
-  let content = (
-    <div className="flex-grow flex items-center justify-center">
-      <LoadingSpinner></LoadingSpinner>
-    </div>
-  );
-  if (!loading) {
-    const verse = verseQuery.data.data;
-    const referenceGlosses = referenceGlossesQuery.data.data;
-    const targetGlosses = targetGlossesQuery.data.data;
-
-    const { bookId } = parseVerseId(verse.id);
-
-    const canEdit = userCan('translate', { type: 'Language', id: language });
-
-    const isHebrew = bookId < 40;
-    content = (
-      <ol
-        className={`flex flex-wrap ${
-          isHebrew ? 'ltr:flex-row-reverse' : 'rtl:flex-row-reverse'
-        }`}
-      >
-        {verse.words.map((word, i) => {
-          const targetGloss = targetGlosses[i]?.approvedGloss;
-          const isSaving = glossRequests.some(
-            ({ wordId }) => wordId === word.id
-          );
-
-          return (
-            <TranslateWord
-              key={word.id}
-              editable={canEdit}
-              word={word}
-              originalLanguage={isHebrew ? 'hebrew' : 'greek'}
-              status={isSaving ? 'saving' : targetGloss ? 'saved' : 'empty'}
-              gloss={targetGloss}
-              referenceGloss={referenceGlosses[i]?.approvedGloss}
-              previousGlosses={targetGlosses[i]?.glosses}
-              onGlossChange={(newGloss) => {
-                glossMutation.mutate({
-                  wordId: word.id,
-                  gloss: newGloss,
-                });
-              }}
-            />
-          );
-        })}
-      </ol>
-    );
-  }
   return (
     <div className="px-4 flex flex-grow flex-col gap-2">
       <VerseSelector
         verseId={params.verseId}
         onVerseChange={(verseId) => navigate('../translate/' + verseId)}
       />
-      {content}
+      {(() => {
+        if (loading) {
+          return (
+            <div className="flex-grow flex items-center justify-center">
+              <LoadingSpinner></LoadingSpinner>
+            </div>
+          );
+        } else {
+          const verse = verseQuery.data.data;
+          const referenceGlosses = referenceGlossesQuery.data.data;
+          const targetGlosses = targetGlossesQuery.data.data;
+
+          const { bookId } = parseVerseId(verse.id);
+
+          const canEdit = userCan('translate', {
+            type: 'Language',
+            id: language,
+          });
+
+          const isHebrew = bookId < 40;
+          return (
+            <ol
+              className={`flex flex-wrap ${
+                isHebrew ? 'ltr:flex-row-reverse' : 'rtl:flex-row-reverse'
+              }`}
+            >
+              {verse.words.map((word, i) => {
+                const targetGloss = targetGlosses[i]?.approvedGloss;
+                const isSaving = glossRequests.some(
+                  ({ wordId }) => wordId === word.id
+                );
+
+                return (
+                  <TranslateWord
+                    key={word.id}
+                    editable={canEdit}
+                    word={word}
+                    originalLanguage={isHebrew ? 'hebrew' : 'greek'}
+                    status={
+                      isSaving ? 'saving' : targetGloss ? 'saved' : 'empty'
+                    }
+                    gloss={targetGloss}
+                    referenceGloss={referenceGlosses[i]?.approvedGloss}
+                    previousGlosses={targetGlosses[i]?.glosses}
+                    onGlossChange={(newGloss) => {
+                      glossMutation.mutate({
+                        wordId: word.id,
+                        gloss: newGloss,
+                      });
+                    }}
+                  />
+                );
+              })}
+            </ol>
+          );
+        }
+      })()}
     </div>
   );
 }

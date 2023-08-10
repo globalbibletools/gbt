@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next';
+
 export interface LoadingSpinnerProps {
   dark?: boolean;
   className?: string;
@@ -7,6 +9,7 @@ export default function LoadingSpinner({
   dark = false,
   className = '',
 }: LoadingSpinnerProps) {
+  const { t } = useTranslation();
   return (
     <>
       <svg
