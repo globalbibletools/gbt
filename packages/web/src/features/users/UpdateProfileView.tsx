@@ -23,7 +23,7 @@ interface FormData {
 
 export default function UpdateProfileView() {
   const { user } = useAuth();
-  const { t } = useTranslation('users');
+  const { t } = useTranslation(['users', 'translation']);
   const flash = useFlash();
 
   const formContext = useForm<FormData>();
@@ -54,7 +54,7 @@ export default function UpdateProfileView() {
       setValue('password', '');
       setValue('confirmPassword', '');
 
-      flash.success(t('user_invited'));
+      flash.success(t('users:profile_updated'));
     } catch (error) {
       flash.error(`${error}`);
     }
@@ -65,10 +65,12 @@ export default function UpdateProfileView() {
   return (
     <View fitToScreen className="flex justify-center items-start">
       <Card className="mx-4 mt-4 w-96 flex-shrink p-6">
-        <ViewTitle>{t('update_profile')}</ViewTitle>
+        <ViewTitle>{t('users:update_profile')}</ViewTitle>
         <Form context={formContext} onSubmit={onSubmit}>
           <div className="mb-2">
-            <FormLabel htmlFor="email">{t('email').toUpperCase()}</FormLabel>
+            <FormLabel htmlFor="email">
+              {t('users:email').toUpperCase()}
+            </FormLabel>
             <TextInput
               id="email"
               name="email"
@@ -81,11 +83,13 @@ export default function UpdateProfileView() {
             <InputError
               id="email-error"
               name="email"
-              messages={{ required: t('email_required') }}
+              messages={{ required: t('users:email_required') }}
             />
           </div>
           <div className="mb-2">
-            <FormLabel htmlFor="name">{t('name').toUpperCase()}</FormLabel>
+            <FormLabel htmlFor="name">
+              {t('users:name').toUpperCase()}
+            </FormLabel>
             <TextInput
               id="name"
               name="name"
@@ -97,12 +101,12 @@ export default function UpdateProfileView() {
             <InputError
               id="name-error"
               name="name"
-              messages={{ required: t('name_required') }}
+              messages={{ required: t('users:name_required') }}
             />
           </div>
           <div className="mb-2">
             <FormLabel htmlFor="password">
-              {t('password').toUpperCase()}
+              {t('users:password').toUpperCase()}
             </FormLabel>
             <TextInput
               type="password"
@@ -117,14 +121,14 @@ export default function UpdateProfileView() {
               id="password-error"
               name="password"
               messages={{
-                required: t('errors.password_required'),
-                minLength: t('errors.password_format'),
+                required: t('users:errors.password_required'),
+                minLength: t('users:errors.password_format'),
               }}
             />
           </div>
           <div className="mb-4">
             <FormLabel htmlFor="confirm-password">
-              {t('confirm_password').toUpperCase()}
+              {t('users:confirm_password').toUpperCase()}
             </FormLabel>
             <TextInput
               type="password"
@@ -138,11 +142,11 @@ export default function UpdateProfileView() {
             <InputError
               id="confirm-password-error"
               name="confirmPassword"
-              messages={{ confirms: t('errors.password_confirmation') }}
+              messages={{ confirms: t('users:errors.password_confirmation') }}
             />
           </div>
           <div>
-            <Button type="submit">{t('accept')}</Button>
+            <Button type="submit">{t('translation:update')}</Button>
             <SubmittingIndicator className="ms-3" />
           </div>
         </Form>

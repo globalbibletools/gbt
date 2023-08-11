@@ -8,7 +8,7 @@ import { useEffect } from 'react';
 import apiClient from '../../shared/apiClient';
 
 export default function EmailVerificationView() {
-  const { t } = useTranslation('users');
+  const { t } = useTranslation(['users']);
   const [params] = useSearchParams();
 
   const { status, mutate } = useMutation({
@@ -29,9 +29,9 @@ export default function EmailVerificationView() {
         {status === 'loading' || status === 'idle' ? (
           <LoadingSpinner />
         ) : status === 'success' ? (
-          t('email_verified')
+          t('users:email_verified')
         ) : (
-          t('email_verification_error')
+          t('users:email_verification_error')
         )}
       </Card>
     </View>

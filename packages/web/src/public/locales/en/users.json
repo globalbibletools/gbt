@@ -5,6 +5,8 @@
   "log_out": "Log Out",
   "password": "Password",
   "confirm_password": "Confirm Password",
+  "profile": "Profile",
+  "update_profile": "Update Profile",
   "invitation": "Invitation",
   "accept": "Accept",
   "invite": "Invite",
@@ -21,6 +23,9 @@
   "user_role_changed": "User role updated!",
   "user_invited": "User invited!",
   "user_joined": "Account created successfully!",
+  "profile_updated": "Profile updated successfully!",
+  "email_verified": "Email address verified.",
+  "email_verification_error": "Could not verify email. The verification may have expired.",
   "errors": {
     "user_exists": "A user with email \"{{email}}\" already exists.",
     "email_required": "Please input your email address.",
