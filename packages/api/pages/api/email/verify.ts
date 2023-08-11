@@ -4,6 +4,7 @@ import { auth } from '../../../shared/auth';
 import { InvalidTokenError } from '../../../shared/errors';
 import { client } from '../../../shared/db';
 import { PostEmailVerificationRequest } from '@translation/api-types';
+import mailer from '../../../shared/mailer';
 
 export default createRoute()
   .post<PostEmailVerificationRequest, void>({
@@ -40,6 +41,13 @@ export default createRoute()
           data: {
             id: `username:${verification.email}`,
           },
+        });
+
+        await mailer.sendEmail({
+          email: authKey.providerUserId,
+          subject: 'Password Changed',
+          text: `Your email address for Global Bible Tools was changed to ${verification.email}.`,
+          html: `Your email address for Global Bible Tools was changed to <strong>${verification.email}</strong>.`,
         });
       }
 

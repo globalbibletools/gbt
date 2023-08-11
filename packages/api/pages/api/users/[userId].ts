@@ -81,6 +81,13 @@ export default createRoute<{ userId: string }>()
               key.providerUserId,
               password
             );
+
+            await mailer.sendEmail({
+              userId: user.id,
+              subject: 'Password Changed',
+              text: `Your password for Global Bible Tools has changed.`,
+              html: `Your password for Global Bible Tools has changed.`,
+            });
           }
 
           if (email && email !== key.providerUserId) {
@@ -97,8 +104,8 @@ export default createRoute<{ userId: string }>()
             const url = redirects.emailVerification(token);
             await mailer.sendEmail(
               {
-                userId: user.id,
-                subject: 'GlobalBibleTools Email Verification',
+                email,
+                subject: 'Email Verification',
                 text: `Please click the link to verify your new email \n\n${url.toString()}`,
                 html: `<a href="${url.toString()}">Click here<a/> to verify your new email.`,
               },
