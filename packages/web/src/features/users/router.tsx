@@ -6,6 +6,7 @@ import AcceptInviteView, { acceptInviteLoader } from './AcceptInviteView';
 import queryClient from '../../shared/queryClient';
 import { authorize } from '../../shared/accessControl';
 import UpdateProfileView from './UpdateProfileView';
+import EmailVerificationView from './EmailVerificationView';
 
 const routes: RouteObject[] = [
   {
@@ -30,6 +31,10 @@ const routes: RouteObject[] = [
     path: 'invite',
     loader: acceptInviteLoader(queryClient),
     element: <AcceptInviteView />,
+  },
+  {
+    path: 'verify-email',
+    element: <EmailVerificationView />,
   },
 ];
 

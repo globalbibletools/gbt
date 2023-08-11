@@ -24,19 +24,21 @@ enum EmailStatus {
 /// A user who can authenticate into the system.
 model AuthUser {
   /// The ID of the user.
-  id            String               @id @default(dbgenerated("generate_ulid()")) @db.Uuid
+  id                 String                  @id @default(dbgenerated("generate_ulid()")) @db.Uuid
   /// The display name of the user.
-  name          String?
+  name               String?
   /// The status of the email (whether we can send emails or not).
-  emailStatus   EmailStatus          @default(UNVERIFIED)
+  emailStatus        EmailStatus             @default(UNVERIFIED)
   /// The list of system roles this user has
-  systemRoles   UserSystemRole[]
+  systemRoles        UserSystemRole[]
   /// The list of sessions for the user.
-  auth_session  AuthSession[]
+  auth_session       AuthSession[]
   /// The list of auth keys for the user
-  auth_key      AuthKey[]
+  auth_key           AuthKey[]
   /// The roles for this user on all languages.
-  languageRoles LanguageMemberRole[]
+  languageRoles      LanguageMemberRole[]
+  /// The list of emails awaiting verification.
+  emailVerifications UserEmailVerification[]
 
   @@map("User")
 }
@@ -75,6 +77,20 @@ model AuthKey {
 
   @@index([user_id])
   @@map("UserAuthentication")
+}
+
+/// A new email for a user awaiting verification.
+model UserEmailVerification {
+  /// The ID of the user whose email needs to be verified.
+  userId  String   @db.Uuid
+  /// The user whose email needs to be verified.
+  user    AuthUser @relation(references: [id], fields: [userId], onDelete: Cascade)
+  /// The email address being verified.
+  email   String
+  /// The token being used for verification.
+  token   String   @id @unique
+  /// The date the verification token is no longer valid.
+  expires BigInt
 }
 
 enum SystemRole {

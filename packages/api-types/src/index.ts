@@ -25,6 +25,10 @@ export const EmailStatus = makeEnum({
 });
 export type EmailStatus = typeof EmailStatus[keyof typeof EmailStatus];
 
+export interface PostEmailVerificationRequest {
+  token: string;
+}
+
 export interface GetSessionResponse {
   user?: {
     id: string;

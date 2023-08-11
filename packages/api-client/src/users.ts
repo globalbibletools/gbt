@@ -1,5 +1,6 @@
 import type {
   GetUsersResponseBody,
+  PostEmailVerificationRequest,
   PostUserRequestBody,
   UpdateUserRequestBody,
 } from '@translation/api-types';
@@ -27,6 +28,14 @@ export default class Users {
   }: UpdateUserRequestBody & { id: string }): Promise<void> {
     return this.client.patch({
       path: `/api/users/${id}`,
+      body,
+    });
+  }
+
+  verifyEmail(token: string): Promise<void> {
+    const body: PostEmailVerificationRequest = { token };
+    return this.client.post({
+      path: `/api/email/verify`,
       body,
     });
   }

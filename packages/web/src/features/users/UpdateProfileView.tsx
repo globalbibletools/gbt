@@ -51,6 +51,9 @@ export default function UpdateProfileView() {
         });
       }
 
+      setValue('password', '');
+      setValue('confirmPassword', '');
+
       flash.success(t('user_invited'));
     } catch (error) {
       flash.error(`${error}`);

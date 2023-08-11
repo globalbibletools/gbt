@@ -70,40 +70,42 @@ export default createRoute<{ userId: string }>()
         });
       }
 
-      if (password) {
+      if (password || email) {
         const key = (await auth.getAllUserKeys(user.id)).find(
           (key) => key.providerId === 'username'
         );
         if (key) {
-          await auth.updateKeyPassword(
-            key.providerId,
-            key.providerUserId,
-            password
-          );
+          if (password) {
+            await auth.updateKeyPassword(
+              key.providerId,
+              key.providerUserId,
+              password
+            );
+          }
+
+          if (email && email !== key.providerUserId) {
+            const token = randomBytes(12).toString('hex');
+            await client.userEmailVerification.create({
+              data: {
+                userId: user.id,
+                token,
+                email,
+                expires: Date.now() + 60 * 60 * 1000,
+              },
+            });
+
+            const url = redirects.emailVerification(token);
+            await mailer.sendEmail(
+              {
+                userId: user.id,
+                subject: 'GlobalBibleTools Email Verification',
+                text: `Please click the link to verify your new email \n\n${url.toString()}`,
+                html: `<a href="${url.toString()}">Click here<a/> to verify your new email.`,
+              },
+              true
+            );
+          }
         }
-      }
-
-      // TODO: verify it actually changed
-      if (email) {
-        const token = randomBytes(12).toString('hex');
-        await auth.createKey(user.id, {
-          type: 'single_use',
-          providerId: 'invite-verification',
-          providerUserId: token,
-          password: null,
-          expiresIn: 60 * 60,
-        });
-
-        const url = redirects.emailVerification(token);
-        await mailer.sendEmail(
-          {
-            userId: user.id,
-            subject: 'GlobalBibleTools Email Verification',
-            text: `Please click the link to verify your new email \n\n${url.toString()}`,
-            html: `<a href="${url.toString()}">Click here<a/> to verify your new email.`,
-          },
-          true
-        );
       }
 
       res.ok();
