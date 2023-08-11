@@ -22,7 +22,7 @@ interface FormData {
 }
 
 export default function UpdateProfileView() {
-  const { user } = useAuth();
+  const { user, refreshAuth } = useAuth();
   const { t } = useTranslation(['users', 'translation']);
   const flash = useFlash();
 
@@ -53,6 +53,8 @@ export default function UpdateProfileView() {
 
       setValue('password', '');
       setValue('confirmPassword', '');
+
+      refreshAuth();
 
       flash.success(t('users:profile_updated'));
     } catch (error) {

@@ -6,14 +6,19 @@ import { useMutation } from '@tanstack/react-query';
 import LoadingSpinner from '../../shared/components/LoadingSpinner';
 import { useEffect } from 'react';
 import apiClient from '../../shared/apiClient';
+import useAuth from '../../shared/hooks/useAuth';
 
 export default function EmailVerificationView() {
   const { t } = useTranslation(['users']);
   const [params] = useSearchParams();
+  const { refreshAuth } = useAuth();
 
   const { status, mutate } = useMutation({
     async mutationFn(variables: { token: string }) {
       await apiClient.users.verifyEmail(variables.token);
+    },
+    onSuccess() {
+      refreshAuth();
     },
   });
 
