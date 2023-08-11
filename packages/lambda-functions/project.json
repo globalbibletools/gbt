@@ -1,0 +1,21 @@
+{
+  "name": "lambda-functions",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/lambda-functions",
+  "projectType": "application",
+  "targets": {
+    "serve-functions": {
+      "command": "sam.cmd build && sam.cmd local start-api",
+      "options": {
+        "cwd": "packages/lambda-functions"
+      }
+    },
+    "deploy-functions": {
+      "command": "sam.cmd build && sam.cmd deploy --guided",
+      "options": {
+        "cwd": "packages/lambda-functions"
+      }
+    }
+  },
+  "tags": []
+}
