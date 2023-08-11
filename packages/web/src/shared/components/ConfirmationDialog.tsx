@@ -53,6 +53,7 @@ const ConfirmationDialog = forwardRef<
 
   function handleResult(result: boolean) {
     setIsOpen(false);
+    formContext.reset();
     if (resolveOpen.current) {
       resolveOpen.current(result);
     }
