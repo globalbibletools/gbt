@@ -11,6 +11,19 @@ patch:
         schema:
           type: object
           properties:
+            name:
+              type: string
+              description: The new name of the user.
+              example: Joe Translator
+            email:
+              type: string
+              format: email
+              description: The new email address of the user.
+              example: joe.translator@example.com
+            password:
+              type: string
+              description: The new password of the user.
+              example: asdf1234
             systemRoles:
               type: array
               description: The list of roles to grant to the user. Replaces all existing roles.

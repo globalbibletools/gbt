@@ -30,7 +30,6 @@ export default function UpdateProfileView() {
   const { setValue } = formContext;
   useEffect(() => {
     if (user) {
-      console.log(user);
       setValue('email', user.email ?? '');
       setValue('name', user.name ?? '');
     }

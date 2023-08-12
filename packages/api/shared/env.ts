@@ -14,5 +14,9 @@ export const originAllowlist =
         `https://interlinear-git-${originSuffix}`,
       ]
     : process.env.ORIGIN_ALLOWLIST?.split(',') ?? [];
+export const redirectOrigin =
+  process.env.VERCEL_ENV === 'preview'
+    ? `https://interlinear-git-${originSuffix}`
+    : process.env.REDIRECT_ORIGIN;
 
 export const importServer = 'https://hebrewgreekbible.online';

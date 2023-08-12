@@ -1,7 +1,7 @@
-const baseUrl = process.env['REDIRECT_ORIGIN'];
+import { redirectOrigin } from './env';
 
 export const redirects = {
-  invite: (token: string) => `${baseUrl}/invite?token=${token}`,
+  invite: (token: string) => `${redirectOrigin}/invite?token=${token}`,
   emailVerification: (token: string) =>
-    `${baseUrl}/verify-email?token=${token}`,
+    `${redirectOrigin}/verify-email?token=${token}`,
 };
