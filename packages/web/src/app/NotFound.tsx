@@ -1,5 +1,7 @@
 import { useRouteError } from 'react-router-dom';
 import { NotFoundError } from '../shared/accessControl';
+import Footer from './Footer';
+import Header from './Header';
 
 export default function NotFound() {
   const error: any = useRouteError();
@@ -11,10 +13,14 @@ export default function NotFound() {
       : error.statusText || error.message;
 
   return (
-    <div className="absolute w-full h-full flex flex-col items-center justify-center">
-      <h1 className="font-bold text-xl mb-6">Woops!</h1>
-      <p className="mb-2">An unknown error has occurred.</p>
-      <p className="italic">{message}</p>
+    <div className="min-h-screen flex flex-col">
+      <Header />
+      <div className="flex-grow relative flex flex-col items-center justify-center">
+        <h1 className="font-bold text-xl mb-6">Woops!</h1>
+        <p className="mb-2">An unknown error has occurred.</p>
+        <p className="italic">{message}</p>
+      </div>
+      <Footer />
     </div>
   );
 }
