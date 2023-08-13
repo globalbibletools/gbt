@@ -35,6 +35,14 @@ export default function Header() {
             {t('languages')}
           </Link>
         )}
+        {userCan('administer', 'User') && (
+          <Link
+            to={'/users'}
+            className="me-4 focus:outline-none hover:underline focus:underline"
+          >
+            {t('users:users')}
+          </Link>
+        )}
         {session.status === 'authenticated' && (
           <DropdownMenu text={session.user.name ?? ''}>
             <DropdownMenuButton
