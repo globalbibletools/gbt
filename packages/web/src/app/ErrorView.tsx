@@ -1,4 +1,4 @@
-import { useRouteError } from 'react-router-dom';
+import { useRouteError, isRouteErrorResponse } from 'react-router-dom';
 import { NotFoundError } from '../shared/accessControl';
 import Footer from './Footer';
 import Header from './Header';
@@ -9,9 +9,12 @@ export default function NotFound() {
   const error: any = useRouteError();
   const { t } = useTranslation(['translation']);
 
+  console.log(error);
+
   const isNotFound =
     error instanceof NotFoundError ||
-    (error instanceof ApiClientError && error.status === 404);
+    (error instanceof ApiClientError && error.status === 404) ||
+    (isRouteErrorResponse(error) && error.status === 404);
 
   const headerText = isNotFound
     ? t('translation:not_found')
