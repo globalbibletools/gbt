@@ -29,7 +29,11 @@ export default function DropdownMenu({
   }
 
   return (
-    <div ref={root} className={`relative ${className}`} onBlur={onBlur}>
+    <div
+      ref={root}
+      className={`relative inline-block ${className}`}
+      onBlur={onBlur}
+    >
       <button
         className="focus:outline-none hover:underline focus:underline"
         type="button"

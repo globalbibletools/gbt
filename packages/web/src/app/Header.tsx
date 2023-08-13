@@ -1,9 +1,6 @@
 import { useTranslation } from 'react-i18next';
-import { useQuery } from '@tanstack/react-query';
 import DropdownMenu, {
   DropdownMenuButton,
-  DropdownMenuLink,
-  DropdownMenuSubmenu,
 } from '../shared/components/actions/DropdownMenu';
 import { Icon } from '../shared/components/Icon';
 import apiClient from '../shared/apiClient';
@@ -11,75 +8,32 @@ import useAuth from '../shared/hooks/useAuth';
 import { Link } from 'react-router-dom';
 import { useAccessControl } from '../shared/accessControl';
 
-export interface HeaderProps {
-  language: string;
-  onLanguageChange(code: string): void;
-}
-
-export default function Header({ language, onLanguageChange }: HeaderProps) {
+export default function Header() {
   const session = useAuth();
   const { t } = useTranslation(['translation', 'users']);
-
-  const languagesQuery = useQuery(['languages'], () =>
-    apiClient.languages.findAll()
-  );
-  const translationLanguages = languagesQuery.data?.data ?? [];
-  const selectedLanguage = translationLanguages.find(
-    (l) => l.code === language
-  );
 
   const userCan = useAccessControl();
 
   return (
-    <header className="p-2 flex items-baseline flex-row z-10">
+    <header className="py-2 px-4 flex items-baseline flex-row z-10 mb-2">
       <Link className="font-bold text-lg" to="/">
         {t('app_name')}
       </Link>
       <div className="flex-grow" />
       <nav className="flex items-baseline" aria-label="primary">
-        {translationLanguages.length > 0 && (
-          <>
-            <Link
-              to={'/translate'}
-              className="me-4 focus:outline-none hover:underline focus:underline"
-            >
-              {t('translate')}
-            </Link>
-            {userCan('administer', 'Language') ? (
-              <DropdownMenu
-                text={selectedLanguage?.name ?? 'Language'}
-                className="me-4"
-              >
-                <DropdownMenuSubmenu text={t('switch_language')}>
-                  {translationLanguages.map((language) => (
-                    <DropdownMenuButton
-                      key={language.code}
-                      onClick={() => onLanguageChange(language.code)}
-                    >
-                      {language.name}
-                    </DropdownMenuButton>
-                  ))}
-                </DropdownMenuSubmenu>
-                <DropdownMenuLink to={'/languages'}>
-                  {t('manage_languages')}
-                </DropdownMenuLink>
-              </DropdownMenu>
-            ) : (
-              <DropdownMenu
-                text={selectedLanguage?.name ?? 'Language'}
-                className="me-4"
-              >
-                {translationLanguages.map((language) => (
-                  <DropdownMenuButton
-                    key={language.code}
-                    onClick={() => onLanguageChange(language.code)}
-                  >
-                    {language.name}
-                  </DropdownMenuButton>
-                ))}
-              </DropdownMenu>
-            )}
-          </>
+        <Link
+          to={'/translate'}
+          className="me-4 focus:outline-none hover:underline focus:underline"
+        >
+          {t('translate')}
+        </Link>
+        {userCan('administer', 'Language') && (
+          <Link
+            to={'/languages'}
+            className="me-4 focus:outline-none hover:underline focus:underline"
+          >
+            {t('languages')}
+          </Link>
         )}
         {session.status === 'authenticated' && (
           <DropdownMenu text={session.user.name ?? ''}>
@@ -89,7 +43,7 @@ export default function Header({ language, onLanguageChange }: HeaderProps) {
                 window.location.href = '/';
               }}
             >
-              <Icon icon="right-from-bracket" className="me-2" fixedWidth />
+              <Icon icon="right-from-bracket" className="me-4" fixedWidth />
               {t('users:log_out')}
             </DropdownMenuButton>
           </DropdownMenu>

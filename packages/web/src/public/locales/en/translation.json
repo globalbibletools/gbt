@@ -1,10 +1,10 @@
 {
   "language_one": "language",
   "language_other": "languages",
+  "languages": "Languages",
   "add_language": "Add Language",
   "new_language": "New Language",
   "switch_language": "Switch Language",
-  "manage_languages": "Manage Languages",
   "manage": "Manage",
   "update": "Update",
   "create": "Create",
