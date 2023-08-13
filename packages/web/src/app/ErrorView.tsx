@@ -9,8 +9,6 @@ export default function NotFound() {
   const error: any = useRouteError();
   const { t } = useTranslation(['translation']);
 
-  console.log('error', error);
-
   const isNotFound =
     error instanceof NotFoundError ||
     (error instanceof ApiClientError && error.status === 404);
