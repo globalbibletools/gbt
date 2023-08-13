@@ -1,7 +1,7 @@
 {
   "language_one": "idioma",
   "language_other": "idiomas",
-  "languages": "idiomas",
+  "languages": "Idiomas",
   "add_language": "Agregar Idioma",
   "new_language": "Nuevo Idioma",
   "switch_language": "Cambiar de Idioma",
@@ -36,5 +36,9 @@
   "language_name_required": "Ingrese el nombre del idioma.",
   "language_code_required": "Ingrese el código de idioma.",
   "translate": "Traducir",
-  "loading": "Cargando"
+  "loading": "Cargando",
+  "not_found": "No Encontrado",
+  "not_found_message": "No pudimos encontrar lo que estás buscando.",
+  "unknown_error": "Error Desconocido",
+  "unknown_error_message": "Ha ocurrido un error desconocido."
 }

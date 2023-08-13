@@ -3,13 +3,13 @@ import translationRoutes from '../features/translation/router';
 import languagesRoutes from '../features/languages/router';
 import userRoutes from '../features/users/router';
 import Layout from './Layout';
-import NotFound from './NotFound';
+import ErrorView from './ErrorView';
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <Layout />,
-    errorElement: <NotFound />,
+    errorElement: <ErrorView />,
     children: [
       {
         index: true,
