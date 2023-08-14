@@ -113,7 +113,9 @@ export default function TranslationView() {
       <div className="flex gap-8 items-center">
         <VerseSelector
           verseId={verseId}
-          onVerseChange={(verseId) => navigate('../translate/' + verseId)}
+          onVerseChange={(verseId) =>
+            navigate(`/languages/${language}/verses/${verseId}`)
+          }
         />
         <DropdownMenu text={selectedLanguage?.name ?? 'Language'}>
           {translationLanguages.map((language) => (

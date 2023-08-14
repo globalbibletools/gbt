@@ -15,22 +15,22 @@ export default function Header() {
   const userCan = useAccessControl();
 
   return (
-    <header className="py-2 px-4 flex items-baseline flex-row z-10 mb-2">
+    <header className="py-2 px-4 flex items-baseline flex-row z-10 mb-2 gap-4">
       <Link className="font-bold text-lg" to="/">
         {t('app_name')}
       </Link>
       <div className="flex-grow" />
-      <nav className="flex items-baseline" aria-label="primary">
+      <nav className="flex items-baseline gap-4" aria-label="primary">
         <Link
           to={'/translate'}
-          className="me-4 focus:outline-none hover:underline focus:underline"
+          className="focus:outline-none hover:underline focus:underline"
         >
           {t('translate')}
         </Link>
         {userCan('administer', 'Language') && (
           <Link
             to={'/languages'}
-            className="me-4 focus:outline-none hover:underline focus:underline"
+            className="focus:outline-none hover:underline focus:underline"
           >
             {t('languages')}
           </Link>
@@ -38,7 +38,7 @@ export default function Header() {
         {userCan('administer', 'User') && (
           <Link
             to={'/users'}
-            className="me-4 focus:outline-none hover:underline focus:underline"
+            className="focus:outline-none hover:underline focus:underline"
           >
             {t('users:users')}
           </Link>
