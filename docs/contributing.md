@@ -27,8 +27,8 @@ These are the major technologies we are using. Familiarity with most of these wi
 
 1. [Install](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/install-sam-cli.html#install-sam-cli-instructions) the SAM cli.
 1. [Install](https://www.docker.com) docker.
-1. Run `nx serve-functionslambda-functions` in a terminal to make the lambda functions available on port 3000.
-   - **Note** - you have to restart this every time you make code changes. Hot reload isn't trivial when running local lambda functions - see [here](https://github.com/aws/aws-sam-cli/issues/901).
+1. Run `nx serve-functions lambda-functions` in a terminal to make the lambda functions available on port 3000.
+   - **Note** - you have to restart this every time you make code changes. Hot reload isn't trivial when running local lambda functions - see [here](https://github.com/aws/aws-sam-cli/issues/901) and [here](https://github.com/aws/aws-sam-cli/issues/921).
 
 ## Development Environment
 
