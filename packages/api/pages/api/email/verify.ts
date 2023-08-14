@@ -17,23 +17,14 @@ export default createRoute()
           token: req.body.token,
         },
       });
-      if (!verification) {
-        throw new InvalidTokenError();
-      }
-
-      if (verification.expires < Date.now()) {
-        await client.userEmailVerification.delete({
-          where: {
-            token: req.body.token,
-          },
-        });
+      if (!verification || verification.expires < Date.now()) {
         throw new InvalidTokenError();
       }
 
       const authKey = (await auth.getAllUserKeys(verification.userId)).find(
         (key) => key.providerId === 'username'
       );
-      if (authKey) {
+      if (authKey && authKey.providerUserId !== verification.email) {
         await client.authKey.update({
           where: {
             id: `username:${authKey.providerUserId}`,
@@ -51,11 +42,6 @@ export default createRoute()
         });
       }
 
-      await client.userEmailVerification.delete({
-        where: {
-          token: req.body.token,
-        },
-      });
       res.ok();
     },
   })
