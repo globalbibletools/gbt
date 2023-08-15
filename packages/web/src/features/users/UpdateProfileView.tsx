@@ -12,91 +12,85 @@ import Button from '../../shared/components/actions/Button';
 import SubmittingIndicator from '../../shared/components/form/SubmittingIndicator';
 import { useFlash } from '../../shared/hooks/flash';
 import useAuth from '../../shared/hooks/useAuth';
-import {
-  LoaderFunctionArgs,
-  useLoaderData,
-  useNavigate,
-  useSearchParams,
-} from 'react-router-dom';
-import { QueryClient } from '@tanstack/query-core';
-import { useQuery } from '@tanstack/react-query';
-
-const createInviteQuery = (token?: string) => ({
-  queryKey: ['invite', token],
-  queryFn: () => apiClient.auth.getInvite(token ?? ''),
-});
-
-export const acceptInviteLoader =
-  (queryClient: QueryClient) =>
-  ({ request }: LoaderFunctionArgs) => {
-    const url = new URL(request.url);
-    const token = url.searchParams.get('token') ?? undefined;
-    return queryClient.ensureQueryData(createInviteQuery(token));
-  };
-
-const useInviteQuery = (token?: string) => {
-  const initialData = useLoaderData() as Awaited<
-    ReturnType<ReturnType<typeof acceptInviteLoader>>
-  >;
-  return useQuery({
-    ...createInviteQuery(token),
-    initialData,
-  });
-};
+import { useEffect } from 'react';
 
 interface FormData {
+  email: string;
   name: string;
   password: string;
   confirmPassword: string;
 }
 
-export default function AcceptInviteView() {
-  const { refreshAuth } = useAuth();
-
-  const [search] = useSearchParams();
-  const token = search.get('token') ?? undefined;
-
-  const { data: invite } = useInviteQuery(token);
-
-  const navigate = useNavigate();
-  const { t } = useTranslation('users');
+export default function UpdateProfileView() {
+  const { user, refreshAuth } = useAuth();
+  const { t } = useTranslation(['users', 'translation']);
   const flash = useFlash();
 
   const formContext = useForm<FormData>();
-  const onSubmit: SubmitHandler<FormData> = async ({ name, password }) => {
-    try {
-      await apiClient.auth.acceptInvite({
-        name,
-        token: token ?? '',
-        password,
-      });
+  const { setValue } = formContext;
+  useEffect(() => {
+    if (user) {
+      setValue('email', user.email ?? '');
+      setValue('name', user.name ?? '');
+    }
+  }, [setValue, user]);
 
-      flash.success(t('user_joined'));
+  const onSubmit: SubmitHandler<FormData> = async ({
+    email,
+    name,
+    password,
+  }) => {
+    try {
+      if (user) {
+        await apiClient.users.update({
+          id: user.id,
+          email,
+          name,
+          password,
+        });
+      }
+
+      setValue('password', '');
+      setValue('confirmPassword', '');
 
       refreshAuth();
 
-      navigate('/');
+      flash.success(t('users:profile_updated'));
     } catch (error) {
       flash.error(`${error}`);
     }
   };
 
+  if (!user) return null;
+
   return (
     <View fitToScreen className="flex justify-center items-start">
       <Card className="mx-4 mt-4 w-96 flex-shrink p-6">
-        <ViewTitle>{t('invitation')}</ViewTitle>
+        <ViewTitle>{t('users:update_profile')}</ViewTitle>
         <Form context={formContext} onSubmit={onSubmit}>
-          <div className="mb-4">
-            <FormLabel htmlFor="email">{t('email').toUpperCase()}</FormLabel>
-            <input
+          <div className="mb-2">
+            <FormLabel htmlFor="email">
+              {t('users:email').toUpperCase()}
+            </FormLabel>
+            <TextInput
               id="email"
-              className="block w-full"
-              readOnly
-              defaultValue={invite.email}
+              name="email"
+              type="email"
+              className="w-full"
+              autoComplete="email"
+              required
+              aria-describedby="email-error"
+            />
+            <InputError
+              id="email-error"
+              name="email"
+              messages={{ required: t('users:email_required') }}
             />
           </div>
           <div className="mb-2">
-            <FormLabel htmlFor="name">{t('name').toUpperCase()}</FormLabel>
+            <FormLabel htmlFor="name">
+              {t('users:name').toUpperCase()}
+            </FormLabel>
             <TextInput
               id="name"
               name="name"
@@ -108,12 +102,12 @@ export default function AcceptInviteView() {
             <InputError
               id="name-error"
               name="name"
-              messages={{ required: t('name_required') }}
+              messages={{ required: t('users:name_required') }}
             />
           </div>
           <div className="mb-2">
             <FormLabel htmlFor="password">
-              {t('password').toUpperCase()}
+              {t('users:password').toUpperCase()}
             </FormLabel>
             <TextInput
               type="password"
@@ -121,7 +115,6 @@ export default function AcceptInviteView() {
               name="password"
               className="w-full"
               autoComplete="new-password"
-              required
               minLength={8}
               aria-describedby="password-error"
             />
@@ -129,14 +122,14 @@ export default function AcceptInviteView() {
               id="password-error"
               name="password"
               messages={{
-                required: t('errors.password_required'),
-                minLength: t('errors.password_format'),
+                required: t('users:errors.password_required'),
+                minLength: t('users:errors.password_format'),
               }}
             />
           </div>
-          <div className="mb-2">
+          <div className="mb-4">
             <FormLabel htmlFor="confirm-password">
-              {t('confirm_password').toUpperCase()}
+              {t('users:confirm_password').toUpperCase()}
             </FormLabel>
             <TextInput
               type="password"
@@ -150,11 +143,11 @@ export default function AcceptInviteView() {
             <InputError
               id="confirm-password-error"
               name="confirmPassword"
-              messages={{ confirms: t('errors.password_confirmation') }}
+              messages={{ confirms: t('users:errors.password_confirmation') }}
             />
           </div>
           <div>
-            <Button type="submit">{t('accept')}</Button>
+            <Button type="submit">{t('translation:update')}</Button>
             <SubmittingIndicator className="ms-3" />
           </div>
         </Form>

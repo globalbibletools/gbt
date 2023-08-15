@@ -24,12 +24,7 @@ export default function InviteUserView() {
   const formContext = useForm<FormData>();
   const onSubmit: SubmitHandler<FormData> = async ({ email }, { reset }) => {
     try {
-      const redirectUrl = new URL(window.location.href);
-      redirectUrl.pathname = '/invite';
-      await apiClient.users.invite({
-        email,
-        redirectUrl: redirectUrl.toString(),
-      });
+      await apiClient.users.invite({ email });
 
       flash.success(t('user_invited'));
       reset();

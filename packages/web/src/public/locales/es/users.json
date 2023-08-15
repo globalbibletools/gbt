@@ -6,6 +6,8 @@
   "log_out": "Cerrar sesión",
   "password": "Contraseña",
   "confirm_password": "Confirmar Contraseña",
+  "profile": "Perfil",
+  "update_profile": "Actualización del Perfil",
   "accept": "Aceptar",
   "invitation": "Invitación",
   "invite": "Invitar",
@@ -22,6 +24,9 @@
   "user_role_changed": "¡Rol de usuario actualizado!",
   "user_invited": "¡Usuario invitado!",
   "user_joined": "¡Cuenta creada exitosamente!",
+  "profile_updated": "¡Perfil actualizado con éxito!",
+  "email_verified": "Correo electrónico verificado.",
+  "email_verification_error": "No se pudo verify email. The verification may have expired.",
   "errors": {
     "user_exists": "Ya existe un usuario con correo electrónico \"{{email}}\"",
     "email_required": "Por favor ingrese su dirección de correo electrónico.",

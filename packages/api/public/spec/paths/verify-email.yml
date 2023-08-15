@@ -1,0 +1,15 @@
+post:
+  tags:
+    - Users
+  summary: Verify an email address.
+  parameters:
+    - name: token
+      in: query
+      description: The token used to validate the email address.
+      required: true
+      schema:
+        type: string
+      example: 'asdf23rev02h3r08g08sd'
+  responses:
+    204:
+      description: Ok

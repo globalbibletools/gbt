@@ -25,6 +25,10 @@ export const EmailStatus = makeEnum({
 });
 export type EmailStatus = typeof EmailStatus[keyof typeof EmailStatus];
 
+export interface PostEmailVerificationRequest {
+  token: string;
+}
+
 export interface GetSessionResponse {
   user?: {
     id: string;
@@ -66,10 +70,12 @@ export interface GetUsersResponseBody {
 
 export interface PostUserRequestBody {
   email: string;
-  redirectUrl: string;
 }
 
 export interface UpdateUserRequestBody {
+  email?: string;
+  name?: string;
+  password?: string;
   systemRoles?: SystemRole[];
 }
 
@@ -118,7 +124,6 @@ export interface GetLanguageMembersResponseBody {
 export interface PostLanguageMemberRequestBody {
   email: string;
   roles: LanguageRole[];
-  redirectUrl: string;
 }
 
 export interface PatchLanguageMemberRequestBody {

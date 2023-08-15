@@ -18,12 +18,16 @@ const transporter = process.env['EMAIL_SERVER']
       },
     };
 
-export interface EmailOptions {
-  userId: string;
+export type EmailOptions = (
+  | {
+      userId: string;
+    }
+  | { email: string }
+) & {
   subject: string;
   text: string;
   html: string;
-}
+};
 
 export class EmailNotVerifiedError extends Error {
   constructor(email: string) {
@@ -49,23 +53,31 @@ export default {
    * @throws `MissingEmailAddressError` - If the user does not have an email address.
    */
   async sendEmail(
-    { userId, subject, text, html }: EmailOptions,
+    { subject, text, html, ...options }: EmailOptions,
     force = false
   ) {
-    let user, primaryKey;
-    try {
-      user = await auth.getUser(userId);
-      const keys = await auth.getAllUserKeys(userId);
-      primaryKey = keys.find((key) => key.type === 'persistent' && key.primary);
-    } catch (error) {
-      throw new MissingEmailAddressError(userId);
+    let email;
+
+    if ('email' in options) {
+      email = options.email;
+    } else {
+      let user, primaryKey;
+      try {
+        user = await auth.getUser(options.userId);
+        const keys = await auth.getAllUserKeys(options.userId);
+        primaryKey = keys.find(
+          (key) => key.type === 'persistent' && key.primary
+        );
+      } catch (error) {
+        throw new MissingEmailAddressError(options.userId);
+      }
+
+      if (!primaryKey) throw new MissingEmailAddressError(options.userId);
+      if (user.emailStatus !== EmailStatus.VERIFIED && !force)
+        throw new EmailNotVerifiedError(primaryKey?.providerUserId);
+
+      email = primaryKey.providerUserId;
     }
-
-    if (!primaryKey) throw new MissingEmailAddressError(userId);
-    if (user.emailStatus !== EmailStatus.VERIFIED && !force)
-      throw new EmailNotVerifiedError(primaryKey?.providerUserId);
-
-    const email = primaryKey.providerUserId;
 
     await this.transporter.sendMail({
       from: process.env['EMAIL_FROM'],
