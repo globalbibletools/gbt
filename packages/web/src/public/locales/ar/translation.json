@@ -1,10 +1,10 @@
 {
   "language_one": "اللغة",
   "language_other": "اللغات",
+  "languages": "اللغات",
   "add_language": "إضافة لغة",
   "new_language": "لغة جديدة",
   "switch_language": "تغيير اللغة",
-  "manage_languages": "إدارة اللغات",
   "manage": "إدارة",
   "update": "تحديث",
   "create": "إنشاء",
@@ -36,5 +36,9 @@
   "language_name_required": "يرجى إدخال اسم اللغة.",
   "language_code_required": "يرجى إدخال رمز اللغة.",
   "translate": "ترجمة",
-  "loading": "تحميل"
+  "loading": "تحميل",
+  "not_found": "غير موجود",
+  "not_found_message": "لم نتمكن من العثور على ما تبحث عنه.",
+  "unknown_error": "خطأ غير معروف",
+  "unknown_error_message": "حدث خطأ غير معروف."
 }

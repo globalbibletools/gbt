@@ -1,34 +1,15 @@
-import { Suspense, useMemo } from 'react';
-import { Outlet, useOutletContext } from 'react-router-dom';
-import useLocalStorageState from '../shared/hooks/useLocalStorageState';
+import { Suspense } from 'react';
+import { Outlet } from 'react-router-dom';
 import Header from './Header';
 import Footer from './Footer';
 
-export interface LayoutContext {
-  language: string;
-}
-
-export function useLayoutContext() {
-  return useOutletContext<LayoutContext>();
-}
-
 export function Layout() {
-  const [language, selectLanguage] = useLocalStorageState<string>(
-    'translation-language',
-    'en'
-  );
-
-  const outletContext = useMemo<LayoutContext>(
-    () => ({ language }),
-    [language]
-  );
-
   return (
     <Suspense fallback="loading">
       <div className="min-h-screen flex flex-col">
-        <Header language={language} onLanguageChange={selectLanguage} />
+        <Header />
         <div className="flex-grow relative flex flex-col">
-          <Outlet context={outletContext} />
+          <Outlet />
         </div>
         <Footer />
       </div>

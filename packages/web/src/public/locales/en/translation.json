@@ -1,10 +1,10 @@
 {
   "language_one": "language",
   "language_other": "languages",
+  "languages": "Languages",
   "add_language": "Add Language",
   "new_language": "New Language",
   "switch_language": "Switch Language",
-  "manage_languages": "Manage Languages",
   "manage": "Manage",
   "update": "Update",
   "create": "Create",
@@ -36,5 +36,9 @@
   "language_name_required": "Please enter the language name.",
   "language_code_required": "Please enter the language code.",
   "translate": "Translate",
-  "loading": "Loading"
+  "loading": "Loading",
+  "not_found": "Not Found",
+  "not_found_message": "We couldn't find what you are looking for.",
+  "unknown_error": "Unknown Error",
+  "unknown_error_message": "An unknown error has occured."
 }

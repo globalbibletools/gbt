@@ -1,30 +1,45 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { GetVerseGlossesResponseBody } from '@translation/api-types';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useLayoutContext } from '../../app/Layout';
 import { useAccessControl } from '../../shared/accessControl';
 import apiClient from '../../shared/apiClient';
 import LoadingSpinner from '../../shared/components/LoadingSpinner';
 import TranslateWord from './TranslateWord';
 import { VerseSelector } from './VerseSelector';
 import { parseVerseId } from './verse-utils';
+import DropdownMenu, {
+  DropdownMenuLink,
+} from '../../shared/components/actions/DropdownMenu';
 
 export default function TranslationView() {
-  const params = useParams() as { verseId: string };
+  const { verseId, language } = useParams() as {
+    verseId: string;
+    language: string;
+  };
   const navigate = useNavigate();
-  const { language } = useLayoutContext();
 
-  const verseQuery = useQuery(['verse', params.verseId], () =>
-    apiClient.verses.findById(params.verseId)
+  useEffect(() => {
+    localStorage.setItem('translation-language', language);
+  }, [language]);
+
+  const verseQuery = useQuery(['verse', verseId], () =>
+    apiClient.verses.findById(verseId)
   );
-  const referenceGlossesQuery = useQuery(
-    ['verse-glosses', 'en', params.verseId],
-    () => apiClient.verses.findVerseGlosses(params.verseId, 'en')
+  const referenceGlossesQuery = useQuery(['verse-glosses', 'en', verseId], () =>
+    apiClient.verses.findVerseGlosses(verseId, 'en')
   );
   const targetGlossesQuery = useQuery(
-    ['verse-glosses', language, params.verseId],
-    () => apiClient.verses.findVerseGlosses(params.verseId, language)
+    ['verse-glosses', language, verseId],
+    () => apiClient.verses.findVerseGlosses(verseId, language)
+  );
+
+  const languagesQuery = useQuery(['languages'], () =>
+    apiClient.languages.findAll()
+  );
+  const translationLanguages = languagesQuery.data?.data ?? [];
+  const selectedLanguage = translationLanguages.find(
+    (l) => l.code === language
   );
 
   const [glossRequests, setGlossRequests] = useState<
@@ -38,7 +53,7 @@ export default function TranslationView() {
       const requestId = Math.floor(Math.random() * 1000000);
       setGlossRequests((requests) => [...requests, { wordId, requestId }]);
 
-      const queryKey = ['verse-glosses', language, params.verseId];
+      const queryKey = ['verse-glosses', language, verseId];
       await queryClient.cancelQueries({ queryKey });
       const previousGlosses = queryClient.getQueryData(queryKey);
       queryClient.setQueryData<GetVerseGlossesResponseBody>(queryKey, (old) => {
@@ -68,7 +83,7 @@ export default function TranslationView() {
     },
     onError: (_, __, context) => {
       queryClient.setQueryData(
-        ['verse-glosses', language, params.verseId],
+        ['verse-glosses', language, verseId],
         context?.previousGlosses
       );
 
@@ -76,7 +91,7 @@ export default function TranslationView() {
     },
     onSettled: (_, __, ___, context) => {
       queryClient.invalidateQueries({
-        queryKey: ['verse-glosses', language, params.verseId],
+        queryKey: ['verse-glosses', language, verseId],
       });
 
       if (context?.requestId) {
@@ -95,15 +110,29 @@ export default function TranslationView() {
     !targetGlossesQuery.isSuccess;
   return (
     <div className="px-4 flex flex-grow flex-col gap-2">
-      <VerseSelector
-        verseId={params.verseId}
-        onVerseChange={(verseId) => navigate('../translate/' + verseId)}
-      />
+      <div className="flex gap-8 items-center">
+        <VerseSelector
+          verseId={verseId}
+          onVerseChange={(verseId) =>
+            navigate(`/languages/${language}/verses/${verseId}`)
+          }
+        />
+        <DropdownMenu text={selectedLanguage?.name ?? 'Language'}>
+          {translationLanguages.map((language) => (
+            <DropdownMenuLink
+              key={language.code}
+              to={`/languages/${language.code}/verses/${verseId}`}
+            >
+              {language.name}
+            </DropdownMenuLink>
+          ))}
+        </DropdownMenu>
+      </div>
       {(() => {
         if (loading) {
           return (
             <div className="flex-grow flex items-center justify-center">
-              <LoadingSpinner></LoadingSpinner>
+              <LoadingSpinner />
             </div>
           );
         } else {
