@@ -1,7 +1,7 @@
 import { ErrorDetail } from '@translation/api-types';
 import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 import { ZodType } from 'zod';
-import { Prisma, SystemRole } from '../prisma/client';
+import { Prisma, SystemRole } from './db';
 import { cors } from './cors';
 import * as Errors from './errors';
 import { createPolicyFor, Policy } from './access-control/policy';

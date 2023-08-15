@@ -86,6 +86,6 @@
     "zod": "3.21.4"
   },
   "prisma": {
-    "schema": "packages/api/prisma/schema.prisma"
+    "schema": "packages/db-client/prisma/schema.prisma"
   }
 }

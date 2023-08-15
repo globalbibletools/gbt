@@ -1,16 +1,14 @@
-import * as z from 'zod';
-import createRoute from '../../../shared/Route';
-import { client } from '../../../shared/db';
-import mailer from '../../../shared/mailer';
 import {
   GetUsersResponseBody,
   PostUserRequestBody,
 } from '@translation/api-types';
-import { authorize } from '../../../shared/access-control/authorize';
-import { accessibleBy } from '../../../prisma/casl';
-import { auth } from '../../../shared/auth';
 import { randomBytes } from 'crypto';
-import { SystemRole } from '../../../prisma/client';
+import * as z from 'zod';
+import createRoute from '../../../shared/Route';
+import { authorize } from '../../../shared/access-control/authorize';
+import { auth } from '../../../shared/auth';
+import { PrismaCasl, PrismaTypes, client } from '../../../shared/db';
+import mailer from '../../../shared/mailer';
 
 export default createRoute()
   .get<void, GetUsersResponseBody>({
@@ -20,7 +18,7 @@ export default createRoute()
     }),
     async handler(req, res) {
       const users = await client.authUser.findMany({
-        where: accessibleBy(req.policy).AuthUser,
+        where: PrismaCasl.accessibleBy(req.policy).AuthUser,
         include: {
           systemRoles: true,
           auth_key: {
@@ -32,12 +30,16 @@ export default createRoute()
       });
 
       res.ok({
-        data: users.map((user) => ({
+        data: users.map((user: PrismaTypes.AuthUser) => ({
           id: user.id,
           name: user.name ?? undefined,
           email: user.auth_key[0]?.id.split(':')[1] ?? undefined,
-          ...(req.session?.user?.systemRoles.includes(SystemRole.ADMIN) && {
-            systemRoles: user.systemRoles.map(({ role }) => role),
+          ...(req.session?.user?.systemRoles.includes(
+            PrismaTypes.SystemRole.ADMIN
+          ) && {
+            systemRoles: user.systemRoles.map(
+              ({ role }: { role: PrismaTypes.SystemRole }) => role
+            ),
             emailStatus: user.emailStatus,
           }),
         })),

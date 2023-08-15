@@ -2,15 +2,15 @@
 
 Our database is postgresql@14.7 with prisma to manage the schema and migrations. Each package can have its own prisma schema if it has its own database. At this moment, only the api project has a database.
 
-[Database schema](./../packages/api/prisma/schema.prisma)
+[Database schema](./../packages/db-client/prisma/schema.prisma)
 
 ## Setup
 
 1. Install postgresql version 14.7
 1. Create database for the project
-1. Set the `DATABASE_URL` env var in `packages/api/.env.local` to the postgres connection string. You may need to include a username and password in the connection string.
-1. Run `nx prisma api migrate reset` to scaffold the database schema.
-1. Run `nx seed api` to insert static verse data into the database.
+1. Set the `DATABASE_URL` env var in `packages/db-client/.env.local` to the postgres connection string. You may need to include a username and password in the connection string.
+1. Run `nx prisma db-client migrate reset` to scaffold the database schema.
+1. Run `nx seed db-client` to insert static verse data into the database.
 
 ## Seed and Reset Data
 

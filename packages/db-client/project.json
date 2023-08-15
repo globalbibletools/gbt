@@ -1,0 +1,38 @@
+{
+  "name": "db-client",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/db-client/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/db-client",
+        "main": "packages/db-client/src/index.ts",
+        "tsConfig": "packages/db-client/tsconfig.lib.json",
+        "assets": []
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["packages/db-client/**/*.ts"]
+      }
+    },
+    "seed": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx ts-node --project packages/db-client/tsconfig.json packages/db-client/prisma/seed.ts"
+      }
+    },
+    "prisma": {
+      "executor": "@translation/nx-plugin:prisma",
+      "options": {
+        "schema": "packages/db-client/prisma/schema.prisma"
+      }
+    }
+  },
+  "tags": []
+}

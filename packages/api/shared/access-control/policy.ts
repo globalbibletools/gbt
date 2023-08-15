@@ -1,36 +1,33 @@
-import {
-  Language,
-  AuthUser,
-  SystemRole,
-  LanguageRole,
-} from '../../prisma/client';
+import { PrismaTypes } from '../db';
 import { PureAbility, AbilityBuilder } from '@casl/ability';
 import { Subjects } from '@casl/prisma';
-import { createPrismaAbility, PrismaQuery } from '../../prisma/casl';
+import { PrismaCasl } from '../db';
 
 export type Subject = Subjects<{
-  Language: Language;
-  AuthUser: AuthUser;
+  Language: PrismaTypes.Language;
+  AuthUser: PrismaTypes.AuthUser;
 }>;
 export type RawSubject = Extract<Subject, string>;
 export type Action = 'create' | 'read' | 'translate' | 'administer';
 
-export type Policy = PureAbility<[Action, Subject], PrismaQuery>;
+export type Policy = PureAbility<[Action, Subject], PrismaCasl.PrismaQuery>;
 
 export interface Actor {
   id: string;
-  systemRoles: SystemRole[];
+  systemRoles: PrismaTypes.SystemRole[];
 }
 
 export function createPolicyFor(user?: Actor) {
-  const { can, build } = new AbilityBuilder<Policy>(createPrismaAbility);
+  const { can, build } = new AbilityBuilder<Policy>(
+    PrismaCasl.createPrismaAbility
+  );
 
   if (user) {
     can('read', 'Language', {
       roles: {
         some: {
           userId: user.id,
-          role: LanguageRole.VIEWER,
+          role: PrismaTypes.LanguageRole.VIEWER,
         },
       },
     });
@@ -38,7 +35,7 @@ export function createPolicyFor(user?: Actor) {
       roles: {
         some: {
           userId: user.id,
-          role: LanguageRole.TRANSLATOR,
+          role: PrismaTypes.LanguageRole.TRANSLATOR,
         },
       },
     });
@@ -46,14 +43,14 @@ export function createPolicyFor(user?: Actor) {
       roles: {
         some: {
           userId: user.id,
-          role: LanguageRole.ADMIN,
+          role: PrismaTypes.LanguageRole.ADMIN,
         },
       },
     });
 
     can('read', 'AuthUser', { id: user.id });
 
-    if (user.systemRoles.includes(SystemRole.ADMIN)) {
+    if (user.systemRoles.includes(PrismaTypes.SystemRole.ADMIN)) {
       can('create', 'Language');
       can('read', 'Language');
       can('administer', 'Language');
