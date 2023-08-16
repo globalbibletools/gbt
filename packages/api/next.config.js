@@ -12,11 +12,13 @@ const nextConfig = {
     // See: https://github.com/gregberge/svgr
     svgr: false,
   },
-  outputFileTracingExcludes: {
-    '*': [
-      'node_modules/@swc/core-linux-x64-gnu',
-      'node_modules/@swc/core-linux-x64-musl',
-    ],
+  experimental: {
+    outputFileTracingExcludes: {
+      '*': [
+        'node_modules/@swc/core-linux-x64-gnu',
+        'node_modules/@swc/core-linux-x64-musl',
+      ],
+    },
   },
 };
 
