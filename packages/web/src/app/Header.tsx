@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import DropdownMenu, {
   DropdownMenuButton,
+  DropdownMenuLink,
 } from '../shared/components/actions/DropdownMenu';
 import { Icon } from '../shared/components/Icon';
 import apiClient from '../shared/apiClient';
