@@ -1,8 +1,8 @@
-import { PrismaClient, Prisma } from '../prisma/client';
+import { PrismaClient, Prisma } from '@translation/db';
 import { randomBytes } from 'crypto';
 
 export { Prisma };
-export * as PrismaTypes from '../prisma/client';
+export * as PrismaTypes from '@translation/db';
 
 export const client = new PrismaClient();
 

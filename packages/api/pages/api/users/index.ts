@@ -7,10 +7,10 @@ import {
   PostUserRequestBody,
 } from '@translation/api-types';
 import { authorize } from '../../../shared/access-control/authorize';
-import { accessibleBy } from '../../../prisma/casl';
+import { accessibleBy } from '../../../shared/access-control/casl';
 import { auth } from '../../../shared/auth';
 import { randomBytes } from 'crypto';
-import { SystemRole } from '../../../prisma/client';
+import { SystemRole } from '@translation/db';
 import { redirects } from '../../../shared/redirects';
 
 export default createRoute()

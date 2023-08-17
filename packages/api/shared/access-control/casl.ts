@@ -10,7 +10,7 @@ import {
   Model,
 } from '@casl/prisma/runtime';
 import { hkt } from '@casl/ability';
-import type { Prisma, PrismaClient } from './client';
+import type { Prisma, PrismaClient } from '@translation/db';
 
 type ModelName = Prisma.ModelName;
 type ModelWhereInput = {
