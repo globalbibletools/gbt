@@ -45,7 +45,6 @@
     "@nx/webpack": "16.7.1",
     "@nx/workspace": "16.7.1",
     "@pmmmwh/react-refresh-webpack-plugin": "0.5.7",
-    "@prisma/nextjs-monorepo-workaround-plugin": "5.1.1",
     "@svgr/webpack": "8.0.1",
     "@swc-node/register": "1.4.2",
     "@swc/cli": "0.1.62",
