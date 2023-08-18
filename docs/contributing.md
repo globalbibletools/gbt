@@ -18,7 +18,7 @@ These are the major technologies we are using. Familiarity with most of these wi
 1. [Install](https://www.postgresql.org/download/) posgresql 14.7 and [set up a new database](./db.md) before running this project.
 1. Run `npm install` to install all of the project's dependencies. Run `npm i -g nx` to make the `nx` command available in the terminal.
 1. Set up your `.env.local` file in the `api` package. At minimum you need to set `DATABASE_URL` to a postgresql connection string to the database you created earlier.
-1. Run `nx seed api` to populate your database with development data. This includes all of the original language data as well as English glosses.
+1. Run `pg_restore -Fc --format=custom --dbname=<connection-string> data/seed.dump` to populate your database with development data. This includes all of the original language data as well as English glosses.
 1. Run `nx serve api` and `nx serve web` in separate terminals. This will make the api server available on port 4300 and the web server available on 4200.
 
 ## Lambda Functions
