@@ -1,13 +1,20 @@
 import { bookKeys } from '../../../data/book-keys';
 import { morphologyData } from '../../../data/morphology';
-import { PrismaClient } from '../prisma/client';
+import { PrismaClient } from './client';
 
 const client = new PrismaClient();
 
 const STRONGS_REGEX = / \[e\]/;
 
 async function run() {
-  const wordData = [];
+  const wordData: {
+    id: string;
+    text: string;
+    verseId: string;
+    grammar: string;
+    strongs: string;
+    english: string;
+  }[] = [];
   const lemmas: {
     [strongs: string]: {
       [grammar: string]: { verseIds: string[]; formId?: string };

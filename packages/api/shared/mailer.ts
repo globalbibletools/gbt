@@ -1,5 +1,5 @@
 import { createTransport, SendMailOptions } from 'nodemailer';
-import { EmailStatus } from '../prisma/client';
+import { EmailStatus } from '@translation/db';
 import { auth } from './auth';
 
 if (!process.env['EMAIL_SERVER'] && process.env.NODE_ENV === 'production') {

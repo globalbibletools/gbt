@@ -1,5 +1,5 @@
 import { SNSMessage } from '@translation/api-types';
-import { EmailStatus } from '../../../prisma/client';
+import { EmailStatus } from '@translation/db';
 import { auth } from '../../../shared/auth';
 import * as z from 'zod';
 import createRoute from '../../../shared/Route';

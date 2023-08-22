@@ -17,6 +17,7 @@
     "paths": {
       "@translation/api-client": ["packages/api-client/src/index.ts"],
       "@translation/api-types": ["packages/api-types/src/index.ts"],
+      "@translation/db": ["packages/db/src/index.ts"],
       "@translation/nx-plugin": ["packages/nx-plugin/src/index.ts"]
     }
   },

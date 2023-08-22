@@ -49,18 +49,6 @@
       "options": {
         "lintFilePatterns": ["packages/api/**/*.{ts,tsx,js,jsx}"]
       }
-    },
-    "seed": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "npx ts-node --project packages/api/tsconfig.json packages/api/prisma/seed.ts"
-      }
-    },
-    "prisma": {
-      "executor": "@translation/nx-plugin:prisma",
-      "options": {
-        "schema": "packages/api/prisma/schema.prisma"
-      }
     }
   },
   "tags": []

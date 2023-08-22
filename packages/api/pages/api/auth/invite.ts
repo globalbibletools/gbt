@@ -7,7 +7,7 @@ import {
 } from '@translation/api-types';
 import { auth } from '../../../shared/auth';
 import { NotFoundError } from '../../../shared/errors';
-import { EmailStatus } from '../../../prisma/client';
+import { EmailStatus } from '@translation/db';
 
 export default createRoute()
   .get<GetInviteRequestQuery, GetInviteResponseBody>({
