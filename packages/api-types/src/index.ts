@@ -94,7 +94,7 @@ export interface GetLanguageResponseBody {
 
 export type PostLanguageRequestBody = Language;
 
-export type PostLanguageImportRequestBody = {
+export type GetLanguageImportStatusRequestBody = {
   import: string;
 };
 

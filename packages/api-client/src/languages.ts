@@ -5,7 +5,7 @@ import type {
   LanguageRole,
   PatchLanguageMemberRequestBody,
   PatchLanguageRequestBody,
-  PostLanguageImportRequestBody,
+  GetLanguageImportStatusRequestBody,
   PostLanguageMemberRequestBody,
   PostLanguageRequestBody,
 } from '@translation/api-types';
@@ -16,7 +16,7 @@ export {
   GetLanguagesResponseBody,
   PatchLanguageRequestBody,
   PostLanguageRequestBody,
-  PostLanguageImportRequestBody,
+  GetLanguageImportStatusRequestBody,
 };
 
 export default class Languages {
@@ -37,7 +37,7 @@ export default class Languages {
 
   async import(
     code: string,
-    body: PostLanguageImportRequestBody
+    body: GetLanguageImportStatusRequestBody
   ): Promise<void> {
     await this.client.post({
       path: `/api/languages/${code}/import`,
