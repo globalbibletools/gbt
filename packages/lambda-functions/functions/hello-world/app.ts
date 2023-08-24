@@ -1,4 +1,4 @@
-import { PrismaClient } from '@translation/db';
+import { PrismaClient } from '../../../../packages/db/src/index';
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 import { bookKeys } from '../../../../data/book-keys';
 
