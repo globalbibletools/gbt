@@ -96,7 +96,7 @@ export default createRoute()
 async function fetchGlossData(url: string) {
   const response = await fetch(url);
   const jsCode = await response.text();
-  return parseGlossJs(jsCode);
+  return parseGlossJs(jsCode.trim());
 }
 
 /**
