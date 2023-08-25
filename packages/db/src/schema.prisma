@@ -4,6 +4,8 @@
 generator client {
   provider        = "prisma-client-js"
   previewFeatures = ["postgresqlExtensions"]
+  // rhel-openssl is needed to use the prisma client on lambda.
+  binaryTargets   = ["native", "rhel-openssl-1.0.x"]
 }
 
 datasource db {

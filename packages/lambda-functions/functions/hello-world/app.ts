@@ -1,4 +1,4 @@
-import { PrismaClient } from '../../../../packages/db/src/index';
+import { PrismaClient } from '@translation/db';
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 import { bookKeys } from '../../../../data/book-keys';
 
@@ -10,12 +10,6 @@ export const lambdaHandler = async (
   event: APIGatewayProxyEvent
 ): Promise<APIGatewayProxyResult> => {
   console.log(event.queryStringParameters);
-  return {
-    statusCode: 200,
-    body: JSON.stringify({
-      message: 'Wow it actually works!',
-    }),
-  };
 
   const languageCode = 'ar'; // TODO: read language code from request
   const importLanguage = 'Arabic'; // TODO: read import language from request
@@ -26,61 +20,70 @@ export const lambdaHandler = async (
     },
   });
 
-  // Delete all the glosses for the language.
-  await client.gloss.deleteMany({
-    where: {
-      languageId: language.id,
-    },
-  });
+  // if (language) {
+  //   // Delete all the glosses for the language.
+  //   await client.gloss.deleteMany({
+  //     where: {
+  //       languageId: language.id,
+  //     },
+  //   });
 
-  const glossData: { wordId; gloss }[] = [];
-  for (const key of bookKeys) {
-    const bookId = bookKeys.indexOf(key) + 1;
-    const glossUrl = `${importServer}/${importLanguage}Glosses/${key}Gloss.js`;
-    const bookData = await fetchGlossData(glossUrl);
-    const referenceUrl = `${importServer}/files/${key}.js`;
-    const referenceData = await fetchGlossData(referenceUrl);
+  //   const glossData: { wordId: string; gloss: string }[] = [];
+  //   for (const key of bookKeys) {
+  //     const bookId = bookKeys.indexOf(key) + 1;
+  //     const glossUrl = `${importServer}/${importLanguage}Glosses/${key}Gloss.js`;
+  //     const bookData = await fetchGlossData(glossUrl);
+  //     const referenceUrl = `${importServer}/files/${key}.js`;
+  //     const referenceData = await fetchGlossData(referenceUrl);
 
-    // Accumulate gloss data
-    for (
-      let chapterNumber = 1;
-      chapterNumber <= bookData.length;
-      chapterNumber++
-    ) {
-      const chapterData = bookData[chapterNumber - 1];
-      for (
-        let verseNumber = 1;
-        verseNumber <= chapterData.length;
-        verseNumber++
-      ) {
-        const verseData = chapterData[verseNumber - 1];
-        let wordNumber = 0;
-        for (let wordIndex = 0; wordIndex < verseData.length; wordIndex++) {
-          const useWord =
-            referenceData[chapterNumber - 1][verseNumber - 1][wordIndex]
-              .length == 6;
-          if (useWord) {
-            wordNumber += 1;
-            const wordId = [
-              bookId.toString().padStart(2, '0'),
-              chapterNumber.toString().padStart(3, '0'),
-              verseNumber.toString().padStart(3, '0'),
-              wordNumber.toString().padStart(2, '0'),
-            ].join('');
-            const gloss = verseData[wordIndex][0];
-            glossData.push({ wordId, gloss });
-          }
-        }
-      }
-    }
-  }
-  await client.gloss.createMany({
-    data: glossData.map(({ wordId, gloss }) => ({
-      wordId,
-      languageId: language.id,
-      gloss,
-    })),
-  });
+  //     // Accumulate gloss data
+  //     for (
+  //       let chapterNumber = 1;
+  //       chapterNumber <= bookData.length;
+  //       chapterNumber++
+  //     ) {
+  //       const chapterData = bookData[chapterNumber - 1];
+  //       for (
+  //         let verseNumber = 1;
+  //         verseNumber <= chapterData.length;
+  //         verseNumber++
+  //       ) {
+  //         const verseData = chapterData[verseNumber - 1];
+  //         let wordNumber = 0;
+  //         for (let wordIndex = 0; wordIndex < verseData.length; wordIndex++) {
+  //           const useWord =
+  //             referenceData[chapterNumber - 1][verseNumber - 1][wordIndex]
+  //               .length == 6;
+  //           if (useWord) {
+  //             wordNumber += 1;
+  //             const wordId = [
+  //               bookId.toString().padStart(2, '0'),
+  //               chapterNumber.toString().padStart(3, '0'),
+  //               verseNumber.toString().padStart(3, '0'),
+  //               wordNumber.toString().padStart(2, '0'),
+  //             ].join('');
+  //             const gloss = verseData[wordIndex][0];
+  //             glossData.push({ wordId, gloss });
+  //           }
+  //         }
+  //       }
+  //     }
+  //   }
+  //   await client.gloss.createMany({
+  //     data: glossData.map(({ wordId, gloss }) => ({
+  //       wordId,
+  //       languageId: language.id,
+  //       gloss,
+  //     })),
+  //   });
+  // }
+
+  return {
+    statusCode: 200,
+    body: JSON.stringify({
+      message: language?.name ?? 'Not found',
+    }),
+  };
 };
 
 /**

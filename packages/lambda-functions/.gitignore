@@ -1,1 +1,4 @@
 .aws-sam
+
+dist/
+env.json
