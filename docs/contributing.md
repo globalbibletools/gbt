@@ -27,7 +27,7 @@ These are the major technologies we are using. Familiarity with most of these wi
 
 1. [Install](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/install-sam-cli.html#install-sam-cli-instructions) the SAM cli.
 1. [Install](https://www.docker.com) docker.
-1. Copy `env-example.json` to `env.json` to the lambda-functions project and update with your local env vars. You can use `host.docker.internal` in situtations where the host IP address is needed. This allows the docker container to connect to services on your host machine.
+1. Copy `env-example.json` to `env.json` to the lambda-functions project and update with your local env vars. You can use `host.docker.internal` in situations where the host IP address (AKA `localhost`) is needed. This allows the docker container to connect to services on your host machine.
 1. Run `nx serve lambda-functions` in a terminal to make the lambda functions available on port 3000.
    - **Note** - you have to restart this every time you make code changes. Hot reload isn't trivial when running local lambda functions - see [here](https://github.com/aws/aws-sam-cli/issues/901) and [here](https://github.com/aws/aws-sam-cli/issues/921).
 
