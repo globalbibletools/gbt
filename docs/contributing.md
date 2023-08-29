@@ -45,6 +45,7 @@ These are the major technologies we are using. Familiarity with most of these wi
 
 ## Pull Requests
 
+- Use [conventional commit as your PR name](https://www.conventionalcommits.org/en/v1.0.0/). The most common prefixes we use are `feat:`, `refactor:`, `chore:`, and `docs:`.
 - Please avoid putting too much into a single PR. Large PRs are more difficult to review and tend to create more merge conflicts.
 - Follow the PR template to speed up the review process.
 - PRs are squashed before they are merged, so your commit names within the PR can be whatever you'd like.
@@ -58,3 +59,4 @@ These are the major technologies we are using. Familiarity with most of these wi
   - The package is widely used: check the number of downloads on npmjs.com, use npm trends to check popularity over time.
   - The package is maintained: check contributions, stars, and releases on GitHub, or check the quality of documentation
 - Prefer smaller packages or packages that can be tree shaken to remove the unused parts. This limits the bloat of our build.
+- Lock the version down in package.json to a specific minor and patch version. This ensures that everyone is using the same version of dependencies.
