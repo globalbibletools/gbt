@@ -1,11 +1,12 @@
-import { GetLanguageImportStatusRequestBody } from '@translation/api-types';
+import { StartLanguageImportStatusRequestBody } from '@translation/api-types';
 import { z } from 'zod';
 import createRoute from '../../../../shared/Route';
 import { authorize } from '../../../../shared/access-control/authorize';
 import { client } from '../../../../shared/db';
+import { importTriggerUrl } from '../../../../shared/env';
 
 export default createRoute()
-  .post<GetLanguageImportStatusRequestBody, void>({
+  .post<StartLanguageImportStatusRequestBody, void>({
     authorize: authorize((req) => ({
       action: 'administer',
       subject: 'Language',
@@ -28,6 +29,22 @@ export default createRoute()
         return;
       }
 
+      // trigger import process
+      const response = await fetch(importTriggerUrl);
+      const result = await response.json();
+      // TODO: actually use the result
+      console.log(result);
+
+      res.ok();
+    },
+  })
+  .get<void, void>({
+    authorize: authorize((req) => ({
+      action: 'administer',
+      subject: 'Language',
+      subjectId: req.query.code,
+    })),
+    async handler(req, res) {
       // TODO: query DB for import status
 
       res.ok();

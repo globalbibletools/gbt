@@ -20,4 +20,4 @@ export const redirectOrigin =
     : process.env.REDIRECT_ORIGIN;
 
 export const importServer = 'https://hebrewgreekbible.online';
-export const importTriggerUrl = process.env.IMPORT_URL;
+export const importTriggerUrl = process.env.IMPORT_URL ?? '';
