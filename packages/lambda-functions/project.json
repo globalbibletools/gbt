@@ -4,17 +4,43 @@
   "sourceRoot": "packages/lambda-functions",
   "projectType": "application",
   "targets": {
-    "serve-functions": {
-      "command": "sam.cmd build && sam.cmd local start-api",
+    "build": {
+      "executor": "@nx/webpack:webpack",
+      "outputs": ["{options.outputPath}"],
       "options": {
-        "cwd": "packages/lambda-functions"
+        "compiler": "babel",
+        "target": "node",
+        "externalDependencies": "none",
+        "outputPath": "dist/packages/lambda-functions",
+        "main": "packages/lambda-functions/functions/hello-world/app.ts",
+        "tsConfig": "packages/lambda-functions/tsconfig.json",
+        "assets": [
+          {
+            "input": "packages/db/src/",
+            "glob": "schema.prisma",
+            "output": "/"
+          },
+          {
+            "input": "node_modules/.prisma/client",
+            "glob": "libquery_engine-rhel-openssl-*.so.node",
+            "output": "/"
+          }
+        ]
       }
     },
-    "deploy-functions": {
-      "command": "sam.cmd build && sam.cmd deploy --guided",
+    "serve": {
+      "command": "sam local start-api --env-vars env.json",
       "options": {
         "cwd": "packages/lambda-functions"
-      }
+      },
+      "dependsOn": ["build"]
+    },
+    "deploy": {
+      "command": "sam deploy --guided",
+      "options": {
+        "cwd": "packages/lambda-functions"
+      },
+      "dependsOn": ["build"]
     }
   },
   "tags": []

@@ -45,7 +45,6 @@ export default function ImportLanguageGlossesView() {
     importLanguages: GetLanguageImportOptionsResponseBody;
   };
   const flash = useFlash();
-  const navigate = useNavigate();
   const { t } = useTranslation();
   const confirmationDialog = useRef<ConfirmationDialogRef>(null);
 
@@ -54,9 +53,8 @@ export default function ImportLanguageGlossesView() {
     const confirmed = await confirmationDialog.current?.open();
     if (confirmed) {
       try {
-        await apiClient.languages.import(language.data.code, data);
-        navigate(`/languages/${language.data.code}`);
-        flash.success(t('import_glosses', { context: 'success' }));
+        await apiClient.languages.startImport(language.data.code, data);
+        // TODO: poll API for import status
       } catch (error) {
         console.error(error);
         flash.error(t('import_glosses', { context: 'error' }));

@@ -5,9 +5,9 @@ import type {
   LanguageRole,
   PatchLanguageMemberRequestBody,
   PatchLanguageRequestBody,
-  PostLanguageImportRequestBody,
   PostLanguageMemberRequestBody,
   PostLanguageRequestBody,
+  StartLanguageImportStatusRequestBody,
 } from '@translation/api-types';
 import type ApiClient from './client';
 
@@ -16,7 +16,7 @@ export {
   GetLanguagesResponseBody,
   PatchLanguageRequestBody,
   PostLanguageRequestBody,
-  PostLanguageImportRequestBody,
+  StartLanguageImportStatusRequestBody,
 };
 
 export default class Languages {
@@ -35,14 +35,18 @@ export default class Languages {
     });
   }
 
-  async import(
+  async startImport(
     code: string,
-    body: PostLanguageImportRequestBody
+    body: StartLanguageImportStatusRequestBody
   ): Promise<void> {
     await this.client.post({
       path: `/api/languages/${code}/import`,
       body,
     });
+  }
+
+  async importStatus(code: string): Promise<void> {
+    await this.client.get({ path: `/api/languages/${code}/import` });
   }
 
   findByCode(code: string): Promise<GetLanguageResponseBody> {
