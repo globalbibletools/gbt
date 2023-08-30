@@ -1,6 +1,6 @@
 import { bookKeys } from '../../../data/book-keys';
 import { morphologyData } from '../../../data/morphology';
-import { PrismaClient } from './client';
+import { PrismaClient } from '@prisma/client';
 
 const client = new PrismaClient();
 
