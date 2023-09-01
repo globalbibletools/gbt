@@ -1,0 +1,11 @@
+{
+  "presets": [
+    [
+      "@nx/js/babel",
+      {
+        "runtime": "automatic"
+      }
+    ]
+  ],
+  "plugins": []
+}
