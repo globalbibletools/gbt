@@ -1,0 +1,22 @@
+{
+  "name": "api",
+  "version": "0.0.1",
+  "dependencies": {
+    "@casl/ability": "6.5.0",
+    "@casl/prisma": "1.4.0",
+    "@lucia-auth/adapter-prisma": "2.0.0",
+    "@prisma/client": "4.11.0",
+    "lucia-auth": "1.8.0",
+    "next": "13.3.0",
+    "nextjs-cors": "2.1.2",
+    "nodemailer": "6.9.2",
+    "prisma": "4.11.0",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "swagger-ui-react": "4.18.1",
+    "typescript": "5.1.6"
+  },
+  "scripts": {
+    "start": "next start"
+  }
+}
