@@ -12,7 +12,7 @@
         "target": "node",
         "externalDependencies": "none",
         "outputPath": "dist/packages/lambda-functions",
-        "main": "packages/lambda-functions/functions/hello-world/app.ts",
+        "main": "packages/lambda-functions/functions/import-language/index.ts",
         "tsConfig": "packages/lambda-functions/tsconfig.json",
         "assets": [
           {
@@ -29,7 +29,7 @@
       }
     },
     "serve": {
-      "command": "sam local start-api --env-vars env.json",
+      "command": "sam local invoke --env-vars env.json --event event.json --debug",
       "options": {
         "cwd": "packages/lambda-functions"
       },
