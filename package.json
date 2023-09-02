@@ -8,6 +8,7 @@
   },
   "private": true,
   "dependencies": {
+    "@aws-sdk/client-sqs": "3.405.0",
     "@casl/ability": "6.5.0",
     "@casl/prisma": "1.4.0",
     "@headlessui/tailwindcss": "0.1.3",

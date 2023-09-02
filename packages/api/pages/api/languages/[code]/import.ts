@@ -3,7 +3,14 @@ import { z } from 'zod';
 import createRoute from '../../../../shared/Route';
 import { authorize } from '../../../../shared/access-control/authorize';
 import { client } from '../../../../shared/db';
-import { importTriggerUrl } from '../../../../shared/env';
+import { SQSClient, SendMessageCommand } from '@aws-sdk/client-sqs';
+
+const sqsClient = new SQSClient({
+  credentials: {
+    accessKeyId: process.env.ACCESS_KEY_ID ?? '',
+    secretAccessKey: process.env.SECRET_ACCESS_KEY ?? '',
+  },
+});
 
 export default createRoute()
   .post<StartLanguageImportStatusRequestBody, void>({
@@ -29,11 +36,16 @@ export default createRoute()
         return;
       }
 
-      // trigger import process
-      const response = await fetch(importTriggerUrl);
-      const result = await response.json();
-      // TODO: actually use the result
-      console.log(result);
+      await sqsClient.send(
+        new SendMessageCommand({
+          QueueUrl: process.env.LANGUAGE_IMPORT_QUEUE_URL,
+          MessageGroupId: req.query.code,
+          MessageBody: JSON.stringify({
+            languageCode: req.query.code,
+            importLanguage: req.body.import,
+          }),
+        })
+      );
 
       res.ok();
     },
