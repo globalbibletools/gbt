@@ -23,6 +23,8 @@
   "error": "Error",
   "success": "Éxito",
   "app_name": "Traducción de brillo",
+  "try_again": "Intentar de Nuevo",
+  "import_glosses_running": "Importación de Glosarios en Curso",
   "import_language": "Lenguaje de importación",
   "import_glosses": "Importar glosas",
   "import_glosses_success": "¡Gloses importados con éxito!",

@@ -130,7 +130,7 @@ export default function ImportLanguageGlossesView() {
               case 'running': {
                 return (
                   <div>
-                    <p className="mb-4">Language import is running.</p>
+                    <p className="mb-4">{t('import_glosses_running')}</p>
                     <div className="flex justify-center">
                       <LoadingSpinner />
                     </div>
@@ -140,9 +140,9 @@ export default function ImportLanguageGlossesView() {
               case 'error': {
                 return (
                   <div>
-                    <p className="mb-4">Language import failed.</p>
+                    <p className="mb-4">{t('import_glosses_error')}</p>
                     <Button onClick={() => setImportStatus('idle')}>
-                      Try again
+                      {t('try_again')}
                     </Button>
                   </div>
                 );
@@ -150,9 +150,9 @@ export default function ImportLanguageGlossesView() {
               case 'complete': {
                 return (
                   <div>
-                    <p className="mb-4">Language import succeeded!</p>
+                    <p className="mb-4">{t('import_glosses_success')}</p>
                     <Button onClick={() => setImportStatus('idle')}>
-                      Try again
+                      {t('try_again')}
                     </Button>
                   </div>
                 );

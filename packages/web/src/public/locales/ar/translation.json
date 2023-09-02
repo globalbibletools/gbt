@@ -23,6 +23,8 @@
   "error": "خطأ",
   "success": "نجاح",
   "app_name": "ترجمة لمعان",
+  "try_again": "حاول مرة أخرى",
+  "import_glosses_running": "جاري استيراد التعريب",
   "import_language": "استيراد لغة",
   "import_glosses": "استيراد اللمعان",
   "import_glosses_success": "اللمعان المستورد بنجاح!",

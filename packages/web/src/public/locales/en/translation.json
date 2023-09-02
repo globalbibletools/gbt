@@ -23,6 +23,8 @@
   "error": "Error",
   "success": "Success",
   "app_name": "Gloss Translation",
+  "try_again": "Try Again",
+  "import_glosses_running": "Gloss import running",
   "import_language": "Import Language",
   "import_glosses": "Import Glosses",
   "import_glosses_success": "Imported glosses successfully!",
