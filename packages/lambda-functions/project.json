@@ -29,7 +29,7 @@
       }
     },
     "serve": {
-      "command": "sam local invoke --env-vars env.json --event event.json --debug",
+      "command": "sam local invoke --env-vars env.json --event event.json",
       "options": {
         "cwd": "packages/lambda-functions"
       },

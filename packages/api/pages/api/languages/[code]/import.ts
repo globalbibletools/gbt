@@ -36,6 +36,13 @@ export default createRoute()
         return;
       }
 
+      const job = await client.languageImportJob.create({
+        data: {
+          languageId: language.id,
+          startDate: new Date(),
+        },
+      });
+
       await sqsClient.send(
         new SendMessageCommand({
           QueueUrl: process.env.LANGUAGE_IMPORT_QUEUE_URL,
@@ -43,6 +50,7 @@ export default createRoute()
           MessageBody: JSON.stringify({
             languageCode: req.query.code,
             importLanguage: req.body.import,
+            jobId: job.id,
           }),
         })
       );

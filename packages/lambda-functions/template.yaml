@@ -5,7 +5,7 @@ Description: >
 
 Globals:
   Function:
-    Timeout: 120
+    Timeout: 360
 
 Resources:
   ImportLanguageFunction:
@@ -16,6 +16,8 @@ Resources:
       Runtime: nodejs18.x
       Architectures:
         - x86_64
+      Timeout: 5000
+      MemorySize: 500
       Environment:
         Variables:
           DATABASE_URL:
