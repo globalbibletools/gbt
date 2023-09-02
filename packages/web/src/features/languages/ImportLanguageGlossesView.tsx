@@ -1,16 +1,11 @@
 import {
   GetLanguageImportOptionsResponseBody,
   GetLanguageResponseBody,
-  SystemRole,
 } from '@translation/api-types';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
-import {
-  LoaderFunctionArgs,
-  useLoaderData,
-  useNavigate,
-} from 'react-router-dom';
+import { LoaderFunctionArgs, useLoaderData } from 'react-router-dom';
 import apiClient from '../../shared/apiClient';
 import ConfirmationDialog, {
   ConfirmationDialogRef,
@@ -49,12 +44,48 @@ export default function ImportLanguageGlossesView() {
   const confirmationDialog = useRef<ConfirmationDialogRef>(null);
 
   const formContext = useForm<FormData>();
+
+  const pollTimeout = useRef<NodeJS.Timer>();
+
+  useEffect(() => {
+    return () => {
+      if (pollTimeout.current) {
+        clearTimeout(pollTimeout.current);
+      }
+    };
+  }, []);
+
   async function onSubmit(data: FormData) {
     const confirmed = await confirmationDialog.current?.open();
     if (confirmed) {
       try {
-        await apiClient.languages.startImport(language.data.code, data);
-        // TODO: poll API for import status
+        const { jobId } = await apiClient.languages.startImport(
+          language.data.code,
+          data
+        );
+
+        await new Promise<void>((resolve, reject) => {
+          const checkImportStatus = async () => {
+            const job = await apiClient.languages.getImportStatus(
+              language.data.code,
+              jobId
+            );
+
+            if (job.endDate) {
+              if (job.succeeded) {
+                flash.success(t('import_glosses', { context: 'success' }));
+                resolve();
+              } else {
+                flash.error(t('import_glosses', { context: 'error' }));
+                reject();
+              }
+            } else {
+              pollTimeout.current = setTimeout(checkImportStatus, 5000);
+            }
+          };
+
+          pollTimeout.current = setTimeout(checkImportStatus, 5000);
+        });
       } catch (error) {
         console.error(error);
         flash.error(t('import_glosses', { context: 'error' }));

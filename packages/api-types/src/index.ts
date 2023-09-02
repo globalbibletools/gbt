@@ -94,9 +94,16 @@ export interface GetLanguageResponseBody {
 
 export type PostLanguageRequestBody = Language;
 
-export type StartLanguageImportStatusRequestBody = {
+export interface PostLanguageImportRequestBody {
   import: string;
-};
+}
+
+export interface GetLanguageImportResponseBody {
+  id: string;
+  startDate: string;
+  endDate?: string;
+  succeeded?: boolean;
+}
 
 export type PatchLanguageRequestBody = Partial<Omit<Language, 'code'>>;
 

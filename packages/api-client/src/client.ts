@@ -94,25 +94,34 @@ export default class ApiClient {
       responseBody = {};
     }
     if (response.ok) {
-      return responseBody;
+      return { body: responseBody, headers: response.headers };
     } else {
       throw new ApiClientError(request, response, responseBody);
     }
   }
 
   async get<Response>(request: ApiClientGetOptions): Promise<Response> {
-    return await this.request({ ...request, method: 'GET' });
+    const response = await this.request({ ...request, method: 'GET' });
+    return response.body;
   }
 
-  async post<Response>(request: ApiClientPostOptions): Promise<Response> {
-    return await this.request({ ...request, method: 'POST' });
+  async post<Response extends { location?: string }>(
+    request: ApiClientPostOptions
+  ): Promise<Response> {
+    const response = await this.request({ ...request, method: 'POST' });
+    return {
+      ...response.body,
+      location: response.headers.get('Location'),
+    };
   }
 
   async patch<Response>(request: ApiClientPatchOptions): Promise<Response> {
-    return await this.request({ ...request, method: 'PATCH' });
+    const response = await this.request({ ...request, method: 'PATCH' });
+    return response.body;
   }
 
   async delete<Response>(request: ApiClientPatchOptions): Promise<Response> {
-    return await this.request({ ...request, method: 'DELETE' });
+    const response = await this.request({ ...request, method: 'DELETE' });
+    return response.body;
   }
 }

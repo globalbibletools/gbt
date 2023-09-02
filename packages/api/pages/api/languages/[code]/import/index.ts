@@ -1,8 +1,8 @@
-import { StartLanguageImportStatusRequestBody } from '@translation/api-types';
+import { PostLanguageImportRequestBody } from '@translation/api-types';
 import { z } from 'zod';
-import createRoute from '../../../../shared/Route';
-import { authorize } from '../../../../shared/access-control/authorize';
-import { client } from '../../../../shared/db';
+import createRoute from '../../../../../shared/Route';
+import { authorize } from '../../../../../shared/access-control/authorize';
+import { client } from '../../../../../shared/db';
 import { SQSClient, SendMessageCommand } from '@aws-sdk/client-sqs';
 
 const sqsClient = new SQSClient({
@@ -12,8 +12,8 @@ const sqsClient = new SQSClient({
   },
 });
 
-export default createRoute()
-  .post<StartLanguageImportStatusRequestBody, void>({
+export default createRoute<{ code: string }>()
+  .post<PostLanguageImportRequestBody, void>({
     authorize: authorize((req) => ({
       action: 'administer',
       subject: 'Language',
@@ -55,19 +55,7 @@ export default createRoute()
         })
       );
 
-      res.ok();
-    },
-  })
-  .get<void, void>({
-    authorize: authorize((req) => ({
-      action: 'administer',
-      subject: 'Language',
-      subjectId: req.query.code,
-    })),
-    async handler(req, res) {
-      // TODO: query DB for import status
-
-      res.ok();
+      res.created(`/api/languages/${req.query.code}/import/${job.id}`);
     },
   })
   .build();

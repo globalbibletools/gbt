@@ -15,26 +15,26 @@ export default class Users {
     });
   }
 
-  invite(body: PostUserRequestBody): Promise<void> {
-    return this.client.post({
+  async invite(body: PostUserRequestBody): Promise<void> {
+    await this.client.post({
       path: `/api/users`,
       body,
     });
   }
 
-  update({
+  async update({
     id,
     ...body
   }: UpdateUserRequestBody & { id: string }): Promise<void> {
-    return this.client.patch({
+    await this.client.patch({
       path: `/api/users/${id}`,
       body,
     });
   }
 
-  verifyEmail(token: string): Promise<void> {
+  async verifyEmail(token: string): Promise<void> {
     const body: PostEmailVerificationRequest = { token };
-    return this.client.post({
+    await this.client.post({
       path: `/api/email/verify`,
       body,
     });
