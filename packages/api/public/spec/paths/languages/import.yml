@@ -1,3 +1,28 @@
+get:
+  tags:
+    - Language Import
+  summary: Get the status of the import job for a language.
+  parameters:
+    - $ref: '../../schemas/parameters.yml#languageCode'
+  responses:
+    200:
+      description: Ok
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              startDate:
+                type: string
+                format: date
+                description: The date the job started.
+              endDate:
+                type: string
+                format: date
+                description: The date the job completed.
+              succeeded:
+                type: boolean
+                description: Whether the job was successful.
 post:
   tags:
     - Language Import
