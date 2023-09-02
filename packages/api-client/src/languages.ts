@@ -38,22 +38,16 @@ export default class Languages {
   async startImport(
     code: string,
     body: PostLanguageImportRequestBody
-  ): Promise<{ jobId: string }> {
-    const { location } = await this.client.post({
+  ): Promise<void> {
+    await this.client.post({
       path: `/api/languages/${code}/import`,
       body,
     });
-    return {
-      jobId: location?.split('/').at(-1) ?? 'unknown',
-    };
   }
 
-  getImportStatus(
-    code: string,
-    jobId: string
-  ): Promise<GetLanguageImportResponseBody> {
+  getImportStatus(code: string): Promise<GetLanguageImportResponseBody> {
     return this.client.get<GetLanguageImportResponseBody>({
-      path: `/api/languages/${code}/import/${jobId}`,
+      path: `/api/languages/${code}/import`,
     });
   }
 

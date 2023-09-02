@@ -98,7 +98,7 @@ export const lambdaHandler = async (event: SQSEvent) => {
 
       await client.languageImportJob.update({
         where: {
-          id: jobId,
+          languageId: language.id,
         },
         data: {
           endDate: new Date(),

@@ -1,12 +1,11 @@
 -- CreateTable
 CREATE TABLE "LanguageImportJob" (
-    "id" UUID NOT NULL DEFAULT generate_ulid(),
     "languageId" UUID NOT NULL,
     "startDate" TIMESTAMP(3) NOT NULL,
     "endDate" TIMESTAMP(3),
     "succeeded" BOOLEAN,
 
-    CONSTRAINT "LanguageImportJob_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "LanguageImportJob_pkey" PRIMARY KEY ("languageId")
 );
 
 -- AddForeignKey
