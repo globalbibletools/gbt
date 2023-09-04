@@ -18,7 +18,10 @@ export const sessionQuery = {
 
 /** Get the status and data in the current session. */
 export default function useAuth(): UseAuthResult {
-  const { data, status } = useQuery(sessionQuery);
+  const { data, status } = useQuery({
+    ...sessionQuery,
+    refetchOnMount: true,
+  });
 
   const queryClient = useQueryClient();
   const refreshAuth = useCallback(() => {
