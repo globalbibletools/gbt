@@ -6,7 +6,7 @@ Our database is postgresql@14.7 with prisma to manage the schema and migrations.
 
 ## Setup
 
-1. Install postgresql version 14.7
+1. [Install](https://www.postgresql.org/download/) postgresql version 14 (latest version).
 1. Create database for the project
 1. Set the `DATABASE_URL` env var in `packages/api/.env.local` and `packages/db/.env.local` to the postgres connection string. You may need to include a username and password in the connection string.
 1. Run `nx prisma db migrate reset` to scaffold the database schema.
