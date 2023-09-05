@@ -16,25 +16,25 @@ Our database is postgresql@14.7 with prisma to manage the schema and migrations.
 
 In order to reset the database to the current schema and clear all data, run the following command. It may take a few minutes to remove any existing data and build out the database schema.
 
-```
+```text
 nx prisma db migrate reset
 ```
 
 Then you can seed the database with static verse data. This will take a few minutes to run.
 
-```
+```bash
 nx seed db
 ```
 
 This seed script runs fine when the database is on the local machine, but for remote databases, it is quite slow. In these situations, use this command:
 
-```
+```bash
 pg_restore -Fc --format=custom --dbname=<connection-string> data/seed.dump
 ```
 
 Generate a new seed file from your local database with:
 
-```
+```bash
 pg_dump -Fc --data-only --exclude-table _prisma_migrations <db-name> > data/seed.dump
 ```
 
@@ -42,13 +42,13 @@ pg_dump -Fc --data-only --exclude-table _prisma_migrations <db-name> > data/seed
 
 To apply existing migrations to your local database, run the command:
 
-```
+```bash
 nx prisma db migrate dev
 ```
 
 To migrate the database schema, first update the prisma schema, and then run the command:
 
-```
+```bash
 nx prisma db migrate dev --name migration_name
 ```
 
