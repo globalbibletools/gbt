@@ -14,12 +14,15 @@ These are the major technologies we are using. Familiarity with most of these wi
 
 ## Local Development
 
-1. [Install](https://nodejs.org/en/download/) node 18 and npm 8. If you need to maintain multiple node versions for other projects, consider using [nvm](https://github.com/nvm-sh/nvm).
-1. [Install](https://www.postgresql.org/download/) posgresql 14.7 and [set up a new database](./db.md) before running this project.
-1. Run `npm install` to install all of the project's dependencies. Run `npm i -g nx` to make the `nx` command available in the terminal.
-1. Set up your `.env.local` file in the `api` package. At minimum you need to set `DATABASE_URL` to a postgresql connection string to the database you created earlier.
-1. Run `pg_restore -Fc --format=custom --dbname=<connection-string> data/seed.dump` to populate your database with development data. This includes all of the original language data as well as English glosses.
-1. Run `nx serve api` and `nx serve web` in separate terminals. This will make the api server available on port 4300 and the web server available on 4200.
+1. [Install](https://code.visualstudio.com/) `IDE VS Code`.
+1. [Create](https://github.com/) a `GitHub` account (if you do not already have one).
+1. Create a `folk` on this repository. If you are new to GitHub you can work through this [tutorial](https://github.com/workdone0/first-contribution-github).
+1. [Install](https://nodejs.org/en/download/) `Node.js 18` (this includes `npm`). If you need to maintain multiple node versions for other projects, consider using [nvm](https://github.com/nvm-sh/nvm).
+1. In a terminal run: `npm install` to install all of the project's dependencies.
+1. In a terminal run: `npm i -g nx` to make the `nx` command available in a terminal.
+1. [Install and set up a new database](./db.md) and then return to this document.
+1. In separate terminals run commands: `nx serve api` and `nx serve web`. This will make the api server available on port [4300](http://localhost:4300/explorer) and the web server available on [4200](http://localhost:4200).
+
 
 ## Lambda Functions
 
