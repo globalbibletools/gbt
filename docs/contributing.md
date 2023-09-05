@@ -22,7 +22,7 @@ These are the major technologies we are using. Familiarity with most of these wi
 1. In a terminal run: `npm i -g nx` to make the `nx` command available in a terminal.
 1. [Install and set up a new database](./db.md) and then return to this document.
 1. In separate terminals run commands: `nx serve api` and `nx serve web`. This will make the api server available on port [4300](http://localhost:4300/explorer) and the web server available on [4200](http://localhost:4200).
-
+1. To login as `ADMIN`, user and password should be `devyn61@ethereal.email` and `asdf1234`.
 
 ## Lambda Functions
 
