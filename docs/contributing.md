@@ -42,6 +42,7 @@ These are the major technologies we are using. Familiarity with most of these wi
 
 - Familiarize yourself with the documentation and codebase so that you understand what the expectations are.
 - Take a look at the [project](https://github.com/users/arrocke/projects/1) to get a sense of what things have been prioritized to be worked on.
+- If you have never contributed to an open source repository before, you may find this [tutorial](https://github.com/workdone0/first-contribution-github) helpful.
 
 ## Pull Requests
 
