@@ -194,6 +194,22 @@ model Language {
   glosses           Gloss[]
   /// The list of roles for members of this language.
   roles             LanguageMemberRole[]
+  /// The pending import job if any.
+  importJob         LanguageImportJob?
+}
+
+/// Keeps track of a language import job.
+model LanguageImportJob {
+  /// The language that is being imported
+  language   Language  @relation(fields: [languageId], references: [id])
+  /// The ID of the language that is being imported.
+  languageId String    @id @db.Uuid
+  /// The start date of the import job
+  startDate  DateTime
+  /// The end date of the import job
+  endDate    DateTime?
+  /// Whether the import succeeded.
+  succeeded  Boolean?
 }
 
 enum LanguageRole {

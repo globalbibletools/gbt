@@ -15,15 +15,15 @@ export default class Auth {
     });
   }
 
-  login({ email, password }: PostLoginRequest): Promise<void> {
-    return this.client.post({
+  async login({ email, password }: PostLoginRequest): Promise<void> {
+    await this.client.post({
       path: '/api/auth/login',
       body: { email, password },
     });
   }
 
-  logout(): Promise<void> {
-    return this.client.post({
+  async logout(): Promise<void> {
+    await this.client.post({
       path: '/api/auth/logout',
     });
   }
@@ -35,12 +35,12 @@ export default class Auth {
     });
   }
 
-  acceptInvite({
+  async acceptInvite({
     token,
     name,
     password,
   }: PostInviteRequestBody): Promise<void> {
-    return this.client.post({
+    await this.client.post({
       path: '/api/auth/invite',
       body: { token, name, password },
     });

@@ -1,13 +1,14 @@
-import type {
-  GetLanguageMembersResponseBody,
-  GetLanguageResponseBody,
-  GetLanguagesResponseBody,
-  LanguageRole,
-  PatchLanguageMemberRequestBody,
-  PatchLanguageRequestBody,
-  PostLanguageMemberRequestBody,
-  PostLanguageRequestBody,
-  StartLanguageImportStatusRequestBody,
+import {
+  GetLanguageImportResponseBody,
+  type GetLanguageMembersResponseBody,
+  type GetLanguageResponseBody,
+  type GetLanguagesResponseBody,
+  type LanguageRole,
+  type PatchLanguageMemberRequestBody,
+  type PatchLanguageRequestBody,
+  type PostLanguageImportRequestBody,
+  type PostLanguageMemberRequestBody,
+  type PostLanguageRequestBody,
 } from '@translation/api-types';
 import type ApiClient from './client';
 
@@ -16,7 +17,6 @@ export {
   GetLanguagesResponseBody,
   PatchLanguageRequestBody,
   PostLanguageRequestBody,
-  StartLanguageImportStatusRequestBody,
 };
 
 export default class Languages {
@@ -37,7 +37,7 @@ export default class Languages {
 
   async startImport(
     code: string,
-    body: StartLanguageImportStatusRequestBody
+    body: PostLanguageImportRequestBody
   ): Promise<void> {
     await this.client.post({
       path: `/api/languages/${code}/import`,
@@ -45,8 +45,10 @@ export default class Languages {
     });
   }
 
-  async importStatus(code: string): Promise<void> {
-    await this.client.get({ path: `/api/languages/${code}/import` });
+  getImportStatus(code: string): Promise<GetLanguageImportResponseBody> {
+    return this.client.get<GetLanguageImportResponseBody>({
+      path: `/api/languages/${code}/import`,
+    });
   }
 
   findByCode(code: string): Promise<GetLanguageResponseBody> {
@@ -71,17 +73,17 @@ export default class Languages {
     });
   }
 
-  inviteMember(
+  async inviteMember(
     code: string,
     request: PostLanguageMemberRequestBody
   ): Promise<void> {
-    return this.client.post({
+    await this.client.post({
       path: `/api/languages/${code}/members`,
       body: request,
     });
   }
 
-  updateMember(
+  async updateMember(
     code: string,
     userId: string,
     roles: LanguageRole[]
@@ -89,14 +91,14 @@ export default class Languages {
     const body: PatchLanguageMemberRequestBody = {
       roles,
     };
-    return this.client.patch({
+    await this.client.patch({
       path: `/api/languages/${code}/members/${userId}`,
       body,
     });
   }
 
-  removeMember(code: string, userId: string): Promise<void> {
-    return this.client.delete({
+  async removeMember(code: string, userId: string): Promise<void> {
+    await this.client.delete({
       path: `/api/languages/${code}/members/${userId}`,
     });
   }
