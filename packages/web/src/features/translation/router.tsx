@@ -1,12 +1,16 @@
 import { RouteObject, redirect } from 'react-router-dom';
-import TranslationView from './TranslationView';
+import TranslationView, {
+  translationLanguageKey,
+  translationVerseIdKey,
+} from './TranslationView';
 
 const routes: RouteObject[] = [
   {
     path: 'translate',
     loader() {
-      const language = localStorage.getItem('translation-language') ?? 'en';
-      return redirect(`/languages/${language}/verses/01001001`);
+      const language = localStorage.getItem(translationLanguageKey) ?? 'en';
+      const verseId = localStorage.getItem(translationVerseIdKey) ?? '01001001';
+      return redirect(`/languages/${language}/verses/${verseId}`);
     },
   },
   {
