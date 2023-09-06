@@ -12,16 +12,24 @@ import DropdownMenu, {
   DropdownMenuLink,
 } from '../../shared/components/actions/DropdownMenu';
 
+export const translationLanguageKey = 'translation-language';
+export const translationVerseIdKey = 'translation-verse-id';
+
 export default function TranslationView() {
-  const { verseId, language } = useParams() as {
-    verseId: string;
+  const { language, verseId } = useParams() as {
     language: string;
+    verseId: string;
   };
-  const navigate = useNavigate();
 
   useEffect(() => {
-    localStorage.setItem('translation-language', language);
+    localStorage.setItem(translationLanguageKey, language);
   }, [language]);
+
+  useEffect(() => {
+    localStorage.setItem(translationVerseIdKey, verseId);
+  }, [verseId]);
+
+  const navigate = useNavigate();
 
   const verseQuery = useQuery(['verse', verseId], () =>
     apiClient.verses.findById(verseId)
