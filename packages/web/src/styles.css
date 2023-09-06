@@ -3,6 +3,18 @@
 @tailwind utilities;
 
 @layer base {
+  @font-face {
+    font-family: 'SBL-Hebrew';
+    src: url('./assets/fonts/SBL_Hbrw.ttf') format('truetype');
+    font-weight: normal;
+  }
+
+  @font-face {
+    font-family: 'SBL-Greek';
+    src: url('./assets/fonts/SBL_grk.ttf') format('truetype');
+    font-weight: normal;
+  }
+
   dialog {
     inset-inline-start: unset;
     inset-inline-end: unset;

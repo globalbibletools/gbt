@@ -35,10 +35,10 @@ export default function TranslateWord({
     <li className="mx-2 mb-4">
       <div
         id={`word-${word.id}`}
-        className={`font-serif mb-2 ${
+        className={`mb-2 ${
           originalLanguage === 'hebrew'
-            ? 'text-2xl text-right'
-            : 'text-lg text-left'
+            ? 'text-2xl text-right font-hebrew'
+            : 'text-lg text-left font-greek'
         }`}
       >
         {word.text}
