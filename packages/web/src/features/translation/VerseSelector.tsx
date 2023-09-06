@@ -43,13 +43,11 @@ export function VerseSelector({ verseId, onVerseChange }: VerseSelectorProps) {
         arial-label={t('select_verse')}
       />
       <button onClick={() => onVerseChange(decrementVerseId(verseId))}>
-        <Icon icon="arrow-left" className="rtl:hidden" />
-        <Icon icon="arrow-right" className="ltr:hidden" />
+        <Icon icon="arrow-up" />
         <span className="sr-only">{t('previous_verse')}</span>
       </button>
       <button onClick={() => onVerseChange(incrementVerseId(verseId))}>
-        <Icon icon="arrow-right" className="rtl:hidden" />
-        <Icon icon="arrow-left" className="ltr:hidden" />
+        <Icon icon="arrow-down" />
         <span className="sr-only">{t('next_verse')}</span>
       </button>
     </div>
