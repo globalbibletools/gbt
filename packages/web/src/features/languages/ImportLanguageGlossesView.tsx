@@ -57,9 +57,11 @@ export default function ImportLanguageGlossesView() {
   >(() => {
     if (currentJob) {
       if (currentJob.endDate) {
+        // This lets the user start a new import if the previous import was more than 24 hours ago.
+        // Otherwise this view would always default to the status of the previous job.
         if (
           Date.now() - new Date(currentJob.endDate).valueOf() <
-          10 * 60 * 1000 // 10 minutes
+          24 * 60 * 60 * 1000 // 24 hours
         ) {
           return currentJob.succeeded ? 'complete' : 'error';
         } else {
