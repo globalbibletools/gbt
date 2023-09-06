@@ -3,12 +3,12 @@
 Our database is postgresql@14.7 with prisma to manage the schema and migrations. Each package can have its own prisma schema if it has its own database. At this moment, only the api project has a database.
 
 [Database schema](./../packages/db/src/schema.prisma)
+
 ## Setup
 
 1. [Install](https://www.postgresql.org/download/) postgresql version 14 (latest version).
 1. Create database for the project. You can perform this task using the included `pgAdmin` tool.
-1. Create a copy of file: [packages/api/.env](./../packages/api/.env) in same directory and rename it to: `.env.local`.
-1. Create new file: `packages/db/.env.local`.
+1. Create a .env.local file in the api and db projects for local environment variables
 1. Set the `DATABASE_URL` env var in both files above to the postgres connection string. You may need to include a username and password in the connection string. Here is a template you can use:
 
 ```text
@@ -22,7 +22,7 @@ DATABASE_URL=postgres://{user}:{password}@{hostname}:{port}/{database-name}
 
 In order to reset the database to the current schema and clear all data, run the following command. It may take a few minutes to remove any existing data and build out the database schema.
 
-```text
+```bash
 nx prisma db migrate reset
 ```
 

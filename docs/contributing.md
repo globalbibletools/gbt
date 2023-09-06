@@ -14,9 +14,6 @@ These are the major technologies we are using. Familiarity with most of these wi
 
 ## Local Development
 
-1. [Install](https://code.visualstudio.com/) `IDE VS Code`.
-1. [Create](https://github.com/) a `GitHub` account (if you do not already have one).
-1. Create a `folk` on this repository. If you are new to GitHub you can work through this [tutorial](https://github.com/workdone0/first-contribution-github).
 1. [Install](https://nodejs.org/en/download/) `Node.js 18` (this includes `npm`). If you need to maintain multiple node versions for other projects, consider using [nvm](https://github.com/nvm-sh/nvm).
 1. In a terminal run: `npm install` to install all of the project's dependencies.
 1. In a terminal run: `npm i -g nx` to make the `nx` command available in a terminal.
