@@ -61,7 +61,7 @@ export default function ImportLanguageGlossesView() {
           Date.now() - new Date(currentJob.endDate).valueOf() <
           10 * 60 * 1000 // 10 minutes
         ) {
-          return 'complete';
+          return currentJob.succeeded ? 'complete' : 'error';
         } else {
           return 'idle';
         }
