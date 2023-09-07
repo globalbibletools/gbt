@@ -175,9 +175,11 @@ model LemmaForm {
 /// A lemma as defined by strongs numbers.
 model Lemma {
   /// The ID of the lemma in the format `[H|G]<strongs>`. Examples: H243, G1243
-  id    String      @id
+  id             String      @id
   /// The list of forms of the lemma.
-  forms LemmaForm[]
+  forms          LemmaForm[]
+  /// The list of lexicon entries associated with the lemma.
+  lexiconEntries LemmaLexiconEntry[]
 }
 
 /// A language use for translation.
@@ -252,9 +254,9 @@ model VerseTranslation {
 
 /// A gloss of a word in a particular language.
 model Gloss {
-  // The word being glossed.
+  /// The word being glossed.
   word       Word     @relation(fields: [wordId], references: [id])
-  // The ID of the word being glossed.
+  /// The ID of the word being glossed.
   wordId     String
   /// The language of the gloss.
   language   Language @relation(fields: [languageId], references: [id])
@@ -264,4 +266,25 @@ model Gloss {
   gloss      String?
 
   @@id([wordId, languageId])
+}
+
+/// The entry in a lexicon associated with a particular lemma.
+/// TODO: determine if we need a better name
+model LemmaLexiconEntry {
+  /// The lemma that this lexicon entry is associated with.
+  lemma       Lemma  @relation(fields: [lemmaId], references: [id])
+  /// The ID of the lemma that this lexicon entry is associated with.
+  lemmaId     String
+  /// The lexicon this data comes from
+  lexiconCode LexiconCode
+  /// The actual content of the lexicon entry
+  content     String
+
+  @@id([lemmaId, lexiconCode])
+}
+
+enum LexiconCode {
+  BDB
+  LSJ
+  STRONGS
 }
