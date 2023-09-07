@@ -13,8 +13,8 @@ library.add(
   FaSolid.faPlus,
   FaSolid.faCheck,
   FaSolid.faArrowsRotate,
-  FaSolid.faArrowLeft,
-  FaSolid.faArrowRight,
+  FaSolid.faArrowUp,
+  FaSolid.faArrowDown,
   FaSolid.faRightFromBracket,
   FaSolid.faExclamationTriangle,
   FaSolid.faFileImport
