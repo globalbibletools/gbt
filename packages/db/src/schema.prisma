@@ -274,9 +274,9 @@ model LemmaResource {
   lemma        Lemma  @relation(fields: [lemmaId], references: [id])
   /// The ID of the lemma that this entry is associated with.
   lemmaId      String
-  /// The resource this data comes from
+  /// The resource this data comes from.
   resourceCode ResourceCode
-  /// The actual content of the resource entry
+  /// The actual content of the resource entry.
   content      String
 
   @@id([lemmaId, resourceCode])
