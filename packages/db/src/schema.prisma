@@ -175,11 +175,11 @@ model LemmaForm {
 /// A lemma as defined by strongs numbers.
 model Lemma {
   /// The ID of the lemma in the format `[H|G]<strongs>`. Examples: H243, G1243
-  id             String      @id
+  id        String      @id
   /// The list of forms of the lemma.
-  forms          LemmaForm[]
-  /// The list of lexicon entries associated with the lemma.
-  lexiconEntries LemmaLexiconEntry[]
+  forms     LemmaForm[]
+  /// The list of resource entries associated with the lemma.
+  resources LemmaResource[]
 }
 
 /// A language use for translation.
@@ -268,22 +268,21 @@ model Gloss {
   @@id([wordId, languageId])
 }
 
-/// The entry in a lexicon associated with a particular lemma.
-/// TODO: determine if we need a better name
-model LemmaLexiconEntry {
-  /// The lemma that this lexicon entry is associated with.
-  lemma       Lemma  @relation(fields: [lemmaId], references: [id])
-  /// The ID of the lemma that this lexicon entry is associated with.
-  lemmaId     String
-  /// The lexicon this data comes from
-  lexiconCode LexiconCode
-  /// The actual content of the lexicon entry
-  content     String
+/// An entry in a study resource associated with a particular lemma.
+model LemmaResource {
+  /// The lemma that this entry is associated with.
+  lemma        Lemma  @relation(fields: [lemmaId], references: [id])
+  /// The ID of the lemma that this entry is associated with.
+  lemmaId      String
+  /// The resource this data comes from
+  resourceCode ResourceCode
+  /// The actual content of the resource entry
+  content      String
 
-  @@id([lemmaId, lexiconCode])
+  @@id([lemmaId, resourceCode])
 }
 
-enum LexiconCode {
+enum ResourceCode {
   BDB
   LSJ
   STRONGS
