@@ -11,6 +11,7 @@ import { parseVerseId } from './verse-utils';
 import DropdownMenu, {
   DropdownMenuLink,
 } from '../../shared/components/actions/DropdownMenu';
+import useKeyboardShortcut from '../../shared/hooks/useKeyboardShortcut';
 
 export const translationLanguageKey = 'translation-language';
 export const translationVerseIdKey = 'translation-verse-id';
@@ -111,6 +112,17 @@ export default function TranslationView() {
   });
 
   const userCan = useAccessControl();
+
+  const options = {
+    overrideSystem: true,
+    ignoreInputFields: false,
+    repeatOnHold: false,
+  };
+  useKeyboardShortcut(
+    ['Control', 'ArrowUp'],
+    () => console.log('Ctrl + Up has been pressed.'),
+    options
+  );
 
   const loading =
     !verseQuery.isSuccess ||
