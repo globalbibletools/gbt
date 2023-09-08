@@ -139,7 +139,7 @@ export function bookName(bookId: number, t: TFunction) {
  * @returns The verse ID if it can be determined, otherwise `null`.
  */
 export function parseReference(reference: string, t: TFunction): string | null {
-  const referenceRegex = /^(.+)\s+(\d+)([:.,]|\s+)(\d+)$/;
+  const referenceRegex = /^(.+?)(?:\s+(\d+)(?:([:.,]|\s+)(\d+))?)?$/;
 
   // Parse the reference into three parts.
   const matches = reference.match(referenceRegex);
@@ -164,13 +164,13 @@ export function parseReference(reference: string, t: TFunction): string | null {
   }
 
   // Coerce the chapter number to be valid.
-  const chapterNumber = clamp(parseInt(chapterStr), 1, chapterCount(bookId));
+  const chapterNumber = chapterStr
+    ? clamp(parseInt(chapterStr), 1, chapterCount(bookId))
+    : 1;
   // Coerce the verse number to be valid.
-  const verseNumber = clamp(
-    parseInt(verseStr),
-    1,
-    verseCount(bookId, chapterNumber)
-  );
+  const verseNumber = verseStr
+    ? clamp(parseInt(verseStr), 1, verseCount(bookId, chapterNumber))
+    : 1;
   return generateVerseId({ bookId, chapterNumber, verseNumber });
 }
 
