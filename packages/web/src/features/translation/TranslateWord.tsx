@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { KeyboardEventHandler, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Icon } from '../../shared/components/Icon';
 import AutocompleteInput from '../../shared/components/form/AutocompleteInput';
@@ -15,6 +15,7 @@ export interface TranslateWordProps {
   originalLanguage: 'hebrew' | 'greek';
   status: 'empty' | 'saving' | 'saved';
   onGlossChange(gloss?: string): void;
+  onKeyDown?: KeyboardEventHandler<HTMLElement>;
 }
 
 export default function TranslateWord({
@@ -26,6 +27,7 @@ export default function TranslateWord({
   referenceGloss,
   previousGlosses,
   onGlossChange,
+  onKeyDown,
 }: TranslateWordProps) {
   const { t } = useTranslation();
   const [text, setText] = useState(gloss ?? '');
@@ -74,6 +76,11 @@ export default function TranslateWord({
               if (newGloss !== gloss) {
                 onGlossChange(newGloss);
                 setText(newGloss);
+              }
+            }}
+            onKeyDown={(e) => {
+              if (onKeyDown) {
+                onKeyDown(e);
               }
             }}
           />

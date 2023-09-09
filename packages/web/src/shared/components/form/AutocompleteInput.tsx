@@ -1,5 +1,10 @@
 import { Combobox } from '@headlessui/react';
-import { ComponentProps, useEffect, useState } from 'react';
+import {
+  ComponentProps,
+  KeyboardEventHandler,
+  useEffect,
+  useState,
+} from 'react';
 import { Icon } from '../Icon';
 
 const CREATE_TAG = '_create';
@@ -20,6 +25,7 @@ export interface AutocompleteProps
   defaultValue?: string[];
   name: string;
   hasErrors?: boolean;
+  onKeyDown?: KeyboardEventHandler<HTMLInputElement>;
 }
 
 const AutocompleteInput = ({
@@ -31,6 +37,7 @@ const AutocompleteInput = ({
   onBlur,
   items,
   name,
+  onKeyDown,
   ...props
 }: AutocompleteProps) => {
   const [normalizedInputValue, setNormalizedInputValue] = useState('');
@@ -76,7 +83,7 @@ const AutocompleteInput = ({
       <Combobox value={value} onChange={onComboboxChange} name={name}>
         <div
           className={`border rounded shadow-inner flex group-focus-within/autocomplete:outline group-focus-within/autocomplete:outline-2
-            
+
             ${
               hasErrors
                 ? 'border-red-700 shadow-red-100 group-focus-within/autocomplete:outline-red-700'
@@ -91,6 +98,11 @@ const AutocompleteInput = ({
             }
             onBlur={onBlur}
             className="w-full py-2 px-3 h-10 rounded-b flex-grow focus:outline-none bg-transparent rounded"
+            onKeyDown={(e) => {
+              if (onKeyDown) {
+                onKeyDown(e);
+              }
+            }}
           />
           <Combobox.Button className="w-8">
             {({ open }) => <Icon icon={open ? 'caret-up' : 'caret-down'} />}

@@ -7,11 +7,14 @@ import apiClient from '../../shared/apiClient';
 import LoadingSpinner from '../../shared/components/LoadingSpinner';
 import TranslateWord from './TranslateWord';
 import { VerseSelector } from './VerseSelector';
-import { parseVerseId } from './verse-utils';
+import {
+  decrementVerseId,
+  incrementVerseId,
+  parseVerseId,
+} from './verse-utils';
 import DropdownMenu, {
   DropdownMenuLink,
 } from '../../shared/components/actions/DropdownMenu';
-import useKeyboardShortcut from '../../shared/hooks/useKeyboardShortcut';
 
 export const translationLanguageKey = 'translation-language';
 export const translationVerseIdKey = 'translation-verse-id';
@@ -113,16 +116,51 @@ export default function TranslationView() {
 
   const userCan = useAccessControl();
 
-  const options = {
-    overrideSystem: true,
-    ignoreInputFields: false,
-    repeatOnHold: false,
+  const handleKeyPress = (event: {
+    key: string;
+    shiftKey: boolean;
+    ctrlKey: boolean;
+    preventDefault: VoidFunction;
+    stopPropagation: VoidFunction;
+  }) => {
+    const watchKeys = ['ArrowUp', 'ArrowDown', 'Home', 'End'];
+    if (!event.ctrlKey || !watchKeys.includes(event.key)) {
+      return;
+    }
+    event.preventDefault();
+    event.stopPropagation();
+    switch (event.key) {
+      case 'ArrowUp':
+        navigate(`/languages/${language}/verses/${decrementVerseId(verseId)}`);
+        break;
+      case 'ArrowDown':
+        navigate(`/languages/${language}/verses/${incrementVerseId(verseId)}`);
+        break;
+      case 'Home':
+        if (event.shiftKey) {
+          console.log('FIRST VERSE!');
+        } else {
+          console.log('FIRST WORD!');
+        }
+        break;
+      case 'End':
+        if (event.shiftKey) {
+          console.log('LAST VERSE!');
+        } else {
+          console.log('LAST WORD!');
+        }
+        break;
+    }
   };
-  useKeyboardShortcut(
-    ['Control', 'ArrowUp'],
-    () => console.log('Ctrl + Up has been pressed.'),
-    options
-  );
+
+  useEffect(() => {
+    // Attach the event listener to the window object
+    window.addEventListener('keydown', handleKeyPress);
+    // Cleanup by removing the event listener when the component unmounts
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress);
+    };
+  }, []);
 
   const loading =
     !verseQuery.isSuccess ||
@@ -198,6 +236,7 @@ export default function TranslationView() {
                         gloss: newGloss,
                       });
                     }}
+                    onKeyDown={handleKeyPress}
                   />
                 );
               })}
