@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { GetVerseGlossesResponseBody } from '@translation/api-types';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAccessControl } from '../../shared/accessControl';
 import apiClient from '../../shared/apiClient';
@@ -116,42 +116,49 @@ export default function TranslationView() {
 
   const userCan = useAccessControl();
 
-  const handleKeyPress = (event: {
-    key: string;
-    shiftKey: boolean;
-    ctrlKey: boolean;
-    preventDefault: VoidFunction;
-    stopPropagation: VoidFunction;
-  }) => {
-    const watchKeys = ['ArrowUp', 'ArrowDown', 'Home', 'End'];
-    if (!event.ctrlKey || !watchKeys.includes(event.key)) {
-      return;
-    }
-    event.preventDefault();
-    event.stopPropagation();
-    switch (event.key) {
-      case 'ArrowUp':
-        navigate(`/languages/${language}/verses/${decrementVerseId(verseId)}`);
-        break;
-      case 'ArrowDown':
-        navigate(`/languages/${language}/verses/${incrementVerseId(verseId)}`);
-        break;
-      case 'Home':
-        if (event.shiftKey) {
-          console.log('FIRST VERSE!');
-        } else {
-          console.log('FIRST WORD!');
-        }
-        break;
-      case 'End':
-        if (event.shiftKey) {
-          console.log('LAST VERSE!');
-        } else {
-          console.log('LAST WORD!');
-        }
-        break;
-    }
-  };
+  const handleKeyPress = useCallback(
+    (event: {
+      key: string;
+      shiftKey: boolean;
+      ctrlKey: boolean;
+      preventDefault: VoidFunction;
+      stopPropagation: VoidFunction;
+    }) => {
+      const watchKeys = ['ArrowUp', 'ArrowDown', 'Home', 'End'];
+      if (!event.ctrlKey || !watchKeys.includes(event.key)) {
+        return;
+      }
+      event.preventDefault();
+      event.stopPropagation();
+      switch (event.key) {
+        case 'ArrowUp':
+          navigate(
+            `/languages/${language}/verses/${decrementVerseId(verseId)}`
+          );
+          break;
+        case 'ArrowDown':
+          navigate(
+            `/languages/${language}/verses/${incrementVerseId(verseId)}`
+          );
+          break;
+        case 'Home':
+          if (event.shiftKey) {
+            console.log('FIRST VERSE!');
+          } else {
+            console.log('FIRST WORD!');
+          }
+          break;
+        case 'End':
+          if (event.shiftKey) {
+            console.log('LAST VERSE!');
+          } else {
+            console.log('LAST WORD!');
+          }
+          break;
+      }
+    },
+    [language, navigate, verseId]
+  );
 
   useEffect(() => {
     // Attach the event listener to the window object
@@ -160,7 +167,7 @@ export default function TranslationView() {
     return () => {
       window.removeEventListener('keydown', handleKeyPress);
     };
-  }, []);
+  }, [handleKeyPress]);
 
   const loading =
     !verseQuery.isSuccess ||
