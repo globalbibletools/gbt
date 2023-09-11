@@ -2,7 +2,6 @@ import { Combobox } from '@headlessui/react';
 import {
   ComponentProps,
   KeyboardEventHandler,
-  Ref,
   forwardRef,
   useEffect,
   useState,
