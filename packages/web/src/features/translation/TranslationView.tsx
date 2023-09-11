@@ -21,6 +21,48 @@ import DropdownMenu, {
 export const translationLanguageKey = 'translation-language';
 export const translationVerseIdKey = 'translation-verse-id';
 
+const VERSES_TO_PREFETCH = 3;
+
+function useTranslationQueries(language: string, verseId: string) {
+  const verseQuery = useQuery(['verse', verseId], () =>
+    apiClient.verses.findById(verseId)
+  );
+  const referenceGlossesQuery = useQuery(['verse-glosses', 'en', verseId], () =>
+    apiClient.verses.findVerseGlosses(verseId, 'en')
+  );
+  const targetGlossesQuery = useQuery(
+    ['verse-glosses', language, verseId],
+    () => apiClient.verses.findVerseGlosses(verseId, language)
+  );
+
+  const queryClient = useQueryClient();
+
+  // This primes the cache with verse data for the next VERSES_TO_PREFETCH verses.
+  // API requests are only sent if there is no data in the cache for the verse.
+  useEffect(() => {
+    let nextVerseId = verseId;
+    for (let i = 0; i < VERSES_TO_PREFETCH; i++) {
+      nextVerseId = incrementVerseId(nextVerseId);
+      queryClient.ensureQueryData({
+        queryKey: ['verse', nextVerseId],
+        queryFn: ({ queryKey }) => apiClient.verses.findById(queryKey[1]),
+      });
+      queryClient.ensureQueryData({
+        queryKey: ['verse-glosses', 'en', nextVerseId],
+        queryFn: ({ queryKey }) =>
+          apiClient.verses.findVerseGlosses(queryKey[2], 'en'),
+      });
+      queryClient.ensureQueryData({
+        queryKey: ['verse-glosses', language, nextVerseId],
+        queryFn: ({ queryKey }) =>
+          apiClient.verses.findVerseGlosses(queryKey[2], queryKey[1]),
+      });
+    }
+  }, [language, verseId, queryClient]);
+
+  return { verseQuery, referenceGlossesQuery, targetGlossesQuery };
+}
+
 export default function TranslationView() {
   const { language, verseId } = useParams() as {
     language: string;
@@ -37,16 +79,8 @@ export default function TranslationView() {
 
   const navigate = useNavigate();
 
-  const verseQuery = useQuery(['verse', verseId], () =>
-    apiClient.verses.findById(verseId)
-  );
-  const referenceGlossesQuery = useQuery(['verse-glosses', 'en', verseId], () =>
-    apiClient.verses.findVerseGlosses(verseId, 'en')
-  );
-  const targetGlossesQuery = useQuery(
-    ['verse-glosses', language, verseId],
-    () => apiClient.verses.findVerseGlosses(verseId, language)
-  );
+  const { verseQuery, referenceGlossesQuery, targetGlossesQuery } =
+    useTranslationQueries(language, verseId);
 
   const languagesQuery = useQuery(['languages'], () =>
     apiClient.languages.findAll()

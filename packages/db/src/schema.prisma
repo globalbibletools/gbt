@@ -175,9 +175,11 @@ model LemmaForm {
 /// A lemma as defined by strongs numbers.
 model Lemma {
   /// The ID of the lemma in the format `[H|G]<strongs>`. Examples: H243, G1243
-  id    String      @id
+  id        String      @id
   /// The list of forms of the lemma.
-  forms LemmaForm[]
+  forms     LemmaForm[]
+  /// The list of resource entries associated with the lemma.
+  resources LemmaResource[]
 }
 
 /// A language use for translation.
@@ -252,9 +254,9 @@ model VerseTranslation {
 
 /// A gloss of a word in a particular language.
 model Gloss {
-  // The word being glossed.
+  /// The word being glossed.
   word       Word     @relation(fields: [wordId], references: [id])
-  // The ID of the word being glossed.
+  /// The ID of the word being glossed.
   wordId     String
   /// The language of the gloss.
   language   Language @relation(fields: [languageId], references: [id])
@@ -264,4 +266,24 @@ model Gloss {
   gloss      String?
 
   @@id([wordId, languageId])
+}
+
+/// An entry in a study resource associated with a particular lemma.
+model LemmaResource {
+  /// The lemma that this entry is associated with.
+  lemma        Lemma  @relation(fields: [lemmaId], references: [id])
+  /// The ID of the lemma that this entry is associated with.
+  lemmaId      String
+  /// The resource this data comes from.
+  resourceCode ResourceCode
+  /// The actual content of the resource entry.
+  content      String
+
+  @@id([lemmaId, resourceCode])
+}
+
+enum ResourceCode {
+  BDB
+  LSJ
+  STRONGS
 }
