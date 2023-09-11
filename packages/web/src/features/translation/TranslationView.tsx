@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { GetVerseGlossesResponseBody } from '@translation/api-types';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAccessControl } from '../../shared/accessControl';
 import apiClient from '../../shared/apiClient';
@@ -118,6 +118,8 @@ export default function TranslationView() {
 
   const userCan = useAccessControl();
 
+  const firstWord = useRef<HTMLInputElement>(null);
+  const lastWord = useRef<HTMLInputElement>(null);
   const handleKeyPress = useCallback(
     (event: {
       key: string;
@@ -150,7 +152,7 @@ export default function TranslationView() {
               `/languages/${language}/verses/${bookFirstVerseId(bookId)}`
             );
           } else {
-            console.log('FIRST WORD!');
+            firstWord.current?.focus();
           }
           break;
         case 'End':
@@ -159,7 +161,7 @@ export default function TranslationView() {
               `/languages/${language}/verses/${bookLastVerseId(bookId)}`
             );
           } else {
-            console.log('LAST WORD!');
+            lastWord.current?.focus();
           }
           break;
       }
@@ -251,6 +253,13 @@ export default function TranslationView() {
                       });
                     }}
                     onKeyDown={handleKeyPress}
+                    ref={(() => {
+                      if (i === 0) {
+                        return firstWord;
+                      } else if (i === verse.words.length - 1) {
+                        return lastWord;
+                      }
+                    })()}
                   />
                 );
               })}

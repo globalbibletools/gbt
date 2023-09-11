@@ -1,4 +1,4 @@
-import { KeyboardEventHandler, useState } from 'react';
+import { KeyboardEventHandler, forwardRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Icon } from '../../shared/components/Icon';
 import AutocompleteInput from '../../shared/components/form/AutocompleteInput';
@@ -18,95 +18,103 @@ export interface TranslateWordProps {
   onKeyDown?: KeyboardEventHandler<HTMLElement>;
 }
 
-export default function TranslateWord({
-  editable = false,
-  word,
-  originalLanguage,
-  status,
-  gloss,
-  referenceGloss,
-  previousGlosses,
-  onGlossChange,
-  onKeyDown,
-}: TranslateWordProps) {
-  const { t } = useTranslation();
-  const [text, setText] = useState(gloss ?? '');
-  const width = useTextWidth(text);
+const TranslateWord = forwardRef<HTMLInputElement, TranslateWordProps>(
+  (
+    {
+      editable = false,
+      word,
+      originalLanguage,
+      status,
+      gloss,
+      referenceGloss,
+      previousGlosses,
+      onGlossChange,
+      onKeyDown,
+    }: TranslateWordProps,
+    ref
+  ) => {
+    const { t } = useTranslation();
+    const [text, setText] = useState(gloss ?? '');
+    const width = useTextWidth(text);
 
-  return (
-    <li className="mx-2 mb-4">
-      <div
-        id={`word-${word.id}`}
-        className={`mb-2 ${
-          originalLanguage === 'hebrew'
-            ? 'text-2xl text-right font-hebrew'
-            : 'text-lg text-left font-greek'
-        }`}
-      >
-        {word.text}
-      </div>
-      <div
-        className={`mb-2 ${
-          originalLanguage === 'hebrew' ? 'text-right' : 'text-left'
-        }`}
-      >
-        {editable ? referenceGloss : gloss}
-      </div>
-      {editable && (
-        <>
-          <AutocompleteInput
-            name="gloss"
-            className="min-w-[80px]"
-            value={gloss}
-            items={previousGlosses.map((gloss) => ({
-              label: gloss,
-              value: gloss,
-            }))}
-            // The extra 24 pixel give room for the padding around the text.
-            style={{ width: width + 24 }}
-            aria-describedby={`word-help-${word.id}`}
-            aria-labelledby={`word-${word.id}`}
-            onChange={(newGloss: string) => {
-              if (newGloss !== gloss) {
-                onGlossChange(newGloss);
-                setText(newGloss);
-              }
-            }}
-            onCreate={(newGloss: string) => {
-              if (newGloss !== gloss) {
-                onGlossChange(newGloss);
-                setText(newGloss);
-              }
-            }}
-            onKeyDown={(e) => {
-              if (onKeyDown) {
-                onKeyDown(e);
-              }
-            }}
-          />
-          <InputHelpText id={`word-help-${word.id}`}>
-            {(() => {
-              if (status === 'saving') {
-                return (
-                  <>
-                    <Icon icon="arrows-rotate" className="me-1" />
-                    {capitalize(t('saving'))}
-                  </>
-                );
-              } else if (status === 'saved') {
-                return (
-                  <>
-                    <Icon icon="check" className="me-1" />
-                    {capitalize(t('saved'))}
-                  </>
-                );
-              } else {
-                return null;
-              }
-            })()}
-          </InputHelpText>
-        </>
-      )}
-    </li>
-  );
-}
+    return (
+      <li className="mx-2 mb-4">
+        <div
+          id={`word-${word.id}`}
+          className={`mb-2 ${
+            originalLanguage === 'hebrew'
+              ? 'text-2xl text-right font-hebrew'
+              : 'text-lg text-left font-greek'
+          }`}
+        >
+          {word.text}
+        </div>
+        <div
+          className={`mb-2 ${
+            originalLanguage === 'hebrew' ? 'text-right' : 'text-left'
+          }`}
+        >
+          {editable ? referenceGloss : gloss}
+        </div>
+        {editable && (
+          <>
+            <AutocompleteInput
+              name="gloss"
+              className="min-w-[80px]"
+              value={gloss}
+              items={previousGlosses.map((gloss) => ({
+                label: gloss,
+                value: gloss,
+              }))}
+              // The extra 24 pixel give room for the padding around the text.
+              style={{ width: width + 24 }}
+              aria-describedby={`word-help-${word.id}`}
+              aria-labelledby={`word-${word.id}`}
+              onChange={(newGloss: string) => {
+                if (newGloss !== gloss) {
+                  onGlossChange(newGloss);
+                  setText(newGloss);
+                }
+              }}
+              onCreate={(newGloss: string) => {
+                if (newGloss !== gloss) {
+                  onGlossChange(newGloss);
+                  setText(newGloss);
+                }
+              }}
+              onKeyDown={(e) => {
+                if (onKeyDown) {
+                  onKeyDown(e);
+                }
+              }}
+              ref={ref}
+            />
+            <InputHelpText id={`word-help-${word.id}`}>
+              {(() => {
+                if (status === 'saving') {
+                  return (
+                    <>
+                      <Icon icon="arrows-rotate" className="me-1" />
+                      {capitalize(t('saving'))}
+                    </>
+                  );
+                } else if (status === 'saved') {
+                  return (
+                    <>
+                      <Icon icon="check" className="me-1" />
+                      {capitalize(t('saved'))}
+                    </>
+                  );
+                } else {
+                  return null;
+                }
+              })()}
+            </InputHelpText>
+          </>
+        )}
+      </li>
+    );
+  }
+);
+
+export default TranslateWord;
