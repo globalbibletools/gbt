@@ -8,6 +8,8 @@ import LoadingSpinner from '../../shared/components/LoadingSpinner';
 import TranslateWord from './TranslateWord';
 import { VerseSelector } from './VerseSelector';
 import {
+  bookFirstVerseId,
+  bookLastVerseId,
   decrementVerseId,
   incrementVerseId,
   parseVerseId,
@@ -130,6 +132,7 @@ export default function TranslationView() {
       }
       event.preventDefault();
       event.stopPropagation();
+      const { bookId } = parseVerseId(verseId);
       switch (event.key) {
         case 'ArrowUp':
           navigate(
@@ -143,14 +146,18 @@ export default function TranslationView() {
           break;
         case 'Home':
           if (event.shiftKey) {
-            console.log('FIRST VERSE!');
+            navigate(
+              `/languages/${language}/verses/${bookFirstVerseId(bookId)}`
+            );
           } else {
             console.log('FIRST WORD!');
           }
           break;
         case 'End':
           if (event.shiftKey) {
-            console.log('LAST VERSE!');
+            navigate(
+              `/languages/${language}/verses/${bookLastVerseId(bookId)}`
+            );
           } else {
             console.log('LAST WORD!');
           }

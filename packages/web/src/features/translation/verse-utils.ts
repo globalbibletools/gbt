@@ -123,6 +123,26 @@ export function incrementVerseId(verseId: string) {
 }
 
 /**
+ * Get the verse ID of the first verse of the given book of the Bible.
+ * @param bookId The book to use.
+ * @returns The verse ID for the first verse in the book.
+ */
+export function bookFirstVerseId(bookId: number) {
+  return generateVerseId({ bookId, chapterNumber: 1, verseNumber: 1 });
+}
+
+/**
+ * Get the verse ID of the last verse of the given book of the Bible.
+ * @param bookId The book to use.
+ * @returns The verse ID for the first verse in the book.
+ */
+export function bookLastVerseId(bookId: number) {
+  const chapterNumber = chapterCount(bookId);
+  const verseNumber = verseCount(bookId, chapterNumber);
+  return generateVerseId({ bookId, chapterNumber, verseNumber });
+}
+
+/**
  * Get the name of the book, using the i18n translation function.
  * @param bookId The book to use.
  * @param t The i18n translation function to use.
