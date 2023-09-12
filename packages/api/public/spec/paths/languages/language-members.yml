@@ -3,7 +3,7 @@ get:
   tags:
     - Languages
   parameters:
-    - $ref: '../schemas/parameters.yml#languageCode'
+    - $ref: '../../schemas/parameters.yml#languageCode'
   responses:
     '200':
       description: Ok
@@ -34,7 +34,7 @@ get:
 post:
   summary: Invite a new member to a language.
   parameters:
-    - $ref: '../schemas/parameters.yml#languageCode'
+    - $ref: '../../schemas/parameters.yml#languageCode'
   requestBody:
     required: true
     content:

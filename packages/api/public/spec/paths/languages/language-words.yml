@@ -3,8 +3,8 @@ patch:
     - Glosses
   summary: Update the gloss of a word for a language.
   parameters:
-    - $ref: '../schemas/parameters.yml#languageCode'
-    - $ref: '../schemas/parameters.yml#wordId'
+    - $ref: '../../schemas/parameters.yml#languageCode'
+    - $ref: '../../schemas/parameters.yml#wordId'
   requestBody:
     required: true
     content:
