@@ -1,6 +1,5 @@
 {
   "users": "Users",
-  "name": "name",
   "email": "email",
   "log_in": "Log In",
   "log_out": "Log Out",
@@ -34,6 +33,7 @@
     "password_format": "Your password should be at least 8 characters.",
     "password_confirmation": "Your password confirmation does not match.",
     "user_email_required": "Please enter the user's email address.",
-    "invalid_auth": "Your email or password are invalid."
+    "invalid_auth": "Your email or password are invalid.",
+    "name_required": "Please input your name"
   }
 }

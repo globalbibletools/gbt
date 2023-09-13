@@ -11,14 +11,14 @@ import { useAccessControl } from '../shared/accessControl';
 
 export default function Header() {
   const session = useAuth();
-  const { t } = useTranslation(['translation', 'users']);
+  const { t } = useTranslation(['common', 'languages', 'translation', 'users']);
 
   const userCan = useAccessControl();
 
   return (
     <header className="py-2 px-4 flex items-baseline flex-row z-10 mb-2 gap-4">
       <Link className="font-bold text-lg" to="/">
-        {t('app_name')}
+        {t('common:app_name')}
       </Link>
       <div className="flex-grow" />
       <nav className="flex items-baseline gap-4" aria-label="primary">
@@ -26,14 +26,14 @@ export default function Header() {
           to={'/translate'}
           className="focus:outline-none hover:underline focus:underline"
         >
-          {t('translate')}
+          {t('translation:translate')}
         </Link>
         {userCan('administer', 'Language') && (
           <Link
             to={'/languages'}
             className="focus:outline-none hover:underline focus:underline"
           >
-            {t('languages')}
+            {t('languages:languages')}
           </Link>
         )}
         {userCan('administer', 'User') && (

@@ -109,7 +109,7 @@ export default function ManageLanguageView() {
   const { data: language } = useLicenseQuery(params.code);
   const { data: members } = useLicenseMembersQuery(params.code);
 
-  const { t } = useTranslation(['translation', 'users']);
+  const { t } = useTranslation(['common', 'languages', 'users']);
 
   const removeMemberMutation = useRemoveLanguageMemberMutation();
   const updateMemberMutation = useUpdateLanguageMemberMutation();
@@ -120,7 +120,7 @@ export default function ManageLanguageView() {
       await apiClient.languages.update(language.data.code, {
         name: data.name,
       });
-      flash.success(t('translation:language_updated'));
+      flash.success(t('languages:language_updated'));
     } catch (error) {
       flash.error(`${error}`);
     }
@@ -137,7 +137,7 @@ export default function ManageLanguageView() {
         <Form context={formContext} onSubmit={onSubmit} className="mb-8">
           <div className="mb-2">
             <FormLabel htmlFor="name">
-              {t('translation:name').toUpperCase()}
+              {t('common:name').toUpperCase()}
             </FormLabel>
             <TextInput
               id="name"
@@ -151,18 +151,18 @@ export default function ManageLanguageView() {
             <InputError
               id="name-error"
               name="name"
-              messages={{ required: t('translation:language_name_required') }}
+              messages={{ required: t('languages:language_name_required') }}
             />
           </div>
           <div>
-            <Button type="submit">{t('translation:update')}</Button>
+            <Button type="submit">{t('common:update')}</Button>
             <SubmittingIndicator className="ms-3" />
           </div>
         </Form>
         <List className="mb-8">
           <ListHeader>
             <ListHeaderCell className="min-w-[120px]">
-              {t('users:name').toUpperCase()}
+              {t('common:name').toUpperCase()}
             </ListHeaderCell>
             <ListHeaderCell className="min-w-[120px]">
               {t('users:email').toUpperCase()}
@@ -227,7 +227,7 @@ export default function ManageLanguageView() {
         <div>
           <Link to="./import" variant="button">
             <Icon icon="file-import" className="me-4"></Icon>
-            {t('import_glosses')}
+            {t('languages:import_glosses')}
           </Link>
         </div>
       </div>

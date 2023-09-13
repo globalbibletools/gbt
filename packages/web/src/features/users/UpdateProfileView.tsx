@@ -23,7 +23,7 @@ interface FormData {
 
 export default function UpdateProfileView() {
   const { user, refreshAuth } = useAuth();
-  const { t } = useTranslation(['users', 'translation']);
+  const { t } = useTranslation(['common', 'translation', 'users']);
   const flash = useFlash();
 
   const formContext = useForm<FormData>();
@@ -84,12 +84,12 @@ export default function UpdateProfileView() {
             <InputError
               id="email-error"
               name="email"
-              messages={{ required: t('users:email_required') }}
+              messages={{ required: t('users:errors.email_required') }}
             />
           </div>
           <div className="mb-2">
             <FormLabel htmlFor="name">
-              {t('users:name').toUpperCase()}
+              {t('common:name').toUpperCase()}
             </FormLabel>
             <TextInput
               id="name"
@@ -102,7 +102,7 @@ export default function UpdateProfileView() {
             <InputError
               id="name-error"
               name="name"
-              messages={{ required: t('users:name_required') }}
+              messages={{ required: t('users:errors.name_required') }}
             />
           </div>
           <div className="mb-2">
@@ -147,7 +147,7 @@ export default function UpdateProfileView() {
             />
           </div>
           <div>
-            <Button type="submit">{t('translation:update')}</Button>
+            <Button type="submit">{t('common:update')}</Button>
             <SubmittingIndicator className="ms-3" />
           </div>
         </Form>

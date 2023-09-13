@@ -34,6 +34,7 @@
     "password_format": "Su contraseña debe tener al menos 8 caracteres.",
     "password_confirmation": "La confirmación de su contraseña no coincide.",
     "user_email_required": "Por favor ingrese la dirección de correo electrónico del usuario.",
-    "invalid_auth": "Tu correo electrónico o contraseña no son válidos."
+    "invalid_auth": "Tu correo electrónico o contraseña no son válidos.",
+    "name_required": "Ingrese su nombre"
   }
 }

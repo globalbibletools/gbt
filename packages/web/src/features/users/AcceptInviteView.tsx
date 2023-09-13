@@ -108,7 +108,7 @@ export default function AcceptInviteView() {
             <InputError
               id="name-error"
               name="name"
-              messages={{ required: t('name_required') }}
+              messages={{ required: t('users:errors.name_required') }}
             />
           </div>
           <div className="mb-2">
