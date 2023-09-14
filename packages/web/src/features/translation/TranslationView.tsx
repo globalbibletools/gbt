@@ -5,7 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useAccessControl } from '../../shared/accessControl';
 import apiClient from '../../shared/apiClient';
 import LoadingSpinner from '../../shared/components/LoadingSpinner';
-import TranslateWord from './TranslateWord';
+import TranslateWord, { TranslateWordRef } from './TranslateWord';
 import { VerseSelector } from './VerseSelector';
 import {
   bookFirstVerseId,
@@ -152,8 +152,8 @@ export default function TranslationView() {
 
   const userCan = useAccessControl();
 
-  const firstWord = useRef<HTMLInputElement>(null);
-  const lastWord = useRef<HTMLInputElement>(null);
+  const firstWord = useRef<TranslateWordRef>(null);
+  const lastWord = useRef<TranslateWordRef>(null);
   const handleKeyPress = useCallback(
     (event: {
       key: string;

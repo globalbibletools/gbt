@@ -1,4 +1,10 @@
-import { KeyboardEventHandler, forwardRef, useState } from 'react';
+import {
+  KeyboardEventHandler,
+  forwardRef,
+  useState,
+  useRef,
+  useImperativeHandle,
+} from 'react';
 import { useTranslation } from 'react-i18next';
 import { Icon } from '../../shared/components/Icon';
 import AutocompleteInput from '../../shared/components/form/AutocompleteInput';
@@ -18,7 +24,11 @@ export interface TranslateWordProps {
   onKeyDown?: KeyboardEventHandler<HTMLElement>;
 }
 
-const TranslateWord = forwardRef<HTMLInputElement, TranslateWordProps>(
+export interface TranslateWordRef {
+  focus(): void;
+}
+
+const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
   (
     {
       editable = false,
@@ -36,6 +46,15 @@ const TranslateWord = forwardRef<HTMLInputElement, TranslateWordProps>(
     const { t } = useTranslation();
     const [text, setText] = useState(gloss ?? '');
     const width = useTextWidth(text);
+    const input = useRef<HTMLInputElement>(null);
+
+    useImperativeHandle(
+      ref,
+      () => ({
+        focus: () => input.current?.focus(),
+      }),
+      []
+    );
 
     return (
       <li className="mx-2 mb-4">
@@ -87,7 +106,7 @@ const TranslateWord = forwardRef<HTMLInputElement, TranslateWordProps>(
                   onKeyDown(e);
                 }
               }}
-              ref={ref}
+              ref={input}
             />
             <InputHelpText id={`word-help-${word.id}`}>
               {(() => {
