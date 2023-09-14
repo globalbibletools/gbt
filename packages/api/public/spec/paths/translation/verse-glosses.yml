@@ -1,6 +1,6 @@
 get:
   tags:
-    - Glosses
+    - Languages
   summary: Get the glosses of a verse for a language.
   parameters:
     - $ref: '../../schemas/parameters.yml#languageCode'

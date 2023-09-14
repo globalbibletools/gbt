@@ -1,6 +1,6 @@
 patch:
   tags:
-    - Glosses
+    - Languages
   summary: Update the gloss of a word for a language.
   parameters:
     - $ref: '../../schemas/parameters.yml#languageCode'

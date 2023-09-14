@@ -1,6 +1,6 @@
 get:
   tags:
-    - Language Import
+    - Misc
   summary: Get the languages that are available to import from hebrewgreekbible.online.
   responses:
     '200':

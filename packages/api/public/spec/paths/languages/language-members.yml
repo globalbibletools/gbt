@@ -33,6 +33,8 @@ get:
                       enum: ['ADMIN', 'EDIT', 'VIEW']
 post:
   summary: Invite a new member to a language.
+  tags:
+    - Languages
   parameters:
     - $ref: '../../schemas/parameters.yml#languageCode'
   requestBody:

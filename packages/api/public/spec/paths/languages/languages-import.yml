@@ -1,6 +1,6 @@
 get:
   tags:
-    - Language Import
+    - Languages
   summary: Get the status of the import job for a language.
   parameters:
     - $ref: '../../schemas/parameters.yml#languageCode'
