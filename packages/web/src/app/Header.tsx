@@ -11,7 +11,7 @@ import { useAccessControl } from '../shared/accessControl';
 
 export default function Header() {
   const session = useAuth();
-  const { t } = useTranslation(['common', 'languages', 'translation', 'users']);
+  const { t } = useTranslation(['common', 'languages', 'translate', 'users']);
 
   const userCan = useAccessControl();
 
@@ -26,7 +26,7 @@ export default function Header() {
           to={'/translate'}
           className="focus:outline-none hover:underline focus:underline"
         >
-          {t('translation:translate')}
+          {t('translate:translate')}
         </Link>
         {userCan('administer', 'Language') && (
           <Link

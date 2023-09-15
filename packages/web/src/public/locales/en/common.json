@@ -3,5 +3,18 @@
   "manage": "Manage",
   "update": "Update",
   "create": "Create",
-  "name": "name"
+  "name": "name",
+  "close": "close",
+  "error": "Error",
+  "success": "Success",
+  "try_again": "Try Again",
+  "confirm_prompt": "Type '{{value}}' to confirm your decision.",
+  "confirm": "Confirm",
+  "cancel": "Cancel",
+  "loading": "Loading",
+  "not_found": "Not Found",
+  "not_found_message": "We couldn't find what you are looking for.",
+  "submitting": "submitting",
+  "unknown_error": "Unknown Error",
+  "unknown_error_message": "An unknown error has occurred."
 }

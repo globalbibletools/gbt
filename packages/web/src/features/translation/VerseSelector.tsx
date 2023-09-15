@@ -16,7 +16,7 @@ export interface VerseSelectorProps {
 }
 
 export function VerseSelector({ verseId, onVerseChange }: VerseSelectorProps) {
-  const { t, i18n } = useTranslation(['translation', 'bible']);
+  const { t } = useTranslation(['translate', 'bible']);
   const verseInfo = parseVerseId(verseId);
 
   const onKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {

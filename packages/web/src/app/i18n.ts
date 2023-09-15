@@ -20,7 +20,6 @@ i18n
       escapeValue: false, // not needed for react as it escapes by default
     },
     returnObjects: true,
-    ns: ['bible', 'translation', 'users'],
     defaultNS: false,
     fallbackNS: false,
   });

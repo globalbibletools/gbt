@@ -23,7 +23,7 @@ interface FormData {
 
 export default function UpdateProfileView() {
   const { user, refreshAuth } = useAuth();
-  const { t } = useTranslation(['common', 'translation', 'users']);
+  const { t } = useTranslation(['common', 'translate', 'users']);
   const flash = useFlash();
 
   const formContext = useForm<FormData>();
