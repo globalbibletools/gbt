@@ -27,7 +27,7 @@ export default function TranslateWord({
   previousGlosses,
   onGlossChange,
 }: TranslateWordProps) {
-  const { t } = useTranslation();
+  const { t } = useTranslation(['translate']);
   const [text, setText] = useState(gloss ?? '');
   const width = useTextWidth(text);
 
@@ -83,14 +83,14 @@ export default function TranslateWord({
                 return (
                   <>
                     <Icon icon="arrows-rotate" className="me-1" />
-                    {capitalize(t('saving'))}
+                    {capitalize(t('translate:saving'))}
                   </>
                 );
               } else if (status === 'saved') {
                 return (
                   <>
                     <Icon icon="check" className="me-1" />
-                    {capitalize(t('saved'))}
+                    {capitalize(t('translate:saved'))}
                   </>
                 );
               } else {

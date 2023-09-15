@@ -18,7 +18,7 @@ interface FormData {
 }
 
 export default function InviteUserView() {
-  const { t } = useTranslation('users');
+  const { t } = useTranslation(['users']);
   const flash = useFlash();
 
   const formContext = useForm<FormData>();
@@ -26,7 +26,7 @@ export default function InviteUserView() {
     try {
       await apiClient.users.invite({ email });
 
-      flash.success(t('user_invited'));
+      flash.success(t('users:user_invited'));
       reset();
     } catch (error) {
       if (error instanceof ApiClientError && error.status === 409) {
@@ -34,7 +34,7 @@ export default function InviteUserView() {
           (error) => error.code === 'AlreadyExists'
         );
         if (alreadyExistsError) {
-          flash.error(t('errors.user_exists', { email }));
+          flash.error(t('users:errors.user_exists', { email }));
           return;
         }
       }
@@ -45,10 +45,12 @@ export default function InviteUserView() {
   return (
     <View fitToScreen className="flex justify-center items-start">
       <Card className="mx-4 mt-4 w-96 flex-shrink p-6">
-        <ViewTitle>{t('invite_user')}</ViewTitle>
+        <ViewTitle>{t('users:invite_user')}</ViewTitle>
         <Form context={formContext} onSubmit={onSubmit}>
           <div className="mb-4">
-            <FormLabel htmlFor="email">{t('email').toUpperCase()}</FormLabel>
+            <FormLabel htmlFor="email">
+              {t('users:email').toUpperCase()}
+            </FormLabel>
             <TextInput
               id="email"
               name="email"
@@ -60,11 +62,11 @@ export default function InviteUserView() {
             <InputError
               id="email-error"
               name="email"
-              messages={{ required: t('errors.user_email_required') }}
+              messages={{ required: t('users:errors.user_email_required') }}
             />
           </div>
           <div>
-            <Button type="submit">{t('invite')}</Button>
+            <Button type="submit">{t('users:invite')}</Button>
             <SubmittingIndicator className="ms-3" />
           </div>
         </Form>

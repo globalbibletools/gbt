@@ -26,7 +26,7 @@ export default function InviteLanguageMemberView() {
   const navigate = useNavigate();
 
   const flash = useFlash();
-  const { t } = useTranslation('users');
+  const { t } = useTranslation(['users']);
 
   const formContext = useForm<FormData>();
   async function onSubmit(data: FormData) {
@@ -36,7 +36,7 @@ export default function InviteLanguageMemberView() {
         roles: data.roles,
       });
 
-      flash.success(t('user_invited'));
+      flash.success(t('users:user_invited'));
 
       navigate(`/languages/${code}`);
     } catch (error) {
@@ -45,7 +45,7 @@ export default function InviteLanguageMemberView() {
           (error) => error.code === 'AlreadyExists'
         );
         if (alreadyExistsError) {
-          flash.error(t('errors.user_exists', { email: data.email }));
+          flash.error(t('users:errors.user_exists', { email: data.email }));
           return;
         }
       }
@@ -56,10 +56,12 @@ export default function InviteLanguageMemberView() {
   return (
     <View fitToScreen className="flex justify-center items-start">
       <Card className="mx-4 mt-4 w-96 flex-shrink p-6">
-        <ViewTitle>{t('invite_user')}</ViewTitle>
+        <ViewTitle>{t('users:invite_user')}</ViewTitle>
         <Form context={formContext} onSubmit={onSubmit}>
           <div className="mb-2">
-            <FormLabel htmlFor="email">{t('email').toUpperCase()}</FormLabel>
+            <FormLabel htmlFor="email">
+              {t('users:email').toUpperCase()}
+            </FormLabel>
             <TextInput
               id="email"
               type="email"
@@ -72,25 +74,28 @@ export default function InviteLanguageMemberView() {
             <InputError
               id="email-error"
               name="email"
-              messages={{ required: t('errors.user_email_required') }}
+              messages={{ required: t('users:errors.user_email_required') }}
             />
           </div>
           <div className="mb-4">
             <FormLabel htmlFor="roles">
-              {t('role', { count: 100 }).toUpperCase()}
+              {t('users:role', { count: 100 }).toUpperCase()}
             </FormLabel>
             <MultiselectInput
               className="w-full"
               name="roles"
               defaultValue={[LanguageRole.Translator]}
               items={[
-                { label: t('role_admin'), value: LanguageRole.Admin },
-                { label: t('role_translator'), value: LanguageRole.Translator },
+                { label: t('users:role_admin'), value: LanguageRole.Admin },
+                {
+                  label: t('users:role_translator'),
+                  value: LanguageRole.Translator,
+                },
               ]}
             />
           </div>
           <div>
-            <Button type="submit">{t('invite')}</Button>
+            <Button type="submit">{t('users:invite')}</Button>
             <SubmittingIndicator className="ms-3" />
           </div>
         </Form>

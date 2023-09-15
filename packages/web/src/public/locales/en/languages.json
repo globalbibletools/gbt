@@ -18,5 +18,6 @@
   "import_glosses_title": "Import Glosses: {{languageName}}",
   "import_glosses_error": "Error importing glosses",
   "import_description": "Select a language to import glosses from <1>hebrewgreekbible.online</1>.",
-  "import_glosses_confirmation_warning": "This will overwrite any glosses associated with the language. It may take some time to complete."
+  "import_glosses_confirmation_warning": "This will overwrite any glosses associated with the language. It may take some time to complete.",
+  "manage": "Manage"
 }

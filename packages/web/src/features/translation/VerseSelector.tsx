@@ -40,15 +40,15 @@ export function VerseSelector({ verseId, onVerseChange }: VerseSelectorProps) {
         autoComplete="off"
         placeholder={generateReference(verseInfo, t)}
         onKeyDown={onKeyDown}
-        arial-label={t('select_verse')}
+        arial-label={t('translate:select_verse')}
       />
       <button onClick={() => onVerseChange(decrementVerseId(verseId))}>
         <Icon icon="arrow-up" />
-        <span className="sr-only">{t('previous_verse')}</span>
+        <span className="sr-only">{t('translate:previous_verse')}</span>
       </button>
       <button onClick={() => onVerseChange(incrementVerseId(verseId))}>
         <Icon icon="arrow-down" />
-        <span className="sr-only">{t('next_verse')}</span>
+        <span className="sr-only">{t('translate:next_verse')}</span>
       </button>
     </div>
   );
