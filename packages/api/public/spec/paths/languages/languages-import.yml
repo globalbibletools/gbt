@@ -1,6 +1,6 @@
 get:
   tags:
-    - Language Import
+    - Languages
   summary: Get the status of the import job for a language.
   parameters:
     - $ref: '../../schemas/parameters.yml#languageCode'
@@ -25,7 +25,7 @@ get:
                 description: Whether the job was successful.
 post:
   tags:
-    - Language Import
+    - Languages
   summary: Import glossing data from hebrewgreekbible.online. WARNING - this process can take some time. It can take around a minute to import all the glosses.
   parameters:
     - $ref: '../../schemas/parameters.yml#languageCode'

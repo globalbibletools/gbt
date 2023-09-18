@@ -9,36 +9,36 @@ servers:
   - url: /api
 paths:
   /auth/login:
-    $ref: ./paths/auth.yml#login
+    $ref: ./paths/users/auth.yml#login
   /auth/logout:
-    $ref: ./paths/auth.yml#logout
+    $ref: ./paths/users/auth.yml#logout
   /auth/session:
-    $ref: ./paths/auth.yml#session
+    $ref: ./paths/users/auth.yml#session
   /auth/invite:
-    $ref: ./paths/auth.yml#invite
+    $ref: ./paths/users/auth.yml#invite
   /users:
-    $ref: ./paths/users.yml
+    $ref: ./paths/users/users.yml
   /users/{userId}:
-    $ref: ./paths/user.yml
+    $ref: ./paths/users/user.yml
   /email/verify:
-    $ref: ./paths/verify-email.yml
+    $ref: ./paths/users/verify-email.yml
   /verses/{verseId}:
-    $ref: ./paths/verse.yml
+    $ref: ./paths/translation/verse.yml
   /import/languages:
-    $ref: ./paths/import/languages.yml
+    $ref: ./paths/languages/import-languages.yml
   /languages:
-    $ref: ./paths/languages.yml
+    $ref: ./paths/languages/languages.yml
   /languages/{code}:
-    $ref: ./paths/language.yml
+    $ref: ./paths/languages/language.yml
   /languages/{code}/import:
-    $ref: ./paths/languages/import.yml
+    $ref: ./paths/languages/languages-import.yml
   /languages/{code}/verses/{verseId}/translation:
-    $ref: ./paths/translations.yml
+    $ref: ./paths/translation/translations.yml
   /languages/{code}/verses/{verseId}/glosses:
-    $ref: ./paths/verse-glosses.yml
+    $ref: ./paths/translation/verse-glosses.yml
   /languages/{code}/words/{wordId}:
-    $ref: ./paths/language-words.yml
+    $ref: ./paths/languages/language-words.yml
   /languages/{code}/members:
-    $ref: ./paths/language-members.yml
+    $ref: ./paths/languages/language-members.yml
   /languages/{code}/members/{userId}:
-    $ref: ./paths/language-member.yml
+    $ref: ./paths/languages/language-member.yml
