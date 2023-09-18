@@ -1,13 +1,19 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { GetVerseGlossesResponseBody } from '@translation/api-types';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAccessControl } from '../../shared/accessControl';
 import apiClient from '../../shared/apiClient';
 import LoadingSpinner from '../../shared/components/LoadingSpinner';
-import TranslateWord from './TranslateWord';
+import TranslateWord, { TranslateWordRef } from './TranslateWord';
 import { VerseSelector } from './VerseSelector';
-import { incrementVerseId, parseVerseId } from './verse-utils';
+import {
+  bookFirstVerseId,
+  bookLastVerseId,
+  decrementVerseId,
+  incrementVerseId,
+  parseVerseId,
+} from './verse-utils';
 import DropdownMenu, {
   DropdownMenuLink,
 } from '../../shared/components/actions/DropdownMenu';
@@ -146,6 +152,66 @@ export default function TranslationView() {
 
   const userCan = useAccessControl();
 
+  const firstWord = useRef<TranslateWordRef>(null);
+  const lastWord = useRef<TranslateWordRef>(null);
+  const handleKeyPress = useCallback(
+    (event: {
+      key: string;
+      shiftKey: boolean;
+      ctrlKey: boolean;
+      preventDefault: VoidFunction;
+      stopPropagation: VoidFunction;
+    }) => {
+      const watchKeys = ['ArrowUp', 'ArrowDown', 'Home', 'End'];
+      if (!event.ctrlKey || !watchKeys.includes(event.key)) {
+        return;
+      }
+      event.preventDefault();
+      event.stopPropagation();
+      const { bookId } = parseVerseId(verseId);
+      switch (event.key) {
+        case 'ArrowUp':
+          navigate(
+            `/languages/${language}/verses/${decrementVerseId(verseId)}`
+          );
+          break;
+        case 'ArrowDown':
+          navigate(
+            `/languages/${language}/verses/${incrementVerseId(verseId)}`
+          );
+          break;
+        case 'Home':
+          if (event.shiftKey) {
+            navigate(
+              `/languages/${language}/verses/${bookFirstVerseId(bookId)}`
+            );
+          } else {
+            firstWord.current?.focus();
+          }
+          break;
+        case 'End':
+          if (event.shiftKey) {
+            navigate(
+              `/languages/${language}/verses/${bookLastVerseId(bookId)}`
+            );
+          } else {
+            lastWord.current?.focus();
+          }
+          break;
+      }
+    },
+    [language, navigate, verseId]
+  );
+
+  useEffect(() => {
+    // Attach the event listener to the window object
+    window.addEventListener('keydown', handleKeyPress);
+    // Cleanup by removing the event listener when the component unmounts
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress);
+    };
+  }, [handleKeyPress]);
+
   const loading =
     !verseQuery.isSuccess ||
     !referenceGlossesQuery.isSuccess ||
@@ -220,6 +286,14 @@ export default function TranslationView() {
                         gloss: newGloss,
                       });
                     }}
+                    onKeyDown={handleKeyPress}
+                    ref={(() => {
+                      if (i === 0) {
+                        return firstWord;
+                      } else if (i === verse.words.length - 1) {
+                        return lastWord;
+                      }
+                    })()}
                   />
                 );
               })}
