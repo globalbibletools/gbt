@@ -1,8 +1,8 @@
 {
-  "select_verse": "Select verse",
-  "previous_verse": "Previous Verse",
   "next_verse": "Next Verse",
-  "saving": "saving",
+  "previous_verse": "Previous Verse",
   "saved": "saved",
+  "saving": "saving",
+  "select_verse": "Select verse",
   "translate": "Translate"
 }

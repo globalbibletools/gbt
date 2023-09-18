@@ -1,8 +1,8 @@
 {
-  "translate": "ترجمة",
-  "select_verse": "حدد الآية",
-  "previous_verse": "الآية السابقة",
   "next_verse": "الآية التالية",
+  "previous_verse": "الآية السابقة",
+  "saved": "تم الحفظ",
   "saving": "جاري الحفظ",
-  "saved": "تم الحفظ"
+  "select_verse": "حدد الآية",
+  "translate": "ترجمة"
 }
