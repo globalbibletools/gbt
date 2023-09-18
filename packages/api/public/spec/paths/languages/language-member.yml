@@ -3,8 +3,8 @@ patch:
   tags:
     - Languages
   parameters:
-    - $ref: '../schemas/parameters.yml#languageCode'
-    - $ref: '../schemas/parameters.yml#userId'
+    - $ref: '../../schemas/parameters.yml#languageCode'
+    - $ref: '../../schemas/parameters.yml#userId'
   requestBody:
     required: true
     content:
@@ -22,8 +22,8 @@ delete:
   tags:
     - Languages
   parameters:
-    - $ref: '../schemas/parameters.yml#languageCode'
-    - $ref: '../schemas/parameters.yml#userId'
+    - $ref: '../../schemas/parameters.yml#languageCode'
+    - $ref: '../../schemas/parameters.yml#userId'
   responses:
     '204':
       description: No Content

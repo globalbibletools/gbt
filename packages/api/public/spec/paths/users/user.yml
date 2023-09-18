@@ -3,7 +3,7 @@ patch:
     - Users
   summary: Update an existing user.
   parameters:
-    - $ref: '../schemas/parameters.yml#userId'
+    - $ref: '../../schemas/parameters.yml#userId'
   requestBody:
     required: true
     content:

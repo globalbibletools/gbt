@@ -3,8 +3,8 @@ get:
     - Languages
   summary: Get the natural language translation of a verse.
   parameters:
-    - $ref: '../schemas/parameters.yml#languageCode'
-    - $ref: '../schemas/parameters.yml#verseId'
+    - $ref: '../../schemas/parameters.yml#languageCode'
+    - $ref: '../../schemas/parameters.yml#verseId'
   responses:
     '200':
       description: Ok
