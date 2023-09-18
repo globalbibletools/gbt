@@ -3,7 +3,7 @@ get:
     - Languages
   summary: Get a language by its IETF code.
   parameters:
-    - $ref: '../schemas/parameters.yml#languageCode'
+    - $ref: '../../schemas/parameters.yml#languageCode'
   responses:
     '200':
       description: Ok
@@ -13,13 +13,13 @@ get:
             type: object
             properties:
               data:
-                $ref: '../schemas/language.yml'
+                $ref: '../../schemas/language.yml'
 patch:
   tags:
     - Languages
   summary: Update a language.
   parameters:
-    - $ref: '../schemas/parameters.yml#languageCode'
+    - $ref: '../../schemas/parameters.yml#languageCode'
   requestBody:
     required: true
     content:
