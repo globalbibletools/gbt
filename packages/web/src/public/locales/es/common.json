@@ -1,0 +1,19 @@
+{
+  "app_name": "Traducción de brillo",
+  "update": "Actualizar",
+  "create": "Crear",
+  "name": "nombre",
+  "close": "cerrar",
+  "error": "Error",
+  "success": "Éxito",
+  "try_again": "Intentar de Nuevo",
+  "confirm_prompt": "Escriba '{{value}}' para confirmar su decisión.",
+  "confirm": "Confirmar",
+  "cancel": "Cancelar",
+  "loading": "Cargando",
+  "not_found": "No Encontrado",
+  "not_found_message": "No pudimos encontrar lo que estás buscando.",
+  "submitting": "Sumisión",
+  "unknown_error": "Error Desconocido",
+  "unknown_error_message": "Ha ocurrido un error desconocido."
+}
