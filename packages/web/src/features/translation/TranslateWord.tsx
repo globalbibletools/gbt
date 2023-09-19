@@ -43,7 +43,7 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
     }: TranslateWordProps,
     ref
   ) => {
-    const { t } = useTranslation();
+    const { t } = useTranslation(['translate']);
     const [text, setText] = useState(gloss ?? '');
     const width = useTextWidth(text);
     const input = useRef<HTMLInputElement>(null);
@@ -114,14 +114,14 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
                   return (
                     <>
                       <Icon icon="arrows-rotate" className="me-1" />
-                      {capitalize(t('saving'))}
+                      {capitalize(t('translate:saving'))}
                     </>
                   );
                 } else if (status === 'saved') {
                   return (
                     <>
                       <Icon icon="check" className="me-1" />
-                      {capitalize(t('saved'))}
+                      {capitalize(t('translate:saved'))}
                     </>
                   );
                 } else {

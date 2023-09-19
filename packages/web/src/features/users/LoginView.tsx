@@ -24,7 +24,7 @@ export default function InviteUserView() {
   const { refreshAuth } = useAuth();
   const navigate = useNavigate();
 
-  const { t } = useTranslation('users');
+  const { t } = useTranslation(['users']);
   const flash = useFlash();
 
   const formContext = useForm<FormData>();
@@ -35,7 +35,7 @@ export default function InviteUserView() {
       navigate('/');
     } catch (error) {
       if (error instanceof ApiClientError && error.status === 401) {
-        flash.error(t('errors.invalid_auth'));
+        flash.error(t('users:errors.invalid_auth'));
       } else {
         flash.error(`${error}`);
       }
@@ -45,10 +45,12 @@ export default function InviteUserView() {
   return (
     <View fitToScreen className="flex justify-center items-start">
       <Card className="mx-4 mt-4 w-96 flex-shrink p-6">
-        <ViewTitle>{t('log_in')}</ViewTitle>
+        <ViewTitle>{t('users:log_in')}</ViewTitle>
         <Form context={formContext} onSubmit={onSubmit}>
           <div className="mb-4">
-            <FormLabel htmlFor="email">{t('email').toUpperCase()}</FormLabel>
+            <FormLabel htmlFor="email">
+              {t('users:email').toUpperCase()}
+            </FormLabel>
             <TextInput
               id="email"
               name="email"
@@ -61,13 +63,13 @@ export default function InviteUserView() {
               id="email-error"
               name="email"
               messages={{
-                required: t('errors.email_required'),
+                required: t('users:errors.email_required'),
               }}
             />
           </div>
           <div className="mb-2">
             <FormLabel htmlFor="password">
-              {t('password').toUpperCase()}
+              {t('users:password').toUpperCase()}
             </FormLabel>
             <TextInput
               id="password"
@@ -82,12 +84,12 @@ export default function InviteUserView() {
               id="password-error"
               name="password"
               messages={{
-                required: t('errors.password_required'),
+                required: t('users:errors.password_required'),
               }}
             />
           </div>
           <div>
-            <Button type="submit">{t('log_in')}</Button>
+            <Button type="submit">{t('users:log_in')}</Button>
             <SubmittingIndicator className="ms-3" />
           </div>
         </Form>

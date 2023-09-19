@@ -8,7 +8,7 @@ import interfaceLanguages from './languages.json';
 
 export default function Footer() {
   const languageDialog = useRef<DialogRef>(null);
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation(['languages']);
 
   useEffect(() => {
     if (!initialLanguageChosen) {
@@ -27,7 +27,7 @@ export default function Footer() {
         <Icon icon="earth" className="me-2" fixedWidth />
         {(interfaceLanguages as { [code: string]: string })[
           i18n.resolvedLanguage
-        ] ?? t('language', { count: 100 })}
+        ] ?? t('languages:language', { count: 100 })}
       </button>
       <LanguageDialog ref={languageDialog} />
     </footer>

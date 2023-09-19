@@ -21,7 +21,7 @@ import SelectInput from '../../shared/components/form/SelectInput';
 import { useAccessControl } from '../../shared/accessControl';
 
 export default function UsersView() {
-  const { t } = useTranslation('users');
+  const { t } = useTranslation(['users']);
   const flash = useFlash();
 
   const userCan = useAccessControl();
@@ -60,7 +60,7 @@ export default function UsersView() {
       alert('Unknown error occurred.');
     },
     onSuccess() {
-      flash.success(t('user_role_changed'));
+      flash.success(t('users:user_role_changed'));
     },
     onSettled: (_, __, ___, context) => {
       queryClient.invalidateQueries({
@@ -72,27 +72,27 @@ export default function UsersView() {
   return (
     <View fitToScreen>
       <div className="m-auto w-fit">
-        <ViewTitle>{capitalize(t('users', { count: 100 }))}</ViewTitle>
+        <ViewTitle>{capitalize(t('users:users', { count: 100 }))}</ViewTitle>
         <List>
           <ListHeader>
             <ListHeaderCell className="min-w-[120px]">
-              {t('name', { count: 1 }).toUpperCase()}
+              {t('users:name', { count: 1 }).toUpperCase()}
             </ListHeaderCell>
             <ListHeaderCell className="min-w-[120px]">
-              {t('email').toUpperCase()}
+              {t('users:email').toUpperCase()}
             </ListHeaderCell>
             <ListHeaderCell className="min-w-[60px]">
-              {t('email_status').toUpperCase()}
+              {t('users:email_status').toUpperCase()}
             </ListHeaderCell>
             <ListHeaderCell className="min-w-[80px]">
-              {t('role', { count: 100 }).toUpperCase()}
+              {t('users:role', { count: 100 }).toUpperCase()}
             </ListHeaderCell>
           </ListHeader>
           {userCan('create', 'User') && (
             <ListRowAction colSpan={4}>
               <Link to="./invite">
                 <Icon icon="plus" className="mr-1" />
-                {t('invite_user')}
+                {t('users:invite_user')}
               </Link>
             </ListRowAction>
           )}
@@ -103,7 +103,7 @@ export default function UsersView() {
                 <ListCell>{user.email}</ListCell>
                 <ListCell>
                   {user.emailStatus &&
-                    t('email_status', {
+                    t('users:email_status', {
                       context: user.emailStatus.toLowerCase(),
                     })}
                 </ListCell>
@@ -112,7 +112,7 @@ export default function UsersView() {
                     className="w-42"
                     name="userRole"
                     value={user.systemRoles?.[0] ?? ''}
-                    aria-label={t('role') ?? ''}
+                    aria-label={t('users:role') ?? ''}
                     onChange={(e) =>
                       userMutation.mutate({
                         id: user.id,
@@ -123,7 +123,9 @@ export default function UsersView() {
                     }
                   >
                     <option></option>
-                    <option value={SystemRole.Admin}>{t('role_admin')}</option>
+                    <option value={SystemRole.Admin}>
+                      {t('users:role_admin')}
+                    </option>
                   </SelectInput>
                 </ListCell>
               </ListRow>

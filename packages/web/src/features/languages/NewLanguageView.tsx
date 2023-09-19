@@ -23,7 +23,7 @@ export default function NewLanguageView() {
   const navigate = useNavigate();
 
   const flash = useFlash();
-  const { t } = useTranslation();
+  const { t } = useTranslation(['common', 'languages']);
 
   const formContext = useForm<FormData>();
   async function onSubmit(data: FormData) {
@@ -33,7 +33,7 @@ export default function NewLanguageView() {
         name: data.name,
       });
 
-      flash.success(t('language_created'));
+      flash.success(t('languages:language_created'));
 
       navigate('/languages');
     } catch (error) {
@@ -42,7 +42,7 @@ export default function NewLanguageView() {
           (error) => error.code === 'AlreadyExists'
         );
         if (alreadyExistsError) {
-          flash.error(t('language_exists', { code: data.code }));
+          flash.error(t('languages:language_exists', { code: data.code }));
           return;
         }
       }
@@ -53,10 +53,12 @@ export default function NewLanguageView() {
   return (
     <View fitToScreen className="flex justify-center items-start">
       <Card className="mx-4 mt-4 w-96 flex-shrink p-6">
-        <ViewTitle>{t('new_language')}</ViewTitle>
+        <ViewTitle>{t('languages:new_language')}</ViewTitle>
         <Form context={formContext} onSubmit={onSubmit}>
           <div className="mb-2">
-            <FormLabel htmlFor="code">{t('code').toUpperCase()}</FormLabel>
+            <FormLabel htmlFor="code">
+              {t('languages:code').toUpperCase()}
+            </FormLabel>
             <TextInput
               id="code"
               name="code"
@@ -68,11 +70,13 @@ export default function NewLanguageView() {
             <InputError
               id="code-error"
               name="code"
-              messages={{ required: t('language_code_required') }}
+              messages={{ required: t('languages:language_code_required') }}
             />
           </div>
           <div className="mb-4">
-            <FormLabel htmlFor="name">{t('name').toUpperCase()}</FormLabel>
+            <FormLabel htmlFor="name">
+              {t('common:name').toUpperCase()}
+            </FormLabel>
             <TextInput
               id="name"
               name="name"
@@ -84,11 +88,11 @@ export default function NewLanguageView() {
             <InputError
               id="name-error"
               name="name"
-              messages={{ required: t('language_name_required') }}
+              messages={{ required: t('languages:language_name_required') }}
             />
           </div>
           <div>
-            <Button type="submit">{t('create')}</Button>
+            <Button type="submit">{t('common:create')}</Button>
             <SubmittingIndicator className="ms-3" />
           </div>
         </Form>

@@ -99,7 +99,7 @@ export function FlashProvider({ children }: FlashProviderProps) {
     [error, success, clear]
   );
 
-  const { t } = useTranslation();
+  const { t } = useTranslation(['common']);
 
   return (
     <FlashContext.Provider value={contextValue}>
@@ -157,7 +157,10 @@ export function FlashProvider({ children }: FlashProviderProps) {
               </div>
               <div role="alert" className="py-2 px-3">
                 <span className="sr-only">
-                  {message.level === 'error' ? t('error') : t('success')}:
+                  {message.level === 'error'
+                    ? t('common:error')
+                    : t('common:success')}
+                  :
                 </span>
                 {message.message}
               </div>
@@ -167,7 +170,7 @@ export function FlashProvider({ children }: FlashProviderProps) {
                 onClick={() => remove(message.id)}
               >
                 <Icon icon="close" />
-                <span className="sr-only">{t('close')}</span>
+                <span className="sr-only">{t('common:close')}</span>
               </button>
             </Transition>
           );
