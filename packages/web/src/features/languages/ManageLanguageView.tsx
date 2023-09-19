@@ -26,6 +26,7 @@ import { Icon } from '../../shared/components/Icon';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import MultiselectInput from '../../shared/components/form/MultiselectInput';
 import queryClient from '../../shared/queryClient';
+import fontClient from '../../shared/fontClient';
 
 const languageQueryKey = (code: string) => ({
   queryKey: ['language', code],
@@ -41,7 +42,8 @@ export const manageLanguageViewLoader = async (code: string) => {
   const members = await queryClient.ensureQueryData(
     languageMembersQueryKey(code)
   );
-  return { language, members };
+  const fonts = await fontClient.getFonts();
+  return { language, members, fonts };
 };
 
 function useUpdateLanguageMemberMutation() {
@@ -108,6 +110,8 @@ export default function ManageLanguageView() {
 
   const { data: language } = useLicenseQuery(params.code);
   const { data: members } = useLicenseMembersQuery(params.code);
+  const { fonts } = useLoaderData() as { fonts: unknown };
+  console.log('FONTS:', fonts);
 
   const { t } = useTranslation(['translation', 'users']);
 
