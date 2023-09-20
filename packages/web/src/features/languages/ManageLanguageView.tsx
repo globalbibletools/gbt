@@ -22,6 +22,7 @@ import Form from '../../shared/components/form/Form';
 import FormLabel from '../../shared/components/form/FormLabel';
 import InputError from '../../shared/components/form/InputError';
 import MultiselectInput from '../../shared/components/form/MultiselectInput';
+import SelectInput from '../../shared/components/form/SelectInput';
 import SubmittingIndicator from '../../shared/components/form/SubmittingIndicator';
 import TextInput from '../../shared/components/form/TextInput';
 import fontClient from '../../shared/fontClient';
@@ -156,6 +157,18 @@ export default function ManageLanguageView() {
               name="name"
               messages={{ required: t('languages:language_name_required') }}
             />
+          </div>
+          <div className="mb-2">
+            <FormLabel htmlFor="font">
+              {t('languages:gloss_font').toUpperCase()}
+            </FormLabel>
+            <SelectInput id="font" name="font" className="w-full" required>
+              {fonts.map((font) => (
+                <option value={font} key={font}>
+                  {font}
+                </option>
+              ))}
+            </SelectInput>
           </div>
           <div>
             <Button type="submit">{t('common:update')}</Button>
