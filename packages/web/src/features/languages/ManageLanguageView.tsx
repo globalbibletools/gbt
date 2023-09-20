@@ -1,17 +1,10 @@
-import apiClient from '../../shared/apiClient';
-import View from '../../shared/components/View';
-import ViewTitle from '../../shared/components/ViewTitle';
-import { useLoaderData, useParams } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { LanguageRole } from '@translation/api-types';
-import TextInput from '../../shared/components/form/TextInput';
-import FormLabel from '../../shared/components/form/FormLabel';
+import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import Form from '../../shared/components/form/Form';
-import InputError from '../../shared/components/form/InputError';
-import { useFlash } from '../../shared/hooks/flash';
-import SubmittingIndicator from '../../shared/components/form/SubmittingIndicator';
-import Button from '../../shared/components/actions/Button';
+import { useLoaderData, useParams } from 'react-router-dom';
+import apiClient from '../../shared/apiClient';
+import { Icon } from '../../shared/components/Icon';
 import {
   List,
   ListBody,
@@ -21,12 +14,19 @@ import {
   ListRow,
   ListRowAction,
 } from '../../shared/components/List';
+import View from '../../shared/components/View';
+import ViewTitle from '../../shared/components/ViewTitle';
+import Button from '../../shared/components/actions/Button';
 import { Link } from '../../shared/components/actions/Link';
-import { Icon } from '../../shared/components/Icon';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import Form from '../../shared/components/form/Form';
+import FormLabel from '../../shared/components/form/FormLabel';
+import InputError from '../../shared/components/form/InputError';
 import MultiselectInput from '../../shared/components/form/MultiselectInput';
-import queryClient from '../../shared/queryClient';
+import SubmittingIndicator from '../../shared/components/form/SubmittingIndicator';
+import TextInput from '../../shared/components/form/TextInput';
 import fontClient from '../../shared/fontClient';
+import { useFlash } from '../../shared/hooks/flash';
+import queryClient from '../../shared/queryClient';
 
 const languageQueryKey = (code: string) => ({
   queryKey: ['language', code],
@@ -80,7 +80,7 @@ function useRemoveLanguageMemberMutation() {
   });
 }
 
-function useLicenseQuery(code: string) {
+function useLanguageQuery(code: string) {
   const loaderData = useLoaderData() as Awaited<
     ReturnType<typeof manageLanguageViewLoader>
   >;
@@ -90,7 +90,7 @@ function useLicenseQuery(code: string) {
   });
 }
 
-function useLicenseMembersQuery(code: string) {
+function useLanguageMembersQuery(code: string) {
   const loaderData = useLoaderData() as Awaited<
     ReturnType<typeof manageLanguageViewLoader>
   >;
@@ -108,10 +108,9 @@ export default function ManageLanguageView() {
   const params = useParams() as { code: string };
   const flash = useFlash();
 
-  const { data: language } = useLicenseQuery(params.code);
-  const { data: members } = useLicenseMembersQuery(params.code);
-  const { fonts } = useLoaderData() as { fonts: unknown };
-  console.log('FONTS:', fonts);
+  const { data: language } = useLanguageQuery(params.code);
+  const { data: members } = useLanguageMembersQuery(params.code);
+  const { fonts } = useLoaderData() as { fonts: string[] };
 
   const { t } = useTranslation(['translation', 'users']);
 
