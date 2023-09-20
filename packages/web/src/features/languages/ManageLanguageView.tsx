@@ -103,6 +103,7 @@ function useLanguageMembersQuery(code: string) {
 
 interface FormData {
   name: string;
+  font: string;
 }
 
 export default function ManageLanguageView() {
@@ -123,6 +124,8 @@ export default function ManageLanguageView() {
     try {
       await apiClient.languages.update(language.data.code, {
         name: data.name,
+        // TODO: send gloss font to API
+        // glossFont: data.font,
       });
       flash.success(t('languages:language_updated'));
     } catch (error) {
