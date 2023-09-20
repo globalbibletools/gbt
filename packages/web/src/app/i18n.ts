@@ -20,6 +20,8 @@ i18n
       escapeValue: false, // not needed for react as it escapes by default
     },
     returnObjects: true,
+    defaultNS: false,
+    fallbackNS: false,
   });
 
 export default i18n;

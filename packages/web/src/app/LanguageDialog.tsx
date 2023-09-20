@@ -6,7 +6,7 @@ import SelectInput from '../shared/components/form/SelectInput';
 import languages from './languages.json';
 
 const LanguageDialog = forwardRef<DialogRef>((_, ref) => {
-  const { i18n } = useTranslation();
+  const { i18n } = useTranslation(['languages']);
 
   return (
     <Dialog ref={ref} className="fixed bottom-4 end-4 m-0">
@@ -16,7 +16,7 @@ const LanguageDialog = forwardRef<DialogRef>((_, ref) => {
       </h1>
 
       <SelectInput
-        name="language"
+        name="languages:language"
         className="block min-w-[150px]"
         value={i18n.resolvedLanguage}
         onChange={(e) => i18n.changeLanguage(e.currentTarget.value)}

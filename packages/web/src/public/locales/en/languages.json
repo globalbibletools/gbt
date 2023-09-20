@@ -1,0 +1,23 @@
+{
+  "add_language": "Add Language",
+  "code": "code",
+  "import_description": "Select a language to import glosses from <1>hebrewgreekbible.online</1>.",
+  "import_glosses": "Import Glosses",
+  "import_glosses_confirmation_warning": "This will overwrite any glosses associated with the language. It may take some time to complete.",
+  "import_glosses_error": "Error importing glosses",
+  "import_glosses_running": "Gloss import running",
+  "import_glosses_success": "Imported glosses successfully!",
+  "import_glosses_title": "Import Glosses: {{languageName}}",
+  "import_language": "Import Language",
+  "language_code_required": "Please enter the language code.",
+  "language_created": "Language created!",
+  "language_exists": "A language with code \"{{code}}\" already exists",
+  "language_name_required": "Please enter the language name.",
+  "language_one": "language",
+  "language_other": "languages",
+  "language_updated": "Language updated!",
+  "languages": "Languages",
+  "manage": "Manage",
+  "new_language": "New Language",
+  "switch_language": "Switch Language"
+}

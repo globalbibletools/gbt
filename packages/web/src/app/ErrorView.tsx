@@ -6,8 +6,9 @@ import { useTranslation } from 'react-i18next';
 import { ApiClientError } from '@translation/api-client';
 
 export default function NotFound() {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const error: any = useRouteError();
-  const { t } = useTranslation(['translation']);
+  const { t } = useTranslation(['common']);
 
   console.log(error);
 
@@ -17,11 +18,11 @@ export default function NotFound() {
     (isRouteErrorResponse(error) && error.status === 404);
 
   const headerText = isNotFound
-    ? t('translation:not_found')
-    : t('translation:unknown_error');
+    ? t('common:not_found')
+    : t('common:unknown_error');
   const description = isNotFound
-    ? t('translation:not_found_message')
-    : t('translation:unknown_error_message');
+    ? t('common:not_found_message')
+    : t('common:unknown_error_message');
   const errorMessage = isNotFound ? '' : error.statusText || error.message;
 
   return (

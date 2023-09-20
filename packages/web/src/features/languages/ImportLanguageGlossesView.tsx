@@ -47,7 +47,7 @@ export default function ImportLanguageGlossesView() {
     ReturnType<typeof importLanguageGlossesLoader>
   >;
   const flash = useFlash();
-  const { t } = useTranslation();
+  const { t } = useTranslation(['common', 'languages']);
   const confirmationDialog = useRef<ConfirmationDialogRef>(null);
 
   const formContext = useForm<FormData>();
@@ -112,7 +112,7 @@ export default function ImportLanguageGlossesView() {
         setImportStatus('running');
       } catch (error) {
         console.error(error);
-        flash.error(t('import_glosses', { context: 'error' }));
+        flash.error(t('languages:import_glosses', { context: 'error' }));
       }
     }
   }
@@ -122,7 +122,7 @@ export default function ImportLanguageGlossesView() {
       <View fitToScreen className="flex justify-center items-start">
         <div className="mx-4 flex-shrink">
           <ViewTitle className="flex">
-            {t('import_glosses', {
+            {t('languages:import_glosses', {
               context: 'title',
               languageName: language.data.name,
             })}
@@ -132,7 +132,9 @@ export default function ImportLanguageGlossesView() {
               case 'running': {
                 return (
                   <div>
-                    <p className="mb-4">{t('import_glosses_running')}</p>
+                    <p className="mb-4">
+                      {t('languages:import_glosses_running')}
+                    </p>
                     <div className="flex justify-center">
                       <LoadingSpinner />
                     </div>
@@ -142,9 +144,11 @@ export default function ImportLanguageGlossesView() {
               case 'error': {
                 return (
                   <div>
-                    <p className="mb-4">{t('import_glosses_error')}</p>
+                    <p className="mb-4">
+                      {t('languages:import_glosses_error')}
+                    </p>
                     <Button onClick={() => setImportStatus('idle')}>
-                      {t('try_again')}
+                      {t('common:try_again')}
                     </Button>
                   </div>
                 );
@@ -152,9 +156,11 @@ export default function ImportLanguageGlossesView() {
               case 'complete': {
                 return (
                   <div>
-                    <p className="mb-4">{t('import_glosses_success')}</p>
+                    <p className="mb-4">
+                      {t('languages:import_glosses_success')}
+                    </p>
                     <Button onClick={() => setImportStatus('idle')}>
-                      {t('try_again')}
+                      {t('common:try_again')}
                     </Button>
                   </div>
                 );
@@ -163,7 +169,7 @@ export default function ImportLanguageGlossesView() {
                 return (
                   <div className="flex flex-col gap-4">
                     <div>
-                      <Trans i18nKey="import_description">
+                      <Trans i18nKey="languages:import_description">
                         Select a language to import glosses from
                         <a
                           href="https://hebrewgreekbible.online"
@@ -177,7 +183,7 @@ export default function ImportLanguageGlossesView() {
                     <Form context={formContext} onSubmit={onSubmit}>
                       <div className="mb-2">
                         <FormLabel htmlFor="import">
-                          {t('import_language').toUpperCase()}
+                          {t('languages:import_language').toUpperCase()}
                         </FormLabel>
                         <SelectInput
                           id="import"
@@ -197,7 +203,7 @@ export default function ImportLanguageGlossesView() {
                       <div>
                         <Button type="submit">
                           <Icon icon="file-import" className="me-4"></Icon>
-                          {t('import_glosses')}
+                          {t('languages:import_glosses')}
                         </Button>
                         <SubmittingIndicator className="ms-3" />
                       </div>
@@ -211,8 +217,8 @@ export default function ImportLanguageGlossesView() {
       </View>
       <ConfirmationDialog
         ref={confirmationDialog}
-        title={t('import_glosses')}
-        description={t('import_glosses_confirmation_warning')}
+        title={t('languages:import_glosses')}
+        description={t('languages:import_glosses_confirmation_warning')}
         confirmationValue={formContext.getValues()['import']}
       />
     </>
