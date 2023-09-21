@@ -28,6 +28,7 @@ import TextInput from '../../shared/components/form/TextInput';
 import fontClient from '../../shared/fontClient';
 import { useFlash } from '../../shared/hooks/flash';
 import queryClient from '../../shared/queryClient';
+import { useEffect, useState } from 'react';
 
 const languageQueryKey = (code: string) => ({
   queryKey: ['language', code],
@@ -133,6 +134,17 @@ export default function ManageLanguageView() {
     }
   }
 
+  const [previewFont, setPreviewFont] = useState('Noto Serif');
+
+  useEffect(() => {
+    for (const font of fonts) {
+      document.head.insertAdjacentHTML(
+        'beforeend',
+        `<link rel=stylesheet href="${fontClient.getPreviewCssUrl(font)}">`
+      );
+    }
+  }, [fonts]);
+
   return (
     <View fitToScreen className="flex justify-center items-start">
       <div className="mx-4 flex-shrink">
@@ -165,13 +177,25 @@ export default function ManageLanguageView() {
             <FormLabel htmlFor="font">
               {t('languages:gloss_font').toUpperCase()}
             </FormLabel>
-            <SelectInput id="font" name="font" className="w-full" required>
-              {fonts.map((font) => (
-                <option value={font} key={font}>
-                  {font}
-                </option>
-              ))}
-            </SelectInput>
+            <div className="flex flex-row gap-4 items-center">
+              <SelectInput
+                id="font"
+                name="font"
+                className="w-full flex-1"
+                required
+                value={previewFont}
+                onChange={(event) => setPreviewFont(event.target.value)}
+              >
+                {fonts.map((font) => (
+                  <option value={font} key={font} style={{ fontFamily: font }}>
+                    {font}
+                  </option>
+                ))}
+              </SelectInput>
+              <p className="flex-1" style={{ fontFamily: previewFont }}>
+                {previewFont}
+              </p>
+            </div>
           </div>
           <div>
             <Button type="submit">{t('common:update')}</Button>

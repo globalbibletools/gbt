@@ -22,14 +22,24 @@ class FontClient {
     if (!responseBody.items) {
       throw new Error('Could not fetch fonts.');
     }
+    console.log(responseBody.items);
     const options = responseBody.items
-      .filter(({ variants }: RawFontOption) => variants.includes('regular'))
+      .filter(
+        ({ family, variants }: RawFontOption) =>
+          variants.includes('regular') &&
+          family.startsWith('Noto') &&
+          !family.includes('Emoji')
+      )
       .map(({ family }: RawFontOption) => family);
     return options;
   }
 
   getCssUrl(family: string) {
-    return `https://fonts.googleapis.com/css2?family=${family}`;
+    return `https://fonts.googleapis.com/css2?display=swap&family=${family}`;
+  }
+
+  getPreviewCssUrl(family: string) {
+    return `https://fonts.googleapis.com/css2?display=swap&family=${family}&text=${family}`;
   }
 }
 
