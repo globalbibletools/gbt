@@ -180,7 +180,7 @@ export default function ManageLanguageView() {
             <SelectInput
               id="font"
               name="font"
-              className="w-full"
+              className="w-full h-fit min-h-[40px]"
               required
               value={previewFont}
               onChange={(event) => setPreviewFont(event.target.value)}
