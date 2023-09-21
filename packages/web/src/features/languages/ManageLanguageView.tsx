@@ -177,25 +177,21 @@ export default function ManageLanguageView() {
             <FormLabel htmlFor="font">
               {t('languages:gloss_font').toUpperCase()}
             </FormLabel>
-            <div className="flex flex-row gap-4 items-center">
-              <SelectInput
-                id="font"
-                name="font"
-                className="w-full flex-1"
-                required
-                value={previewFont}
-                onChange={(event) => setPreviewFont(event.target.value)}
-              >
-                {fonts.map((font) => (
-                  <option value={font} key={font} style={{ fontFamily: font }}>
-                    {font}
-                  </option>
-                ))}
-              </SelectInput>
-              <p className="flex-1" style={{ fontFamily: previewFont }}>
-                {previewFont}
-              </p>
-            </div>
+            <SelectInput
+              id="font"
+              name="font"
+              className="w-full"
+              required
+              value={previewFont}
+              onChange={(event) => setPreviewFont(event.target.value)}
+              style={{ fontFamily: previewFont }}
+            >
+              {fonts.map((font) => (
+                <option value={font} key={font} style={{ fontFamily: font }}>
+                  {font}
+                </option>
+              ))}
+            </SelectInput>
           </div>
           <div>
             <Button type="submit">{t('common:update')}</Button>
