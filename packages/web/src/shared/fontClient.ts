@@ -18,11 +18,9 @@ class FontClient {
     } catch (error) {
       responseBody = {};
     }
-    console.log(responseBody);
     if (!responseBody.items) {
       throw new Error('Could not fetch fonts.');
     }
-    console.log(responseBody.items);
     const options = responseBody.items
       .filter(
         ({ family, variants }: RawFontOption) =>
