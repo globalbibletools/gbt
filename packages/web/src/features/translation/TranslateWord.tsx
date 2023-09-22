@@ -15,11 +15,12 @@ import { capitalize } from '../../shared/utils';
 export interface TranslateWordProps {
   editable?: boolean;
   word: { id: string; text: string };
-  referenceGloss?: string;
-  gloss?: string;
-  previousGlosses: string[];
   originalLanguage: 'hebrew' | 'greek';
   status: 'empty' | 'saving' | 'saved';
+  gloss?: string;
+  glossFont?: string;
+  referenceGloss?: string;
+  previousGlosses: string[];
   onGlossChange(gloss?: string): void;
   onKeyDown?: KeyboardEventHandler<HTMLElement>;
 }
@@ -36,6 +37,7 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
       originalLanguage,
       status,
       gloss,
+      glossFont,
       referenceGloss,
       previousGlosses,
       onGlossChange,
@@ -86,7 +88,7 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
                 value: gloss,
               }))}
               // The extra 24 pixel give room for the padding around the text.
-              style={{ width: width + 24 }}
+              style={{ width: width + 24, fontFamily: glossFont }}
               aria-describedby={`word-help-${word.id}`}
               aria-labelledby={`word-${word.id}`}
               onChange={(newGloss: string) => {
