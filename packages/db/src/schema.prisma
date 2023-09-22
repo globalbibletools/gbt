@@ -190,6 +190,8 @@ model Language {
   code              String               @unique
   /// The localized name of the language.
   name              String
+  /// The English name of the gloss font selected for this language.
+  glossFont         String               @default("Noto Serif")
   /// This list of verse translation in this language.
   verseTranslations VerseTranslation[]
   /// The list of glosses of different words for this language.

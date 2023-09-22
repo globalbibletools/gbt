@@ -104,7 +104,7 @@ function useLanguageMembersQuery(code: string) {
 
 interface FormData {
   name: string;
-  font: string;
+  glossFont: string;
 }
 
 export default function ManageLanguageView() {
@@ -125,8 +125,7 @@ export default function ManageLanguageView() {
     try {
       await apiClient.languages.update(language.data.code, {
         name: data.name,
-        // TODO: send gloss font to API
-        // glossFont: data.font,
+        glossFont: data.glossFont,
       });
       flash.success(t('languages:language_updated'));
     } catch (error) {
@@ -134,7 +133,7 @@ export default function ManageLanguageView() {
     }
   }
 
-  const [previewFont, setPreviewFont] = useState('Noto Serif');
+  const [previewFont, setPreviewFont] = useState(language.data.glossFont);
 
   useEffect(() => {
     for (const font of fonts) {
@@ -174,12 +173,12 @@ export default function ManageLanguageView() {
             />
           </div>
           <div className="mb-2">
-            <FormLabel htmlFor="font">
+            <FormLabel htmlFor="glossFont">
               {t('languages:gloss_font').toUpperCase()}
             </FormLabel>
             <SelectInput
-              id="font"
-              name="font"
+              id="glossFont"
+              name="glossFont"
               className="w-full h-fit min-h-[40px]"
               required
               value={previewFont}
