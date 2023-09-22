@@ -21,7 +21,7 @@ export default createRoute()
     },
   })
   .post<PostLanguageRequestBody, void>({
-    schema: languageSchema,
+    schema: languageSchema.omit({ glossFont: true }),
     authorize: authorize({ action: 'create', subject: 'Language' }),
     async handler(req, res) {
       await client.language.create({
