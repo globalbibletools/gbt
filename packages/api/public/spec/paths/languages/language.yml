@@ -31,6 +31,10 @@ patch:
               type: string
               example: Español
               description: The name of the language in the language itself.
+            glossFont:
+              type: string
+              example: Noto Serif
+              description: The name of the language's gloss font.
   responses:
     '204':
       description: No Content
