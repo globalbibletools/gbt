@@ -115,6 +115,17 @@ export default function ManageLanguageView() {
   const { data: language } = useLanguageQuery(params.code);
   const { data: members } = useLanguageMembersQuery(params.code);
   const { fonts } = useLoaderData() as { fonts: string[] };
+  // TODO: get these from fetch.bible
+  const translationOptions = [
+    {
+      label: 'King James Version',
+      value: 'kjv',
+    },
+    {
+      label: 'New International Version',
+      value: 'niv',
+    },
+  ];
 
   const { t } = useTranslation(['common', 'languages', 'users']);
 
@@ -202,16 +213,7 @@ export default function ManageLanguageView() {
               name="bibleTranslationIds"
               className="w-full"
               defaultValue={language.data.bibleTranslationIds}
-              items={[
-                {
-                  label: 'King James Version',
-                  value: 'kjv',
-                },
-                {
-                  label: 'New International Version',
-                  value: 'niv',
-                },
-              ]}
+              items={translationOptions}
             />
           </div>
           <div>
