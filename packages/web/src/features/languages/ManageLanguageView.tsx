@@ -201,6 +201,7 @@ export default function ManageLanguageView() {
             <MultiselectInput
               name="bibleTranslationIds"
               className="w-full"
+              defaultValue={language.data.bibleTranslationIds}
               items={[
                 {
                   label: 'King James Version',
