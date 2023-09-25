@@ -105,6 +105,7 @@ function useLanguageMembersQuery(code: string) {
 interface FormData {
   name: string;
   glossFont: string;
+  bibleTranslationIds: string[];
 }
 
 export default function ManageLanguageView() {
@@ -122,6 +123,8 @@ export default function ManageLanguageView() {
 
   const formContext = useForm<FormData>();
   async function onSubmit(data: FormData) {
+    // TODO: save these
+    console.log('BIBLE TRANSLATION IDS:', data.bibleTranslationIds);
     try {
       await apiClient.languages.update(language.data.code, {
         name: data.name,
@@ -191,6 +194,25 @@ export default function ManageLanguageView() {
                 </option>
               ))}
             </SelectInput>
+          </div>
+          <div className="mb-2">
+            <FormLabel htmlFor="bibleTranslationIds">
+              {t('languages:bible_translations').toUpperCase()}
+            </FormLabel>
+            <MultiselectInput
+              name="bibleTranslationIds"
+              className="w-full"
+              items={[
+                {
+                  label: 'King James Version',
+                  value: 'kjv',
+                },
+                {
+                  label: 'New International Version',
+                  value: 'niv',
+                },
+              ]}
+            />
           </div>
           <div>
             <Button type="submit">{t('common:update')}</Button>
