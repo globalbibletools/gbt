@@ -190,6 +190,8 @@ model Language {
   code                String               @unique
   /// The localized name of the language.
   name                String
+  /// The English name of the gloss font selected for this language.
+  glossFont           String               @default("Noto Serif")
   /// The list of Bible translation IDs associated with this language.
   bibleTranslationIds String[]
   /// This list of verse translation in this language.

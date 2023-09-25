@@ -1,17 +1,10 @@
-import apiClient from '../../shared/apiClient';
-import View from '../../shared/components/View';
-import ViewTitle from '../../shared/components/ViewTitle';
-import { useLoaderData, useParams } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { LanguageRole } from '@translation/api-types';
-import TextInput from '../../shared/components/form/TextInput';
-import FormLabel from '../../shared/components/form/FormLabel';
+import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import Form from '../../shared/components/form/Form';
-import InputError from '../../shared/components/form/InputError';
-import { useFlash } from '../../shared/hooks/flash';
-import SubmittingIndicator from '../../shared/components/form/SubmittingIndicator';
-import Button from '../../shared/components/actions/Button';
+import { useLoaderData, useParams } from 'react-router-dom';
+import apiClient from '../../shared/apiClient';
+import { Icon } from '../../shared/components/Icon';
 import {
   List,
   ListBody,
@@ -21,11 +14,21 @@ import {
   ListRow,
   ListRowAction,
 } from '../../shared/components/List';
+import View from '../../shared/components/View';
+import ViewTitle from '../../shared/components/ViewTitle';
+import Button from '../../shared/components/actions/Button';
 import { Link } from '../../shared/components/actions/Link';
-import { Icon } from '../../shared/components/Icon';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import Form from '../../shared/components/form/Form';
+import FormLabel from '../../shared/components/form/FormLabel';
+import InputError from '../../shared/components/form/InputError';
 import MultiselectInput from '../../shared/components/form/MultiselectInput';
+import SelectInput from '../../shared/components/form/SelectInput';
+import SubmittingIndicator from '../../shared/components/form/SubmittingIndicator';
+import TextInput from '../../shared/components/form/TextInput';
+import fontClient from '../../shared/fontClient';
+import { useFlash } from '../../shared/hooks/flash';
 import queryClient from '../../shared/queryClient';
+import { useEffect, useState } from 'react';
 
 const languageQueryKey = (code: string) => ({
   queryKey: ['language', code],
@@ -41,7 +44,8 @@ export const manageLanguageViewLoader = async (code: string) => {
   const members = await queryClient.ensureQueryData(
     languageMembersQueryKey(code)
   );
-  return { language, members };
+  const fonts = await fontClient.getFonts();
+  return { language, members, fonts };
 };
 
 function useUpdateLanguageMemberMutation() {
@@ -78,7 +82,7 @@ function useRemoveLanguageMemberMutation() {
   });
 }
 
-function useLicenseQuery(code: string) {
+function useLanguageQuery(code: string) {
   const loaderData = useLoaderData() as Awaited<
     ReturnType<typeof manageLanguageViewLoader>
   >;
@@ -88,7 +92,7 @@ function useLicenseQuery(code: string) {
   });
 }
 
-function useLicenseMembersQuery(code: string) {
+function useLanguageMembersQuery(code: string) {
   const loaderData = useLoaderData() as Awaited<
     ReturnType<typeof manageLanguageViewLoader>
   >;
@@ -100,14 +104,16 @@ function useLicenseMembersQuery(code: string) {
 
 interface FormData {
   name: string;
+  glossFont: string;
 }
 
 export default function ManageLanguageView() {
   const params = useParams() as { code: string };
   const flash = useFlash();
 
-  const { data: language } = useLicenseQuery(params.code);
-  const { data: members } = useLicenseMembersQuery(params.code);
+  const { data: language } = useLanguageQuery(params.code);
+  const { data: members } = useLanguageMembersQuery(params.code);
+  const { fonts } = useLoaderData() as { fonts: string[] };
 
   const { t } = useTranslation(['common', 'languages', 'users']);
 
@@ -119,12 +125,24 @@ export default function ManageLanguageView() {
     try {
       await apiClient.languages.update(language.data.code, {
         name: data.name,
+        glossFont: data.glossFont,
       });
       flash.success(t('languages:language_updated'));
     } catch (error) {
       flash.error(`${error}`);
     }
   }
+
+  const [previewFont, setPreviewFont] = useState(language.data.glossFont);
+
+  useEffect(() => {
+    for (const font of fonts) {
+      document.head.insertAdjacentHTML(
+        'beforeend',
+        `<link rel=stylesheet href="${fontClient.getPreviewCssUrl(font)}">`
+      );
+    }
+  }, [fonts]);
 
   return (
     <View fitToScreen className="flex justify-center items-start">
@@ -153,6 +171,26 @@ export default function ManageLanguageView() {
               name="name"
               messages={{ required: t('languages:language_name_required') }}
             />
+          </div>
+          <div className="mb-2">
+            <FormLabel htmlFor="glossFont">
+              {t('languages:gloss_font').toUpperCase()}
+            </FormLabel>
+            <SelectInput
+              id="glossFont"
+              name="glossFont"
+              className="w-full h-fit min-h-[40px]"
+              required
+              value={previewFont}
+              onChange={(event) => setPreviewFont(event.target.value)}
+              style={{ fontFamily: previewFont }}
+            >
+              {fonts.map((font) => (
+                <option value={font} key={font} style={{ fontFamily: font }}>
+                  {font}
+                </option>
+              ))}
+            </SelectInput>
           </div>
           <div>
             <Button type="submit">{t('common:update')}</Button>
