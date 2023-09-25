@@ -123,12 +123,11 @@ export default function ManageLanguageView() {
 
   const formContext = useForm<FormData>();
   async function onSubmit(data: FormData) {
-    // TODO: save these
-    console.log('BIBLE TRANSLATION IDS:', data.bibleTranslationIds);
     try {
       await apiClient.languages.update(language.data.code, {
         name: data.name,
         glossFont: data.glossFont,
+        bibleTranslationIds: data.bibleTranslationIds,
       });
       flash.success(t('languages:language_updated'));
     } catch (error) {

@@ -13,5 +13,6 @@ export const languageSchema = schemaForType<Language>()(
     code: z.string(),
     name: z.string(),
     glossFont: z.string(),
+    bibleTranslationIds: z.array(z.string()),
   })
 );

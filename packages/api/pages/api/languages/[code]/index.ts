@@ -27,6 +27,7 @@ export default createRoute<{ code: string }>()
             code: language.code,
             name: language.name,
             glossFont: language.glossFont,
+            bibleTranslationIds: language.bibleTranslationIds,
           },
         });
       } else {
@@ -49,6 +50,9 @@ export default createRoute<{ code: string }>()
       }
       if (req.body.glossFont) {
         data.glossFont = req.body.glossFont;
+      }
+      if (req.body.bibleTranslationIds) {
+        data.bibleTranslationIds = req.body.bibleTranslationIds;
       }
 
       await client.language.update({

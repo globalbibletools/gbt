@@ -16,12 +16,13 @@ export default createRoute()
           code: language.code,
           name: language.name,
           glossFont: language.glossFont,
+          bibleTranslationIds: language.bibleTranslationIds,
         })),
       });
     },
   })
   .post<PostLanguageRequestBody, void>({
-    schema: languageSchema.omit({ glossFont: true }),
+    schema: languageSchema.pick({ code: true, name: true }),
     authorize: authorize({ action: 'create', subject: 'Language' }),
     async handler(req, res) {
       await client.language.create({

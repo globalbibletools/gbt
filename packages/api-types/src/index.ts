@@ -83,6 +83,7 @@ export interface Language {
   code: string;
   name: string;
   glossFont: string;
+  bibleTranslationIds: string[];
 }
 
 export interface GetLanguagesResponseBody {
@@ -94,7 +95,7 @@ export interface GetLanguageResponseBody {
 }
 
 // New languages will use the default glossFont defined in schema.prisma.
-export type PostLanguageRequestBody = Omit<Language, 'glossFont'>;
+export type PostLanguageRequestBody = Pick<Language, 'code' | 'name'>;
 
 export interface PostLanguageImportRequestBody {
   import: string;
