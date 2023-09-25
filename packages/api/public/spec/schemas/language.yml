@@ -2,15 +2,15 @@ allOf:
   - $ref: './create-language.yml'
   - type: object
     properties:
-      code:
-        type: string
-        example: es
-        description: The [IETF language code](https://en.wikipedia.org/wiki/IETF_language_tag).
-      name:
-        type: string
-        example: Español
-        description: The name of the language in the language itself.
       glossFont:
         type: string
         example: Noto Serif
         description: The name of the language's gloss font.
+      bibleTranslationIds:
+        type: array
+        items:
+          type: string
+        example:
+          - eng_abt
+          - eng_bsb
+        description: The list of bible translations used with the language.
