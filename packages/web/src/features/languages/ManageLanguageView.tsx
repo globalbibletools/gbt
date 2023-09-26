@@ -48,7 +48,7 @@ export const manageLanguageViewLoader = async (code: string) => {
     languageMembersQueryKey(code)
   );
   const fonts = await fontClient.getFonts();
-  const translations = await bibleTranslationClient.getOptions();
+  const translations = await bibleTranslationClient.getOptions(code);
   return { language, members, fonts, translations };
 };
 
@@ -122,7 +122,6 @@ export default function ManageLanguageView() {
     fonts: string[];
     translations: BibleTranslation[];
   };
-  // TODO: get these from fetch.bible
   const translationOptions = translations.map(({ id, name }) => ({
     label: name,
     value: id,
