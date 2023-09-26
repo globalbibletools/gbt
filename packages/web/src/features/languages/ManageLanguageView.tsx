@@ -29,6 +29,9 @@ import fontClient from '../../shared/fontClient';
 import { useFlash } from '../../shared/hooks/flash';
 import queryClient from '../../shared/queryClient';
 import { useEffect, useState } from 'react';
+import bibleTranslationClient, {
+  BibleTranslation,
+} from '../../shared/bibleTranslationClient';
 
 const languageQueryKey = (code: string) => ({
   queryKey: ['language', code],
@@ -45,7 +48,8 @@ export const manageLanguageViewLoader = async (code: string) => {
     languageMembersQueryKey(code)
   );
   const fonts = await fontClient.getFonts();
-  return { language, members, fonts };
+  const translations = await bibleTranslationClient.getOptions();
+  return { language, members, fonts, translations };
 };
 
 function useUpdateLanguageMemberMutation() {
@@ -114,18 +118,15 @@ export default function ManageLanguageView() {
 
   const { data: language } = useLanguageQuery(params.code);
   const { data: members } = useLanguageMembersQuery(params.code);
-  const { fonts } = useLoaderData() as { fonts: string[] };
+  const { fonts, translations } = useLoaderData() as {
+    fonts: string[];
+    translations: BibleTranslation[];
+  };
   // TODO: get these from fetch.bible
-  const translationOptions = [
-    {
-      label: 'King James Version',
-      value: 'kjv',
-    },
-    {
-      label: 'New International Version',
-      value: 'niv',
-    },
-  ];
+  const translationOptions = translations.map(({ id, name }) => ({
+    label: name,
+    value: id,
+  }));
 
   const { t } = useTranslation(['common', 'languages', 'users']);
 
