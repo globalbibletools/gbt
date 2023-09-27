@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { LanguageRole } from '@translation/api-types';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useLoaderData, useParams } from 'react-router-dom';
@@ -27,8 +28,8 @@ import SubmittingIndicator from '../../shared/components/form/SubmittingIndicato
 import TextInput from '../../shared/components/form/TextInput';
 import fontClient from '../../shared/fontClient';
 import { useFlash } from '../../shared/hooks/flash';
+import { useLoadFonts } from '../../shared/hooks/useLoadFonts';
 import queryClient from '../../shared/queryClient';
-import { useEffect, useState } from 'react';
 
 const languageQueryKey = (code: string) => ({
   queryKey: ['language', code],
@@ -135,14 +136,7 @@ export default function ManageLanguageView() {
 
   const [previewFont, setPreviewFont] = useState(language.data.font);
 
-  useEffect(() => {
-    for (const font of fonts) {
-      document.head.insertAdjacentHTML(
-        'beforeend',
-        `<link rel=stylesheet href="${fontClient.getPreviewCssUrl(font)}">`
-      );
-    }
-  }, [fonts]);
+  useLoadFonts(fonts, true);
 
   return (
     <View fitToScreen className="flex justify-center items-start">
