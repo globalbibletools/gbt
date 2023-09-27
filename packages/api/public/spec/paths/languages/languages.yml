@@ -18,10 +18,10 @@ get:
                   - example:
                       - code: es
                         name: Español
-                        glossFont: Noto Serif
+                        font: Noto Serif
                       - code: en
                         name: English
-                        glossFont: Noto Sans
+                        font: Noto Sans
 post:
   tags:
     - Languages

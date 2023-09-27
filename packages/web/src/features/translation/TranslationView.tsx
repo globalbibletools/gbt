@@ -104,7 +104,7 @@ export default function TranslationView() {
       document.head.insertAdjacentHTML(
         'beforeend',
         `<link rel=stylesheet href="${fontClient.getCssUrl(
-          selectedLanguage.glossFont
+          selectedLanguage.font
         )}">`
       );
     }
@@ -298,7 +298,7 @@ export default function TranslationView() {
                       isSaving ? 'saving' : targetGloss ? 'saved' : 'empty'
                     }
                     gloss={targetGloss}
-                    glossFont={selectedLanguage?.glossFont}
+                    font={selectedLanguage?.font}
                     referenceGloss={referenceGlosses[i]?.approvedGloss}
                     previousGlosses={targetGlosses[i]?.glosses}
                     onGlossChange={(newGloss) => {

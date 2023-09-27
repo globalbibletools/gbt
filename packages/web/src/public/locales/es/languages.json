@@ -1,7 +1,7 @@
 {
   "add_language": "Agregar Idioma",
   "code": "código",
-  "gloss_font": "Fuente de brillo",
+  "font": "Fuente",
   "import_description": "Seleccione un idioma para importar glosas de <1>hebrewgreekbible.online</1>.",
   "import_glosses": "Importar glosas",
   "import_glosses_confirmation_warning": "Esto sobrescribirá cualquier brillo asociado con el lenguaje. Puede llevar algún tiempo completar.",

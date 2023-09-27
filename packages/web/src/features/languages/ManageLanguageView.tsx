@@ -104,7 +104,7 @@ function useLanguageMembersQuery(code: string) {
 
 interface FormData {
   name: string;
-  glossFont: string;
+  font: string;
 }
 
 export default function ManageLanguageView() {
@@ -125,7 +125,7 @@ export default function ManageLanguageView() {
     try {
       await apiClient.languages.update(language.data.code, {
         name: data.name,
-        glossFont: data.glossFont,
+        font: data.font,
       });
       flash.success(t('languages:language_updated'));
     } catch (error) {
@@ -133,7 +133,7 @@ export default function ManageLanguageView() {
     }
   }
 
-  const [previewFont, setPreviewFont] = useState(language.data.glossFont);
+  const [previewFont, setPreviewFont] = useState(language.data.font);
 
   useEffect(() => {
     for (const font of fonts) {
@@ -173,12 +173,12 @@ export default function ManageLanguageView() {
             />
           </div>
           <div className="mb-2">
-            <FormLabel htmlFor="glossFont">
-              {t('languages:gloss_font').toUpperCase()}
+            <FormLabel htmlFor="font">
+              {t('languages:font').toUpperCase()}
             </FormLabel>
             <SelectInput
-              id="glossFont"
-              name="glossFont"
+              id="font"
+              name="font"
               className="w-full h-fit min-h-[40px]"
               required
               value={previewFont}

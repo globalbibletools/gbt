@@ -82,7 +82,7 @@ export interface UpdateUserRequestBody {
 export interface Language {
   code: string;
   name: string;
-  glossFont: string;
+  font: string;
 }
 
 export interface GetLanguagesResponseBody {
@@ -93,8 +93,8 @@ export interface GetLanguageResponseBody {
   data: Language;
 }
 
-// New languages will use the default glossFont defined in schema.prisma.
-export type PostLanguageRequestBody = Omit<Language, 'glossFont'>;
+// New languages will use the default font defined in schema.prisma.
+export type PostLanguageRequestBody = Omit<Language, 'font'>;
 
 export interface PostLanguageImportRequestBody {
   import: string;

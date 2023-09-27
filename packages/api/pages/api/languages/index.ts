@@ -15,13 +15,13 @@ export default createRoute()
         data: languages.map((language) => ({
           code: language.code,
           name: language.name,
-          glossFont: language.glossFont,
+          font: language.font,
         })),
       });
     },
   })
   .post<PostLanguageRequestBody, void>({
-    schema: languageSchema.omit({ glossFont: true }),
+    schema: languageSchema.omit({ font: true }),
     authorize: authorize({ action: 'create', subject: 'Language' }),
     async handler(req, res) {
       await client.language.create({
