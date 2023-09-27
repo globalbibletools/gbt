@@ -18,13 +18,13 @@ get:
                   - example:
                       - code: es
                         name: Español
-                        glossFont: Noto Serif
+                        font: Noto Serif
                         bibleTranslationIds:
                           - spa_bes
                           - spa_vbl
                       - code: en
                         name: English
-                        glossFont: Noto Sans
+                        font: Noto Sans
                         bibleTranslationIds:
                           - eng_abt
                           - eng_bsb

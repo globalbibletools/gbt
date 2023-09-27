@@ -15,7 +15,7 @@ export default createRoute()
         data: languages.map((language) => ({
           code: language.code,
           name: language.name,
-          glossFont: language.glossFont,
+          font: language.font,
           bibleTranslationIds: language.bibleTranslationIds,
         })),
       });

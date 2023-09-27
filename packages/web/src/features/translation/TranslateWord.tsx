@@ -18,7 +18,7 @@ export interface TranslateWordProps {
   originalLanguage: 'hebrew' | 'greek';
   status: 'empty' | 'saving' | 'saved';
   gloss?: string;
-  glossFont?: string;
+  font?: string;
   referenceGloss?: string;
   previousGlosses: string[];
   onGlossChange(gloss?: string): void;
@@ -37,7 +37,7 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
       originalLanguage,
       status,
       gloss,
-      glossFont,
+      font,
       referenceGloss,
       previousGlosses,
       onGlossChange,
@@ -88,7 +88,7 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
                 value: gloss,
               }))}
               // The extra 24 pixel give room for the padding around the text.
-              style={{ width: width + 24, fontFamily: glossFont }}
+              style={{ width: width + 24, fontFamily: font }}
               aria-describedby={`word-help-${word.id}`}
               aria-labelledby={`word-${word.id}`}
               onChange={(newGloss: string) => {

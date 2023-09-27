@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { LanguageRole } from '@translation/api-types';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useLoaderData, useParams } from 'react-router-dom';
@@ -27,8 +28,8 @@ import SubmittingIndicator from '../../shared/components/form/SubmittingIndicato
 import TextInput from '../../shared/components/form/TextInput';
 import fontClient from '../../shared/fontClient';
 import { useFlash } from '../../shared/hooks/flash';
+import { useLoadFonts } from '../../shared/hooks/useLoadFonts';
 import queryClient from '../../shared/queryClient';
-import { useEffect, useState } from 'react';
 import bibleTranslationClient, {
   BibleTranslation,
 } from '../../shared/bibleTranslationClient';
@@ -108,7 +109,7 @@ function useLanguageMembersQuery(code: string) {
 
 interface FormData {
   name: string;
-  glossFont: string;
+  font: string;
   bibleTranslationIds: string[];
 }
 
@@ -137,7 +138,7 @@ export default function ManageLanguageView() {
     try {
       await apiClient.languages.update(language.data.code, {
         name: data.name,
-        glossFont: data.glossFont,
+        font: data.font,
         bibleTranslationIds: data.bibleTranslationIds,
       });
       flash.success(t('languages:language_updated'));
@@ -146,16 +147,9 @@ export default function ManageLanguageView() {
     }
   }
 
-  const [previewFont, setPreviewFont] = useState(language.data.glossFont);
+  const [previewFont, setPreviewFont] = useState(language.data.font);
 
-  useEffect(() => {
-    for (const font of fonts) {
-      document.head.insertAdjacentHTML(
-        'beforeend',
-        `<link rel=stylesheet href="${fontClient.getPreviewCssUrl(font)}">`
-      );
-    }
-  }, [fonts]);
+  useLoadFonts(fonts, true);
 
   return (
     <View fitToScreen className="flex justify-center items-start">
@@ -186,12 +180,12 @@ export default function ManageLanguageView() {
             />
           </div>
           <div className="mb-2">
-            <FormLabel htmlFor="glossFont">
-              {t('languages:gloss_font').toUpperCase()}
+            <FormLabel htmlFor="font">
+              {t('languages:font').toUpperCase()}
             </FormLabel>
             <SelectInput
-              id="glossFont"
-              name="glossFont"
+              id="font"
+              name="font"
               className="w-full h-fit min-h-[40px]"
               required
               value={previewFont}

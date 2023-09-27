@@ -31,10 +31,10 @@ patch:
               type: string
               example: Español
               description: The name of the language in the language itself.
-            glossFont:
+            font:
               type: string
               example: Noto Serif
-              description: The name of the language's gloss font.
+              description: The name of the font used with the language.
             bibleTranslationIds:
               type: array
               items:
