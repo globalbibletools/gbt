@@ -28,7 +28,10 @@ import SubmittingIndicator from '../../shared/components/form/SubmittingIndicato
 import TextInput from '../../shared/components/form/TextInput';
 import fontClient from '../../shared/fontClient';
 import { useFlash } from '../../shared/hooks/flash';
-import { useLoadFonts } from '../../shared/hooks/useLoadFonts';
+import {
+  expandFontFamily,
+  useFontLoader,
+} from '../../shared/hooks/useFontLoader';
 import queryClient from '../../shared/queryClient';
 import bibleTranslationClient, {
   BibleTranslation,
@@ -149,7 +152,7 @@ export default function ManageLanguageView() {
 
   const [previewFont, setPreviewFont] = useState(language.data.font);
 
-  useLoadFonts(fonts, true);
+  useFontLoader(fonts, true);
 
   return (
     <View fitToScreen className="flex justify-center items-start">
@@ -190,7 +193,7 @@ export default function ManageLanguageView() {
               required
               value={previewFont}
               onChange={(event) => setPreviewFont(event.target.value)}
-              style={{ fontFamily: previewFont }}
+              style={{ fontFamily: expandFontFamily(previewFont) }}
             >
               {fonts.map((font) => (
                 <option value={font} key={font} style={{ fontFamily: font }}>

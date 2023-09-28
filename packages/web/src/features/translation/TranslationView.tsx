@@ -8,7 +8,7 @@ import LoadingSpinner from '../../shared/components/LoadingSpinner';
 import DropdownMenu, {
   DropdownMenuLink,
 } from '../../shared/components/actions/DropdownMenu';
-import fontClient from '../../shared/fontClient';
+import { useFontLoader } from '../../shared/hooks/useFontLoader';
 import TranslateWord, { TranslateWordRef } from './TranslateWord';
 import { VerseSelector } from './VerseSelector';
 import {
@@ -18,7 +18,6 @@ import {
   incrementVerseId,
   parseVerseId,
 } from './verse-utils';
-import { useLoadFonts } from '../../shared/hooks/useLoadFonts';
 
 export const translationLanguageKey = 'translation-language';
 export const translationVerseIdKey = 'translation-verse-id';
@@ -100,7 +99,7 @@ export default function TranslationView() {
   const selectedLanguage = translationLanguages.find(
     (l) => l.code === language
   );
-  useLoadFonts(selectedLanguage ? [selectedLanguage.code] : []);
+  useFontLoader(selectedLanguage ? [selectedLanguage.code] : []);
 
   const [glossRequests, setGlossRequests] = useState<
     { wordId: string; requestId: number }[]
