@@ -18,7 +18,7 @@ import {
   incrementVerseId,
   parseVerseId,
 } from './verse-utils';
-import { useLoadFonts } from '../../shared/hooks/useLoadFonts';
+import { useFontLoader } from '../../shared/hooks/useFontLoader';
 
 export const translationLanguageKey = 'translation-language';
 export const translationVerseIdKey = 'translation-verse-id';
@@ -100,7 +100,7 @@ export default function TranslationView() {
   const selectedLanguage = translationLanguages.find(
     (l) => l.code === language
   );
-  useLoadFonts(selectedLanguage ? [selectedLanguage.code] : []);
+  useFontLoader(selectedLanguage ? [selectedLanguage.code] : []);
 
   const [glossRequests, setGlossRequests] = useState<
     { wordId: string; requestId: number }[]

@@ -4,7 +4,7 @@ import fontClient from '../fontClient';
 /**
  * Ensure that each of the given fonts has been added to the page.
  */
-export const useLoadFonts = (fonts: string[], preview = false) => {
+export const useFontLoader = (fonts: string[], preview = false) => {
   useEffect(() => {
     for (const font of fonts) {
       loadFontUrl(

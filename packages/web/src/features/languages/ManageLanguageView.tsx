@@ -28,7 +28,7 @@ import SubmittingIndicator from '../../shared/components/form/SubmittingIndicato
 import TextInput from '../../shared/components/form/TextInput';
 import fontClient from '../../shared/fontClient';
 import { useFlash } from '../../shared/hooks/flash';
-import { useLoadFonts } from '../../shared/hooks/useLoadFonts';
+import { useFontLoader } from '../../shared/hooks/useFontLoader';
 import queryClient from '../../shared/queryClient';
 
 const languageQueryKey = (code: string) => ({
@@ -136,7 +136,7 @@ export default function ManageLanguageView() {
 
   const [previewFont, setPreviewFont] = useState(language.data.font);
 
-  useLoadFonts(fonts, true);
+  useFontLoader(fonts, true);
 
   return (
     <View fitToScreen className="flex justify-center items-start">
