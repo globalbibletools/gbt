@@ -1,14 +1,15 @@
 import {
   KeyboardEventHandler,
   forwardRef,
-  useState,
-  useRef,
   useImperativeHandle,
+  useRef,
+  useState,
 } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Icon } from '../../shared/components/Icon';
 import AutocompleteInput from '../../shared/components/form/AutocompleteInput';
 import InputHelpText from '../../shared/components/form/InputHelpText';
+import { expandFontFamily } from '../../shared/hooks/useFontLoader';
 import { useTextWidth } from '../../shared/hooks/useTextWidth';
 import { capitalize } from '../../shared/utils';
 
@@ -88,7 +89,10 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
                 value: gloss,
               }))}
               // The extra 24 pixel give room for the padding around the text.
-              style={{ width: width + 24, fontFamily: font }}
+              style={{
+                width: width + 24,
+                fontFamily: expandFontFamily(font ?? 'Noto Serif'),
+              }}
               aria-describedby={`word-help-${word.id}`}
               aria-labelledby={`word-${word.id}`}
               onChange={(newGloss: string) => {
