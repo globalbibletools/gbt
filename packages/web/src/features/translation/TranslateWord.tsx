@@ -11,6 +11,7 @@ import ComboboxInput from '../../shared/components/form/ComboboxInput';
 import InputHelpText from '../../shared/components/form/InputHelpText';
 import { useTextWidth } from '../../shared/hooks/useTextWidth';
 import { capitalize } from '../../shared/utils';
+import AutocompleteInput from '../../shared/components/form/AutocompleteInput';
 
 export interface TranslateWordProps {
   editable?: boolean;
@@ -77,28 +78,17 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
         </div>
         {editable && (
           <>
-            <ComboboxInput
+            <AutocompleteInput
               name="gloss"
               className="min-w-[80px]"
               value={gloss}
-              items={previousGlosses.map((gloss) => ({
-                label: gloss,
-                value: gloss,
-              }))}
-              // The extra 24 pixel give room for the padding around the text.
               style={{ width: width + 24 }}
               aria-describedby={`word-help-${word.id}`}
               aria-labelledby={`word-${word.id}`}
-              onChange={(newGloss: string) => {
-                if (newGloss !== gloss) {
-                  onGlossChange(newGloss);
-                  setText(newGloss);
-                }
-              }}
-              onCreate={(newGloss: string) => {
-                if (newGloss !== gloss) {
-                  onGlossChange(newGloss);
-                  setText(newGloss);
+              onChange={(e) => {
+                if (e.target.value !== gloss) {
+                  onGlossChange(e.target.value);
+                  setText(e.target.value);
                 }
               }}
               onKeyDown={(e) => {
@@ -106,6 +96,7 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
                   onKeyDown(e);
                 }
               }}
+              suggestions={previousGlosses}
               ref={input}
             />
             <InputHelpText id={`word-help-${word.id}`}>
