@@ -7,7 +7,7 @@ import {
 } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Icon } from '../../shared/components/Icon';
-import AutocompleteInput from '../../shared/components/form/AutocompleteInput';
+import ComboboxInput from '../../shared/components/form/ComboboxInput';
 import InputHelpText from '../../shared/components/form/InputHelpText';
 import { useTextWidth } from '../../shared/hooks/useTextWidth';
 import { capitalize } from '../../shared/utils';
@@ -77,7 +77,7 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
         </div>
         {editable && (
           <>
-            <AutocompleteInput
+            <ComboboxInput
               name="gloss"
               className="min-w-[80px]"
               value={gloss}

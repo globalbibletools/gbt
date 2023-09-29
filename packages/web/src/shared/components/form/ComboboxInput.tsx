@@ -10,26 +10,26 @@ import { Icon } from '../Icon';
 
 const CREATE_TAG = '_create';
 
-export interface AutocompleteItem {
+export interface ComboboxItem {
   label: string;
   value: string;
 }
 
-export interface AutocompleteProps
+export interface ComboboxProps
   extends Omit<ComponentProps<'input'>, 'value' | 'onChange' | 'ref'> {
   className?: string;
   value?: string;
   onBlur?(): void;
   onChange?(value: string): void;
   onCreate?(text?: string): void;
-  items: AutocompleteItem[];
+  items: ComboboxItem[];
   defaultValue?: string[];
   name: string;
   hasErrors?: boolean;
   onKeyDown?: KeyboardEventHandler<HTMLInputElement>;
 }
 
-const AutocompleteInput = forwardRef<HTMLInputElement, AutocompleteProps>(
+const ComboboxInput = forwardRef<HTMLInputElement, ComboboxProps>(
   (
     {
       className = '',
@@ -42,12 +42,11 @@ const AutocompleteInput = forwardRef<HTMLInputElement, AutocompleteProps>(
       name,
       onKeyDown,
       ...props
-    }: AutocompleteProps,
+    }: ComboboxProps,
     ref
   ) => {
     const [normalizedInputValue, setNormalizedInputValue] = useState('');
-    const [filteredItems, setFilteredItems] =
-      useState<AutocompleteItem[]>(items);
+    const [filteredItems, setFilteredItems] = useState<ComboboxItem[]>(items);
 
     // If none of the items matches the input value exactly,
     // then we want to give the option of creating a new item.
@@ -85,15 +84,15 @@ const AutocompleteInput = forwardRef<HTMLInputElement, AutocompleteProps>(
     }
 
     return (
-      <div className={`${className}  group/autocomplete relative`}>
+      <div className={`${className}  group/combobox relative`}>
         <Combobox value={value} onChange={onComboboxChange} name={name}>
           <div
-            className={`border rounded shadow-inner flex group-focus-within/autocomplete:outline group-focus-within/autocomplete:outline-2
+            className={`border rounded shadow-inner flex group-focus-within/combobox:outline group-focus-within/combobox:outline-2
 
             ${
               hasErrors
-                ? 'border-red-700 shadow-red-100 group-focus-within/autocomplete:outline-red-700'
-                : 'border-slate-400 group-focus-within/autocomplete:outline-blue-600'
+                ? 'border-red-700 shadow-red-100 group-focus-within/combobox:outline-red-700'
+                : 'border-slate-400 group-focus-within/combobox:outline-blue-600'
             }
           `}
           >
@@ -147,4 +146,4 @@ function ignoreDiacritics(word: string) {
   return word.normalize('NFD').replace(/\p{Diacritic}/gu, '');
 }
 
-export default AutocompleteInput;
+export default ComboboxInput;
