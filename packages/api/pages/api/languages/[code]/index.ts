@@ -26,6 +26,7 @@ export default createRoute<{ code: string }>()
           data: {
             code: language.code,
             name: language.name,
+            font: language.font,
           },
         });
       } else {
@@ -45,6 +46,9 @@ export default createRoute<{ code: string }>()
 
       if (req.body.name) {
         data.name = req.body.name;
+      }
+      if (req.body.font) {
+        data.font = req.body.font;
       }
 
       await client.language.update({

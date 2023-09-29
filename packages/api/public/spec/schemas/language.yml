@@ -1,10 +1,16 @@
-type: object
-properties:
-  code:
-    type: string
-    example: es
-    description: The [IETF language code](https://en.wikipedia.org/wiki/IETF_language_tag).
-  name:
-    type: string
-    example: Español
-    description: The name of the language in the language itself.
+allOf:
+  - $ref: './create-language.yml'
+  - type: object
+    properties:
+      code:
+        type: string
+        example: es
+        description: The [IETF language code](https://en.wikipedia.org/wiki/IETF_language_tag).
+      name:
+        type: string
+        example: Español
+        description: The name of the language in the language itself.
+      font:
+        type: string
+        example: Noto Sans
+        description: The name of the font used with the language.

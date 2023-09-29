@@ -1,6 +1,7 @@
 {
   "add_language": "Add Language",
   "code": "code",
+  "font": "Font",
   "import_description": "Select a language to import glosses from <1>hebrewgreekbible.online</1>.",
   "import_glosses": "Import Glosses",
   "import_glosses_confirmation_warning": "This will overwrite any glosses associated with the language. It may take some time to complete.",

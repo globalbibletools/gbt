@@ -18,8 +18,10 @@ get:
                   - example:
                       - code: es
                         name: Español
+                        font: Noto Sans
                       - code: en
                         name: English
+                        font: Noto Sans
 post:
   tags:
     - Languages
@@ -29,7 +31,7 @@ post:
     content:
       application/json:
         schema:
-          $ref: '../../schemas/language.yml'
+          $ref: '../../schemas/create-language.yml'
   responses:
     201:
       description: Created
