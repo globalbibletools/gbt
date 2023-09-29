@@ -18,10 +18,16 @@ get:
                   - example:
                       - code: es
                         name: Español
-                        font: Noto Sans
+                        font: Noto Serif
+                        bibleTranslationIds:
+                          - spa_bes
+                          - spa_vbl
                       - code: en
                         name: English
                         font: Noto Sans
+                        bibleTranslationIds:
+                          - eng_abt
+                          - eng_bsb
 post:
   tags:
     - Languages

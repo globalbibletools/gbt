@@ -185,21 +185,23 @@ model Lemma {
 /// A language use for translation.
 model Language {
   /// The ID of the language. This is distinct from the IETF language code.
-  id                String               @id @default(dbgenerated("generate_ulid()")) @db.Uuid
+  id                  String               @id @default(dbgenerated("generate_ulid()")) @db.Uuid
   /// The IETF language code.
-  code              String               @unique
+  code                String               @unique
   /// The localized name of the language.
-  name              String
+  name                String
   /// The English name of the font selected for this language.
-  font              String               @default("Noto Sans")
+  font                String               @default("Noto Sans")
+  /// The list of Bible translation IDs associated with this language.
+  bibleTranslationIds String[]
   /// This list of verse translation in this language.
-  verseTranslations VerseTranslation[]
+  verseTranslations   VerseTranslation[]
   /// The list of glosses of different words for this language.
-  glosses           Gloss[]
+  glosses             Gloss[]
   /// The list of roles for members of this language.
-  roles             LanguageMemberRole[]
+  roles               LanguageMemberRole[]
   /// The pending import job if any.
-  importJob         LanguageImportJob?
+  importJob           LanguageImportJob?
 }
 
 /// Keeps track of a language import job.

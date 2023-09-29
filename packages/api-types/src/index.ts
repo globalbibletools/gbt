@@ -83,6 +83,7 @@ export interface Language {
   code: string;
   name: string;
   font: string;
+  bibleTranslationIds: string[];
 }
 
 export interface GetLanguagesResponseBody {
@@ -93,8 +94,7 @@ export interface GetLanguageResponseBody {
   data: Language;
 }
 
-// New languages will use the default font defined in schema.prisma.
-export type PostLanguageRequestBody = Omit<Language, 'font'>;
+export type PostLanguageRequestBody = Pick<Language, 'code' | 'name'>;
 
 export interface PostLanguageImportRequestBody {
   import: string;

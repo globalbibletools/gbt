@@ -33,6 +33,9 @@ import {
   useFontLoader,
 } from '../../shared/hooks/useFontLoader';
 import queryClient from '../../shared/queryClient';
+import bibleTranslationClient, {
+  BibleTranslation,
+} from '../../shared/bibleTranslationClient';
 
 const languageQueryKey = (code: string) => ({
   queryKey: ['language', code],
@@ -49,7 +52,8 @@ export const manageLanguageViewLoader = async (code: string) => {
     languageMembersQueryKey(code)
   );
   const fonts = await fontClient.getFonts();
-  return { language, members, fonts };
+  const translations = await bibleTranslationClient.getOptions(code);
+  return { language, members, fonts, translations };
 };
 
 function useUpdateLanguageMemberMutation() {
@@ -109,6 +113,7 @@ function useLanguageMembersQuery(code: string) {
 interface FormData {
   name: string;
   font: string;
+  bibleTranslationIds: string[];
 }
 
 export default function ManageLanguageView() {
@@ -117,7 +122,14 @@ export default function ManageLanguageView() {
 
   const { data: language } = useLanguageQuery(params.code);
   const { data: members } = useLanguageMembersQuery(params.code);
-  const { fonts } = useLoaderData() as { fonts: string[] };
+  const { fonts, translations } = useLoaderData() as {
+    fonts: string[];
+    translations: BibleTranslation[];
+  };
+  const translationOptions = translations.map(({ id, name }) => ({
+    label: name,
+    value: id,
+  }));
 
   const { t } = useTranslation(['common', 'languages', 'users']);
 
@@ -130,6 +142,7 @@ export default function ManageLanguageView() {
       await apiClient.languages.update(language.data.code, {
         name: data.name,
         font: data.font,
+        bibleTranslationIds: data.bibleTranslationIds,
       });
       flash.success(t('languages:language_updated'));
     } catch (error) {
@@ -188,6 +201,17 @@ export default function ManageLanguageView() {
                 </option>
               ))}
             </SelectInput>
+          </div>
+          <div className="mb-2">
+            <FormLabel htmlFor="bibleTranslationIds">
+              {t('languages:bible_translations').toUpperCase()}
+            </FormLabel>
+            <MultiselectInput
+              name="bibleTranslationIds"
+              className="w-full"
+              defaultValue={language.data.bibleTranslationIds}
+              items={translationOptions}
+            />
           </div>
           <div>
             <Button type="submit">{t('common:update')}</Button>

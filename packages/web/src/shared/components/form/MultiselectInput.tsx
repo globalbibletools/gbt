@@ -100,7 +100,7 @@ const BaseMultiselectInput = forwardRef<
               {({ open }) => <Icon icon={open ? 'caret-up' : 'caret-down'} />}
             </Combobox.Button>
           </div>
-          <Combobox.Options className="absolute w-full bg-white mt-1 rounded border border-slate-400 shadow z-10">
+          <Combobox.Options className="absolute z-20 mt-1 max-h-80 w-full overflow-auto rounded border border-slate-400 bg-white shadow">
             {items.map((item) => (
               <Combobox.Option
                 className="px-3 py-2 ui-active:bg-blue-400"

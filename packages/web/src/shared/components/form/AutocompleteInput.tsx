@@ -115,7 +115,7 @@ const AutocompleteInput = forwardRef<HTMLInputElement, AutocompleteProps>(
               {({ open }) => <Icon icon={open ? 'caret-up' : 'caret-down'} />}
             </Combobox.Button>
           </div>
-          <Combobox.Options className="z-10 absolute min-w-[160px] w-full max-h-80 bg-white overflow-auto mt-1 rounded border border-slate-400 shadow">
+          <Combobox.Options className="absolute z-20 mt-1 max-h-80 w-full min-w-[160px] overflow-auto rounded border border-slate-400 bg-white shadow">
             {filteredItems.map((item) => (
               <Combobox.Option
                 className="px-3 py-2 ui-active:bg-blue-400"
