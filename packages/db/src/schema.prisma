@@ -191,7 +191,7 @@ model Language {
   /// The localized name of the language.
   name                String
   /// The English name of the font selected for this language.
-  font                String               @default("Noto Serif")
+  font                String               @default("Noto Sans")
   /// The list of Bible translation IDs associated with this language.
   bibleTranslationIds String[]
   /// This list of verse translation in this language.

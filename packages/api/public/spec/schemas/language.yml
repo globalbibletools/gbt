@@ -4,7 +4,7 @@ allOf:
     properties:
       font:
         type: string
-        example: Noto Serif
+        example: Noto Sans
         description: The name of the font used with the language.
       bibleTranslationIds:
         type: array

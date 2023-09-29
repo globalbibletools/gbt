@@ -91,7 +91,7 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
               // The extra 24 pixel give room for the padding around the text.
               style={{
                 width: width + 24,
-                fontFamily: expandFontFamily(font ?? 'Noto Serif'),
+                fontFamily: expandFontFamily(font ?? 'Noto Sans'),
               }}
               aria-describedby={`word-help-${word.id}`}
               aria-labelledby={`word-${word.id}`}

@@ -54,9 +54,6 @@ export default createRoute<{ code: string }>()
       if (req.body.bibleTranslationIds) {
         data.bibleTranslationIds = req.body.bibleTranslationIds;
       }
-      if (req.body.bibleTranslationIds) {
-        data.bibleTranslationIds = req.body.bibleTranslationIds;
-      }
 
       await client.language.update({
         where: {
