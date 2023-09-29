@@ -18,7 +18,7 @@ get:
                   - example:
                       - code: es
                         name: Español
-                        font: Noto Serif
+                        font: Noto Sans
                       - code: en
                         name: English
                         font: Noto Sans

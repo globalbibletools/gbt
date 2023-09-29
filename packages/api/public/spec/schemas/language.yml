@@ -12,5 +12,5 @@ allOf:
         description: The name of the language in the language itself.
       font:
         type: string
-        example: Noto Serif
+        example: Noto Sans
         description: The name of the font used with the language.
