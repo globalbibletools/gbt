@@ -1,0 +1,19 @@
+{
+  "app_name": "ترجمة لمعان",
+  "cancel": "يلغي",
+  "close": "إغلاق",
+  "confirm": "يتأكد",
+  "confirm_prompt": "اكتب '{{value}}' لتأكيد قرارك.",
+  "create": "إنشاء",
+  "error": "خطأ",
+  "loading": "تحميل",
+  "name": "الاسم",
+  "not_found": "غير موجود",
+  "not_found_message": "لم نتمكن من العثور على ما تبحث عنه.",
+  "submitting": "جاري الإرسال",
+  "success": "نجاح",
+  "try_again": "حاول مرة أخرى",
+  "unknown_error": "خطأ غير معروف",
+  "unknown_error_message": "حدث خطأ غير معروف.",
+  "update": "تحديث"
+}

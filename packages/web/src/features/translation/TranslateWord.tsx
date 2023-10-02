@@ -1,25 +1,27 @@
 import {
   KeyboardEventHandler,
   forwardRef,
-  useState,
-  useRef,
   useImperativeHandle,
+  useRef,
+  useState,
 } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Icon } from '../../shared/components/Icon';
 import AutocompleteInput from '../../shared/components/form/AutocompleteInput';
 import InputHelpText from '../../shared/components/form/InputHelpText';
+import { expandFontFamily } from '../../shared/hooks/useFontLoader';
 import { useTextWidth } from '../../shared/hooks/useTextWidth';
 import { capitalize } from '../../shared/utils';
 
 export interface TranslateWordProps {
   editable?: boolean;
   word: { id: string; text: string };
-  referenceGloss?: string;
-  gloss?: string;
-  previousGlosses: string[];
   originalLanguage: 'hebrew' | 'greek';
   status: 'empty' | 'saving' | 'saved';
+  gloss?: string;
+  font?: string;
+  referenceGloss?: string;
+  previousGlosses: string[];
   onGlossChange(gloss?: string): void;
   onKeyDown?: KeyboardEventHandler<HTMLElement>;
 }
@@ -36,6 +38,7 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
       originalLanguage,
       status,
       gloss,
+      font,
       referenceGloss,
       previousGlosses,
       onGlossChange,
@@ -43,7 +46,7 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
     }: TranslateWordProps,
     ref
   ) => {
-    const { t } = useTranslation();
+    const { t } = useTranslation(['translate']);
     const [text, setText] = useState(gloss ?? '');
     const width = useTextWidth(text);
     const input = useRef<HTMLInputElement>(null);
@@ -86,7 +89,10 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
                 value: gloss,
               }))}
               // The extra 24 pixel give room for the padding around the text.
-              style={{ width: width + 24 }}
+              style={{
+                width: width + 24,
+                fontFamily: expandFontFamily(font ?? 'Noto Sans'),
+              }}
               aria-describedby={`word-help-${word.id}`}
               aria-labelledby={`word-${word.id}`}
               onChange={(newGloss: string) => {
@@ -114,14 +120,14 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
                   return (
                     <>
                       <Icon icon="arrows-rotate" className="me-1" />
-                      {capitalize(t('saving'))}
+                      {capitalize(t('translate:saving'))}
                     </>
                   );
                 } else if (status === 'saved') {
                   return (
                     <>
                       <Icon icon="check" className="me-1" />
-                      {capitalize(t('saved'))}
+                      {capitalize(t('translate:saved'))}
                     </>
                   );
                 } else {

@@ -1,0 +1,19 @@
+{
+  "app_name": "Gloss Translation",
+  "cancel": "Cancel",
+  "close": "close",
+  "confirm": "Confirm",
+  "confirm_prompt": "Type '{{value}}' to confirm your decision.",
+  "create": "Create",
+  "error": "Error",
+  "loading": "Loading",
+  "name": "name",
+  "not_found": "Not Found",
+  "not_found_message": "We couldn't find what you are looking for.",
+  "submitting": "submitting",
+  "success": "Success",
+  "try_again": "Try Again",
+  "unknown_error": "Unknown Error",
+  "unknown_error_message": "An unknown error has occurred.",
+  "update": "Update"
+}

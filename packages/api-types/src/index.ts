@@ -82,6 +82,8 @@ export interface UpdateUserRequestBody {
 export interface Language {
   code: string;
   name: string;
+  font: string;
+  bibleTranslationIds: string[];
 }
 
 export interface GetLanguagesResponseBody {
@@ -92,7 +94,7 @@ export interface GetLanguageResponseBody {
   data: Language;
 }
 
-export type PostLanguageRequestBody = Language;
+export type PostLanguageRequestBody = Pick<Language, 'code' | 'name'>;
 
 export interface PostLanguageImportRequestBody {
   import: string;

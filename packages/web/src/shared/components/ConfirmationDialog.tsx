@@ -34,7 +34,7 @@ const ConfirmationDialog = forwardRef<
   const resolveOpen = useRef<
     ((value: boolean | PromiseLike<boolean>) => void) | null
   >(null);
-  const { t } = useTranslation();
+  const { t } = useTranslation(['common']);
   const [enableConfirmationButton, setEnableConfirmationButton] =
     useState<boolean>(false);
   const formContext = useForm<FormData>();
@@ -98,7 +98,7 @@ const ConfirmationDialog = forwardRef<
                 </Dialog.Title>
                 <p className="text-sm text-red-500 font-bold">{description}</p>
                 <p id="prompt" className="text-sm text-gray-600">
-                  {t('confirm_prompt', { value: confirmationValue })}
+                  {t('common:confirm_prompt', { value: confirmationValue })}
                 </p>
                 <Form context={formContext} onSubmit={() => handleResult(true)}>
                   <TextInput
@@ -120,10 +120,10 @@ const ConfirmationDialog = forwardRef<
                       type="button"
                       onClick={() => handleResult(false)}
                     >
-                      {t('cancel')}
+                      {t('common:cancel')}
                     </button>
                     <Button disabled={!enableConfirmationButton} type="submit">
-                      {t('confirm')}
+                      {t('common:confirm')}
                     </Button>
                   </div>
                 </Form>

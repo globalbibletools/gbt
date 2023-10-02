@@ -25,17 +25,19 @@ export function languagesViewLoader() {
 export default function LanguagesView() {
   const languages = useLoaderData() as GetLanguagesResponseBody;
 
-  const { t } = useTranslation();
+  const { t } = useTranslation(['languages']);
   const accessControl = useAccessControl();
 
   return (
     <View fitToScreen>
       <div className="m-auto w-fit">
-        <ViewTitle>{capitalize(t('language', { count: 100 }))}</ViewTitle>
+        <ViewTitle>
+          {capitalize(t('languages:language', { count: 100 }))}
+        </ViewTitle>
         <List>
           <ListHeader>
             <ListHeaderCell className="min-w-[240px]">
-              {t('language', { count: 1 }).toUpperCase()}
+              {t('languages:language', { count: 1 }).toUpperCase()}
             </ListHeaderCell>
             <ListHeaderCell />
           </ListHeader>
@@ -43,7 +45,7 @@ export default function LanguagesView() {
             <ListRowAction colSpan={2}>
               <Link to="./new">
                 <Icon icon="plus" className="me-1" />
-                {t('add_language')}
+                {t('languages:add_language')}
               </Link>
             </ListRowAction>
           )}
@@ -55,7 +57,11 @@ export default function LanguagesView() {
                   {accessControl('administer', {
                     type: 'Language',
                     id: language.code,
-                  }) && <Link to={`./${language.code}`}>{t('manage')}</Link>}
+                  }) && (
+                    <Link to={`./${language.code}`}>
+                      {t('languages:manage')}
+                    </Link>
+                  )}
                 </ListCell>
               </ListRow>
             ))}
