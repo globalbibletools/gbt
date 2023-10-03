@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: Gloss Translation API
   description: |-
-    This is the Gloss Translation API. 
+    This is the Gloss Translation API.
     The frontend can be accessed at [https://gloss-translation.vercel.app]().
   version: 0.0.1
 servers:
@@ -42,3 +42,5 @@ paths:
     $ref: ./paths/languages/language-members.yml
   /languages/{code}/members/{userId}:
     $ref: ./paths/languages/language-member.yml
+  /lemmas/{lemmaId}/resources:
+    $ref: ./paths/resources/lemma-resources.yml

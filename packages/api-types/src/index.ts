@@ -179,3 +179,12 @@ export interface SNSNotificationMessage {
 }
 
 export type SNSMessage = SNSConfirmSubscriptionMessage | SNSNotificationMessage;
+
+export interface Resource {
+  resource: string;
+  entry: string;
+}
+
+export interface GetLemmaResourcesResponseBody {
+  data: Resource[];
+}
