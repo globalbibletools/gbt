@@ -99,7 +99,7 @@ export default function TranslationView() {
   const selectedLanguage = translationLanguages.find(
     (l) => l.code === language
   );
-  useFontLoader(selectedLanguage ? [selectedLanguage.code] : []);
+  useFontLoader(selectedLanguage ? [selectedLanguage.font] : []);
 
   const [glossRequests, setGlossRequests] = useState<
     { wordId: string; requestId: number }[]
