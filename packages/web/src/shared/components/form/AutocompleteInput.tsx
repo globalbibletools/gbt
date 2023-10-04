@@ -72,6 +72,7 @@ const AutocompleteInput = forwardRef<HTMLInputElement, AutocompleteInputProps>(
           <input
             ref={ref}
             {...props}
+            autoComplete="off"
             value={input}
             onChange={(e) => {
               open();
@@ -170,7 +171,7 @@ const AutocompleteInput = forwardRef<HTMLInputElement, AutocompleteInputProps>(
                     : undefined
                 }
                 className={`
-                  px-3 py-1 whitespace-nowrap
+                  px-3 py-1 whitespace-nowrap cursor-pointer hover:bg-blue-400
                   ${i === activeIndex ? 'bg-blue-400' : ''}
                 `}
                 key={suggestion}
