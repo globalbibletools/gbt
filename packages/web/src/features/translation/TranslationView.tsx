@@ -5,6 +5,10 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useAccessControl } from '../../shared/accessControl';
 import apiClient from '../../shared/apiClient';
 import LoadingSpinner from '../../shared/components/LoadingSpinner';
+import DropdownMenu, {
+  DropdownMenuLink,
+} from '../../shared/components/actions/DropdownMenu';
+import { useFontLoader } from '../../shared/hooks/useFontLoader';
 import TranslateWord, { TranslateWordRef } from './TranslateWord';
 import { VerseSelector } from './VerseSelector';
 import {
@@ -14,9 +18,6 @@ import {
   incrementVerseId,
   parseVerseId,
 } from './verse-utils';
-import DropdownMenu, {
-  DropdownMenuLink,
-} from '../../shared/components/actions/DropdownMenu';
 
 export const translationLanguageKey = 'translation-language';
 export const translationVerseIdKey = 'translation-verse-id';
@@ -24,6 +25,9 @@ export const translationVerseIdKey = 'translation-verse-id';
 const VERSES_TO_PREFETCH = 3;
 
 function useTranslationQueries(language: string, verseId: string) {
+  const languagesQuery = useQuery(['languages'], () =>
+    apiClient.languages.findAll()
+  );
   const verseQuery = useQuery(['verse', verseId], () =>
     apiClient.verses.findById(verseId)
   );
@@ -60,7 +64,12 @@ function useTranslationQueries(language: string, verseId: string) {
     }
   }, [language, verseId, queryClient]);
 
-  return { verseQuery, referenceGlossesQuery, targetGlossesQuery };
+  return {
+    languagesQuery,
+    verseQuery,
+    referenceGlossesQuery,
+    targetGlossesQuery,
+  };
 }
 
 export default function TranslationView() {
@@ -79,16 +88,18 @@ export default function TranslationView() {
 
   const navigate = useNavigate();
 
-  const { verseQuery, referenceGlossesQuery, targetGlossesQuery } =
-    useTranslationQueries(language, verseId);
+  const {
+    languagesQuery,
+    verseQuery,
+    referenceGlossesQuery,
+    targetGlossesQuery,
+  } = useTranslationQueries(language, verseId);
 
-  const languagesQuery = useQuery(['languages'], () =>
-    apiClient.languages.findAll()
-  );
   const translationLanguages = languagesQuery.data?.data ?? [];
   const selectedLanguage = translationLanguages.find(
     (l) => l.code === language
   );
+  useFontLoader(selectedLanguage ? [selectedLanguage.font] : []);
 
   const [glossRequests, setGlossRequests] = useState<
     { wordId: string; requestId: number }[]
@@ -278,6 +289,7 @@ export default function TranslationView() {
                       isSaving ? 'saving' : targetGloss ? 'saved' : 'empty'
                     }
                     gloss={targetGloss}
+                    font={selectedLanguage?.font}
                     referenceGloss={referenceGlosses[i]?.approvedGloss}
                     previousGlosses={targetGlosses[i]?.glosses}
                     onGlossChange={(newGloss) => {
