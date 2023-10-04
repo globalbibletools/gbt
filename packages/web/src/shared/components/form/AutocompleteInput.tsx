@@ -18,6 +18,7 @@ const AutocompleteInput = forwardRef<HTMLInputElement, AutocompleteInputProps>(
     { className, onBlur, suggestions, value, onChange, onKeyDown, ...props },
     ref
   ) => {
+    const [input, setInput] = useState('');
     const [isOpen, setOpen] = useState(false);
     const [filteredSuggestions, setFilteredSuggestions] = useState<string[]>(
       []
@@ -26,8 +27,12 @@ const AutocompleteInput = forwardRef<HTMLInputElement, AutocompleteInputProps>(
     const [activeIndex, setActiveIndex] = useState<number | undefined>();
 
     useEffect(() => {
-      if (value) {
-        const normalizedInput = normalizeFilter(value.toLowerCase());
+      setInput(value ?? '');
+    }, [value]);
+
+    useEffect(() => {
+      if (input) {
+        const normalizedInput = normalizeFilter(input.toLowerCase());
         setFilteredSuggestions(
           suggestions.filter((suggestion) =>
             normalizeFilter(suggestion.toLowerCase()).includes(normalizedInput)
@@ -38,7 +43,7 @@ const AutocompleteInput = forwardRef<HTMLInputElement, AutocompleteInputProps>(
         setFilteredSuggestions(suggestions);
         setActiveIndex(undefined);
       }
-    }, [value, suggestions]);
+    }, [input, suggestions]);
 
     function open() {
       setOpen(true);
@@ -48,6 +53,12 @@ const AutocompleteInput = forwardRef<HTMLInputElement, AutocompleteInputProps>(
     function close() {
       setOpen(false);
       setActiveIndex(undefined);
+    }
+
+    function change(newValue: string) {
+      if (newValue !== value) {
+        onChange(newValue);
+      }
     }
 
     return (
@@ -61,14 +72,15 @@ const AutocompleteInput = forwardRef<HTMLInputElement, AutocompleteInputProps>(
           <input
             ref={ref}
             {...props}
-            value={value ?? ''}
+            value={input}
             onChange={(e) => {
               open();
-              onChange(e.target.value);
+              setInput(e.target.value);
             }}
             onBlur={(e) => {
               if (e.relatedTarget !== e.currentTarget.nextSibling) {
                 close();
+                change(input);
               }
               onBlur?.(e);
             }}
@@ -78,7 +90,7 @@ const AutocompleteInput = forwardRef<HTMLInputElement, AutocompleteInputProps>(
                   case 'Enter':
                   case 'Tab': {
                     if (typeof activeIndex === 'number') {
-                      onChange(filteredSuggestions[activeIndex]);
+                      change(filteredSuggestions[activeIndex]);
                     }
                     break;
                   }
@@ -144,15 +156,28 @@ const AutocompleteInput = forwardRef<HTMLInputElement, AutocompleteInputProps>(
             <Icon icon={isOpen ? 'caret-up' : 'caret-down'} />
           </button>
         </div>
-        {isOpen && (
+        {isOpen && filteredSuggestions.length > 0 && (
           <ol className="z-10 absolute min-w-full max-h-80 bg-white overflow-auto mt-1 rounded border border-slate-400 shadow">
             {filteredSuggestions.map((suggestion, i) => (
               <li
+                ref={
+                  i === activeIndex
+                    ? (el) => {
+                        el?.scrollIntoView({
+                          block: 'nearest',
+                        });
+                      }
+                    : undefined
+                }
                 className={`
-                  px-3 py-2
+                  px-3 py-1 whitespace-nowrap
                   ${i === activeIndex ? 'bg-blue-400' : ''}
                 `}
                 key={suggestion}
+                onClick={() => {
+                  change(suggestion);
+                  close();
+                }}
               >
                 {suggestion}
               </li>
