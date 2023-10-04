@@ -85,10 +85,10 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
               style={{ width: width + 24 }}
               aria-describedby={`word-help-${word.id}`}
               aria-labelledby={`word-${word.id}`}
-              onChange={(e) => {
-                if (e.target.value !== gloss) {
-                  onGlossChange(e.target.value);
-                  setText(e.target.value);
+              onChange={(value) => {
+                if (value !== gloss) {
+                  onGlossChange(value);
+                  setText(value);
                 }
               }}
               onKeyDown={(e) => {
