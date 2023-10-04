@@ -15,7 +15,16 @@ function normalizeFilter(word: string) {
 
 const AutocompleteInput = forwardRef<HTMLInputElement, AutocompleteInputProps>(
   (
-    { className, onBlur, suggestions, value, onChange, onKeyDown, ...props },
+    {
+      className,
+      style,
+      onBlur,
+      suggestions,
+      value,
+      onChange,
+      onKeyDown,
+      ...props
+    },
     ref
   ) => {
     const [input, setInput] = useState('');
@@ -62,7 +71,7 @@ const AutocompleteInput = forwardRef<HTMLInputElement, AutocompleteInputProps>(
     }
 
     return (
-      <div className={`${className} group/combobox relative`}>
+      <div className={`${className} group/combobox relative`} style={style}>
         <div
           className={`
             border rounded shadow-inner flex group-focus-within/combobox:outline group-focus-within/combobox:outline-2
@@ -70,8 +79,9 @@ const AutocompleteInput = forwardRef<HTMLInputElement, AutocompleteInputProps>(
           `}
         >
           <input
-            ref={ref}
             {...props}
+            ref={ref}
+            className="w-full py-2 ps-3 h-10 rounded-b flex-grow focus:outline-none bg-transparent rounded"
             autoComplete="off"
             value={input}
             onChange={(e) => {
@@ -79,7 +89,11 @@ const AutocompleteInput = forwardRef<HTMLInputElement, AutocompleteInputProps>(
               setInput(e.target.value);
             }}
             onBlur={(e) => {
-              if (e.relatedTarget !== e.currentTarget.nextSibling) {
+              if (
+                !e.currentTarget.parentElement?.parentElement?.contains(
+                  e.relatedTarget
+                )
+              ) {
                 close();
                 change(input);
               }
@@ -141,7 +155,6 @@ const AutocompleteInput = forwardRef<HTMLInputElement, AutocompleteInputProps>(
               }
               onKeyDown?.(e);
             }}
-            className="w-full py-2 px-3 h-10 rounded-b flex-grow focus:outline-none bg-transparent rounded"
           />
           <button
             className="w-8"
@@ -161,6 +174,7 @@ const AutocompleteInput = forwardRef<HTMLInputElement, AutocompleteInputProps>(
           <ol className="z-10 absolute min-w-full max-h-80 bg-white overflow-auto mt-1 rounded border border-slate-400 shadow">
             {filteredSuggestions.map((suggestion, i) => (
               <li
+                tabIndex={-1}
                 ref={
                   i === activeIndex
                     ? (el) => {

@@ -1,16 +1,22 @@
-import { useEffect, useRef, useState } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
+
+export interface UseTextWidthOptions {
+  /** The text to measure */
+  text: string;
+  /** The font family to measure the text in. */
+  fontFamily: string;
+  /** The font size to measure the text in. */
+  fontSize: string;
+}
 
 /**
  * Calculate the width of some text.
- * @param text The text to measure.
  * @returns The width of the text, in pixels.
  */
-// TODO: allow the font information to be passed in, so that we can take
-//       into account things like font family, font size, and font weight.
-export function useTextWidth(text: string): number {
+export function useTextWidth(options: UseTextWidthOptions): number {
   const el = useRef<HTMLDivElement>();
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const div = document.createElement('div');
     div.style.width = 'auto';
     div.style.height = '0';
@@ -28,12 +34,14 @@ export function useTextWidth(text: string): number {
 
   const [width, setWidth] = useState(0);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (el.current) {
-      el.current.innerText = text;
+      el.current.style.fontFamily = options.fontFamily;
+      el.current.style.fontSize = options.fontSize;
+      el.current.innerText = options.text;
       setWidth(el.current.clientWidth);
     }
-  }, [text]);
+  }, [options]);
 
   return width;
 }
