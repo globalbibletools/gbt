@@ -33,7 +33,7 @@ userId:
 lemmaId:
   name: lemmaId
   in: path
-  description: TODO - add description here.
+  description: The id of the lemma as a strong's number.
   required: true
   schema:
     type: string
