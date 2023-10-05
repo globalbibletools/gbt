@@ -1,150 +1,217 @@
-import { Combobox } from '@headlessui/react';
-import {
-  ComponentProps,
-  KeyboardEventHandler,
-  forwardRef,
-  useEffect,
-  useState,
-} from 'react';
+import { ComponentProps, forwardRef, useEffect, useRef, useState } from 'react';
 import { Icon } from '../Icon';
 
-const CREATE_TAG = '_create';
-
-export interface AutocompleteItem {
-  label: string;
-  value: string;
-}
-
-export interface AutocompleteProps
-  extends Omit<ComponentProps<'input'>, 'value' | 'onChange' | 'ref'> {
-  className?: string;
+export interface AutocompleteInputProps
+  extends Omit<ComponentProps<'input'>, 'value' | 'onChange'> {
   value?: string;
-  onBlur?(): void;
-  onChange?(value: string): void;
-  onCreate?(text?: string): void;
-  items: AutocompleteItem[];
-  defaultValue?: string[];
-  name: string;
-  hasErrors?: boolean;
-  onKeyDown?: KeyboardEventHandler<HTMLInputElement>;
+  onChange(value: string): void;
+  suggestions: string[];
 }
 
-const AutocompleteInput = forwardRef<HTMLInputElement, AutocompleteProps>(
+function normalizeFilter(word: string) {
+  // From https://stackoverflow.com/a/37511463
+  return word.normalize('NFD').replace(/\p{Diacritic}/gu, '');
+}
+
+const AutocompleteInput = forwardRef<HTMLInputElement, AutocompleteInputProps>(
   (
-    {
-      className = '',
-      hasErrors,
-      value,
-      onChange,
-      onCreate,
-      onBlur,
-      items,
-      name,
-      onKeyDown,
-      ...props
-    }: AutocompleteProps,
+    { className, style, suggestions, value, onChange, onKeyDown, ...props },
     ref
   ) => {
-    const [normalizedInputValue, setNormalizedInputValue] = useState('');
-    const [filteredItems, setFilteredItems] =
-      useState<AutocompleteItem[]>(items);
+    const [input, setInput] = useState('');
+    const [isOpen, setOpen] = useState(false);
+    const [filteredSuggestions, setFilteredSuggestions] = useState<string[]>(
+      []
+    );
+    const [activeIndex, setActiveIndex] = useState<number | undefined>();
 
-    // If none of the items matches the input value exactly,
-    // then we want to give the option of creating a new item.
     useEffect(() => {
-      if (normalizedInputValue) {
-        const filteredItems = items.filter((item) =>
-          ignoreDiacritics(item.label.normalize('NFD').toLowerCase()).includes(
-            ignoreDiacritics(normalizedInputValue.toLowerCase())
+      setInput(value ?? '');
+    }, [value]);
+
+    useEffect(() => {
+      if (input) {
+        const normalizedInput = normalizeFilter(input.toLowerCase());
+        setFilteredSuggestions(
+          suggestions.filter((suggestion) =>
+            normalizeFilter(suggestion.toLowerCase()).includes(normalizedInput)
           )
         );
-        const noExactMatch = filteredItems.every(
-          (item) => item.label.normalize('NFD') !== normalizedInputValue
-        );
-        if (noExactMatch && !!onCreate) {
-          setFilteredItems([
-            { value: CREATE_TAG, label: normalizedInputValue },
-            ...filteredItems,
-          ]);
-        } else {
-          setFilteredItems(items);
-        }
+        setActiveIndex(undefined);
       } else {
-        setFilteredItems(items);
+        setFilteredSuggestions(suggestions);
+        setActiveIndex(undefined);
       }
-    }, [items, normalizedInputValue, onCreate]);
+    }, [input, suggestions]);
 
-    function onComboboxChange(newValue: string) {
-      if (newValue === CREATE_TAG) {
-        onCreate?.(normalizedInputValue);
-      } else {
-        if (newValue !== value) {
-          onChange?.(newValue);
-        }
+    function open() {
+      setOpen(true);
+      setActiveIndex(undefined);
+    }
+
+    function close() {
+      setOpen(false);
+      setActiveIndex(undefined);
+    }
+
+    function change(newValue: string) {
+      if (newValue !== value) {
+        onChange(newValue);
       }
     }
 
-    return (
-      <div className={`${className}  group/autocomplete relative`}>
-        <Combobox value={value} onChange={onComboboxChange} name={name}>
-          <div
-            className={`border rounded shadow-inner flex group-focus-within/autocomplete:outline group-focus-within/autocomplete:outline-2
+    const root = useRef<HTMLDivElement>(null);
+    useEffect(() => {
+      const handler = (e: PointerEvent) => {
+        if (!root.current?.contains(e.target as Element)) {
+          let newValue;
+          if (typeof activeIndex === 'number') {
+            newValue = filteredSuggestions[activeIndex];
+          } else {
+            newValue = input;
+          }
+          if (newValue !== value) {
+            onChange(newValue);
+          }
+          close();
+        }
+      };
+      window.addEventListener('pointerdown', handler);
+      return () => window.removeEventListener('pointerdown', handler);
+    }, [onChange, input, activeIndex, filteredSuggestions, value]);
 
-            ${
-              hasErrors
-                ? 'border-red-700 shadow-red-100 group-focus-within/autocomplete:outline-red-700'
-                : 'border-slate-400 group-focus-within/autocomplete:outline-blue-600'
-            }
+    return (
+      <div
+        ref={root}
+        className={`${className} group/combobox relative`}
+        style={style}
+      >
+        <div
+          className={`
+            border rounded shadow-inner flex group-focus-within/combobox:outline group-focus-within/combobox:outline-2
+          border-slate-400 group-focus-within/combobox:outline-blue-600
           `}
-          >
-            <Combobox.Input
-              {...props}
-              onChange={(event) =>
-                setNormalizedInputValue(event.target.value.normalize('NFD'))
-              }
-              onBlur={onBlur}
-              className="w-full py-2 px-3 h-10 rounded-b flex-grow focus:outline-none bg-transparent rounded"
-              onKeyDown={(e) => {
-                if (onKeyDown) {
-                  onKeyDown(e);
+        >
+          <input
+            {...props}
+            ref={ref}
+            className="w-full py-2 ps-3 h-10 rounded-b flex-grow focus:outline-none bg-transparent rounded"
+            autoComplete="off"
+            value={
+              typeof activeIndex === 'number'
+                ? filteredSuggestions[activeIndex]
+                : input
+            }
+            onChange={(e) => {
+              open();
+              setInput(e.target.value);
+            }}
+            onKeyDown={(e) => {
+              if (!e.altKey && !e.ctrlKey && !e.shiftKey && !e.metaKey) {
+                switch (e.key) {
+                  case 'Enter':
+                  case 'Tab': {
+                    if (typeof activeIndex === 'number') {
+                      change(filteredSuggestions[activeIndex]);
+                    } else {
+                      change(input);
+                    }
+                    close();
+                    break;
+                  }
+                  case 'Escape': {
+                    close();
+                    e.preventDefault();
+                    e.stopPropagation();
+                    break;
+                  }
+                  case 'ArrowDown': {
+                    if (isOpen) {
+                      if (typeof activeIndex === 'number') {
+                        if (activeIndex === filteredSuggestions.length - 1) {
+                          setActiveIndex(undefined);
+                        } else {
+                          setActiveIndex(activeIndex + 1);
+                        }
+                      } else {
+                        setActiveIndex(0);
+                      }
+                    } else {
+                      open();
+                    }
+                    e.preventDefault();
+                    e.stopPropagation();
+                    break;
+                  }
+                  case 'ArrowUp': {
+                    if (isOpen) {
+                      if (typeof activeIndex === 'number') {
+                        if (activeIndex === 0) {
+                          setActiveIndex(undefined);
+                        } else {
+                          setActiveIndex(activeIndex - 1);
+                        }
+                      } else {
+                        setActiveIndex(filteredSuggestions.length - 1);
+                      }
+                    } else {
+                      open();
+                    }
+                    e.preventDefault();
+                    e.stopPropagation();
+                    break;
+                  }
                 }
-              }}
-              ref={ref}
-            />
-            <Combobox.Button className="w-8">
-              {({ open }) => <Icon icon={open ? 'caret-up' : 'caret-down'} />}
-            </Combobox.Button>
-          </div>
-          <Combobox.Options className="absolute z-20 mt-1 max-h-80 w-full min-w-[160px] overflow-auto rounded border border-slate-400 bg-white shadow">
-            {filteredItems.map((item) => (
-              <Combobox.Option
-                className="px-3 py-2 ui-active:bg-blue-400"
-                key={item.value}
-                value={item.value}
+              }
+              onKeyDown?.(e);
+            }}
+          />
+          <button
+            className="w-8"
+            aria-hidden="true"
+            tabIndex={-1}
+            onClick={(e) => {
+              if (isOpen) close();
+              else open();
+              const input = e.currentTarget.previousSibling as HTMLInputElement;
+              input.focus();
+            }}
+          >
+            <Icon icon={isOpen ? 'caret-up' : 'caret-down'} />
+          </button>
+        </div>
+        {isOpen && filteredSuggestions.length > 0 && (
+          <ol className="z-10 absolute min-w-full max-h-80 bg-white overflow-auto mt-1 rounded border border-slate-400 shadow">
+            {filteredSuggestions.map((suggestion, i) => (
+              <li
+                tabIndex={-1}
+                ref={
+                  i === activeIndex
+                    ? (el) => {
+                        el?.scrollIntoView({
+                          block: 'nearest',
+                        });
+                      }
+                    : undefined
+                }
+                className={`
+                  px-3 py-1 whitespace-nowrap cursor-pointer hover:bg-blue-400
+                  ${i === activeIndex ? 'bg-blue-400' : ''}
+                `}
+                key={suggestion}
+                onClick={() => {
+                  change(suggestion);
+                  close();
+                }}
               >
-                {item.value === CREATE_TAG ? (
-                  <>
-                    <Icon icon="add" /> "
-                    <span className="italic">{item.label}</span>"
-                  </>
-                ) : (
-                  item.label
-                )}
-              </Combobox.Option>
+                {suggestion}
+              </li>
             ))}
-          </Combobox.Options>
-        </Combobox>
+          </ol>
+        )}
       </div>
     );
   }
 );
-
-/**
- * Return a version of the word where all diacritics have been removed.
- */
-function ignoreDiacritics(word: string) {
-  // From https://stackoverflow.com/a/37511463
-  return word.normalize('NFD').replace(/\p{Diacritic}/gu, '');
-}
 
 export default AutocompleteInput;
