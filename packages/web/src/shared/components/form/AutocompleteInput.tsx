@@ -4,7 +4,7 @@ import { Icon } from '../Icon';
 export interface AutocompleteInputProps
   extends Omit<ComponentProps<'input'>, 'value' | 'onChange'> {
   value?: string;
-  onChange(value: string): void;
+  onChange?(value: string): void;
   suggestions: string[];
 }
 
@@ -56,7 +56,7 @@ const AutocompleteInput = forwardRef<HTMLInputElement, AutocompleteInputProps>(
 
     function change(newValue: string) {
       if (newValue !== value) {
-        onChange(newValue);
+        onChange?.(newValue);
       }
     }
 
@@ -71,7 +71,7 @@ const AutocompleteInput = forwardRef<HTMLInputElement, AutocompleteInputProps>(
             newValue = input;
           }
           if (newValue !== value) {
-            onChange(newValue);
+            onChange?.(newValue);
           }
           close();
         }

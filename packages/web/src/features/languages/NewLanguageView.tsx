@@ -13,6 +13,8 @@ import SubmittingIndicator from '../../shared/components/form/SubmittingIndicato
 import Button from '../../shared/components/actions/Button';
 import { useFlash } from '../../shared/hooks/flash';
 import Card from '../../shared/components/Card';
+import AutocompleteInput from '../../shared/components/form/AutocompleteInput';
+import { langCodes } from './../../shared/languageCodes';
 
 interface FormData {
   code: string;
@@ -59,12 +61,12 @@ export default function NewLanguageView() {
             <FormLabel htmlFor="code">
               {t('languages:code').toUpperCase()}
             </FormLabel>
-            <TextInput
+            <AutocompleteInput
               id="code"
               name="code"
               className="w-full"
-              autoComplete="off"
               required
+              suggestions={langCodes}
               aria-describedby="code-error"
             />
             <InputError
@@ -92,7 +94,12 @@ export default function NewLanguageView() {
             />
           </div>
           <div>
-            <Button type="submit">{t('common:create')}</Button>
+            <Button
+              type="submit"
+              disabled={!langCodes.includes(formContext.getValues().code)}
+            >
+              {t('common:create')}
+            </Button>
             <SubmittingIndicator className="ms-3" />
           </div>
         </Form>
