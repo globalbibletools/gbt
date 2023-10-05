@@ -1,4 +1,4 @@
-import { ComponentProps, forwardRef, useEffect, useState } from 'react';
+import { ComponentProps, forwardRef, useEffect, useRef, useState } from 'react';
 import { Icon } from '../Icon';
 
 export interface AutocompleteInputProps
@@ -15,16 +15,7 @@ function normalizeFilter(word: string) {
 
 const AutocompleteInput = forwardRef<HTMLInputElement, AutocompleteInputProps>(
   (
-    {
-      className,
-      style,
-      onBlur,
-      suggestions,
-      value,
-      onChange,
-      onKeyDown,
-      ...props
-    },
+    { className, style, suggestions, value, onChange, onKeyDown, ...props },
     ref
   ) => {
     const [input, setInput] = useState('');
@@ -32,7 +23,6 @@ const AutocompleteInput = forwardRef<HTMLInputElement, AutocompleteInputProps>(
     const [filteredSuggestions, setFilteredSuggestions] = useState<string[]>(
       []
     );
-
     const [activeIndex, setActiveIndex] = useState<number | undefined>();
 
     useEffect(() => {
@@ -70,8 +60,32 @@ const AutocompleteInput = forwardRef<HTMLInputElement, AutocompleteInputProps>(
       }
     }
 
+    const root = useRef<HTMLDivElement>(null);
+    useEffect(() => {
+      const handler = (e: PointerEvent) => {
+        if (!root.current?.contains(e.target as Element)) {
+          let newValue;
+          if (typeof activeIndex === 'number') {
+            newValue = filteredSuggestions[activeIndex];
+          } else {
+            newValue = input;
+          }
+          if (newValue !== value) {
+            onChange(newValue);
+          }
+          close();
+        }
+      };
+      window.addEventListener('pointerdown', handler);
+      return () => window.removeEventListener('pointerdown', handler);
+    }, [onChange, input, activeIndex, filteredSuggestions, value]);
+
     return (
-      <div className={`${className} group/combobox relative`} style={style}>
+      <div
+        ref={root}
+        className={`${className} group/combobox relative`}
+        style={style}
+      >
         <div
           className={`
             border rounded shadow-inner flex group-focus-within/combobox:outline group-focus-within/combobox:outline-2
@@ -83,21 +97,14 @@ const AutocompleteInput = forwardRef<HTMLInputElement, AutocompleteInputProps>(
             ref={ref}
             className="w-full py-2 ps-3 h-10 rounded-b flex-grow focus:outline-none bg-transparent rounded"
             autoComplete="off"
-            value={input}
+            value={
+              typeof activeIndex === 'number'
+                ? filteredSuggestions[activeIndex]
+                : input
+            }
             onChange={(e) => {
               open();
               setInput(e.target.value);
-            }}
-            onBlur={(e) => {
-              if (
-                !e.currentTarget.parentElement?.parentElement?.contains(
-                  e.relatedTarget
-                )
-              ) {
-                close();
-                change(input);
-              }
-              onBlur?.(e);
             }}
             onKeyDown={(e) => {
               if (!e.altKey && !e.ctrlKey && !e.shiftKey && !e.metaKey) {
@@ -106,7 +113,10 @@ const AutocompleteInput = forwardRef<HTMLInputElement, AutocompleteInputProps>(
                   case 'Tab': {
                     if (typeof activeIndex === 'number') {
                       change(filteredSuggestions[activeIndex]);
+                    } else {
+                      change(input);
                     }
+                    close();
                     break;
                   }
                   case 'Escape': {
