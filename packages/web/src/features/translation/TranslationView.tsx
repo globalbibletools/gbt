@@ -298,7 +298,6 @@ export default function TranslationView() {
                         gloss: newGloss,
                       });
                     }}
-                    onKeyDown={handleKeyPress}
                     ref={(() => {
                       if (i === 0) {
                         return firstWord;

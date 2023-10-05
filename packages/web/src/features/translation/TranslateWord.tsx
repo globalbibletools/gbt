@@ -1,17 +1,11 @@
-import {
-  KeyboardEventHandler,
-  forwardRef,
-  useImperativeHandle,
-  useRef,
-  useState,
-} from 'react';
+import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Icon } from '../../shared/components/Icon';
-import AutocompleteInput from '../../shared/components/form/AutocompleteInput';
 import InputHelpText from '../../shared/components/form/InputHelpText';
 import { expandFontFamily } from '../../shared/hooks/useFontLoader';
 import { useTextWidth } from '../../shared/hooks/useTextWidth';
 import { capitalize } from '../../shared/utils';
+import AutocompleteInput from '../../shared/components/form/AutocompleteInput';
 
 export interface TranslateWordProps {
   editable?: boolean;
@@ -23,7 +17,6 @@ export interface TranslateWordProps {
   referenceGloss?: string;
   previousGlosses: string[];
   onGlossChange(gloss?: string): void;
-  onKeyDown?: KeyboardEventHandler<HTMLElement>;
 }
 
 export interface TranslateWordRef {
@@ -42,14 +35,18 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
       referenceGloss,
       previousGlosses,
       onGlossChange,
-      onKeyDown,
     }: TranslateWordProps,
     ref
   ) => {
     const { t } = useTranslation(['translate']);
-    const [text, setText] = useState(gloss ?? '');
-    const width = useTextWidth(text);
+    const width = useTextWidth({
+      text: gloss ?? '',
+      fontFamily: expandFontFamily(font ?? 'Noto Sans'),
+      fontSize: '16px',
+    });
     const input = useRef<HTMLInputElement>(null);
+
+    const root = useRef<HTMLLIElement>(null);
 
     useImperativeHandle(
       ref,
@@ -60,7 +57,7 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
     );
 
     return (
-      <li className="mx-2 mb-4">
+      <li className="mx-2 mb-4" ref={root}>
         <div
           id={`word-${word.id}`}
           className={`mb-2 ${
@@ -82,36 +79,32 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
           <>
             <AutocompleteInput
               name="gloss"
-              className="min-w-[80px]"
               value={gloss}
-              items={previousGlosses.map((gloss) => ({
-                label: gloss,
-                value: gloss,
-              }))}
-              // The extra 24 pixel give room for the padding around the text.
+              // The extra 42 pixels give room for the padding and caret icon.
               style={{
-                width: width + 24,
+                width: width + 42,
                 fontFamily: expandFontFamily(font ?? 'Noto Sans'),
               }}
               aria-describedby={`word-help-${word.id}`}
               aria-labelledby={`word-${word.id}`}
-              onChange={(newGloss: string) => {
-                if (newGloss !== gloss) {
-                  onGlossChange(newGloss);
-                  setText(newGloss);
-                }
-              }}
-              onCreate={(newGloss: string) => {
-                if (newGloss !== gloss) {
-                  onGlossChange(newGloss);
-                  setText(newGloss);
+              onChange={(value) => {
+                if (value !== gloss) {
+                  onGlossChange(value);
                 }
               }}
               onKeyDown={(e) => {
-                if (onKeyDown) {
-                  onKeyDown(e);
+                if (e.metaKey || e.altKey || e.ctrlKey) return;
+                if (e.key === 'Enter') {
+                  if (e.shiftKey) {
+                    const prev = root.current?.previousElementSibling;
+                    prev?.querySelector('input')?.focus();
+                  } else {
+                    const prev = root.current?.nextElementSibling;
+                    prev?.querySelector('input')?.focus();
+                  }
                 }
               }}
+              suggestions={previousGlosses}
               ref={input}
             />
             <InputHelpText id={`word-help-${word.id}`}>
