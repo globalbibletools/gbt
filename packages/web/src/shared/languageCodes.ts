@@ -1,4 +1,6 @@
-export const langCodes = [
+// This list of iso639-3 codes is from SIL.
+// https://iso639-3.sil.org/sites/iso639-3/files/downloads/iso-639-3.tab
+export const languageCodes = [
   'aaa',
   'aab',
   'aac',

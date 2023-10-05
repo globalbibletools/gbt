@@ -14,7 +14,7 @@ import Button from '../../shared/components/actions/Button';
 import { useFlash } from '../../shared/hooks/flash';
 import Card from '../../shared/components/Card';
 import AutocompleteInput from '../../shared/components/form/AutocompleteInput';
-import { langCodes } from './../../shared/languageCodes';
+import { languageCodes } from './../../shared/languageCodes';
 
 interface FormData {
   code: string;
@@ -66,7 +66,7 @@ export default function NewLanguageView() {
               name="code"
               className="w-full"
               required
-              suggestions={langCodes}
+              suggestions={languageCodes}
               aria-describedby="code-error"
             />
             <InputError
@@ -96,7 +96,7 @@ export default function NewLanguageView() {
           <div>
             <Button
               type="submit"
-              disabled={!langCodes.includes(formContext.getValues().code)}
+              disabled={!languageCodes.includes(formContext.getValues().code)}
             >
               {t('common:create')}
             </Button>
