@@ -30,3 +30,11 @@ userId:
   schema:
     type: string
   example: '123e4567-e89b-12d3-a456-426614174000'
+lemmaId:
+  name: lemmaId
+  in: path
+  description: The id of the lemma as a strong's number.
+  required: true
+  schema:
+    type: string
+  example: G314
