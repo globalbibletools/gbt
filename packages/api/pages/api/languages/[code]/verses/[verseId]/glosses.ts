@@ -45,6 +45,7 @@ export default createRoute<{ code: string; verseId: string }>()
                     formId: word.formId,
                   },
                   languageId: language.id,
+                  state: GlossState.Approved,
                 },
                 _count: {
                   gloss: true,
