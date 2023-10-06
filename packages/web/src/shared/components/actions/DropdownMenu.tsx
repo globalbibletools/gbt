@@ -47,7 +47,7 @@ export default function DropdownMenu({
       <ul
         id={`${cssId}-menu`}
         className={`
-          absolute end-0 border border-slate-300 shadow-md py-2 rounded bg-white
+          absolute end-0 border border-slate-300 shadow-md py-2 rounded bg-white z-10
           ${isOpen ? '' : 'hidden'}
         `}
         onClick={() => setIsOpen(false)}
