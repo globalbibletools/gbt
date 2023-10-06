@@ -1,19 +1,19 @@
+import { ApiClientError } from '@translation/api-client';
+import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import apiClient from '../../shared/apiClient';
+import Card from '../../shared/components/Card';
 import View from '../../shared/components/View';
 import ViewTitle from '../../shared/components/ViewTitle';
-import { useNavigate } from 'react-router-dom';
-import TextInput from '../../shared/components/form/TextInput';
-import FormLabel from '../../shared/components/form/FormLabel';
-import { useTranslation } from 'react-i18next';
-import { ApiClientError } from '@translation/api-client';
-import Form from '../../shared/components/form/Form';
-import InputError from '../../shared/components/form/InputError';
-import { useForm } from 'react-hook-form';
-import SubmittingIndicator from '../../shared/components/form/SubmittingIndicator';
 import Button from '../../shared/components/actions/Button';
+import ComboboxInput from '../../shared/components/form/ComboboxInput';
+import Form from '../../shared/components/form/Form';
+import FormLabel from '../../shared/components/form/FormLabel';
+import InputError from '../../shared/components/form/InputError';
+import SubmittingIndicator from '../../shared/components/form/SubmittingIndicator';
+import TextInput from '../../shared/components/form/TextInput';
 import { useFlash } from '../../shared/hooks/flash';
-import Card from '../../shared/components/Card';
-import AutocompleteInput from '../../shared/components/form/AutocompleteInput';
 import { languageCodes } from './../../shared/languageCodes';
 
 interface FormData {
@@ -61,12 +61,15 @@ export default function NewLanguageView() {
             <FormLabel htmlFor="code">
               {t('languages:code').toUpperCase()}
             </FormLabel>
-            <AutocompleteInput
+            <ComboboxInput
               id="code"
               name="code"
               className="w-full"
               required
-              suggestions={languageCodes}
+              items={languageCodes.map((code, i) => ({
+                label: code,
+                value: code,
+              }))}
               aria-describedby="code-error"
             />
             <InputError

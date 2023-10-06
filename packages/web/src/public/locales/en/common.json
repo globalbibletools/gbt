@@ -12,6 +12,7 @@
   "not_found_message": "We couldn't find what you are looking for.",
   "submitting": "submitting",
   "success": "Success",
+  "too_many_options": "Too many matching options. Please filter further.",
   "try_again": "Try Again",
   "unknown_error": "Unknown Error",
   "unknown_error_message": "An unknown error has occurred.",

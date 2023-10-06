@@ -6,9 +6,11 @@ import {
   useEffect,
   useState,
 } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Icon } from '../Icon';
 
 const CREATE_TAG = '_create';
+const MAX_ITEMS = 1000;
 
 export interface ComboboxItem {
   label: string;
@@ -45,6 +47,7 @@ const ComboboxInput = forwardRef<HTMLInputElement, ComboboxProps>(
     }: ComboboxProps,
     ref
   ) => {
+    const { t } = useTranslation(['common']);
     const [normalizedInputValue, setNormalizedInputValue] = useState('');
     const [filteredItems, setFilteredItems] = useState<ComboboxItem[]>(items);
 
@@ -66,7 +69,7 @@ const ComboboxInput = forwardRef<HTMLInputElement, ComboboxProps>(
             ...filteredItems,
           ]);
         } else {
-          setFilteredItems(items);
+          setFilteredItems(filteredItems);
         }
       } else {
         setFilteredItems(items);
@@ -115,22 +118,26 @@ const ComboboxInput = forwardRef<HTMLInputElement, ComboboxProps>(
             </Combobox.Button>
           </div>
           <Combobox.Options className="z-10 absolute min-w-[160px] w-full max-h-80 bg-white overflow-auto mt-1 rounded border border-slate-400 shadow">
-            {filteredItems.map((item) => (
-              <Combobox.Option
-                className="px-3 py-2 ui-active:bg-blue-400"
-                key={item.value}
-                value={item.value}
-              >
-                {item.value === CREATE_TAG ? (
-                  <>
-                    <Icon icon="add" /> "
-                    <span className="italic">{item.label}</span>"
-                  </>
-                ) : (
-                  item.label
-                )}
-              </Combobox.Option>
-            ))}
+            {filteredItems.length > MAX_ITEMS ? (
+              <div className="px-3 py-2">{t('common:too_many_options')}</div>
+            ) : (
+              filteredItems.map((item) => (
+                <Combobox.Option
+                  className="px-3 py-2 ui-active:bg-blue-400"
+                  key={item.value}
+                  value={item.value}
+                >
+                  {item.value === CREATE_TAG ? (
+                    <>
+                      <Icon icon="add" /> "
+                      <span className="italic">{item.label}</span>"
+                    </>
+                  ) : (
+                    item.label
+                  )}
+                </Combobox.Option>
+              ))
+            )}
           </Combobox.Options>
         </Combobox>
       </div>
