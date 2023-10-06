@@ -153,10 +153,17 @@ export interface GetVerseResponseBody {
   };
 }
 
+export const GlossState = makeEnum({
+  Approved: 'APPROVED',
+  Unapproved: 'UNAPPROVED',
+});
+export type GlossState = typeof GlossState[keyof typeof GlossState];
+
 export interface Gloss {
   wordId: string;
-  approvedGloss?: string;
-  glosses: string[];
+  gloss?: string;
+  suggestions: string[];
+  state: GlossState;
 }
 
 export interface GetVerseGlossesResponseBody {

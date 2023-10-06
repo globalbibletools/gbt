@@ -123,12 +123,7 @@ export default function TranslationView() {
             const doc = glosses[index];
             glosses.splice(index, 1, {
               ...doc,
-              approvedGloss: gloss,
-              glosses: gloss
-                ? doc.glosses.includes(gloss)
-                  ? doc.glosses
-                  : [...doc.glosses, gloss]
-                : doc.glosses,
+              gloss,
             });
             return {
               data: glosses,
@@ -274,7 +269,7 @@ export default function TranslationView() {
               }`}
             >
               {verse.words.map((word, i) => {
-                const targetGloss = targetGlosses[i]?.approvedGloss;
+                const targetGloss = targetGlosses[i]?.gloss;
                 const isSaving = glossRequests.some(
                   ({ wordId }) => wordId === word.id
                 );
@@ -290,8 +285,8 @@ export default function TranslationView() {
                     }
                     gloss={targetGloss}
                     font={selectedLanguage?.font}
-                    referenceGloss={referenceGlosses[i]?.approvedGloss}
-                    previousGlosses={targetGlosses[i]?.glosses}
+                    referenceGloss={referenceGlosses[i]?.gloss}
+                    previousGlosses={targetGlosses[i]?.suggestions}
                     onGlossChange={(newGloss) => {
                       glossMutation.mutate({
                         wordId: word.id,
