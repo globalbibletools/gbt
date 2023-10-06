@@ -16,7 +16,7 @@ export interface TranslateWordProps {
   font?: string;
   referenceGloss?: string;
   previousGlosses: string[];
-  onGlossChange(gloss?: string): void;
+  onChange(data: { gloss?: string; approved?: boolean }): void;
 }
 
 export interface TranslateWordRef {
@@ -34,7 +34,7 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
       font,
       referenceGloss,
       previousGlosses,
-      onGlossChange,
+      onChange,
     }: TranslateWordProps,
     ref
   ) => {
@@ -88,20 +88,33 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
               state={status === 'approved' ? 'success' : undefined}
               aria-describedby={`word-help-${word.id}`}
               aria-labelledby={`word-${word.id}`}
-              onChange={(value) => {
+              onChange={(value, implicit) => {
                 if (value !== gloss) {
-                  onGlossChange(value);
+                  onChange({
+                    gloss: value,
+                    approved: implicit ? undefined : true,
+                  });
                 }
               }}
               onKeyDown={(e) => {
                 if (e.metaKey || e.altKey || e.ctrlKey) return;
-                if (e.key === 'Enter') {
-                  if (e.shiftKey) {
-                    const prev = root.current?.previousElementSibling;
-                    prev?.querySelector('input')?.focus();
-                  } else {
-                    const prev = root.current?.nextElementSibling;
-                    prev?.querySelector('input')?.focus();
+                switch (e.key) {
+                  case 'Enter': {
+                    if (status !== 'approved') {
+                      onChange({ approved: true });
+                    }
+                    if (e.shiftKey) {
+                      const prev = root.current?.previousElementSibling;
+                      prev?.querySelector('input')?.focus();
+                    } else {
+                      const prev = root.current?.nextElementSibling;
+                      prev?.querySelector('input')?.focus();
+                    }
+                    break;
+                  }
+                  case 'Escape': {
+                    onChange({ approved: false });
+                    break;
                   }
                 }
               }}

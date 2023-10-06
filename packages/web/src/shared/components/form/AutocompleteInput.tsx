@@ -5,7 +5,15 @@ export interface AutocompleteInputProps
   extends Omit<ComponentProps<'input'>, 'value' | 'onChange'> {
   state?: 'success';
   value?: string;
-  onChange(value: string): void;
+  /** A change is implicit if it occurs:
+   *    - when a user clicks out of the input
+   *    - when a user uses the tab key to select
+   *
+   *  A change is explicit if it occurs:
+   *    - when a user clicks on an autocomplete suggestion
+   *    - when a user uses the enter key to select
+   */
+  onChange(value: string, implicit: boolean): void;
   suggestions: string[];
 }
 
@@ -64,9 +72,9 @@ const AutocompleteInput = forwardRef<HTMLInputElement, AutocompleteInputProps>(
       setActiveIndex(undefined);
     }
 
-    function change(newValue: string) {
-      if (newValue !== value) {
-        onChange(newValue);
+    function change(newValue: string, implicit: boolean) {
+      if (newValue !== value || !implicit) {
+        onChange(newValue, implicit);
       }
     }
 
@@ -81,7 +89,7 @@ const AutocompleteInput = forwardRef<HTMLInputElement, AutocompleteInputProps>(
             newValue = input;
           }
           if (newValue !== value) {
-            onChange(newValue);
+            onChange(newValue, true);
           }
           close();
         }
@@ -126,9 +134,9 @@ const AutocompleteInput = forwardRef<HTMLInputElement, AutocompleteInputProps>(
                   case 'Enter':
                   case 'Tab': {
                     if (typeof activeIndex === 'number') {
-                      change(filteredSuggestions[activeIndex]);
+                      change(filteredSuggestions[activeIndex], e.key === 'Tab');
                     } else {
-                      change(input);
+                      change(input, e.key === 'Tab');
                     }
                     close();
                     break;
@@ -214,7 +222,7 @@ const AutocompleteInput = forwardRef<HTMLInputElement, AutocompleteInputProps>(
                 `}
                 key={suggestion}
                 onClick={() => {
-                  change(suggestion);
+                  change(suggestion, false);
                   close();
                 }}
               >

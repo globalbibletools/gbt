@@ -1,5 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { GetVerseGlossesResponseBody } from '@translation/api-types';
+import {
+  GetVerseGlossesResponseBody,
+  GlossState,
+} from '@translation/api-types';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAccessControl } from '../../shared/accessControl';
@@ -106,9 +109,18 @@ export default function TranslationView() {
   >([]);
   const queryClient = useQueryClient();
   const glossMutation = useMutation({
-    mutationFn: (variables: { wordId: string; gloss?: string }) =>
-      apiClient.words.updateGloss(variables.wordId, language, variables.gloss),
-    onMutate: async ({ wordId, gloss }) => {
+    mutationFn: (variables: {
+      wordId: string;
+      gloss?: string;
+      state?: GlossState;
+    }) =>
+      apiClient.words.updateGloss({
+        wordId: variables.wordId,
+        language,
+        gloss: variables.gloss,
+        state: variables.state,
+      }),
+    onMutate: async ({ wordId, gloss, state }) => {
       const requestId = Math.floor(Math.random() * 1000000);
       setGlossRequests((requests) => [...requests, { wordId, requestId }]);
 
@@ -123,7 +135,8 @@ export default function TranslationView() {
             const doc = glosses[index];
             glosses.splice(index, 1, {
               ...doc,
-              gloss,
+              gloss: gloss ?? doc.gloss,
+              state: state ?? doc.state,
             });
             return {
               data: glosses,
@@ -293,10 +306,16 @@ export default function TranslationView() {
                     font={selectedLanguage?.font}
                     referenceGloss={referenceGlosses[i]?.gloss}
                     previousGlosses={targetGlosses[i]?.suggestions}
-                    onGlossChange={(newGloss) => {
+                    onChange={({ gloss, approved }) => {
                       glossMutation.mutate({
                         wordId: word.id,
-                        gloss: newGloss,
+                        gloss,
+                        state:
+                          approved === true
+                            ? GlossState.Approved
+                            : approved === false
+                            ? GlossState.Unapproved
+                            : undefined,
                       });
                     }}
                     ref={(() => {
