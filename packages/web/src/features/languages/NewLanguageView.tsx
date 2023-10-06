@@ -27,7 +27,9 @@ export default function NewLanguageView() {
   const flash = useFlash();
   const { t } = useTranslation(['common', 'languages']);
 
-  const formContext = useForm<FormData>();
+  const formContext = useForm<FormData>({
+    defaultValues: { code: '', name: '' },
+  });
   async function onSubmit(data: FormData) {
     try {
       await apiClient.languages.create({
@@ -96,10 +98,7 @@ export default function NewLanguageView() {
             />
           </div>
           <div>
-            <Button
-              type="submit"
-              disabled={!languageCodes.includes(formContext.getValues().code)}
-            >
+            <Button type="submit" disabled={!formContext.formState.isValid}>
               {t('common:create')}
             </Button>
             <SubmittingIndicator className="ms-3" />
