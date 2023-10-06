@@ -6,6 +6,7 @@ import {
   useEffect,
   useState,
 } from 'react';
+import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { Icon } from '../Icon';
 
@@ -17,21 +18,49 @@ export interface ComboboxItem {
   value: string;
 }
 
-export interface ComboboxProps
+export type ComboboxInputProps = BaseComboboxInputProps & {
+  required?: boolean;
+};
+
+export default function ComboboxInput(props: ComboboxInputProps) {
+  const context = useFormContext();
+
+  if (context) {
+    return (
+      <Controller
+        control={context.control}
+        name={props.name}
+        defaultValue={props.defaultValue}
+        rules={{ required: props.required }}
+        render={({ field, fieldState }) => (
+          <BaseComboboxInput
+            {...field}
+            items={props.items}
+            hasErrors={!!fieldState.error}
+          />
+        )}
+      />
+    );
+  } else {
+    return <BaseComboboxInput {...props} />;
+  }
+}
+
+interface BaseComboboxInputProps
   extends Omit<ComponentProps<'input'>, 'value' | 'onChange' | 'ref'> {
   className?: string;
+  name: string;
+  items: ComboboxItem[];
   value?: string;
+  defaultValue?: string[];
+  hasErrors?: boolean;
   onBlur?(): void;
   onChange?(value: string): void;
   onCreate?(text?: string): void;
-  items: ComboboxItem[];
-  defaultValue?: string[];
-  name: string;
-  hasErrors?: boolean;
   onKeyDown?: KeyboardEventHandler<HTMLInputElement>;
 }
 
-const ComboboxInput = forwardRef<HTMLInputElement, ComboboxProps>(
+const BaseComboboxInput = forwardRef<HTMLInputElement, BaseComboboxInputProps>(
   (
     {
       className = '',
@@ -44,7 +73,7 @@ const ComboboxInput = forwardRef<HTMLInputElement, ComboboxProps>(
       name,
       onKeyDown,
       ...props
-    }: ComboboxProps,
+    }: BaseComboboxInputProps,
     ref
   ) => {
     const { t } = useTranslation(['common']);
@@ -152,5 +181,3 @@ function ignoreDiacritics(word: string) {
   // From https://stackoverflow.com/a/37511463
   return word.normalize('NFD').replace(/\p{Diacritic}/gu, '');
 }
-
-export default ComboboxInput;

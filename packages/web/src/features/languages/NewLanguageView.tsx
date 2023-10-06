@@ -7,7 +7,7 @@ import Card from '../../shared/components/Card';
 import View from '../../shared/components/View';
 import ViewTitle from '../../shared/components/ViewTitle';
 import Button from '../../shared/components/actions/Button';
-import ComboboxInput from '../../shared/components/form/ComboboxInput';
+import BaseComboboxInput from '../../shared/components/form/ComboboxInput';
 import Form from '../../shared/components/form/Form';
 import FormLabel from '../../shared/components/form/FormLabel';
 import InputError from '../../shared/components/form/InputError';
@@ -61,7 +61,7 @@ export default function NewLanguageView() {
             <FormLabel htmlFor="code">
               {t('languages:code').toUpperCase()}
             </FormLabel>
-            <ComboboxInput
+            <BaseComboboxInput
               id="code"
               name="code"
               className="w-full"
