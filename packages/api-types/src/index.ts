@@ -172,6 +172,7 @@ export interface GetVerseGlossesResponseBody {
 
 export interface PatchWordGlossRequestBody {
   gloss?: string;
+  state?: GlossState;
 }
 
 export interface SNSConfirmSubscriptionMessage {

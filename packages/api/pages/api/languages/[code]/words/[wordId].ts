@@ -1,13 +1,16 @@
 import * as z from 'zod';
-import { PatchWordGlossRequestBody } from '@translation/api-types';
+import { GlossState, PatchWordGlossRequestBody } from '@translation/api-types';
 import createRoute from '../../../../../shared/Route';
-import { client } from '../../../../../shared/db';
+import { PrismaTypes, client } from '../../../../../shared/db';
 import { authorize } from '../../../../../shared/access-control/authorize';
 
 export default createRoute<{ code: string; wordId: string }>()
   .patch<PatchWordGlossRequestBody, void>({
     schema: z.object({
       gloss: z.string().optional(),
+      state: z
+        .enum(Object.values(GlossState) as [GlossState, ...GlossState[]])
+        .optional(),
     }),
     authorize: authorize((req) => ({
       action: 'translate',
@@ -26,7 +29,14 @@ export default createRoute<{ code: string; wordId: string }>()
         return;
       }
 
-      const normalizedGloss = req.body.gloss?.normalize('NFD');
+      const fields: { gloss?: string; state?: PrismaTypes.GlossState } = {};
+
+      if (typeof req.body.gloss !== 'undefined') {
+        fields.gloss = req.body.gloss.normalize('NFD');
+      }
+      if (typeof req.body.state !== 'undefined') {
+        fields.state = req.body.state;
+      }
 
       await client.gloss.upsert({
         where: {
@@ -35,13 +45,11 @@ export default createRoute<{ code: string; wordId: string }>()
             languageId: language.id,
           },
         },
-        update: {
-          gloss: normalizedGloss,
-        },
+        update: fields,
         create: {
+          ...fields,
           wordId: req.query.wordId,
           languageId: language.id,
-          gloss: normalizedGloss,
         },
       });
 
