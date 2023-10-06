@@ -7,7 +7,7 @@ import Card from '../../shared/components/Card';
 import View from '../../shared/components/View';
 import ViewTitle from '../../shared/components/ViewTitle';
 import Button from '../../shared/components/actions/Button';
-import BaseComboboxInput from '../../shared/components/form/ComboboxInput';
+import ComboboxInput from '../../shared/components/form/ComboboxInput';
 import Form from '../../shared/components/form/Form';
 import FormLabel from '../../shared/components/form/FormLabel';
 import InputError from '../../shared/components/form/InputError';
@@ -51,7 +51,6 @@ export default function NewLanguageView() {
       flash.error(`${error}`);
     }
   }
-
   return (
     <View fitToScreen className="flex justify-center items-start">
       <Card className="mx-4 mt-4 w-96 flex-shrink p-6">
@@ -61,7 +60,7 @@ export default function NewLanguageView() {
             <FormLabel htmlFor="code">
               {t('languages:code').toUpperCase()}
             </FormLabel>
-            <BaseComboboxInput
+            <ComboboxInput
               id="code"
               name="code"
               className="w-full"
