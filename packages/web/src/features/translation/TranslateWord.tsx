@@ -11,7 +11,7 @@ export interface TranslateWordProps {
   editable?: boolean;
   word: { id: string; text: string };
   originalLanguage: 'hebrew' | 'greek';
-  status: 'empty' | 'saving' | 'saved';
+  status: 'empty' | 'saving' | 'saved' | 'approved';
   gloss?: string;
   font?: string;
   referenceGloss?: string;
@@ -85,6 +85,7 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
                 width: width + 42,
                 fontFamily: expandFontFamily(font ?? 'Noto Sans'),
               }}
+              state={status === 'approved' ? 'success' : undefined}
               aria-describedby={`word-help-${word.id}`}
               aria-labelledby={`word-${word.id}`}
               onChange={(value) => {
@@ -116,10 +117,10 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
                       {capitalize(t('translate:saving'))}
                     </>
                   );
-                } else if (status === 'saved') {
+                } else if (status === 'approved') {
                   return (
                     <>
-                      <Icon icon="check" className="me-1" />
+                      <Icon icon="check" className="me-1 text-green-600" />
                       {capitalize(t('translate:saved'))}
                     </>
                   );

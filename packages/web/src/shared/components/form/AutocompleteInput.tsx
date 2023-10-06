@@ -3,6 +3,7 @@ import { Icon } from '../Icon';
 
 export interface AutocompleteInputProps
   extends Omit<ComponentProps<'input'>, 'value' | 'onChange'> {
+  state?: 'success';
   value?: string;
   onChange(value: string): void;
   suggestions: string[];
@@ -15,7 +16,16 @@ function normalizeFilter(word: string) {
 
 const AutocompleteInput = forwardRef<HTMLInputElement, AutocompleteInputProps>(
   (
-    { className, style, suggestions, value, onChange, onKeyDown, ...props },
+    {
+      className,
+      style,
+      suggestions,
+      value,
+      onChange,
+      onKeyDown,
+      state,
+      ...props
+    },
     ref
   ) => {
     const [input, setInput] = useState('');
@@ -89,7 +99,11 @@ const AutocompleteInput = forwardRef<HTMLInputElement, AutocompleteInputProps>(
         <div
           className={`
             border rounded shadow-inner flex group-focus-within/combobox:outline group-focus-within/combobox:outline-2
-          border-slate-400 group-focus-within/combobox:outline-blue-600
+            ${
+              state === 'success'
+                ? 'border-green-600 group-focus-within/combobox:outline-green-700'
+                : 'border-slate-400 group-focus-within/combobox:outline-blue-600'
+            }
           `}
         >
           <input

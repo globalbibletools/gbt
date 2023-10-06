@@ -269,7 +269,7 @@ export default function TranslationView() {
               }`}
             >
               {verse.words.map((word, i) => {
-                const targetGloss = targetGlosses[i]?.gloss;
+                const targetGloss = targetGlosses[i];
                 const isSaving = glossRequests.some(
                   ({ wordId }) => wordId === word.id
                 );
@@ -281,9 +281,15 @@ export default function TranslationView() {
                     word={word}
                     originalLanguage={isHebrew ? 'hebrew' : 'greek'}
                     status={
-                      isSaving ? 'saving' : targetGloss ? 'saved' : 'empty'
+                      isSaving
+                        ? 'saving'
+                        : targetGloss.gloss
+                        ? targetGloss.state === 'APPROVED'
+                          ? 'approved'
+                          : 'saved'
+                        : 'empty'
                     }
-                    gloss={targetGloss}
+                    gloss={targetGloss?.gloss}
                     font={selectedLanguage?.font}
                     referenceGloss={referenceGlosses[i]?.gloss}
                     previousGlosses={targetGlosses[i]?.suggestions}
