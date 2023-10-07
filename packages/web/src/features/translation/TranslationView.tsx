@@ -21,6 +21,9 @@ import {
   incrementVerseId,
   parseVerseId,
 } from './verse-utils';
+import Button from '../../shared/components/actions/Button';
+import { Icon } from '../../shared/components/Icon';
+import { useTranslation } from 'react-i18next';
 
 export const translationLanguageKey = 'translation-language';
 export const translationVerseIdKey = 'translation-verse-id';
@@ -76,6 +79,7 @@ function useTranslationQueries(language: string, verseId: string) {
 }
 
 export default function TranslationView() {
+  const { t } = useTranslation('common');
   const { language, verseId } = useParams() as {
     language: string;
     verseId: string;
@@ -328,6 +332,25 @@ export default function TranslationView() {
                   />
                 );
               })}
+              {canEdit && (
+                <li className="mx-2 mb-4 flex items-end">
+                  <Button
+                    variant="tertiary"
+                    className="mb-2"
+                    onClick={() => {
+                      navigate(
+                        `/languages/${language}/verses/${incrementVerseId(
+                          verseId
+                        )}`
+                      );
+                    }}
+                  >
+                    {isHebrew && <Icon icon="arrow-left" className="mr-1" />}
+                    {t('common:next')}
+                    {!isHebrew && <Icon icon="arrow-right" className="ml-1" />}
+                  </Button>
+                </li>
+              )}
             </ol>
           );
         }
