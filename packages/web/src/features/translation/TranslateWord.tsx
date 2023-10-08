@@ -134,7 +134,7 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
                   return (
                     <>
                       <Icon icon="check" className="me-1 text-green-600" />
-                      {capitalize(t('translate:saved'))}
+                      {capitalize(t('translate:approved'))}
                     </>
                   );
                 } else {
