@@ -62,22 +62,25 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
           id={`word-${word.id}`}
           className={`mb-2 ${
             originalLanguage === 'hebrew'
-              ? 'text-2xl text-right font-hebrew'
-              : 'text-lg text-left font-greek'
+              ? 'text-2xl text-right font-hebrew pr-3'
+              : 'text-lg text-left font-greek pl-3'
           }`}
+          dir={originalLanguage === 'hebrew' ? 'rtl' : 'ltr'}
         >
           {word.text}
         </div>
         <div
           className={`mb-2 ${
-            originalLanguage === 'hebrew' ? 'text-right' : 'text-left'
+            originalLanguage === 'hebrew' ? 'text-right pr-3' : 'text-left pl-3'
           }`}
+          dir="ltr"
         >
           {editable ? referenceGloss : gloss}
         </div>
         {editable && (
           <>
             <AutocompleteInput
+              className="-m-px"
               name="gloss"
               value={gloss}
               // The extra 42 pixels give room for the padding and caret icon.
@@ -85,6 +88,7 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
                 width: width + 42,
                 fontFamily: expandFontFamily(font ?? 'Noto Sans'),
               }}
+              dir={originalLanguage === 'hebrew' ? 'rtl' : 'ltr'}
               state={status === 'approved' ? 'success' : undefined}
               aria-describedby={`word-help-${word.id}`}
               aria-labelledby={`word-${word.id}`}

@@ -5,6 +5,8 @@ export interface AutocompleteInputProps
   extends Omit<ComponentProps<'input'>, 'value' | 'onChange'> {
   state?: 'success';
   value?: string;
+  /** When specified, overrides the text direction of the component. */
+  dir?: 'ltr' | 'rtl';
   /** A change is implicit if it occurs:
    *    - when a user clicks out of the input
    *    - when a user uses the tab key to select
@@ -32,6 +34,7 @@ const AutocompleteInput = forwardRef<HTMLInputElement, AutocompleteInputProps>(
       onChange,
       onKeyDown,
       state,
+      dir,
       ...props
     },
     ref
@@ -103,6 +106,7 @@ const AutocompleteInput = forwardRef<HTMLInputElement, AutocompleteInputProps>(
         ref={root}
         className={`${className} group/combobox relative`}
         style={style}
+        dir={dir}
       >
         <div
           className={`
@@ -117,7 +121,12 @@ const AutocompleteInput = forwardRef<HTMLInputElement, AutocompleteInputProps>(
           <input
             {...props}
             ref={ref}
-            className="w-full py-2 ps-3 h-10 rounded-b flex-grow focus:outline-none bg-transparent rounded"
+            className={`
+              w-full py-2 h-10 rounded-b flex-grow focus:outline-none bg-transparent rounded
+              ${typeof dir !== 'string' ? 'ps-3' : ''}
+              ${dir === 'ltr' ? 'pl-3 text-left' : ''}
+              ${dir === 'rtl' ? 'pr-3 text-right' : ''}
+            `}
             autoComplete="off"
             value={
               typeof activeIndex === 'number'
@@ -202,8 +211,8 @@ const AutocompleteInput = forwardRef<HTMLInputElement, AutocompleteInputProps>(
             <Icon icon={isOpen ? 'caret-up' : 'caret-down'} />
           </button>
         </div>
-        {isOpen && filteredSuggestions.length > 0 && (
-          <ol className="z-10 absolute min-w-full max-h-80 bg-white overflow-auto mt-1 rounded border border-slate-400 shadow">
+        {isOpen && (
+          <ol className="z-10 absolute min-w-full min-h-[24px] max-h-80 bg-white overflow-auto mt-1 rounded border border-slate-400 shadow">
             {filteredSuggestions.map((suggestion, i) => (
               <li
                 tabIndex={-1}
