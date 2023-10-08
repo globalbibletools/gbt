@@ -333,7 +333,12 @@ export default function TranslationView() {
                 );
               })}
               {canEdit && (
-                <li className="mx-2 mb-4 flex items-end">
+                <li
+                  className={`
+                    mx-2 mb-4 flex items-center border-slate-300
+                    ${isHebrew ? 'border-r pr-4' : 'border-l pl-4'}
+                  `}
+                >
                   <Button
                     variant="tertiary"
                     className="mb-2"
