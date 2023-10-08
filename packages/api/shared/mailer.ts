@@ -20,12 +20,19 @@ const transporter = process.env['EMAIL_SERVER']
 
 export type EmailOptions = (
   | {
+      /** The user to send the email to. The email will not be sent unless the user's email is verified. */
       userId: string;
     }
-  | { email: string }
+  | {
+      /** The email address to send to. This bypasses all email verification checks, so use with caution. */
+      email: string;
+    }
 ) & {
+  /** The subject line of the email. */
   subject: string;
+  /** The text of the message for email clients that don't support HTML. */
   text: string;
+  /** The email message formatted as HTML. */
   html: string;
 };
 
@@ -47,15 +54,13 @@ export default {
   transporter,
   /**
    * Send a transactional email to a user.
+   * If a `userId` is given, this will confirm the user's email address is active before sending the message.
+   * Otherwise if `email` is given, this verification will be bypassed.
    * @param email - The email to send along with the intended user.
-   * @param force - Send to unverified users. Should only be used to send invites.
    * @throws `EmailNotVerifiedError` - If the user's email is not verified or has previously bounced or complained.
    * @throws `MissingEmailAddressError` - If the user does not have an email address.
    */
-  async sendEmail(
-    { subject, text, html, ...options }: EmailOptions,
-    force = false
-  ) {
+  async sendEmail({ subject, text, html, ...options }: EmailOptions) {
     let email;
 
     if ('email' in options) {
@@ -73,7 +78,7 @@ export default {
       }
 
       if (!primaryKey) throw new MissingEmailAddressError(options.userId);
-      if (user.emailStatus !== EmailStatus.VERIFIED && !force)
+      if (user.emailStatus !== EmailStatus.VERIFIED)
         throw new EmailNotVerifiedError(primaryKey?.providerUserId);
 
       email = primaryKey.providerUserId;
