@@ -27,9 +27,7 @@ export default function NewLanguageView() {
   const flash = useFlash();
   const { t } = useTranslation(['common', 'languages']);
 
-  const formContext = useForm<FormData>({
-    defaultValues: { code: '', name: '' },
-  });
+  const formContext = useForm<FormData>();
   async function onSubmit(data: FormData) {
     try {
       await apiClient.languages.create({

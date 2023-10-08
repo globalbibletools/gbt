@@ -52,7 +52,7 @@ interface BaseComboboxInputProps
   name: string;
   items: ComboboxItem[];
   value?: string;
-  defaultValue?: string[];
+  defaultValue?: string;
   hasErrors?: boolean;
   onBlur?(): void;
   onChange?(value: string): void;
@@ -65,7 +65,7 @@ const BaseComboboxInput = forwardRef<HTMLInputElement, BaseComboboxInputProps>(
     {
       className = '',
       hasErrors,
-      value,
+      value = '',
       onChange,
       onCreate,
       onBlur,
