@@ -5,12 +5,6 @@ export type BibleTranslation = {
   name: string;
 };
 
-// For some reason, fetch.bible uses non-standard language codes.
-const langCodeMapping: Record<string, string> = {
-  en: 'eng',
-  es: 'spa',
-};
-
 /**
  * This class acts as a wrapper over all interactions with fetch.bible.
  */
@@ -24,10 +18,7 @@ class BibleTranslationClient {
     const collection = await this.client.fetch_collection();
     const options: { sort_by_year?: boolean; language?: string } = {};
     options.sort_by_year = true;
-    // Filter by language, if the language code is in langCodeMapping
-    if (languageCode && langCodeMapping[languageCode]) {
-      options.language = langCodeMapping[languageCode];
-    }
+    options.language = languageCode;
     const translations = await collection.get_translations(options);
     return translations.map(({ id, name_english, name_local }) => ({
       id,
