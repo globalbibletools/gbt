@@ -96,9 +96,7 @@ export default function NewLanguageView() {
             />
           </div>
           <div>
-            <Button type="submit" disabled={!formContext.formState.isValid}>
-              {t('common:create')}
-            </Button>
+            <Button type="submit">{t('common:create')}</Button>
             <SubmittingIndicator className="ms-3" />
           </div>
         </Form>
