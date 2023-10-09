@@ -130,7 +130,7 @@ async function run() {
 
   const language = await client.language.create({
     data: {
-      code: 'en',
+      code: 'eng',
       name: 'English',
     },
   });
