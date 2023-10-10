@@ -92,7 +92,7 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
                 if (value !== gloss) {
                   onChange({
                     gloss: value,
-                    approved: implicit ? undefined : true,
+                    approved: !implicit,
                   });
                 }
               }}
