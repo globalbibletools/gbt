@@ -344,7 +344,7 @@ export default function TranslationView() {
               {canEdit && (
                 <li
                   className={`
-                    mx-2 mb-4 flex items-center border-slate-300
+                    mx-2 mb-4 flex items-center border-slate-300 h-28
                     ${isHebrew ? 'border-r pr-4' : 'border-l pl-4'}
                   `}
                 >
