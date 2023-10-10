@@ -57,7 +57,11 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
     );
 
     return (
-      <li className="mx-2 mb-4" ref={root}>
+      <li
+        className="mx-2 mb-4"
+        ref={root}
+        dir={originalLanguage === 'hebrew' ? 'rtl' : 'ltr'}
+      >
         <div
           id={`word-${word.id}`}
           className={`mb-2 ${
@@ -65,7 +69,6 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
               ? 'text-2xl text-right font-hebrew pr-3'
               : 'text-lg text-left font-greek pl-3'
           }`}
-          dir={originalLanguage === 'hebrew' ? 'rtl' : 'ltr'}
         >
           {word.text}
         </div>
@@ -80,7 +83,7 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
         {editable && (
           <>
             <AutocompleteInput
-              className="-m-px"
+              className="-m-px min-w-[80px]"
               name="gloss"
               value={gloss}
               // The extra 42 pixels give room for the padding and caret icon.

@@ -198,7 +198,7 @@ const AutocompleteInput = forwardRef<HTMLInputElement, AutocompleteInputProps>(
             }}
           />
           <button
-            className="w-8"
+            className="w-8 flex-shrink-0"
             aria-hidden="true"
             tabIndex={-1}
             onClick={(e) => {
