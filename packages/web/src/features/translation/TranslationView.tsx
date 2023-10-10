@@ -287,21 +287,23 @@ export default function TranslationView() {
                   ({ wordId }) => wordId === word.id
                 );
 
+                let status: 'empty' | 'saving' | 'saved' | 'approved' = 'empty';
+                if (isSaving) {
+                  status = 'saving';
+                } else if (targetGloss.gloss) {
+                  status =
+                    targetGloss.state === GlossState.Approved
+                      ? 'approved'
+                      : 'saved';
+                }
+
                 return (
                   <TranslateWord
                     key={word.id}
                     editable={canEdit}
                     word={word}
                     originalLanguage={isHebrew ? 'hebrew' : 'greek'}
-                    status={
-                      isSaving
-                        ? 'saving'
-                        : targetGloss.gloss
-                        ? targetGloss.state === 'APPROVED'
-                          ? 'approved'
-                          : 'saved'
-                        : 'empty'
-                    }
+                    status={status}
                     gloss={targetGloss?.gloss}
                     font={selectedLanguage?.font}
                     referenceGloss={referenceGlosses[i]?.gloss}
