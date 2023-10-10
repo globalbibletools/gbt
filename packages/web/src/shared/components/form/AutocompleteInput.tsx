@@ -4,7 +4,7 @@ import { Icon } from '../Icon';
 export interface AutocompleteInputProps
   extends Omit<ComponentProps<'input'>, 'value' | 'onChange'> {
   state?: 'success';
-  value?: string;
+  value: string;
   /** A change is implicit if it occurs:
    *    - when a user clicks out of the input
    *    - when a user uses the tab key to select
@@ -37,6 +37,7 @@ const AutocompleteInput = forwardRef<HTMLInputElement, AutocompleteInputProps>(
     ref
   ) => {
     const [input, setInput] = useState('');
+    const [isFocused, setFocus] = useState(false);
     const [isOpen, setOpen] = useState(false);
     const [filteredSuggestions, setFilteredSuggestions] = useState<string[]>(
       []
@@ -80,23 +81,25 @@ const AutocompleteInput = forwardRef<HTMLInputElement, AutocompleteInputProps>(
 
     const root = useRef<HTMLDivElement>(null);
     useEffect(() => {
-      const handler = (e: PointerEvent) => {
-        if (!root.current?.contains(e.target as Element)) {
-          let newValue;
-          if (typeof activeIndex === 'number') {
-            newValue = filteredSuggestions[activeIndex];
-          } else {
-            newValue = input;
+      if (isFocused) {
+        const handler = (e: PointerEvent) => {
+          if (!root.current?.contains(e.target as Element)) {
+            let newValue;
+            if (typeof activeIndex === 'number') {
+              newValue = filteredSuggestions[activeIndex];
+            } else {
+              newValue = input;
+            }
+            if (newValue !== value) {
+              onChange(newValue, true);
+            }
+            close();
           }
-          if (newValue !== value) {
-            onChange(newValue, true);
-          }
-          close();
-        }
-      };
-      window.addEventListener('pointerdown', handler);
-      return () => window.removeEventListener('pointerdown', handler);
-    }, [onChange, input, activeIndex, filteredSuggestions, value]);
+        };
+        window.addEventListener('pointerdown', handler);
+        return () => window.removeEventListener('pointerdown', handler);
+      }
+    }, [isFocused, onChange, input, activeIndex, filteredSuggestions, value]);
 
     return (
       <div
@@ -124,6 +127,14 @@ const AutocompleteInput = forwardRef<HTMLInputElement, AutocompleteInputProps>(
                 ? filteredSuggestions[activeIndex]
                 : input
             }
+            onFocus={(e) => {
+              setFocus(true);
+              props.onFocus?.(e);
+            }}
+            onBlur={(e) => {
+              setFocus(false);
+              props.onBlur?.(e);
+            }}
             onChange={(e) => {
               open();
               setInput(e.target.value);

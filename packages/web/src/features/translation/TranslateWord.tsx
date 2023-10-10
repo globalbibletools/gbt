@@ -79,7 +79,7 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
           <>
             <AutocompleteInput
               name="gloss"
-              value={gloss}
+              value={gloss ?? ''}
               // The extra 42 pixels give room for the padding and caret icon.
               style={{
                 width: width + 42,
@@ -138,7 +138,7 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
                   return (
                     <>
                       <Icon icon="check" className="me-1 text-green-600" />
-                      {capitalize(t('translate:saved'))}
+                      {capitalize(t('translate:approved'))}
                     </>
                   );
                 } else {

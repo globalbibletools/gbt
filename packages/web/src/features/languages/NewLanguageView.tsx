@@ -1,18 +1,20 @@
+import { ApiClientError } from '@translation/api-client';
+import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import apiClient from '../../shared/apiClient';
+import Card from '../../shared/components/Card';
 import View from '../../shared/components/View';
 import ViewTitle from '../../shared/components/ViewTitle';
-import { useNavigate } from 'react-router-dom';
-import TextInput from '../../shared/components/form/TextInput';
-import FormLabel from '../../shared/components/form/FormLabel';
-import { useTranslation } from 'react-i18next';
-import { ApiClientError } from '@translation/api-client';
-import Form from '../../shared/components/form/Form';
-import InputError from '../../shared/components/form/InputError';
-import { useForm } from 'react-hook-form';
-import SubmittingIndicator from '../../shared/components/form/SubmittingIndicator';
 import Button from '../../shared/components/actions/Button';
+import ComboboxInput from '../../shared/components/form/ComboboxInput';
+import Form from '../../shared/components/form/Form';
+import FormLabel from '../../shared/components/form/FormLabel';
+import InputError from '../../shared/components/form/InputError';
+import SubmittingIndicator from '../../shared/components/form/SubmittingIndicator';
+import TextInput from '../../shared/components/form/TextInput';
 import { useFlash } from '../../shared/hooks/flash';
-import Card from '../../shared/components/Card';
+import { languageCodes } from './../../shared/languageCodes';
 
 interface FormData {
   code: string;
@@ -49,7 +51,6 @@ export default function NewLanguageView() {
       flash.error(`${error}`);
     }
   }
-
   return (
     <View fitToScreen className="flex justify-center items-start">
       <Card className="mx-4 mt-4 w-96 flex-shrink p-6">
@@ -59,12 +60,15 @@ export default function NewLanguageView() {
             <FormLabel htmlFor="code">
               {t('languages:code').toUpperCase()}
             </FormLabel>
-            <TextInput
+            <ComboboxInput
               id="code"
               name="code"
               className="w-full"
-              autoComplete="off"
               required
+              items={languageCodes.map((code, i) => ({
+                label: code,
+                value: code,
+              }))}
               aria-describedby="code-error"
             />
             <InputError

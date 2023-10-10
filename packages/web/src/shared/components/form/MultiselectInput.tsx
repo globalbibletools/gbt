@@ -3,15 +3,9 @@ import { Combobox } from '@headlessui/react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { Icon } from '../Icon';
 
-export interface MultiselectInputProps {
-  className?: string;
-  name: string;
-  items: { label: string; value: string }[];
-  value?: string[];
-  defaultValue?: string[];
+export type MultiselectInputProps = BaseMultiselectInputProps & {
   required?: boolean;
-  onChange?(value: string[]): void;
-}
+};
 
 export default function MultiselectInput(props: MultiselectInputProps) {
   const context = useFormContext();
@@ -39,13 +33,13 @@ export default function MultiselectInput(props: MultiselectInputProps) {
 
 interface BaseMultiselectInputProps {
   className?: string;
-  value?: string[];
-  onBlur?(): void;
-  onChange?(value: string[]): void;
-  items: { label: string; value: string }[];
-  defaultValue?: string[];
   name: string;
+  items: { label: string; value: string }[];
+  value?: string[];
+  defaultValue?: string[];
   hasErrors?: boolean;
+  onChange?(value: string[]): void;
+  onBlur?(): void;
 }
 
 const BaseMultiselectInput = forwardRef<
