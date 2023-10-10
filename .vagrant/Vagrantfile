@@ -1,0 +1,196 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# NOTES:
+# This version was tested using Windows 11 Home Edition
+# It uses the "vagrant-gatling-rsync" Vagrant plugin to sync host folder to guest folder
+# It uses the "vagrant-rsync-back" plugin to sync guest folder to host folder
+# The sync from host to guest happens automatically on "vagrant up" after a "vagrant halt"
+# Once the sync is complete, rsync will monitor the host folder for changes and sync them to the guest folder.
+# To sync from guest to host, you must manually run "vagrant rsync-back" in a terminal window in vagrant project folder
+# Please install these plugins before issuing "vagrant up" by running the 2 commands in a terminal window.
+# vagrant plugin install vagrant-gatling-rsync
+# vagrant plugin install vagrant-rsync-back
+
+# Customize the following constants to suit your needs
+HOST_FOLDER = "../gloss-translation"
+
+# All Vagrant configuration is done below. The "2" in Vagrant.configure
+# configures the configuration version (we support older styles for
+# backwards compatibility). Please don't change it unless you know what
+# you're doing.
+Vagrant.configure("2") do |config|
+  # The most common configuration options are documented and commented below.
+  # For a complete reference, please see the online documentation at
+  # https://docs.vagrantup.com.
+
+  # Every Vagrant development environment requires a box. You can search for
+  # boxes at https://vagrantcloud.com/search.
+  config.vm.box = "generic/ubuntu2204"
+
+  # Configure for application API
+  config.vm.network "forwarded_port", guest: 4300, host: 4300, host_ip: "127.0.0.1"
+
+  # Configure for application Web
+  config.vm.network "forwarded_port", guest: 4200, host: 4200, host_ip: "127.0.0.1"
+
+  # Mount repo project root folder.
+  config.vm.synced_folder HOST_FOLDER, "/home/vagrant/vmrepo", type: "rsync",
+    rsync__exclude: [".git/",".vagrant/","docs/", "node_modules/","packages/api/.env.local","packages/db/.env.local"]
+
+  # Configure the window for gatling to coalesce writes.
+  if Vagrant.has_plugin?("vagrant-gatling-rsync")
+    config.gatling.latency = 2.5
+    config.gatling.time_format = "%H:%M:%S"
+  end
+
+  # Automatically sync when machines with rsync folders come up.
+  config.gatling.rsync_on_startup = true
+
+  # Disable the default share of the current code directory. Doing this
+  # provides improved isolation between the vagrant box and your host
+  # by making sure your Vagrantfile isn't accessable to the vagrant box.
+  # If you use this you may want to enable additional shared subfolders as
+  # shown above.
+  config.vm.synced_folder ".", "/vagrant", disabled: true
+
+  # Use VBoxManage to customize the VM.
+  # Enable creation of symbolic links on dir /home/vagrant/vmrepo
+  config.vm.provider "virtualbox" do |vb|
+    vb.memory = 4096  # Set RAM in MB (4GB in this example)
+    vb.cpus = 2      # Set the number of CPU cores
+    vb.customize ["setextradata", :id, "VBoxInternal2/SharedFoldersEnableSymlinksCreate//home/vagrant/vmrepo", "1"]
+  end
+
+  config.vm.provision "shell", name: "nodejs", inline: <<-SHELL
+    echo "Provisioning with root access"
+
+    # Update resynchronizes the package index files from their sources. 
+    sudo apt update
+
+    # *** Install Node.js 18 ***
+    echo "Installing Node.js 18..."
+
+    # 1. Download and import the Nodesource GPG key
+    sudo apt install -y ca-certificates curl gnupg
+    sudo mkdir -p /etc/apt/keyrings
+    curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
+
+    # 2. Create deb repository
+    NODE_MAJOR=18
+    echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" | sudo tee /etc/apt/sources.list.d/nodesource.list
+
+    # 3. Run Update and Install
+    sudo apt update
+    sudo apt install nodejs -y
+    echo "End of: Installing Node.js 18"
+  SHELL
+
+  config.vm.provision "shell", name: "postgres", inline: <<-SHELL
+    echo "Starting Postgres 14..."
+    echo "Provisioning with root access"
+
+    # *** Install Postgres 14 ***
+    echo "Installing Postgres 14..."
+
+    # 1. Create the file repository configuration:
+    sudo sh -c 'echo "deb https://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+
+    # 2. Import the repository signing key:
+    wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+
+    # 3. Update the package lists
+    sudo apt update
+
+    # 4. Install the latest version of PostgreSQL.
+    # If you want a specific version, use 'postgresql-14' or similar instead of 'postgresql':
+    sudo apt -y install postgresql-14
+
+    # 5. Create a PostgreSQL user with CREATEDB and CREATEROLE privileges
+    echo "sudo -u postgres psql -c \"CREATE USER vagrant WITH PASSWORD 'vagrant' CREATEDB CREATEROLE;\""
+    sudo -u postgres psql -c "CREATE USER vagrant WITH PASSWORD 'vagrant' CREATEDB CREATEROLE;"
+
+    # 6. Create a new database owned by the 'vagrant' user
+    echo "sudo -u postgres psql -c \"CREATE DATABASE gloss_translation OWNER vagrant;\""
+    sudo -u postgres psql -c "CREATE DATABASE gloss_translation OWNER vagrant;"
+
+    # 7. Restart PostgreSQL to apply changes (may be necessary depending on your setup)    
+    sudo service postgresql restart
+
+    echo "End of: Installing Postgres 14"
+  SHELL
+
+  config.vm.provision "shell", name: "profile", privileged: false, inline: <<-SHELL
+    echo "Setting up profile for /home/vagrant/vmrepo"
+    echo "Provisioning with user access"
+    if !(grep -q "cd /home/vagrant/vmrepo" /home/vagrant/.profile) then
+      echo "Appending cd /home/vagrant/vmrepo to .profile"
+      echo "cd /home/vagrant/vmrepo" >> /home/vagrant/.profile
+    fi
+    echo "End of profile"
+  SHELL
+
+  config.vm.provision "shell", name: "env", privileged: false, inline: <<-SHELL
+    echo "Setting up .env.local files"
+    echo "Provisioning with user access"
+    echo "Performing database project setup..."
+    echo "Creating .env.local files with DATABASE_URL"
+
+    echo "DATABASE_URL=postgres://vagrant:vagrant@localhost:5432/gloss_translation" >  /home/vagrant/vmrepo/packages/api/.env.local
+    echo "DATABASE_URL=postgres://vagrant:vagrant@localhost:5432/gloss_translation" >  /home/vagrant/vmrepo/packages/db/.env.local
+
+    echo "End of .env.local files"
+  SHELL
+
+  config.vm.provision "shell", name: "issue", inline: <<-SHELL
+    echo "Resolving File Watcher Limit Issue..."
+    echo "Provisioning with root access"
+    # Define the line to check for
+    line_to_check="fs.inotify.max_user_watches=524288"
+     
+     # Check if the line exists in /etc/sysctl.conf
+     if grep -qF "$line_to_check" /etc/sysctl.conf; then
+       echo "Line already exists. Nothing to do."
+     else
+       # Append the line to the end of the file
+       echo "$line_to_check" | sudo tee -a /etc/sysctl.conf
+       echo "Line added to /etc/sysctl.conf."
+     fi
+     echo "End of File Watcher Limit Issue"
+  SHELL
+    
+  config.vm.provision "shell", name: "npm", privileged: false, inline: <<-SHELL
+    echo "Setting up npm"
+    echo "Provisioning with user access"
+    echo "cd /home/vagrant/vmrepo"
+    cd /home/vagrant/vmrepo
+
+    echo "Performing npm install..."
+    npm install
+    echo "Setting nx as global..."
+    sudo npm i -g nx
+    echo "npm provisioning completed."
+
+    echo "Recompiling project..."
+    nx build api
+    nx build web
+
+    echo "End of npm"
+  SHELL
+
+  config.vm.provision "shell", name: "dbsetup", privileged: false, inline: <<-SHELL
+    echo "Setting up database"
+    echo "Provisioning with user access"
+    echo "cd /home/vagrant/vmrepo"
+    cd /home/vagrant/vmrepo
+    echo "Running db migrations with Nx Prisma"
+    echo "nx prisma db migrate reset"
+    nx prisma db migrate reset --force
+
+    echo "Restoring database from seed dump"
+    echo "pg_restore -Fc --format=custom --dbname=postgres://vagrant:vagrant@localhost:5432/gloss_translation /home/vagrant/vmrepo/data/seed.dump"
+    pg_restore -Fc --format=custom --dbname=postgres://vagrant:vagrant@localhost:5432/gloss_translation /home/vagrant/vmrepo/data/seed.dump
+
+    echo "End of dbsetup"
+  SHELL
+end
