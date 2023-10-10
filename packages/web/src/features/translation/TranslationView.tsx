@@ -239,6 +239,15 @@ export default function TranslationView() {
     !verseQuery.isSuccess ||
     !referenceGlossesQuery.isSuccess ||
     !targetGlossesQuery.isSuccess;
+
+  const loadedFromNextButton = useRef(false);
+  useEffect(() => {
+    if (!loading && loadedFromNextButton.current) {
+      firstWord.current?.focus();
+      loadedFromNextButton.current = false;
+    }
+  }, [loading, verseQuery.data]);
+
   return (
     <div className="px-4 flex flex-grow flex-col gap-2">
       <div className="flex gap-8 items-center">
@@ -343,6 +352,7 @@ export default function TranslationView() {
                     variant="tertiary"
                     className="mb-2"
                     onClick={() => {
+                      loadedFromNextButton.current = true;
                       navigate(
                         `/languages/${language}/verses/${incrementVerseId(
                           verseId
