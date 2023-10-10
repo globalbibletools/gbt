@@ -342,15 +342,10 @@ export default function TranslationView() {
                 );
               })}
               {canEdit && (
-                <li
-                  className={`
-                    mx-2 mb-4 flex items-center border-slate-300 h-28
-                    ${isHebrew ? 'border-r pr-4' : 'border-l pl-4'}
-                  `}
-                >
+                <li className="mx-2">
                   <Button
                     variant="tertiary"
-                    className="mb-2"
+                    className="mt-[81px]"
                     onClick={() => {
                       loadedFromNextButton.current = true;
                       navigate(
