@@ -12,6 +12,7 @@
   "not_found_message": "لم نتمكن من العثور على ما تبحث عنه.",
   "submitting": "جاري الإرسال",
   "success": "نجاح",
+  "too_many_options": "الكثير من الخيارات التي يجب عرضها.يرجى تصفية مزيد من.",
   "try_again": "حاول مرة أخرى",
   "unknown_error": "خطأ غير معروف",
   "unknown_error_message": "حدث خطأ غير معروف.",

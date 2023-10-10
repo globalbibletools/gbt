@@ -34,8 +34,9 @@ function useTranslationQueries(language: string, verseId: string) {
   const verseQuery = useQuery(['verse', verseId], () =>
     apiClient.verses.findById(verseId)
   );
-  const referenceGlossesQuery = useQuery(['verse-glosses', 'en', verseId], () =>
-    apiClient.verses.findVerseGlosses(verseId, 'en')
+  const referenceGlossesQuery = useQuery(
+    ['verse-glosses', 'eng', verseId],
+    () => apiClient.verses.findVerseGlosses(verseId, 'eng')
   );
   const targetGlossesQuery = useQuery(
     ['verse-glosses', language, verseId],
@@ -55,9 +56,9 @@ function useTranslationQueries(language: string, verseId: string) {
         queryFn: ({ queryKey }) => apiClient.verses.findById(queryKey[1]),
       });
       queryClient.ensureQueryData({
-        queryKey: ['verse-glosses', 'en', nextVerseId],
+        queryKey: ['verse-glosses', 'eng', nextVerseId],
         queryFn: ({ queryKey }) =>
-          apiClient.verses.findVerseGlosses(queryKey[2], 'en'),
+          apiClient.verses.findVerseGlosses(queryKey[2], 'eng'),
       });
       queryClient.ensureQueryData({
         queryKey: ['verse-glosses', language, nextVerseId],

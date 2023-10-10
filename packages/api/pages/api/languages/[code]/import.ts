@@ -56,7 +56,7 @@ export default createRoute<{ code: string }>()
 
       // Don't allow importing English glosses. They are already imported from
       // seed data.
-      if (!language || language.code == 'en') {
+      if (!language || language.code == 'eng') {
         res.notFound();
         return;
       }
