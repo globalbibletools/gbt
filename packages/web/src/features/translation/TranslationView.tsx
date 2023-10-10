@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { GetVerseGlossesResponseBody } from '@translation/api-types';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAccessControl } from '../../shared/accessControl';
 import apiClient from '../../shared/apiClient';
@@ -8,7 +8,10 @@ import LoadingSpinner from '../../shared/components/LoadingSpinner';
 import DropdownMenu, {
   DropdownMenuLink,
 } from '../../shared/components/actions/DropdownMenu';
-import { useFontLoader } from '../../shared/hooks/useFontLoader';
+import {
+  expandFontFamily,
+  useFontLoader,
+} from '../../shared/hooks/useFontLoader';
 import TranslateWord, { TranslateWordRef } from './TranslateWord';
 import { VerseSelector } from './VerseSelector';
 import {
@@ -162,6 +165,16 @@ export default function TranslationView() {
     },
   });
 
+  const [verseTranslation, setVerseTranslation] = useState('');
+  useEffect(() => {
+    // TODO: load verse translation from bibleTranslationClient.
+    setVerseTranslation(
+      'This is the verse translation for ' +
+        verseId +
+        '. Another sentence goes here. Another sentence goes here. Another sentence goes here. A really long long long long long long long long long long long long long long long long long long long long long long long long long long sentence. Another sentence goes here. Another sentence goes here. A really long long long long long long long long long long long long long long long long long long long long long long long long long long sentence.'
+    );
+  }, [verseId]);
+
   const userCan = useAccessControl();
 
   const firstWord = useRef<TranslateWordRef>(null);
@@ -269,47 +282,61 @@ export default function TranslationView() {
 
           const isHebrew = bookId < 40;
           return (
-            <ol
-              className={`flex flex-wrap ${
-                isHebrew ? 'ltr:flex-row-reverse' : 'rtl:flex-row-reverse'
-              }`}
-            >
-              {verse.words.map((word, i) => {
-                const targetGloss = targetGlosses[i]?.approvedGloss;
-                const isSaving = glossRequests.some(
-                  ({ wordId }) => wordId === word.id
-                );
+            <>
+              <p
+                className="text-base"
+                style={{
+                  fontFamily: expandFontFamily(
+                    selectedLanguage?.font ?? 'Noto Sans'
+                  ),
+                }}
+              >
+                {/* TODO: display correct chapter/verse number */}
+                <span className="text-sm font-bold me-2">10:31</span>
+                {verseTranslation}
+              </p>
+              <ol
+                className={`flex flex-wrap ${
+                  isHebrew ? 'ltr:flex-row-reverse' : 'rtl:flex-row-reverse'
+                }`}
+              >
+                {verse.words.map((word, i) => {
+                  const targetGloss = targetGlosses[i]?.approvedGloss;
+                  const isSaving = glossRequests.some(
+                    ({ wordId }) => wordId === word.id
+                  );
 
-                return (
-                  <TranslateWord
-                    key={word.id}
-                    editable={canEdit}
-                    word={word}
-                    originalLanguage={isHebrew ? 'hebrew' : 'greek'}
-                    status={
-                      isSaving ? 'saving' : targetGloss ? 'saved' : 'empty'
-                    }
-                    gloss={targetGloss}
-                    font={selectedLanguage?.font}
-                    referenceGloss={referenceGlosses[i]?.approvedGloss}
-                    previousGlosses={targetGlosses[i]?.glosses}
-                    onGlossChange={(newGloss) => {
-                      glossMutation.mutate({
-                        wordId: word.id,
-                        gloss: newGloss,
-                      });
-                    }}
-                    ref={(() => {
-                      if (i === 0) {
-                        return firstWord;
-                      } else if (i === verse.words.length - 1) {
-                        return lastWord;
+                  return (
+                    <TranslateWord
+                      key={word.id}
+                      editable={canEdit}
+                      word={word}
+                      originalLanguage={isHebrew ? 'hebrew' : 'greek'}
+                      status={
+                        isSaving ? 'saving' : targetGloss ? 'saved' : 'empty'
                       }
-                    })()}
-                  />
-                );
-              })}
-            </ol>
+                      gloss={targetGloss}
+                      font={selectedLanguage?.font}
+                      referenceGloss={referenceGlosses[i]?.approvedGloss}
+                      previousGlosses={targetGlosses[i]?.glosses}
+                      onGlossChange={(newGloss) => {
+                        glossMutation.mutate({
+                          wordId: word.id,
+                          gloss: newGloss,
+                        });
+                      }}
+                      ref={(() => {
+                        if (i === 0) {
+                          return firstWord;
+                        } else if (i === verse.words.length - 1) {
+                          return lastWord;
+                        }
+                      })()}
+                    />
+                  );
+                })}
+              </ol>
+            </>
           );
         }
       })()}
