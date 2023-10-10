@@ -79,7 +79,7 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
           <>
             <AutocompleteInput
               name="gloss"
-              value={gloss}
+              value={gloss ?? ''}
               // The extra 42 pixels give room for the padding and caret icon.
               style={{
                 width: width + 42,
