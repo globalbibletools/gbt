@@ -1,4 +1,10 @@
-import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
+import {
+  forwardRef,
+  useImperativeHandle,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
 import { useTranslation } from 'react-i18next';
 import { Icon } from '../../shared/components/Icon';
 import InputHelpText from '../../shared/components/form/InputHelpText';
@@ -39,11 +45,6 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
     ref
   ) => {
     const { t } = useTranslation(['translate']);
-    const width = useTextWidth({
-      text: gloss ?? '',
-      fontFamily: expandFontFamily(font ?? 'Noto Sans'),
-      fontSize: '16px',
-    });
     const input = useRef<HTMLInputElement>(null);
 
     const root = useRef<HTMLLIElement>(null);
@@ -55,6 +56,24 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
       }),
       []
     );
+
+    const glossWidth = useTextWidth({
+      text: gloss ?? '',
+      fontFamily: expandFontFamily(font ?? 'Noto Sans'),
+      fontSize: '16px',
+    });
+    const ancientWord = useRef<HTMLSpanElement>(null);
+    const refGloss = useRef<HTMLSpanElement>(null);
+    const [width, setWidth] = useState(0);
+    useLayoutEffect(() => {
+      setWidth(
+        Math.max(
+          ancientWord.current?.clientWidth ?? 0,
+          refGloss.current?.clientWidth ?? 0,
+          glossWidth
+        )
+      );
+    }, [glossWidth]);
 
     return (
       <li
@@ -70,7 +89,9 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
               : 'text-lg text-left font-greek pl-3'
           }`}
         >
-          {word.text}
+          <span className="inline-block" ref={ancientWord}>
+            {word.text}
+          </span>
         </div>
         <div
           className={`mb-2 ${
@@ -78,7 +99,9 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
           }`}
           dir="ltr"
         >
-          {editable ? referenceGloss : gloss}
+          <span className="inline-block" ref={refGloss}>
+            {editable ? referenceGloss : gloss}
+          </span>
         </div>
         {editable && (
           <>
