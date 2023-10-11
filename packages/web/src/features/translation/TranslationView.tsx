@@ -165,9 +165,11 @@ export default function TranslationView() {
     },
   });
 
+  const [translationName, setTranslationName] = useState('');
   const [verseTranslation, setVerseTranslation] = useState('');
   useEffect(() => {
     // TODO: load verse translation from bibleTranslationClient.
+    setTranslationName('ABC');
     setVerseTranslation(
       'This is the verse translation for ' +
         verseId +
@@ -291,8 +293,9 @@ export default function TranslationView() {
                   ),
                 }}
               >
-                {/* TODO: display correct chapter/verse number */}
-                <span className="text-sm font-bold me-2">10:31</span>
+                <span className="text-sm font-bold me-2">
+                  {translationName}
+                </span>
                 {verseTranslation}
               </p>
               <ol
