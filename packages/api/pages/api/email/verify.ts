@@ -2,9 +2,9 @@ import * as z from 'zod';
 import createRoute from '../../../shared/Route';
 import { auth } from '../../../shared/auth';
 import { InvalidTokenError } from '../../../shared/errors';
-import { client } from '../../../shared/db';
+import { PrismaTypes, client } from '../../../shared/db';
 import { PostEmailVerificationRequest } from '@translation/api-types';
-import mailer from '../../../shared/mailer';
+import mailer, { EmailNotVerifiedError } from '../../../shared/mailer';
 
 export default createRoute()
   .post<PostEmailVerificationRequest, void>({
@@ -25,21 +25,50 @@ export default createRoute()
         (key) => key.providerId === 'username'
       );
       if (authKey && authKey.providerUserId !== verification.email) {
-        await client.authKey.update({
+        // We have to manually handle whether the old email was still verified
+        // because the email will have changed for the user when it comes time to send it.
+        const user = await client.authUser.findUnique({
           where: {
-            id: `username:${authKey.providerUserId}`,
-          },
-          data: {
-            id: `username:${verification.email}`,
+            id: authKey.userId,
           },
         });
+        const oldEmailVerified =
+          user?.emailStatus === PrismaTypes.EmailStatus.VERIFIED;
 
-        await mailer.sendEmail({
-          email: authKey.providerUserId,
-          subject: 'Password Changed',
-          text: `Your email address for Global Bible Tools was changed to ${verification.email}.`,
-          html: `Your email address for Global Bible Tools was changed to <strong>${verification.email}</strong>.`,
-        });
+        await client.$transaction([
+          client.authKey.update({
+            where: {
+              id: `username:${authKey.providerUserId}`,
+            },
+            data: {
+              id: `username:${verification.email}`,
+            },
+          }),
+          client.authUser.update({
+            where: {
+              id: authKey.userId,
+            },
+            data: {
+              emailStatus: PrismaTypes.EmailStatus.VERIFIED,
+            },
+          }),
+          client.userEmailVerification.delete({
+            where: {
+              token: req.body.token,
+            },
+          }),
+        ]);
+
+        if (oldEmailVerified) {
+          await mailer.sendEmail({
+            email: authKey.providerUserId,
+            subject: 'Password Changed',
+            text: `Your email address for Global Bible Tools was changed to ${verification.email}.`,
+            html: `Your email address for Global Bible Tools was changed to <strong>${verification.email}</strong>.`,
+          });
+        } else {
+          throw new EmailNotVerifiedError(authKey.providerUserId);
+        }
       }
 
       res.ok();
