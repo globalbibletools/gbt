@@ -83,7 +83,7 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
       >
         <div
           id={`word-${word.id}`}
-          className={`mb-2 ${
+          className={`mb-1 h-8 ${
             originalLanguage === 'hebrew'
               ? 'text-2xl text-right font-hebrew pr-3'
               : 'text-lg text-left font-greek pl-3'
@@ -94,7 +94,7 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
           </span>
         </div>
         <div
-          className={`mb-2 ${
+          className={`mb-1 h-8 ${
             originalLanguage === 'hebrew' ? 'text-right pr-3' : 'text-left pl-3'
           }`}
           dir="ltr"
