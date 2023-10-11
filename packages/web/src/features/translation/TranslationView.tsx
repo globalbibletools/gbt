@@ -21,6 +21,9 @@ import {
   incrementVerseId,
   parseVerseId,
 } from './verse-utils';
+import Button from '../../shared/components/actions/Button';
+import { Icon } from '../../shared/components/Icon';
+import { useTranslation } from 'react-i18next';
 
 export const translationLanguageKey = 'translation-language';
 export const translationVerseIdKey = 'translation-verse-id';
@@ -77,6 +80,7 @@ function useTranslationQueries(language: string, verseId: string) {
 }
 
 export default function TranslationView() {
+  const { t } = useTranslation('common');
   const { language, verseId } = useParams() as {
     language: string;
     verseId: string;
@@ -236,6 +240,15 @@ export default function TranslationView() {
     !verseQuery.isSuccess ||
     !referenceGlossesQuery.isSuccess ||
     !targetGlossesQuery.isSuccess;
+
+  const loadedFromNextButton = useRef(false);
+  useEffect(() => {
+    if (!loading && loadedFromNextButton.current) {
+      firstWord.current?.focus();
+      loadedFromNextButton.current = false;
+    }
+  }, [loading, verseQuery.data]);
+
   return (
     <div className="px-4 flex flex-grow flex-col gap-2">
       <div className="flex gap-8 items-center">
@@ -331,6 +344,26 @@ export default function TranslationView() {
                   />
                 );
               })}
+              {canEdit && (
+                <li className="mx-2">
+                  <Button
+                    variant="tertiary"
+                    className="mt-[81px]"
+                    onClick={() => {
+                      loadedFromNextButton.current = true;
+                      navigate(
+                        `/languages/${language}/verses/${incrementVerseId(
+                          verseId
+                        )}`
+                      );
+                    }}
+                  >
+                    {isHebrew && <Icon icon="arrow-left" className="mr-1" />}
+                    {t('common:next')}
+                    {!isHebrew && <Icon icon="arrow-right" className="ml-1" />}
+                  </Button>
+                </li>
+              )}
             </ol>
           );
         }
