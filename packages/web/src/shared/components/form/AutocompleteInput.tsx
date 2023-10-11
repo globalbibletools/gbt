@@ -3,8 +3,17 @@ import { Icon } from '../Icon';
 
 export interface AutocompleteInputProps
   extends Omit<ComponentProps<'input'>, 'value' | 'onChange'> {
-  value?: string;
-  onChange?(value: string): void;
+  state?: 'success';
+  value: string;
+  /** A change is implicit if it occurs:
+   *    - when a user clicks out of the input
+   *    - when a user uses the tab key to select
+   *
+   *  A change is explicit if it occurs:
+   *    - when a user clicks on an autocomplete suggestion
+   *    - when a user uses the enter key to select
+   */
+  onChange(value: string, implicit: boolean): void;
   suggestions: string[];
 }
 
@@ -15,10 +24,20 @@ function normalizeFilter(word: string) {
 
 const AutocompleteInput = forwardRef<HTMLInputElement, AutocompleteInputProps>(
   (
-    { className, style, suggestions, value, onChange, onKeyDown, ...props },
+    {
+      className,
+      style,
+      suggestions,
+      value,
+      onChange,
+      onKeyDown,
+      state,
+      ...props
+    },
     ref
   ) => {
     const [input, setInput] = useState('');
+    const [isFocused, setFocus] = useState(false);
     const [isOpen, setOpen] = useState(false);
     const [filteredSuggestions, setFilteredSuggestions] = useState<string[]>(
       []
@@ -54,31 +73,33 @@ const AutocompleteInput = forwardRef<HTMLInputElement, AutocompleteInputProps>(
       setActiveIndex(undefined);
     }
 
-    function change(newValue: string) {
-      if (newValue !== value) {
-        onChange?.(newValue);
+    function change(newValue: string, implicit: boolean) {
+      if (newValue !== value || !implicit) {
+        onChange(newValue, implicit);
       }
     }
 
     const root = useRef<HTMLDivElement>(null);
     useEffect(() => {
-      const handler = (e: PointerEvent) => {
-        if (!root.current?.contains(e.target as Element)) {
-          let newValue;
-          if (typeof activeIndex === 'number') {
-            newValue = filteredSuggestions[activeIndex];
-          } else {
-            newValue = input;
+      if (isFocused) {
+        const handler = (e: PointerEvent) => {
+          if (!root.current?.contains(e.target as Element)) {
+            let newValue;
+            if (typeof activeIndex === 'number') {
+              newValue = filteredSuggestions[activeIndex];
+            } else {
+              newValue = input;
+            }
+            if (newValue !== value) {
+              onChange(newValue, true);
+            }
+            close();
           }
-          if (newValue !== value) {
-            onChange?.(newValue);
-          }
-          close();
-        }
-      };
-      window.addEventListener('pointerdown', handler);
-      return () => window.removeEventListener('pointerdown', handler);
-    }, [onChange, input, activeIndex, filteredSuggestions, value]);
+        };
+        window.addEventListener('pointerdown', handler);
+        return () => window.removeEventListener('pointerdown', handler);
+      }
+    }, [isFocused, onChange, input, activeIndex, filteredSuggestions, value]);
 
     return (
       <div
@@ -89,7 +110,11 @@ const AutocompleteInput = forwardRef<HTMLInputElement, AutocompleteInputProps>(
         <div
           className={`
             border rounded shadow-inner flex group-focus-within/combobox:outline group-focus-within/combobox:outline-2
-          border-slate-400 group-focus-within/combobox:outline-blue-600
+            ${
+              state === 'success'
+                ? 'border-green-600 group-focus-within/combobox:outline-green-700'
+                : 'border-slate-400 group-focus-within/combobox:outline-blue-600'
+            }
           `}
         >
           <input
@@ -102,6 +127,14 @@ const AutocompleteInput = forwardRef<HTMLInputElement, AutocompleteInputProps>(
                 ? filteredSuggestions[activeIndex]
                 : input
             }
+            onFocus={(e) => {
+              setFocus(true);
+              props.onFocus?.(e);
+            }}
+            onBlur={(e) => {
+              setFocus(false);
+              props.onBlur?.(e);
+            }}
             onChange={(e) => {
               open();
               setInput(e.target.value);
@@ -112,9 +145,9 @@ const AutocompleteInput = forwardRef<HTMLInputElement, AutocompleteInputProps>(
                   case 'Enter':
                   case 'Tab': {
                     if (typeof activeIndex === 'number') {
-                      change(filteredSuggestions[activeIndex]);
+                      change(filteredSuggestions[activeIndex], e.key === 'Tab');
                     } else {
-                      change(input);
+                      change(input, e.key === 'Tab');
                     }
                     close();
                     break;
@@ -200,7 +233,7 @@ const AutocompleteInput = forwardRef<HTMLInputElement, AutocompleteInputProps>(
                 `}
                 key={suggestion}
                 onClick={() => {
-                  change(suggestion);
+                  change(suggestion, false);
                   close();
                 }}
               >

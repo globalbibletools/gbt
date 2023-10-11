@@ -11,12 +11,12 @@ export interface TranslateWordProps {
   editable?: boolean;
   word: { id: string; text: string };
   originalLanguage: 'hebrew' | 'greek';
-  status: 'empty' | 'saving' | 'saved';
+  status: 'empty' | 'saving' | 'saved' | 'approved';
   gloss?: string;
   font?: string;
   referenceGloss?: string;
   previousGlosses: string[];
-  onGlossChange(gloss?: string): void;
+  onChange(data: { gloss?: string; approved?: boolean }): void;
 }
 
 export interface TranslateWordRef {
@@ -34,7 +34,7 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
       font,
       referenceGloss,
       previousGlosses,
-      onGlossChange,
+      onChange,
     }: TranslateWordProps,
     ref
   ) => {
@@ -79,28 +79,42 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
           <>
             <AutocompleteInput
               name="gloss"
-              value={gloss}
+              value={gloss ?? ''}
               // The extra 42 pixels give room for the padding and caret icon.
               style={{
                 width: width + 42,
                 fontFamily: expandFontFamily(font ?? 'Noto Sans'),
               }}
+              state={status === 'approved' ? 'success' : undefined}
               aria-describedby={`word-help-${word.id}`}
               aria-labelledby={`word-${word.id}`}
-              onChange={(value) => {
+              onChange={(value, implicit) => {
                 if (value !== gloss) {
-                  onGlossChange(value);
+                  onChange({
+                    gloss: value,
+                    approved: !implicit,
+                  });
                 }
               }}
               onKeyDown={(e) => {
                 if (e.metaKey || e.altKey || e.ctrlKey) return;
-                if (e.key === 'Enter') {
-                  if (e.shiftKey) {
-                    const prev = root.current?.previousElementSibling;
-                    prev?.querySelector('input')?.focus();
-                  } else {
-                    const prev = root.current?.nextElementSibling;
-                    prev?.querySelector('input')?.focus();
+                switch (e.key) {
+                  case 'Enter': {
+                    if (status !== 'approved') {
+                      onChange({ approved: true });
+                    }
+                    if (e.shiftKey) {
+                      const prev = root.current?.previousElementSibling;
+                      prev?.querySelector('input')?.focus();
+                    } else {
+                      const prev = root.current?.nextElementSibling;
+                      prev?.querySelector('input')?.focus();
+                    }
+                    break;
+                  }
+                  case 'Escape': {
+                    onChange({ approved: false });
+                    break;
                   }
                 }
               }}
@@ -116,11 +130,11 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
                       {capitalize(t('translate:saving'))}
                     </>
                   );
-                } else if (status === 'saved') {
+                } else if (status === 'approved') {
                   return (
                     <>
-                      <Icon icon="check" className="me-1" />
-                      {capitalize(t('translate:saved'))}
+                      <Icon icon="check" className="me-1 text-green-600" />
+                      {capitalize(t('translate:approved'))}
                     </>
                   );
                 } else {
