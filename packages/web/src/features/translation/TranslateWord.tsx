@@ -84,14 +84,18 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
           <>
             <AutocompleteInput
               className="-m-px min-w-[80px]"
+              inputClassName={
+                originalLanguage === 'hebrew' ? 'text-right' : 'text-left'
+              }
               name="gloss"
               value={gloss}
-              // The extra 42 pixels give room for the padding and caret icon.
+              // The extra 26 pixels give room for the padding and border.
               style={{
-                width: width + 42,
+                width: width + 26,
                 fontFamily: expandFontFamily(font ?? 'Noto Sans'),
               }}
-              dir={originalLanguage === 'hebrew' ? 'rtl' : 'ltr'}
+              // TODO: set this based on the gloss language
+              dir="ltr"
               state={status === 'approved' ? 'success' : undefined}
               aria-describedby={`word-help-${word.id}`}
               aria-labelledby={`word-${word.id}`}
