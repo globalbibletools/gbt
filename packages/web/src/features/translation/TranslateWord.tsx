@@ -155,7 +155,12 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
               suggestions={previousGlosses}
               ref={input}
             />
-            <InputHelpText id={`word-help-${word.id}`}>
+            <InputHelpText
+              id={`word-help-${word.id}`}
+              className={
+                originalLanguage === 'hebrew' ? 'text-right' : 'text-left'
+              }
+            >
               {(() => {
                 if (status === 'saving') {
                   return (
