@@ -111,7 +111,7 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
                 originalLanguage === 'hebrew' ? 'text-right' : 'text-left'
               }
               name="gloss"
-              value={gloss}
+              value={gloss ?? ''}
               // The extra 26 pixels give room for the padding and border.
               style={{
                 width: width + 26,
@@ -126,7 +126,7 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
                 if (value !== gloss) {
                   onChange({
                     gloss: value,
-                    approved: implicit ? undefined : true,
+                    approved: !implicit,
                   });
                 }
               }}
@@ -134,6 +134,7 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
                 if (e.metaKey || e.altKey || e.ctrlKey) return;
                 switch (e.key) {
                   case 'Enter': {
+                    e.preventDefault();
                     if (status !== 'approved') {
                       onChange({ approved: true });
                     }
@@ -141,8 +142,11 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
                       const prev = root.current?.previousElementSibling;
                       prev?.querySelector('input')?.focus();
                     } else {
-                      const prev = root.current?.nextElementSibling;
-                      prev?.querySelector('input')?.focus();
+                      const nextRoot = root.current?.nextElementSibling;
+                      const next =
+                        nextRoot?.querySelector('input') ??
+                        nextRoot?.querySelector('button');
+                      next?.focus();
                     }
                     break;
                   }

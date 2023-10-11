@@ -21,6 +21,9 @@ import {
   incrementVerseId,
   parseVerseId,
 } from './verse-utils';
+import Button from '../../shared/components/actions/Button';
+import { Icon } from '../../shared/components/Icon';
+import { useTranslation } from 'react-i18next';
 
 export const translationLanguageKey = 'translation-language';
 export const translationVerseIdKey = 'translation-verse-id';
@@ -34,8 +37,9 @@ function useTranslationQueries(language: string, verseId: string) {
   const verseQuery = useQuery(['verse', verseId], () =>
     apiClient.verses.findById(verseId)
   );
-  const referenceGlossesQuery = useQuery(['verse-glosses', 'en', verseId], () =>
-    apiClient.verses.findVerseGlosses(verseId, 'en')
+  const referenceGlossesQuery = useQuery(
+    ['verse-glosses', 'eng', verseId],
+    () => apiClient.verses.findVerseGlosses(verseId, 'eng')
   );
   const targetGlossesQuery = useQuery(
     ['verse-glosses', language, verseId],
@@ -55,9 +59,9 @@ function useTranslationQueries(language: string, verseId: string) {
         queryFn: ({ queryKey }) => apiClient.verses.findById(queryKey[1]),
       });
       queryClient.ensureQueryData({
-        queryKey: ['verse-glosses', 'en', nextVerseId],
+        queryKey: ['verse-glosses', 'eng', nextVerseId],
         queryFn: ({ queryKey }) =>
-          apiClient.verses.findVerseGlosses(queryKey[2], 'en'),
+          apiClient.verses.findVerseGlosses(queryKey[2], 'eng'),
       });
       queryClient.ensureQueryData({
         queryKey: ['verse-glosses', language, nextVerseId],
@@ -76,6 +80,7 @@ function useTranslationQueries(language: string, verseId: string) {
 }
 
 export default function TranslationView() {
+  const { t } = useTranslation('common');
   const { language, verseId } = useParams() as {
     language: string;
     verseId: string;
@@ -235,6 +240,15 @@ export default function TranslationView() {
     !verseQuery.isSuccess ||
     !referenceGlossesQuery.isSuccess ||
     !targetGlossesQuery.isSuccess;
+
+  const loadedFromNextButton = useRef(false);
+  useEffect(() => {
+    if (!loading && loadedFromNextButton.current) {
+      firstWord.current?.focus();
+      loadedFromNextButton.current = false;
+    }
+  }, [loading, verseQuery.data]);
+
   return (
     <div className="px-4 flex flex-grow flex-col gap-2">
       <div className="flex gap-8 items-center">
@@ -287,21 +301,23 @@ export default function TranslationView() {
                   ({ wordId }) => wordId === word.id
                 );
 
+                let status: 'empty' | 'saving' | 'saved' | 'approved' = 'empty';
+                if (isSaving) {
+                  status = 'saving';
+                } else if (targetGloss.gloss) {
+                  status =
+                    targetGloss.state === GlossState.Approved
+                      ? 'approved'
+                      : 'saved';
+                }
+
                 return (
                   <TranslateWord
                     key={word.id}
                     editable={canEdit}
                     word={word}
                     originalLanguage={isHebrew ? 'hebrew' : 'greek'}
-                    status={
-                      isSaving
-                        ? 'saving'
-                        : targetGloss.gloss
-                        ? targetGloss.state === 'APPROVED'
-                          ? 'approved'
-                          : 'saved'
-                        : 'empty'
-                    }
+                    status={status}
                     gloss={targetGloss?.gloss}
                     font={selectedLanguage?.font}
                     referenceGloss={referenceGlosses[i]?.gloss}
@@ -328,6 +344,26 @@ export default function TranslationView() {
                   />
                 );
               })}
+              {canEdit && (
+                <li className="mx-2">
+                  <Button
+                    variant="tertiary"
+                    className="mt-[81px]"
+                    onClick={() => {
+                      loadedFromNextButton.current = true;
+                      navigate(
+                        `/languages/${language}/verses/${incrementVerseId(
+                          verseId
+                        )}`
+                      );
+                    }}
+                  >
+                    {isHebrew && <Icon icon="arrow-left" className="mr-1" />}
+                    {t('common:next')}
+                    {!isHebrew && <Icon icon="arrow-right" className="ml-1" />}
+                  </Button>
+                </li>
+              )}
             </ol>
           );
         }
