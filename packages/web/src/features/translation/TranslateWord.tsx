@@ -1,4 +1,10 @@
-import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
+import {
+  forwardRef,
+  useImperativeHandle,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
 import { useTranslation } from 'react-i18next';
 import { Icon } from '../../shared/components/Icon';
 import InputHelpText from '../../shared/components/form/InputHelpText';
@@ -39,11 +45,6 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
     ref
   ) => {
     const { t } = useTranslation(['translate']);
-    const width = useTextWidth({
-      text: gloss ?? '',
-      fontFamily: expandFontFamily(font ?? 'Noto Sans'),
-      fontSize: '16px',
-    });
     const input = useRef<HTMLInputElement>(null);
 
     const root = useRef<HTMLLIElement>(null);
@@ -56,35 +57,68 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
       []
     );
 
+    const glossWidth = useTextWidth({
+      text: gloss ?? '',
+      fontFamily: expandFontFamily(font ?? 'Noto Sans'),
+      fontSize: '16px',
+    });
+    const ancientWord = useRef<HTMLSpanElement>(null);
+    const refGloss = useRef<HTMLSpanElement>(null);
+    const [width, setWidth] = useState(0);
+    useLayoutEffect(() => {
+      setWidth(
+        Math.max(
+          ancientWord.current?.clientWidth ?? 0,
+          refGloss.current?.clientWidth ?? 0,
+          glossWidth
+        )
+      );
+    }, [glossWidth]);
+
     return (
-      <li className="mx-2 mb-4" ref={root}>
+      <li
+        className="mx-2 mb-4"
+        ref={root}
+        dir={originalLanguage === 'hebrew' ? 'rtl' : 'ltr'}
+      >
         <div
           id={`word-${word.id}`}
-          className={`mb-2 ${
+          className={`mb-1 h-8 ${
             originalLanguage === 'hebrew'
-              ? 'text-2xl text-right font-hebrew'
-              : 'text-lg text-left font-greek'
+              ? 'text-2xl text-right font-hebrew pr-3'
+              : 'text-lg text-left font-greek pl-3'
           }`}
         >
-          {word.text}
+          <span className="inline-block" ref={ancientWord}>
+            {word.text}
+          </span>
         </div>
         <div
-          className={`mb-2 ${
-            originalLanguage === 'hebrew' ? 'text-right' : 'text-left'
+          className={`mb-1 h-8 ${
+            originalLanguage === 'hebrew' ? 'text-right pr-3' : 'text-left pl-3'
           }`}
+          dir="ltr"
         >
-          {editable ? referenceGloss : gloss}
+          <span className="inline-block" ref={refGloss}>
+            {editable ? referenceGloss : gloss}
+          </span>
         </div>
         {editable && (
           <>
             <AutocompleteInput
+              className="-m-px min-w-[80px]"
+              inputClassName={
+                originalLanguage === 'hebrew' ? 'text-right' : 'text-left'
+              }
               name="gloss"
               value={gloss ?? ''}
-              // The extra 42 pixels give room for the padding and caret icon.
+              // The extra 26 pixels give room for the padding and border.
               style={{
-                width: width + 42,
+                width: width + 26,
                 fontFamily: expandFontFamily(font ?? 'Noto Sans'),
               }}
+              // TODO: set this based on the gloss language
+              dir="ltr"
               state={status === 'approved' ? 'success' : undefined}
               aria-describedby={`word-help-${word.id}`}
               aria-labelledby={`word-${word.id}`}
@@ -125,7 +159,12 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
               suggestions={previousGlosses}
               ref={input}
             />
-            <InputHelpText id={`word-help-${word.id}`}>
+            <InputHelpText
+              id={`word-help-${word.id}`}
+              className={
+                originalLanguage === 'hebrew' ? 'text-right' : 'text-left'
+              }
+            >
               {(() => {
                 if (status === 'saving') {
                   return (

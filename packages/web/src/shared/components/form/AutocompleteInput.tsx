@@ -1,10 +1,10 @@
 import { ComponentProps, forwardRef, useEffect, useRef, useState } from 'react';
-import { Icon } from '../Icon';
 
 export interface AutocompleteInputProps
   extends Omit<ComponentProps<'input'>, 'value' | 'onChange'> {
+  inputClassName?: string;
   state?: 'success';
-  value: string;
+  value?: string;
   /** A change is implicit if it occurs:
    *    - when a user clicks out of the input
    *    - when a user uses the tab key to select
@@ -25,7 +25,8 @@ function normalizeFilter(word: string) {
 const AutocompleteInput = forwardRef<HTMLInputElement, AutocompleteInputProps>(
   (
     {
-      className,
+      inputClassName = '',
+      className = '',
       style,
       suggestions,
       value,
@@ -102,119 +103,100 @@ const AutocompleteInput = forwardRef<HTMLInputElement, AutocompleteInputProps>(
     }, [isFocused, onChange, input, activeIndex, filteredSuggestions, value]);
 
     return (
-      <div
-        ref={root}
-        className={`${className} group/combobox relative`}
-        style={style}
-      >
-        <div
+      <div ref={root} className={`${className} relative`} style={style}>
+        <input
+          {...props}
+          ref={ref}
           className={`
-            border rounded shadow-inner flex group-focus-within/combobox:outline group-focus-within/combobox:outline-2
+            ${inputClassName}
+            border rounded shadow-inner focus:outline focus:outline-2
+            w-full py-2 px-3 h-10 bg-transparent
             ${
               state === 'success'
-                ? 'border-green-600 group-focus-within/combobox:outline-green-700'
-                : 'border-slate-400 group-focus-within/combobox:outline-blue-600'
+                ? 'border-green-600 focus:outline-green-700'
+                : 'border-slate-400 focus:outline-blue-600'
             }
           `}
-        >
-          <input
-            {...props}
-            ref={ref}
-            className="w-full py-2 ps-3 h-10 rounded-b flex-grow focus:outline-none bg-transparent rounded"
-            autoComplete="off"
-            value={
-              typeof activeIndex === 'number'
-                ? filteredSuggestions[activeIndex]
-                : input
-            }
-            onFocus={(e) => {
-              setFocus(true);
-              props.onFocus?.(e);
-            }}
-            onBlur={(e) => {
-              setFocus(false);
-              props.onBlur?.(e);
-            }}
-            onChange={(e) => {
-              open();
-              setInput(e.target.value);
-            }}
-            onKeyDown={(e) => {
-              if (!e.altKey && !e.ctrlKey && !e.shiftKey && !e.metaKey) {
-                switch (e.key) {
-                  case 'Enter':
-                  case 'Tab': {
+          autoComplete="off"
+          value={
+            typeof activeIndex === 'number'
+              ? filteredSuggestions[activeIndex]
+              : input
+          }
+          onFocus={(e) => {
+            setFocus(true);
+            props.onFocus?.(e);
+          }}
+          onBlur={(e) => {
+            setFocus(false);
+            props.onBlur?.(e);
+          }}
+          onChange={(e) => {
+            open();
+            setInput(e.target.value);
+          }}
+          onKeyDown={(e) => {
+            if (!e.altKey && !e.ctrlKey && !e.shiftKey && !e.metaKey) {
+              switch (e.key) {
+                case 'Enter':
+                case 'Tab': {
+                  if (typeof activeIndex === 'number') {
+                    change(filteredSuggestions[activeIndex], e.key === 'Tab');
+                  } else {
+                    change(input, e.key === 'Tab');
+                  }
+                  close();
+                  break;
+                }
+                case 'Escape': {
+                  close();
+                  e.preventDefault();
+                  e.stopPropagation();
+                  break;
+                }
+                case 'ArrowDown': {
+                  if (isOpen) {
                     if (typeof activeIndex === 'number') {
-                      change(filteredSuggestions[activeIndex], e.key === 'Tab');
-                    } else {
-                      change(input, e.key === 'Tab');
-                    }
-                    close();
-                    break;
-                  }
-                  case 'Escape': {
-                    close();
-                    e.preventDefault();
-                    e.stopPropagation();
-                    break;
-                  }
-                  case 'ArrowDown': {
-                    if (isOpen) {
-                      if (typeof activeIndex === 'number') {
-                        if (activeIndex === filteredSuggestions.length - 1) {
-                          setActiveIndex(undefined);
-                        } else {
-                          setActiveIndex(activeIndex + 1);
-                        }
+                      if (activeIndex === filteredSuggestions.length - 1) {
+                        setActiveIndex(undefined);
                       } else {
-                        setActiveIndex(0);
+                        setActiveIndex(activeIndex + 1);
                       }
                     } else {
-                      open();
+                      setActiveIndex(0);
                     }
-                    e.preventDefault();
-                    e.stopPropagation();
-                    break;
+                  } else {
+                    open();
                   }
-                  case 'ArrowUp': {
-                    if (isOpen) {
-                      if (typeof activeIndex === 'number') {
-                        if (activeIndex === 0) {
-                          setActiveIndex(undefined);
-                        } else {
-                          setActiveIndex(activeIndex - 1);
-                        }
+                  e.preventDefault();
+                  e.stopPropagation();
+                  break;
+                }
+                case 'ArrowUp': {
+                  if (isOpen) {
+                    if (typeof activeIndex === 'number') {
+                      if (activeIndex === 0) {
+                        setActiveIndex(undefined);
                       } else {
-                        setActiveIndex(filteredSuggestions.length - 1);
+                        setActiveIndex(activeIndex - 1);
                       }
                     } else {
-                      open();
+                      setActiveIndex(filteredSuggestions.length - 1);
                     }
-                    e.preventDefault();
-                    e.stopPropagation();
-                    break;
+                  } else {
+                    open();
                   }
+                  e.preventDefault();
+                  e.stopPropagation();
+                  break;
                 }
               }
-              onKeyDown?.(e);
-            }}
-          />
-          <button
-            className="w-8"
-            aria-hidden="true"
-            tabIndex={-1}
-            onClick={(e) => {
-              if (isOpen) close();
-              else open();
-              const input = e.currentTarget.previousSibling as HTMLInputElement;
-              input.focus();
-            }}
-          >
-            <Icon icon={isOpen ? 'caret-up' : 'caret-down'} />
-          </button>
-        </div>
+            }
+            onKeyDown?.(e);
+          }}
+        />
         {isOpen && filteredSuggestions.length > 0 && (
-          <ol className="z-10 absolute min-w-full max-h-80 bg-white overflow-auto mt-1 rounded border border-slate-400 shadow">
+          <ol className="z-10 absolute min-w-full min-h-[24px] max-h-80 bg-white overflow-auto mt-1 rounded border border-slate-400 shadow">
             {filteredSuggestions.map((suggestion, i) => (
               <li
                 tabIndex={-1}

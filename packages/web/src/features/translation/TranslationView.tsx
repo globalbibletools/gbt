@@ -348,7 +348,7 @@ export default function TranslationView() {
                 <li className="mx-2">
                   <Button
                     variant="tertiary"
-                    className="mt-[81px]"
+                    className="mt-20"
                     onClick={() => {
                       loadedFromNextButton.current = true;
                       navigate(
