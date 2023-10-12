@@ -80,7 +80,7 @@ function useTranslationQueries(language: string, verseId: string) {
 }
 
 export default function TranslationView() {
-  const { t } = useTranslation('common');
+  const { t, i18n } = useTranslation('common');
   const { language, verseId } = useParams() as {
     language: string;
     verseId: string;
@@ -345,7 +345,7 @@ export default function TranslationView() {
                 );
               })}
               {canEdit && (
-                <li className="mx-2">
+                <li className="mx-2" dir={isHebrew ? 'rtl' : 'ltr'}>
                   <Button
                     variant="tertiary"
                     className="mt-20"
@@ -359,7 +359,9 @@ export default function TranslationView() {
                     }}
                   >
                     {isHebrew && <Icon icon="arrow-left" className="mr-1" />}
-                    {t('common:next')}
+                    <span dir={i18n.dir(i18n.language)}>
+                      {t('common:next')}
+                    </span>
                     {!isHebrew && <Icon icon="arrow-right" className="ml-1" />}
                   </Button>
                 </li>

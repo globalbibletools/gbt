@@ -44,7 +44,7 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
     }: TranslateWordProps,
     ref
   ) => {
-    const { t } = useTranslation(['translate']);
+    const { t, i18n } = useTranslation(['translate']);
     const input = useRef<HTMLInputElement>(null);
 
     const root = useRef<HTMLLIElement>(null);
@@ -106,7 +106,10 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
         {editable && (
           <>
             <AutocompleteInput
-              className="-m-px min-w-[80px]"
+              className={`
+                -m-px min-w-[80px]
+                ${originalLanguage === 'hebrew' ? 'text-right' : 'text-left'}
+              `}
               inputClassName={
                 originalLanguage === 'hebrew' ? 'text-right' : 'text-left'
               }
@@ -117,8 +120,6 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
                 width: width + 26,
                 fontFamily: expandFontFamily(font ?? 'Noto Sans'),
               }}
-              // TODO: set this based on the gloss language
-              dir="ltr"
               state={status === 'approved' ? 'success' : undefined}
               aria-describedby={`word-help-${word.id}`}
               aria-labelledby={`word-${word.id}`}
@@ -170,14 +171,18 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
                   return (
                     <>
                       <Icon icon="arrows-rotate" className="me-1" />
-                      {capitalize(t('translate:saving'))}
+                      <span dir={i18n.dir(i18n.language)}>
+                        {capitalize(t('translate:saving'))}
+                      </span>
                     </>
                   );
                 } else if (status === 'approved') {
                   return (
                     <>
                       <Icon icon="check" className="me-1 text-green-600" />
-                      {capitalize(t('translate:approved'))}
+                      <span dir={i18n.dir(i18n.language)}>
+                        {capitalize(t('translate:approved'))}
+                      </span>
                     </>
                   );
                 } else {
