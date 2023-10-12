@@ -21,6 +21,8 @@ import {
   incrementVerseId,
   parseVerseId,
 } from './verse-utils';
+import bibleTranslationClient from '../../shared/bibleTranslationClient';
+import { useTranslation } from 'react-i18next';
 
 export const translationLanguageKey = 'translation-language';
 export const translationVerseIdKey = 'translation-verse-id';
@@ -91,6 +93,7 @@ export default function TranslationView() {
   }, [verseId]);
 
   const navigate = useNavigate();
+  const { t } = useTranslation(['translate']);
 
   const {
     languagesQuery,
@@ -168,14 +171,20 @@ export default function TranslationView() {
   const [translationName, setTranslationName] = useState('');
   const [verseTranslation, setVerseTranslation] = useState('');
   useEffect(() => {
-    // TODO: load verse translation from bibleTranslationClient.
-    setTranslationName('ABC');
-    setVerseTranslation(
-      'This is the verse translation for ' +
-        verseId +
-        '. Another sentence goes here. Another sentence goes here. Another sentence goes here. A really long long long long long long long long long long long long long long long long long long long long long long long long long long sentence. Another sentence goes here. Another sentence goes here. A really long long long long long long long long long long long long long long long long long long long long long long long long long long sentence.'
-    );
-  }, [verseId]);
+    // Clear the current translation content while loading.
+    setVerseTranslation('');
+    bibleTranslationClient
+      .getTranslation(verseId, selectedLanguage?.bibleTranslationIds ?? [])
+      .then((translation) => {
+        if (translation) {
+          setTranslationName(translation.translationName);
+          setVerseTranslation(translation.verseTranslation);
+        } else {
+          setTranslationName('');
+          setVerseTranslation(t('translate:translation_not_found') ?? '');
+        }
+      });
+  }, [t, selectedLanguage, verseId]);
 
   const userCan = useAccessControl();
 
@@ -286,7 +295,7 @@ export default function TranslationView() {
           return (
             <>
               <p
-                className="text-base"
+                className="text-base my-8"
                 style={{
                   fontFamily: expandFontFamily(
                     selectedLanguage?.font ?? 'Noto Sans'
