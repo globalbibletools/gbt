@@ -22,11 +22,15 @@ export default createRoute<{ code: string; verseId: string }>()
       }
 
       const words = await client.$queryRaw<WordsRawQuery>`
+        -- First we create a query with the words in a verse.
         WITH "VerseWord" AS (
         	SELECT "Word"."id", "Word"."formId" FROM "Verse"
         	JOIN "Word" ON "Verse"."id" = "Word"."verseId"
         	WHERE "verseId" = ${req.query.verseId}
         ),
+        -- Then we gather suggestions for each word in the verse.
+        -- First we count up each unique gloss across the entire text.
+        -- Then we can build an array of suggestions in descending order of use for each word.
         "Suggestion" AS (
         	SELECT "id", array_agg("gloss" ORDER BY "count" DESC) AS "suggestions" FROM (
         		SELECT "VerseWord"."id", "Gloss"."gloss", COUNT(1) FROM "VerseWord"
@@ -38,6 +42,7 @@ export default createRoute<{ code: string; verseId: string }>()
         	) AS "WordSuggestion"
         	GROUP BY "id"
         )
+        -- Now we can gather the suggestions and other data for each word in the verse.
         SELECT "VerseWord"."id" as "wordId", "Gloss"."gloss", "Suggestion"."suggestions", "Gloss"."state" FROM "VerseWord"
         LEFT OUTER JOIN "Suggestion" ON "VerseWord"."id" = "Suggestion"."id"
         JOIN "Gloss" ON "VerseWord"."id" = "wordId"
