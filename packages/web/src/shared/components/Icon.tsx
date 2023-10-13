@@ -15,6 +15,8 @@ library.add(
   FaSolid.faArrowsRotate,
   FaSolid.faArrowUp,
   FaSolid.faArrowDown,
+  FaSolid.faArrowLeft,
+  FaSolid.faArrowRight,
   FaSolid.faRightFromBracket,
   FaSolid.faExclamationTriangle,
   FaSolid.faFileImport
