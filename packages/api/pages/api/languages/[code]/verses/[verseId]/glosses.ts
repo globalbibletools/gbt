@@ -46,7 +46,8 @@ export default createRoute<{ code: string; verseId: string }>()
         SELECT "VerseWord"."id" as "wordId", "Gloss"."gloss", "Suggestion"."suggestions", "Gloss"."state" FROM "VerseWord"
         LEFT OUTER JOIN "Suggestion" ON "VerseWord"."id" = "Suggestion"."id"
         JOIN "Gloss" ON "VerseWord"."id" = "wordId"
-        WHERE "Gloss"."languageId" = ${language.id}::uuid
+        WHERE "Gloss"."languageId" = ${language.id}::uuid 
+        ORDER BY "VerseWord"."id" ASC
       `;
 
       if (words.length === 0) {
