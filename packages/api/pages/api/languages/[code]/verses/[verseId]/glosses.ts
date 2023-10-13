@@ -1,4 +1,7 @@
-import { GetVerseGlossesResponseBody } from '@translation/api-types';
+import {
+  GetVerseGlossesResponseBody,
+  GlossState,
+} from '@translation/api-types';
 import { client, Prisma } from '../../../../../../shared/db';
 import createRoute from '../../../../../../shared/Route';
 
@@ -42,6 +45,7 @@ export default createRoute<{ code: string; verseId: string }>()
                     formId: word.formId,
                   },
                   languageId: language.id,
+                  state: GlossState.Approved,
                 },
                 _count: {
                   gloss: true,
@@ -56,13 +60,18 @@ export default createRoute<{ code: string; verseId: string }>()
           );
 
           res.ok({
-            data: verse.words.map((word, i) => ({
-              wordId: word.id,
-              approvedGloss: word.glosses[0]?.gloss ?? undefined,
-              glosses: glosses[i]
-                .map((doc) => doc.gloss)
-                .filter((gloss): gloss is string => !!gloss),
-            })),
+            data: verse.words.map((word, i) => {
+              const glossEntry = word.glosses.at(0);
+              const state = glossEntry?.state;
+              return {
+                wordId: word.id,
+                gloss: glossEntry?.gloss ?? undefined,
+                suggestions: glosses[i]
+                  .map((doc) => doc.gloss)
+                  .filter((gloss): gloss is string => !!gloss),
+                state: state ?? GlossState.Unapproved,
+              };
+            }),
           });
           return;
         }
