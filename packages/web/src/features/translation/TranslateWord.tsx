@@ -120,6 +120,8 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
                 width: width + 26,
                 fontFamily: expandFontFamily(font ?? 'Noto Sans'),
               }}
+              // TODO: set based on translating language
+              dir="ltr"
               state={status === 'approved' ? 'success' : undefined}
               aria-describedby={`word-help-${word.id}`}
               aria-labelledby={`word-${word.id}`}
