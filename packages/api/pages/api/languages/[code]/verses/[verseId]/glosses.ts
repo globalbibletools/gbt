@@ -5,7 +5,7 @@ import createRoute from '../../../../../../shared/Route';
 type WordsRawQuery = {
   wordId: string;
   gloss: string;
-  suggestions: string[] | null;
+  suggestions: string[];
   state: PrismaTypes.GlossState;
 }[];
 
@@ -37,28 +37,28 @@ export default createRoute<{ code: string; verseId: string }>()
         		JOIN "Word" ON "Word"."formId" = "VerseWord"."formId"
         		JOIN "Gloss" ON "Word"."id" = "Gloss"."wordId"
         			AND "Gloss"."languageId" = ${language.id}::uuid
-              AND "Gloss"."state" = 'APPROVED'
+        			AND "Gloss"."state" = 'APPROVED'
         		GROUP BY "VerseWord"."id", "Gloss"."gloss"
         	) AS "WordSuggestion"
         	GROUP BY "id"
         )
         -- Now we can gather the suggestions and other data for each word in the verse.
-        SELECT "VerseWord"."id" as "wordId", "Gloss"."gloss", "Suggestion"."suggestions", "Gloss"."state" FROM "VerseWord"
+        SELECT
+          "VerseWord"."id" as "wordId",
+          COALESCE("Gloss"."gloss", '') AS "gloss",
+          COALESCE("Suggestion"."suggestions", '{}') AS "suggestions",
+          COALESCE("Gloss"."state", 'UNAPPROVED') AS "state"
+        FROM "VerseWord"
         LEFT OUTER JOIN "Suggestion" ON "VerseWord"."id" = "Suggestion"."id"
-        JOIN "Gloss" ON "VerseWord"."id" = "wordId"
-        WHERE "Gloss"."languageId" = ${language.id}::uuid 
+        LEFT OUTER JOIN "Gloss" ON "VerseWord"."id" = "wordId"
+          AND "Gloss"."languageId" = ${language.id}::uuid
         ORDER BY "VerseWord"."id" ASC
       `;
 
       if (words.length === 0) {
         res.notFound();
       } else {
-        res.ok({
-          data: words.map((word) => ({
-            ...word,
-            suggestions: word.suggestions ?? [],
-          })),
-        });
+        res.ok({ data: words });
       }
     },
   })
