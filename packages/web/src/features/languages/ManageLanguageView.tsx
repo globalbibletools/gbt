@@ -23,19 +23,15 @@ import Form from '../../shared/components/form/Form';
 import FormLabel from '../../shared/components/form/FormLabel';
 import InputError from '../../shared/components/form/InputError';
 import MultiselectInput from '../../shared/components/form/MultiselectInput';
-import SelectInput from '../../shared/components/form/SelectInput';
 import SubmittingIndicator from '../../shared/components/form/SubmittingIndicator';
 import TextInput from '../../shared/components/form/TextInput';
 import fontClient from '../../shared/fontClient';
 import { useFlash } from '../../shared/hooks/flash';
-import {
-  expandFontFamily,
-  useFontLoader,
-} from '../../shared/hooks/useFontLoader';
 import queryClient from '../../shared/queryClient';
 import bibleTranslationClient, {
   BibleTranslation,
 } from '../../shared/bibleTranslationClient';
+import ComboboxInput from '../../shared/components/form/ComboboxInput';
 
 const languageQueryKey = (code: string) => ({
   queryKey: ['language', code],
@@ -152,8 +148,6 @@ export default function ManageLanguageView() {
 
   const [previewFont, setPreviewFont] = useState(language.data.font);
 
-  useFontLoader(fonts, true);
-
   return (
     <View fitToScreen className="flex justify-center items-start">
       <div className="mx-4 flex-shrink">
@@ -186,21 +180,15 @@ export default function ManageLanguageView() {
             <FormLabel htmlFor="font">
               {t('languages:font').toUpperCase()}
             </FormLabel>
-            <SelectInput
+            <ComboboxInput
               id="font"
               name="font"
-              className="w-full h-fit min-h-[40px]"
+              className="w-full h-10"
               required
               value={previewFont}
-              onChange={(event) => setPreviewFont(event.target.value)}
-              style={{ fontFamily: expandFontFamily(previewFont) }}
-            >
-              {fonts.map((font) => (
-                <option value={font} key={font} style={{ fontFamily: font }}>
-                  {font}
-                </option>
-              ))}
-            </SelectInput>
+              items={fonts.map((font) => ({ label: font, value: font }))}
+              onChange={(font) => setPreviewFont(font)}
+            />
           </div>
           <div className="mb-2">
             <FormLabel htmlFor="bibleTranslationIds">
