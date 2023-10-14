@@ -7,7 +7,7 @@ Although Vagrant supports [VirtualBox](https://www.virtualbox.org/), [Hyper-V](h
 ## Prerequisites
 
 1. You will require 4 GB of memory.
-1. You will require 8 GB of diskspace.
+1. You will require 8 GB of disk space.
 1. `npm install` creates symbolic links. As a result, the VM user: `vagrant` requires `create symbolic link` authority. In some environements, only the administrator has this authority. To resolve this issue in Windows, the following steps can be performed:
    1. Launch the `Local Security Policy` app from the `start menu` (or `Win+R`, then type `secpol.msc`)
    1. Navigate to `Local Policies` -> `User Rights Assignment`.
@@ -23,45 +23,43 @@ Although Vagrant supports [VirtualBox](https://www.virtualbox.org/), [Hyper-V](h
 1. Verify installation by running `vagrant -v` in a terminal session.
 1. Install [VirtualBox](https://www.virtualbox.org/).
 1. If you have not already done so, fork repo to your local machine.
-1. Create a new folder to contain your `Vagrant project`. Start a terminal session in that folder.
-1. Install a [box](https://developer.hashicorp.com/vagrant/tutorials/getting-started/getting-started-boxes). The `Vagrantfile` in this repository uses `generic/ubuntu2204`. To install it run:
+1. Next you will need to install a [box](https://developer.hashicorp.com/vagrant/tutorials/getting-started/getting-started-boxes). The `Vagrantfile` in this repository uses box: `generic/ubuntu2204`. So to install this box, run in a terminal window:
 
 ```bash
-vagrant box add generic/ubuntu2204
+    vagrant box add generic/ubuntu2204
 ```
 
 To see which boxes are installed run:
 
 ```bash
-vagrant box list
+    vagrant box list
 ```
 
-8. Copy file: `Vagrantfile` from host `gloss-translation` repository `.vagrant/` folder to your vagrant project folder.
+7. Create a new folder and name it something that identifies the VM you are about to create. Example: `UbuntuVM`. The name of this folder will be used by Vagrant to identify this specific VM. It is to this directory that you will copy the vagrant file we have created for you. In a later step, Vagrant will create subdirectory`.vagrant` which it will use to manage your VM. It is in this directory where you will run all Vagrant commands that are specific to your VM.
+8. Copy file: `Vagrantfile` from host `gloss-translation` repository `.vagrant/` folder to the new folder you created above.
 9. Read the `NOTES:` section contained in file `Vagrantfile`.
-10. in the `Vagrantfile`, edit `HOST_FOLDER`
+10. in the `Vagrantfile`, edit `HOST_FOLDER` by replacing `../gloss-translation` with the location of your repository root folder.
 
 ```ruby
- HOST_FOLDER = "../gloss-translation"
+    HOST_FOLDER = "../gloss-translation"
 ```
-
-Replace `../gloss-translation` with the location of your repository root folder.
 
 11. If required, perform any requested `plugin` installations mentioned in the `NOTES:` section. To see which plugins are installed run:
 
 ```bash
-vagrant plugin list
+    vagrant plugin list
 ```
 
-12. To start the creation of your virtual development environment, run the command:
+12. To start the creation of your virtual development environment, run this command in your newly created directory:
 
 ```bash
-vagrant up
+    vagrant up
 ```
 
-13. For help on vagrant commands, at terminal session enter:
+13. For help on vagrant commands, at a terminal session enter:
 
 ```bash
-vagrant -help
+    vagrant -help
 ```
 
 ## Post-Installation Notes
