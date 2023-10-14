@@ -182,6 +182,11 @@ model Lemma {
   resources LemmaResource[]
 }
 
+enum TextDirection {
+  ltr
+  rtl
+}
+
 /// A language use for translation.
 model Language {
   /// The ID of the language. This is distinct from the IETF language code.
@@ -192,6 +197,8 @@ model Language {
   name                String
   /// The English name of the font selected for this language.
   font                String               @default("Noto Sans")
+  /// The direction the text goes in the language.
+  textDirection       TextDirection        @default(ltr)
   /// The list of Bible translation IDs associated with this language.
   bibleTranslationIds String[]
   /// This list of verse translation in this language.
