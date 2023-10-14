@@ -74,15 +74,12 @@ export default createRoute()
       });
 
       const url = redirects.invite(token);
-      await mailer.sendEmail(
-        {
-          userId: user.id,
-          subject: 'GlobalBibleTools Invite',
-          text: `You've been invited to globalbibletools.com. Click the following to accept your invite and get started.\n\n${url.toString()}`,
-          html: `You've been invited to globalbibletools.com. <a href="${url.toString()}">Click here<a/> to accept your invite and get started.`,
-        },
-        true
-      );
+      await mailer.sendEmail({
+        email,
+        subject: 'GlobalBibleTools Invite',
+        text: `You've been invited to globalbibletools.com. Click the following to accept your invite and get started.\n\n${url.toString()}`,
+        html: `You've been invited to globalbibletools.com. <a href="${url.toString()}">Click here<a/> to accept your invite and get started.`,
+      });
 
       res.created(`/api/users/${user.id}`);
     },

@@ -8,6 +8,7 @@
   "error": "Error",
   "loading": "Loading",
   "name": "name",
+  "next": "Next",
   "not_found": "Not Found",
   "not_found_message": "We couldn't find what you are looking for.",
   "submitting": "submitting",
