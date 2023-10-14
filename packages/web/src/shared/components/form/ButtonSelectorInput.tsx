@@ -11,20 +11,20 @@ const ButtonSelectorContext = createContext<ButtonSelectorContextValue | null>(
   null
 );
 
-export interface ButtonSelectorProps
+export interface ButtonSelectorInputProps
   extends Omit<ComponentProps<'fieldset'>, 'defaultValue'> {
   name: string;
   defaultValue?: string;
   required?: boolean;
 }
 
-export function ButtonSelector({
+export function ButtonSelectorInput({
   children,
   name,
   defaultValue,
   required,
   ...props
-}: ButtonSelectorProps) {
+}: ButtonSelectorInputProps) {
   const formContext = useFormContext();
   const hasErrors = !!formContext?.formState.errors[name];
 

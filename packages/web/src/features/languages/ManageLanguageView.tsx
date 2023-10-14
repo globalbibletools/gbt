@@ -37,9 +37,9 @@ import bibleTranslationClient, {
   BibleTranslation,
 } from '../../shared/bibleTranslationClient';
 import {
-  ButtonSelector,
+  ButtonSelectorInput,
   ButtonSelectorOption,
-} from '../../shared/components/form/ButtonSelector';
+} from '../../shared/components/form/ButtonSelectorInput';
 
 const languageQueryKey = (code: string) => ({
   queryKey: ['language', code],
@@ -213,7 +213,7 @@ export default function ManageLanguageView() {
               {t('languages:text_direction').toUpperCase()}
             </FormLabel>
             <div>
-              <ButtonSelector
+              <ButtonSelectorInput
                 name="textDirection"
                 aria-labelledby="text-direction-label"
                 defaultValue={language.data.textDirection}
@@ -224,7 +224,7 @@ export default function ManageLanguageView() {
                 <ButtonSelectorOption value={TextDirection.RTL}>
                   {t('languages:rtl')}
                 </ButtonSelectorOption>
-              </ButtonSelector>
+              </ButtonSelectorInput>
             </div>
           </div>
           <div className="mb-2">
