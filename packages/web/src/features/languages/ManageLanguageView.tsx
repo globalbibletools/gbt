@@ -36,6 +36,10 @@ import queryClient from '../../shared/queryClient';
 import bibleTranslationClient, {
   BibleTranslation,
 } from '../../shared/bibleTranslationClient';
+import {
+  ButtonSelector,
+  ButtonSelectorOption,
+} from '../../shared/components/form/ButtonSelector';
 
 const languageQueryKey = (code: string) => ({
   queryKey: ['language', code],
@@ -201,6 +205,22 @@ export default function ManageLanguageView() {
                 </option>
               ))}
             </SelectInput>
+          </div>
+          <div className="mb-2">
+            <FormLabel id="text-direction-label">TEXT DIRECTION</FormLabel>
+            <div>
+              <ButtonSelector
+                name="languageDirection"
+                aria-labelledby="text-direction-label"
+              >
+                <ButtonSelectorOption value="ltr">
+                  Left to Right
+                </ButtonSelectorOption>
+                <ButtonSelectorOption value="ltr">
+                  Right to Left
+                </ButtonSelectorOption>
+              </ButtonSelector>
+            </div>
           </div>
           <div className="mb-2">
             <FormLabel htmlFor="bibleTranslationIds">
