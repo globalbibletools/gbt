@@ -71,7 +71,8 @@ export function ButtonSelectorOption({
     <label
       className={`
         inline-block py-2 px-3 font-bold h-10 bg-white border border-l-0
-        first:rounded-l first:border-l last:rounded-r
+        ltr:first:rounded-l ltr:first:border-l ltr:last:rounded-r
+        rtl:last:rounded-l rtl:last:border-l rtl:first:rounded-r
         [&:has(:checked)]:bg-slate-900 [&:has(:checked)]:text-white
         shadow-inner [&:has(:checked)]:shadow-none
         ${hasErrors ? 'border-red-700 shadow-red-100' : 'border-slate-400'}

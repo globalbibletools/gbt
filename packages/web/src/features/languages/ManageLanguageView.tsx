@@ -209,7 +209,9 @@ export default function ManageLanguageView() {
             </SelectInput>
           </div>
           <div className="mb-2">
-            <FormLabel id="text-direction-label">TEXT DIRECTION</FormLabel>
+            <FormLabel id="text-direction-label">
+              {t('languages:text_direction').toUpperCase()}
+            </FormLabel>
             <div>
               <ButtonSelector
                 name="textDirection"
@@ -217,10 +219,10 @@ export default function ManageLanguageView() {
                 defaultValue={language.data.textDirection}
               >
                 <ButtonSelectorOption value={TextDirection.LTR}>
-                  Left to Right
+                  {t('languages:ltr')}
                 </ButtonSelectorOption>
                 <ButtonSelectorOption value={TextDirection.RTL}>
-                  Right to Left
+                  {t('languages:rtl')}
                 </ButtonSelectorOption>
               </ButtonSelector>
             </div>
