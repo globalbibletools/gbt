@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { LanguageRole } from '@translation/api-types';
+import { LanguageRole, TextDirection } from '@translation/api-types';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -117,6 +117,7 @@ function useLanguageMembersQuery(code: string) {
 interface FormData {
   name: string;
   font: string;
+  textDirection: TextDirection;
   bibleTranslationIds: string[];
 }
 
@@ -146,6 +147,7 @@ export default function ManageLanguageView() {
       await apiClient.languages.update(language.data.code, {
         name: data.name,
         font: data.font,
+        textDirection: data.textDirection,
         bibleTranslationIds: data.bibleTranslationIds,
       });
       flash.success(t('languages:language_updated'));
@@ -210,13 +212,14 @@ export default function ManageLanguageView() {
             <FormLabel id="text-direction-label">TEXT DIRECTION</FormLabel>
             <div>
               <ButtonSelector
-                name="languageDirection"
+                name="textDirection"
                 aria-labelledby="text-direction-label"
+                defaultValue={language.data.textDirection}
               >
-                <ButtonSelectorOption value="ltr">
+                <ButtonSelectorOption value={TextDirection.LTR}>
                   Left to Right
                 </ButtonSelectorOption>
-                <ButtonSelectorOption value="ltr">
+                <ButtonSelectorOption value={TextDirection.RTL}>
                   Right to Left
                 </ButtonSelectorOption>
               </ButtonSelector>

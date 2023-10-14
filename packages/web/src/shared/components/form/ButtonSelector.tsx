@@ -82,7 +82,7 @@ export function ButtonSelectorOption({
         className="absolute opacity-0"
         type="radio"
         name={selectorContext.name}
-        defaultValue={selectorContext.defaultValue}
+        defaultChecked={selectorContext.defaultValue === value}
         value={value}
       />
       {children}
