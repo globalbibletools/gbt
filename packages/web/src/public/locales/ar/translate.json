@@ -4,5 +4,6 @@
   "previous_verse": "الآية السابقة",
   "saving": "جاري الحفظ",
   "select_verse": "حدد الآية",
-  "translate": "ترجمة"
+  "translate": "ترجمة",
+  "translation_not_found": "لا يوجد ترجمة متوفرة."
 }

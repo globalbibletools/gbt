@@ -4,5 +4,6 @@
   "previous_verse": "Verso anterior",
   "saving": "guardando",
   "select_verse": "Seleccionar verso",
-  "translate": "Traducir"
+  "translate": "Traducir",
+  "translation_not_found": "No hay traducción disponible."
 }
