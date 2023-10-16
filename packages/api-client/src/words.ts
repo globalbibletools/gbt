@@ -6,14 +6,14 @@ export { PatchWordGlossRequestBody };
 export default class Verses {
   constructor(private readonly client: ApiClient) {}
 
-  async updateGloss(
-    wordId: string,
-    language: string,
-    gloss?: string
-  ): Promise<void> {
-    const body: PatchWordGlossRequestBody = {
-      gloss,
-    };
+  async updateGloss({
+    wordId,
+    language,
+    ...body
+  }: PatchWordGlossRequestBody & {
+    wordId: string;
+    language: string;
+  }): Promise<void> {
     await this.client.patch({
       path: `/api/languages/${language}/words/${wordId}`,
       body,

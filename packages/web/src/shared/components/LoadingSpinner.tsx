@@ -9,7 +9,7 @@ export default function LoadingSpinner({
   dark = false,
   className = '',
 }: LoadingSpinnerProps) {
-  const { t } = useTranslation();
+  const { t } = useTranslation(['common']);
   return (
     <>
       <svg
@@ -32,7 +32,7 @@ export default function LoadingSpinner({
           fill="currentFill"
         />
       </svg>
-      <span className="sr-only">{t('loading')}</span>
+      <span className="sr-only">{t('common:loading')}</span>
     </>
   );
 }

@@ -8,7 +8,7 @@ const routes: RouteObject[] = [
   {
     path: 'translate',
     loader() {
-      const language = localStorage.getItem(translationLanguageKey) ?? 'en';
+      const language = localStorage.getItem(translationLanguageKey) ?? 'eng';
       const verseId = localStorage.getItem(translationVerseIdKey) ?? '01001001';
       return redirect(`/languages/${language}/verses/${verseId}`);
     },

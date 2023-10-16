@@ -9,15 +9,13 @@ export interface SubmittingIndicatorProps {
 export default function SubmittingIndicator({
   className = '',
 }: SubmittingIndicatorProps) {
-  const { t } = useTranslation();
+  const { t } = useTranslation(['common']);
   const { isSubmitting } = useFormState();
 
   return isSubmitting ? (
     <div className={`${className} inline-block`}>
       <LoadingSpinner className="inline-block" />
-      <span role="status" className="sr-only">
-        {t('submitting')}
-      </span>
+      <span role="status">{t('common:submitting')}</span>
     </div>
   ) : null;
 }

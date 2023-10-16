@@ -59,7 +59,7 @@ export default function AcceptInviteView() {
   const { data: invite } = useInviteQuery(token);
 
   const navigate = useNavigate();
-  const { t } = useTranslation('users');
+  const { t } = useTranslation(['users']);
   const flash = useFlash();
 
   const formContext = useForm<FormData>();
@@ -71,7 +71,7 @@ export default function AcceptInviteView() {
         password,
       });
 
-      flash.success(t('user_joined'));
+      flash.success(t('users:user_joined'));
 
       refreshAuth();
 
@@ -84,10 +84,12 @@ export default function AcceptInviteView() {
   return (
     <View fitToScreen className="flex justify-center items-start">
       <Card className="mx-4 mt-4 w-96 flex-shrink p-6">
-        <ViewTitle>{t('invitation')}</ViewTitle>
+        <ViewTitle>{t('users:invitation')}</ViewTitle>
         <Form context={formContext} onSubmit={onSubmit}>
           <div className="mb-4">
-            <FormLabel htmlFor="email">{t('email').toUpperCase()}</FormLabel>
+            <FormLabel htmlFor="email">
+              {t('users:email').toUpperCase()}
+            </FormLabel>
             <input
               id="email"
               className="block w-full"
@@ -96,7 +98,9 @@ export default function AcceptInviteView() {
             />
           </div>
           <div className="mb-2">
-            <FormLabel htmlFor="name">{t('name').toUpperCase()}</FormLabel>
+            <FormLabel htmlFor="name">
+              {t('users:name').toUpperCase()}
+            </FormLabel>
             <TextInput
               id="name"
               name="name"
@@ -108,12 +112,12 @@ export default function AcceptInviteView() {
             <InputError
               id="name-error"
               name="name"
-              messages={{ required: t('name_required') }}
+              messages={{ required: t('users:errors.name_required') }}
             />
           </div>
           <div className="mb-2">
             <FormLabel htmlFor="password">
-              {t('password').toUpperCase()}
+              {t('users:password').toUpperCase()}
             </FormLabel>
             <TextInput
               type="password"
@@ -129,14 +133,14 @@ export default function AcceptInviteView() {
               id="password-error"
               name="password"
               messages={{
-                required: t('errors.password_required'),
-                minLength: t('errors.password_format'),
+                required: t('users:errors.password_required'),
+                minLength: t('users:errors.password_format'),
               }}
             />
           </div>
           <div className="mb-2">
             <FormLabel htmlFor="confirm-password">
-              {t('confirm_password').toUpperCase()}
+              {t('users:confirm_password').toUpperCase()}
             </FormLabel>
             <TextInput
               type="password"
@@ -150,11 +154,11 @@ export default function AcceptInviteView() {
             <InputError
               id="confirm-password-error"
               name="confirmPassword"
-              messages={{ confirms: t('errors.password_confirmation') }}
+              messages={{ confirms: t('users:errors.password_confirmation') }}
             />
           </div>
           <div>
-            <Button type="submit">{t('accept')}</Button>
+            <Button type="submit">{t('users:accept')}</Button>
             <SubmittingIndicator className="ms-3" />
           </div>
         </Form>

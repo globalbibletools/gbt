@@ -1,10 +1,17 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { GetVerseGlossesResponseBody } from '@translation/api-types';
+import {
+  GetVerseGlossesResponseBody,
+  GlossState,
+} from '@translation/api-types';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAccessControl } from '../../shared/accessControl';
 import apiClient from '../../shared/apiClient';
 import LoadingSpinner from '../../shared/components/LoadingSpinner';
+import DropdownMenu, {
+  DropdownMenuLink,
+} from '../../shared/components/actions/DropdownMenu';
+import { useFontLoader } from '../../shared/hooks/useFontLoader';
 import TranslateWord, { TranslateWordRef } from './TranslateWord';
 import { VerseSelector } from './VerseSelector';
 import {
@@ -14,9 +21,9 @@ import {
   incrementVerseId,
   parseVerseId,
 } from './verse-utils';
-import DropdownMenu, {
-  DropdownMenuLink,
-} from '../../shared/components/actions/DropdownMenu';
+import Button from '../../shared/components/actions/Button';
+import { Icon } from '../../shared/components/Icon';
+import { useTranslation } from 'react-i18next';
 
 export const translationLanguageKey = 'translation-language';
 export const translationVerseIdKey = 'translation-verse-id';
@@ -24,11 +31,15 @@ export const translationVerseIdKey = 'translation-verse-id';
 const VERSES_TO_PREFETCH = 3;
 
 function useTranslationQueries(language: string, verseId: string) {
+  const languagesQuery = useQuery(['languages'], () =>
+    apiClient.languages.findAll()
+  );
   const verseQuery = useQuery(['verse', verseId], () =>
     apiClient.verses.findById(verseId)
   );
-  const referenceGlossesQuery = useQuery(['verse-glosses', 'en', verseId], () =>
-    apiClient.verses.findVerseGlosses(verseId, 'en')
+  const referenceGlossesQuery = useQuery(
+    ['verse-glosses', 'eng', verseId],
+    () => apiClient.verses.findVerseGlosses(verseId, 'eng')
   );
   const targetGlossesQuery = useQuery(
     ['verse-glosses', language, verseId],
@@ -48,9 +59,9 @@ function useTranslationQueries(language: string, verseId: string) {
         queryFn: ({ queryKey }) => apiClient.verses.findById(queryKey[1]),
       });
       queryClient.ensureQueryData({
-        queryKey: ['verse-glosses', 'en', nextVerseId],
+        queryKey: ['verse-glosses', 'eng', nextVerseId],
         queryFn: ({ queryKey }) =>
-          apiClient.verses.findVerseGlosses(queryKey[2], 'en'),
+          apiClient.verses.findVerseGlosses(queryKey[2], 'eng'),
       });
       queryClient.ensureQueryData({
         queryKey: ['verse-glosses', language, nextVerseId],
@@ -60,10 +71,16 @@ function useTranslationQueries(language: string, verseId: string) {
     }
   }, [language, verseId, queryClient]);
 
-  return { verseQuery, referenceGlossesQuery, targetGlossesQuery };
+  return {
+    languagesQuery,
+    verseQuery,
+    referenceGlossesQuery,
+    targetGlossesQuery,
+  };
 }
 
 export default function TranslationView() {
+  const { t, i18n } = useTranslation('common');
   const { language, verseId } = useParams() as {
     language: string;
     verseId: string;
@@ -79,25 +96,36 @@ export default function TranslationView() {
 
   const navigate = useNavigate();
 
-  const { verseQuery, referenceGlossesQuery, targetGlossesQuery } =
-    useTranslationQueries(language, verseId);
+  const {
+    languagesQuery,
+    verseQuery,
+    referenceGlossesQuery,
+    targetGlossesQuery,
+  } = useTranslationQueries(language, verseId);
 
-  const languagesQuery = useQuery(['languages'], () =>
-    apiClient.languages.findAll()
-  );
   const translationLanguages = languagesQuery.data?.data ?? [];
   const selectedLanguage = translationLanguages.find(
     (l) => l.code === language
   );
+  useFontLoader(selectedLanguage ? [selectedLanguage.font] : []);
 
   const [glossRequests, setGlossRequests] = useState<
     { wordId: string; requestId: number }[]
   >([]);
   const queryClient = useQueryClient();
   const glossMutation = useMutation({
-    mutationFn: (variables: { wordId: string; gloss?: string }) =>
-      apiClient.words.updateGloss(variables.wordId, language, variables.gloss),
-    onMutate: async ({ wordId, gloss }) => {
+    mutationFn: (variables: {
+      wordId: string;
+      gloss?: string;
+      state?: GlossState;
+    }) =>
+      apiClient.words.updateGloss({
+        wordId: variables.wordId,
+        language,
+        gloss: variables.gloss,
+        state: variables.state,
+      }),
+    onMutate: async ({ wordId, gloss, state }) => {
       const requestId = Math.floor(Math.random() * 1000000);
       setGlossRequests((requests) => [...requests, { wordId, requestId }]);
 
@@ -112,12 +140,8 @@ export default function TranslationView() {
             const doc = glosses[index];
             glosses.splice(index, 1, {
               ...doc,
-              approvedGloss: gloss,
-              glosses: gloss
-                ? doc.glosses.includes(gloss)
-                  ? doc.glosses
-                  : [...doc.glosses, gloss]
-                : doc.glosses,
+              gloss: gloss ?? doc.gloss,
+              state: state ?? doc.state,
             });
             return {
               data: glosses,
@@ -216,6 +240,15 @@ export default function TranslationView() {
     !verseQuery.isSuccess ||
     !referenceGlossesQuery.isSuccess ||
     !targetGlossesQuery.isSuccess;
+
+  const loadedFromNextButton = useRef(false);
+  useEffect(() => {
+    if (!loading && loadedFromNextButton.current) {
+      firstWord.current?.focus();
+      loadedFromNextButton.current = false;
+    }
+  }, [loading, verseQuery.data]);
+
   return (
     <div className="px-4 flex flex-grow flex-col gap-2">
       <div className="flex gap-8 items-center">
@@ -263,10 +296,20 @@ export default function TranslationView() {
               }`}
             >
               {verse.words.map((word, i) => {
-                const targetGloss = targetGlosses[i]?.approvedGloss;
+                const targetGloss = targetGlosses[i];
                 const isSaving = glossRequests.some(
                   ({ wordId }) => wordId === word.id
                 );
+
+                let status: 'empty' | 'saving' | 'saved' | 'approved' = 'empty';
+                if (isSaving) {
+                  status = 'saving';
+                } else if (targetGloss.gloss) {
+                  status =
+                    targetGloss.state === GlossState.Approved
+                      ? 'approved'
+                      : 'saved';
+                }
 
                 return (
                   <TranslateWord
@@ -274,19 +317,23 @@ export default function TranslationView() {
                     editable={canEdit}
                     word={word}
                     originalLanguage={isHebrew ? 'hebrew' : 'greek'}
-                    status={
-                      isSaving ? 'saving' : targetGloss ? 'saved' : 'empty'
-                    }
-                    gloss={targetGloss}
-                    referenceGloss={referenceGlosses[i]?.approvedGloss}
-                    previousGlosses={targetGlosses[i]?.glosses}
-                    onGlossChange={(newGloss) => {
+                    status={status}
+                    gloss={targetGloss?.gloss}
+                    font={selectedLanguage?.font}
+                    referenceGloss={referenceGlosses[i]?.gloss}
+                    previousGlosses={targetGlosses[i]?.suggestions}
+                    onChange={({ gloss, approved }) => {
                       glossMutation.mutate({
                         wordId: word.id,
-                        gloss: newGloss,
+                        gloss,
+                        state:
+                          approved === true
+                            ? GlossState.Approved
+                            : approved === false
+                            ? GlossState.Unapproved
+                            : undefined,
                       });
                     }}
-                    onKeyDown={handleKeyPress}
                     ref={(() => {
                       if (i === 0) {
                         return firstWord;
@@ -297,6 +344,28 @@ export default function TranslationView() {
                   />
                 );
               })}
+              {canEdit && (
+                <li className="mx-2" dir={isHebrew ? 'rtl' : 'ltr'}>
+                  <Button
+                    variant="tertiary"
+                    className="mt-20"
+                    onClick={() => {
+                      loadedFromNextButton.current = true;
+                      navigate(
+                        `/languages/${language}/verses/${incrementVerseId(
+                          verseId
+                        )}`
+                      );
+                    }}
+                  >
+                    {isHebrew && <Icon icon="arrow-left" className="mr-1" />}
+                    <span dir={i18n.dir(i18n.language)}>
+                      {t('common:next')}
+                    </span>
+                    {!isHebrew && <Icon icon="arrow-right" className="ml-1" />}
+                  </Button>
+                </li>
+              )}
             </ol>
           );
         }

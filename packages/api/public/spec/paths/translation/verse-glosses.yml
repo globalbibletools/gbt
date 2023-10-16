@@ -21,35 +21,43 @@ get:
                     id:
                       type: string
                       description: The unique ID for the word in the verse.
-                    approvedGloss:
+                    gloss:
                       type: string
                       description: The approved gloss for the word in the selected language.
-                    glosses:
+                    suggestions:
                       type: array
                       description: The list of glosses for this word ranked by usage.
                       items:
                         type: string
-                    machineGloss:
+                    machineSuggestion:
                       type: string
                       description: The machine generated gloss.
+                    state:
+                      type: string
+                      description: The approval state of the gloss
                 example:
                   - id: 02zpg
-                    approvedGloss: 'habló'
-                    glosses: ['habló', 'hablaba']
-                    machineGloss: 'habló'
+                    gloss: 'habló'
+                    suggestions: ['habló', 'hablaba']
+                    machineSuggestion: 'habló'
+                    state: APPROVED
                   - id: 02HB7
-                    approvedGloss: 'Jehová'
-                    glosses: ['Jehová', Diós]
-                    machineGloss: 'Jehová'
+                    gloss: 'Jehová'
+                    suggestions: ['Jehová', Diós]
+                    machineSuggestion: 'Jehová'
+                    state: UNAPPROVED
                   - id: 02BkQ
-                    approvedGloss: 'a'
-                    glosses: ['a']
-                    machineGloss: 'a'
+                    gloss: 'a'
+                    suggestions: ['a']
+                    machineSuggestion: 'a'
+                    state: UNAPPROVED
                   - id: 02PD3
-                    approvedGloss: 'Moisés'
-                    glosses: ['Moisés']
-                    machineGloss: 'Moisés'
+                    gloss: 'Moisés'
+                    suggestions: ['Moisés']
+                    machineSuggestion: 'Moisés'
+                    state: UNAPPROVED
                   - id: 02FWp
-                    approvedGloss: 'diciendo'
-                    glosses: ['diciendo']
-                    machineGloss: 'diciendo'
+                    gloss: 'diciendo'
+                    suggestions: ['diciendo']
+                    machineSuggestion: 'diciendo'
+                    state: UNAPPROVED

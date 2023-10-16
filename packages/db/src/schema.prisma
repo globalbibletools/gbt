@@ -175,7 +175,7 @@ model LemmaForm {
 /// A lemma as defined by strongs numbers.
 model Lemma {
   /// The ID of the lemma in the format `[H|G]<strongs>`. Examples: H243, G1243
-  id        String      @id
+  id        String          @id
   /// The list of forms of the lemma.
   forms     LemmaForm[]
   /// The list of resource entries associated with the lemma.
@@ -185,19 +185,23 @@ model Lemma {
 /// A language use for translation.
 model Language {
   /// The ID of the language. This is distinct from the IETF language code.
-  id                String               @id @default(dbgenerated("generate_ulid()")) @db.Uuid
+  id                  String               @id @default(dbgenerated("generate_ulid()")) @db.Uuid
   /// The IETF language code.
-  code              String               @unique
+  code                String               @unique
   /// The localized name of the language.
-  name              String
+  name                String
+  /// The English name of the font selected for this language.
+  font                String               @default("Noto Sans")
+  /// The list of Bible translation IDs associated with this language.
+  bibleTranslationIds String[]
   /// This list of verse translation in this language.
-  verseTranslations VerseTranslation[]
+  verseTranslations   VerseTranslation[]
   /// The list of glosses of different words for this language.
-  glosses           Gloss[]
+  glosses             Gloss[]
   /// The list of roles for members of this language.
-  roles             LanguageMemberRole[]
+  roles               LanguageMemberRole[]
   /// The pending import job if any.
-  importJob         LanguageImportJob?
+  importJob           LanguageImportJob?
 }
 
 /// Keeps track of a language import job.
@@ -252,18 +256,25 @@ model VerseTranslation {
   @@id([verseId, languageId])
 }
 
+enum GlossState {
+  APPROVED
+  UNAPPROVED
+}
+
 /// A gloss of a word in a particular language.
 model Gloss {
   /// The word being glossed.
-  word       Word     @relation(fields: [wordId], references: [id])
+  word       Word       @relation(fields: [wordId], references: [id])
   /// The ID of the word being glossed.
   wordId     String
   /// The language of the gloss.
-  language   Language @relation(fields: [languageId], references: [id])
+  language   Language   @relation(fields: [languageId], references: [id])
   /// The ID of the language of the gloss.
-  languageId String   @db.Uuid
+  languageId String     @db.Uuid
   /// The text of the gloss.
   gloss      String?
+  /// The approval state of the gloss.
+  state      GlossState @default(UNAPPROVED)
 
   @@id([wordId, languageId])
 }
@@ -271,7 +282,7 @@ model Gloss {
 /// An entry in a study resource associated with a particular lemma.
 model LemmaResource {
   /// The lemma that this entry is associated with.
-  lemma        Lemma  @relation(fields: [lemmaId], references: [id])
+  lemma        Lemma        @relation(fields: [lemmaId], references: [id])
   /// The ID of the lemma that this entry is associated with.
   lemmaId      String
   /// The resource this data comes from.

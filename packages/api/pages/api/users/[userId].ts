@@ -102,15 +102,12 @@ export default createRoute<{ userId: string }>()
             });
 
             const url = redirects.emailVerification(token);
-            await mailer.sendEmail(
-              {
-                email,
-                subject: 'Email Verification',
-                text: `Please click the link to verify your new email \n\n${url.toString()}`,
-                html: `<a href="${url.toString()}">Click here<a/> to verify your new email.`,
-              },
-              true
-            );
+            await mailer.sendEmail({
+              email,
+              subject: 'Email Verification',
+              text: `Please click the link to verify your new email \n\n${url.toString()}`,
+              html: `<a href="${url.toString()}">Click here<a/> to verify your new email.`,
+            });
           }
         }
       }

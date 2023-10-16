@@ -82,6 +82,8 @@ export interface UpdateUserRequestBody {
 export interface Language {
   code: string;
   name: string;
+  font: string;
+  bibleTranslationIds: string[];
 }
 
 export interface GetLanguagesResponseBody {
@@ -92,7 +94,7 @@ export interface GetLanguageResponseBody {
   data: Language;
 }
 
-export type PostLanguageRequestBody = Language;
+export type PostLanguageRequestBody = Pick<Language, 'code' | 'name'>;
 
 export interface PostLanguageImportRequestBody {
   import: string;
@@ -151,10 +153,17 @@ export interface GetVerseResponseBody {
   };
 }
 
+export const GlossState = makeEnum({
+  Approved: 'APPROVED',
+  Unapproved: 'UNAPPROVED',
+});
+export type GlossState = typeof GlossState[keyof typeof GlossState];
+
 export interface Gloss {
   wordId: string;
-  approvedGloss?: string;
-  glosses: string[];
+  gloss?: string;
+  suggestions: string[];
+  state: GlossState;
 }
 
 export interface GetVerseGlossesResponseBody {
@@ -163,6 +172,7 @@ export interface GetVerseGlossesResponseBody {
 
 export interface PatchWordGlossRequestBody {
   gloss?: string;
+  state?: GlossState;
 }
 
 export interface SNSConfirmSubscriptionMessage {
@@ -179,3 +189,12 @@ export interface SNSNotificationMessage {
 }
 
 export type SNSMessage = SNSConfirmSubscriptionMessage | SNSNotificationMessage;
+
+export interface Resource {
+  resource: string;
+  entry: string;
+}
+
+export interface GetLemmaResourcesResponseBody {
+  data: Resource[];
+}
