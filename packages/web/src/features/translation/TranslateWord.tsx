@@ -21,7 +21,7 @@ export interface TranslateWordProps {
   gloss?: string;
   font?: string;
   referenceGloss?: string;
-  previousGlosses: string[];
+  suggestions: string[];
   onChange(data: { gloss?: string; approved?: boolean }): void;
 }
 
@@ -39,7 +39,7 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
       gloss,
       font,
       referenceGloss,
-      previousGlosses,
+      suggestions,
       onChange,
     }: TranslateWordProps,
     ref
@@ -114,7 +114,7 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
                 originalLanguage === 'hebrew' ? 'text-right' : 'text-left'
               }
               name="gloss"
-              value={gloss ?? ''}
+              value={gloss || suggestions[0]}
               // The extra 26 pixels give room for the padding and border.
               style={{
                 width: width + 26,
@@ -139,7 +139,7 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
                   case 'Enter': {
                     e.preventDefault();
                     if (status !== 'approved') {
-                      onChange({ approved: true });
+                      onChange({ gloss, approved: true });
                     }
                     if (e.shiftKey) {
                       const prev = root.current?.previousElementSibling;
@@ -159,7 +159,7 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
                   }
                 }
               }}
-              suggestions={previousGlosses}
+              suggestions={suggestions}
               ref={input}
             />
             <InputHelpText
