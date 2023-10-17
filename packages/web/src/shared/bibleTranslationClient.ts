@@ -32,7 +32,9 @@ class BibleTranslationClient {
   async getTranslation(
     verseId: string,
     translationIds: string[]
-  ): Promise<{ translationName: string; verseTranslation: string } | null> {
+  ): Promise<
+    { translationName: string; verseTranslation: string } | undefined
+  > {
     const { bookId, chapterNumber, verseNumber } = parseVerseId(verseId);
     const bookKey = bookKeys[bookId - 1].toLowerCase();
     const collection = await this.client.fetch_collection();
@@ -61,7 +63,6 @@ class BibleTranslationClient {
         continue;
       }
     }
-    return null;
   }
 }
 
