@@ -196,9 +196,6 @@ export default function TranslationView() {
       });
     }
   );
-  const translationName = translationQuery.data?.name ?? '';
-  const verseTranslation =
-    translationQuery.data?.translation ?? t('translate:translation_not_found');
 
   const userCan = useAccessControl();
 
@@ -325,10 +322,17 @@ export default function TranslationView() {
                   ),
                 }}
               >
-                <span className="text-sm font-bold me-2">
-                  {translationName}
-                </span>
-                {verseTranslation}
+                {translationQuery.isSuccess && (
+                  <>
+                    <span className="text-sm font-bold me-2">
+                      {translationQuery.data?.name}
+                    </span>
+                    <span>{translationQuery.data?.translation}</span>
+                  </>
+                )}
+                {translationQuery.isError && (
+                  <span>{t('translate:translation_not_found')}</span>
+                )}
               </p>
               <ol
                 className={`flex flex-wrap ${
