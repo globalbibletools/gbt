@@ -12,6 +12,7 @@ import { expandFontFamily } from '../../shared/hooks/useFontLoader';
 import { useTextWidth } from '../../shared/hooks/useTextWidth';
 import { capitalize } from '../../shared/utils';
 import AutocompleteInput from '../../shared/components/form/AutocompleteInput';
+import { TextDirection } from '@translation/api-types';
 
 export interface TranslateWordProps {
   editable?: boolean;
@@ -19,7 +20,7 @@ export interface TranslateWordProps {
   originalLanguage: 'hebrew' | 'greek';
   status: 'empty' | 'saving' | 'saved' | 'approved';
   gloss?: string;
-  font?: string;
+  targetLanguage?: { textDirection: TextDirection; font: string };
   referenceGloss?: string;
   suggestions: string[];
   onChange(data: { gloss?: string; approved?: boolean }): void;
@@ -37,7 +38,7 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
       originalLanguage,
       status,
       gloss,
-      font,
+      targetLanguage,
       referenceGloss,
       suggestions,
       onChange,
@@ -59,7 +60,7 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
 
     const glossWidth = useTextWidth({
       text: gloss ?? '',
-      fontFamily: expandFontFamily(font ?? 'Noto Sans'),
+      fontFamily: expandFontFamily(targetLanguage?.font ?? 'Noto Sans'),
       fontSize: '16px',
     });
     const ancientWord = useRef<HTMLSpanElement>(null);
@@ -118,10 +119,11 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
               // The extra 26 pixels give room for the padding and border.
               style={{
                 width: width + 26,
-                fontFamily: expandFontFamily(font ?? 'Noto Sans'),
+                fontFamily: expandFontFamily(
+                  targetLanguage?.font ?? 'Noto Sans'
+                ),
               }}
-              // TODO: set based on translating language
-              dir="ltr"
+              dir={targetLanguage?.textDirection ?? TextDirection.LTR}
               state={status === 'approved' ? 'success' : undefined}
               aria-describedby={`word-help-${word.id}`}
               aria-labelledby={`word-${word.id}`}

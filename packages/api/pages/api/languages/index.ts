@@ -16,6 +16,7 @@ export default createRoute()
           code: language.code,
           name: language.name,
           font: language.font,
+          textDirection: language.textDirection,
           bibleTranslationIds: language.bibleTranslationIds,
         })),
       });

@@ -1,5 +1,5 @@
 import * as z from 'zod';
-import { Language } from '@translation/api-types';
+import { Language, TextDirection } from '@translation/api-types';
 
 const schemaForType =
   <T>() =>
@@ -13,6 +13,9 @@ export const languageSchema = schemaForType<Language>()(
     code: z.string(),
     name: z.string(),
     font: z.string(),
+    textDirection: z.enum(
+      Object.values(TextDirection) as [TextDirection, ...TextDirection[]]
+    ),
     bibleTranslationIds: z.array(z.string()),
   })
 );

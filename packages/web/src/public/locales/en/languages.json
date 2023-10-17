@@ -19,7 +19,10 @@
   "language_other": "languages",
   "language_updated": "Language updated!",
   "languages": "Languages",
+  "ltr": "Left to Right",
   "manage": "Manage",
   "new_language": "New Language",
-  "switch_language": "Switch Language"
+  "rtl": "Right to Left",
+  "switch_language": "Switch Language",
+  "text_direction": "Text Direction"
 }

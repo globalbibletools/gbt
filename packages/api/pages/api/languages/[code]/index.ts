@@ -27,6 +27,7 @@ export default createRoute<{ code: string }>()
             code: language.code,
             name: language.name,
             font: language.font,
+            textDirection: language.textDirection,
             bibleTranslationIds: language.bibleTranslationIds,
           },
         });
@@ -53,6 +54,9 @@ export default createRoute<{ code: string }>()
       }
       if (req.body.bibleTranslationIds) {
         data.bibleTranslationIds = req.body.bibleTranslationIds;
+      }
+      if (req.body.textDirection) {
+        data.textDirection = req.body.textDirection;
       }
 
       await client.language.update({
