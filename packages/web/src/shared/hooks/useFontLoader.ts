@@ -12,7 +12,7 @@ export const expandFontFamily = (font: string) => {
       return `"${font}", "${secondary}"`;
     }
   }
-  return `"${font}"`;
+  return `"${font}", "Noto Sans"`;
 };
 
 /**

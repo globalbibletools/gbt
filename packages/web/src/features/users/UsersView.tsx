@@ -17,8 +17,8 @@ import { GetUsersResponseBody, SystemRole } from '@translation/api-types';
 import { capitalize } from '../../shared/utils';
 import { useFlash } from '../../shared/hooks/flash';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import SelectInput from '../../shared/components/form/SelectInput';
 import { useAccessControl } from '../../shared/accessControl';
+import ComboboxInput from '../../shared/components/form/ComboboxInput';
 
 export default function UsersView() {
   const { t } = useTranslation(['users']);
@@ -108,25 +108,23 @@ export default function UsersView() {
                     })}
                 </ListCell>
                 <ListCell>
-                  <SelectInput
+                  <ComboboxInput
                     className="w-42"
+                    autoComplete="off"
                     name="userRole"
                     value={user.systemRoles?.[0] ?? ''}
                     aria-label={t('users:role') ?? ''}
-                    onChange={(e) =>
+                    onChange={(role) =>
                       userMutation.mutate({
                         id: user.id,
-                        systemRoles: e.currentTarget.value
-                          ? [e.currentTarget.value as SystemRole]
-                          : [],
+                        systemRoles: role ? [role as SystemRole] : [],
                       })
                     }
-                  >
-                    <option></option>
-                    <option value={SystemRole.Admin}>
-                      {t('users:role_admin')}
-                    </option>
-                  </SelectInput>
+                    items={[
+                      { label: '', value: '' },
+                      { label: t('users:role_admin'), value: SystemRole.Admin },
+                    ]}
+                  />
                 </ListCell>
               </ListRow>
             ))}
