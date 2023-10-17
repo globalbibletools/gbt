@@ -129,7 +129,7 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
                 if (value !== gloss) {
                   onChange({
                     gloss: value,
-                    approved: !implicit,
+                    approved: !implicit && !!value,
                   });
                 }
               }}
@@ -139,7 +139,7 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
                   case 'Enter': {
                     e.preventDefault();
                     if (status !== 'approved') {
-                      onChange({ gloss, approved: true });
+                      onChange({ gloss, approved: !!gloss });
                     }
                     if (e.shiftKey) {
                       const prev = root.current?.previousElementSibling;

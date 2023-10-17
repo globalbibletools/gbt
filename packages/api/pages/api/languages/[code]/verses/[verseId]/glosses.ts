@@ -38,6 +38,7 @@ export default createRoute<{ code: string; verseId: string }>()
         		JOIN "Gloss" ON "Word"."id" = "Gloss"."wordId"
         			AND "Gloss"."languageId" = ${language.id}::uuid
         			AND "Gloss"."state" = 'APPROVED'
+              AND "Gloss"."gloss" IS NOT NULL
         		GROUP BY "VerseWord"."id", "Gloss"."gloss"
         	) AS "WordSuggestion"
         	GROUP BY "id"
@@ -52,6 +53,7 @@ export default createRoute<{ code: string; verseId: string }>()
         LEFT OUTER JOIN "Suggestion" ON "VerseWord"."id" = "Suggestion"."id"
         LEFT OUTER JOIN "Gloss" ON "VerseWord"."id" = "wordId"
           AND "Gloss"."languageId" = ${language.id}::uuid
+          AND "Gloss"."gloss" IS NOT NULL
         ORDER BY "VerseWord"."id" ASC
       `;
 
