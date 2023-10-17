@@ -54,6 +54,7 @@ interface BaseComboboxInputProps
   value?: string;
   defaultValue?: string;
   hasErrors?: boolean;
+  up?: boolean;
   onBlur?(): void;
   onChange?(value: string): void;
   onCreate?(text?: string): void;
@@ -71,6 +72,7 @@ const BaseComboboxInput = forwardRef<HTMLInputElement, BaseComboboxInputProps>(
       onBlur,
       items,
       name,
+      up,
       onKeyDown,
       ...props
     }: BaseComboboxInputProps,
@@ -119,13 +121,13 @@ const BaseComboboxInput = forwardRef<HTMLInputElement, BaseComboboxInputProps>(
       <div className={`${className}  group/combobox relative`}>
         <Combobox value={value} onChange={onComboboxChange} name={name}>
           <div
-            className={`border rounded shadow-inner flex group-focus-within/combobox:outline group-focus-within/combobox:outline-2
-
-            ${
-              hasErrors
-                ? 'border-red-700 shadow-red-100 group-focus-within/combobox:outline-red-700'
-                : 'border-slate-400 group-focus-within/combobox:outline-blue-600'
-            }
+            className={`
+              border rounded shadow-inner flex group-focus-within/combobox:outline group-focus-within/combobox:outline-2
+              ${
+                hasErrors
+                  ? 'border-red-700 shadow-red-100 group-focus-within/combobox:outline-red-700'
+                  : 'border-slate-400 group-focus-within/combobox:outline-blue-600'
+              }
           `}
           >
             <Combobox.Input
@@ -135,6 +137,9 @@ const BaseComboboxInput = forwardRef<HTMLInputElement, BaseComboboxInputProps>(
               }
               onBlur={onBlur}
               className="w-full py-2 px-3 h-10 rounded-b flex-grow focus:outline-none bg-transparent rounded"
+              displayValue={(value) =>
+                items.find((i) => i.value === value)?.label ?? ''
+              }
               onKeyDown={(e) => {
                 if (onKeyDown) {
                   onKeyDown(e);
@@ -146,13 +151,18 @@ const BaseComboboxInput = forwardRef<HTMLInputElement, BaseComboboxInputProps>(
               {({ open }) => <Icon icon={open ? 'caret-up' : 'caret-down'} />}
             </Combobox.Button>
           </div>
-          <Combobox.Options className="z-10 absolute min-w-[160px] w-full max-h-80 bg-white overflow-auto mt-1 rounded border border-slate-400 shadow">
+          <Combobox.Options
+            className={`
+              z-10 absolute min-w-[160px] w-full max-h-80 bg-white overflow-auto mt-1 rounded border border-slate-400 shadow
+              ${up ? '-mt-1 top-0 transform -translate-y-full' : 'mt-1'}
+            `}
+          >
             {filteredItems.length > MAX_ITEMS ? (
               <div className="px-3 py-2">{t('common:too_many_options')}</div>
             ) : (
               filteredItems.map((item) => (
                 <Combobox.Option
-                  className="px-3 py-2 ui-active:bg-blue-400"
+                  className="px-3 py-2 ui-active:bg-blue-400 h-10"
                   key={item.value}
                   value={item.value}
                 >

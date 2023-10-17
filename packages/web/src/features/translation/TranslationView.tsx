@@ -321,7 +321,7 @@ export default function TranslationView() {
                     gloss={targetGloss?.gloss}
                     font={selectedLanguage?.font}
                     referenceGloss={referenceGlosses[i]?.gloss}
-                    previousGlosses={targetGlosses[i]?.suggestions}
+                    suggestions={targetGlosses[i]?.suggestions}
                     onChange={({ gloss, approved }) => {
                       glossMutation.mutate({
                         wordId: word.id,

@@ -12,11 +12,11 @@ import ViewTitle from '../../shared/components/ViewTitle';
 import Button from '../../shared/components/actions/Button';
 import Form from '../../shared/components/form/Form';
 import FormLabel from '../../shared/components/form/FormLabel';
-import SelectInput from '../../shared/components/form/SelectInput';
 import SubmittingIndicator from '../../shared/components/form/SubmittingIndicator';
 import { useFlash } from '../../shared/hooks/flash';
 import { ApiClientError } from '@translation/api-client';
 import LoadingSpinner from '../../shared/components/LoadingSpinner';
+import ComboboxInput from '../../shared/components/form/ComboboxInput';
 
 export async function importLanguageGlossesLoader({
   params,
@@ -185,20 +185,18 @@ export default function ImportLanguageGlossesView() {
                         <FormLabel htmlFor="import">
                           {t('languages:import_language').toUpperCase()}
                         </FormLabel>
-                        <SelectInput
+                        <ComboboxInput
                           id="import"
                           name="import"
                           className="w-full"
                           autoComplete="off"
                           required
                           aria-describedby="import-error"
-                        >
-                          {importLanguages.data.map((name) => (
-                            <option value={name} key={name}>
-                              {name}
-                            </option>
-                          ))}
-                        </SelectInput>
+                          items={importLanguages.data.map((language) => ({
+                            label: language,
+                            value: language,
+                          }))}
+                        />
                       </div>
                       <div>
                         <Button type="submit">
