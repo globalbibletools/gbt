@@ -27,7 +27,9 @@ import {
 import Button from '../../shared/components/actions/Button';
 import { Icon } from '../../shared/components/Icon';
 import { useTranslation } from 'react-i18next';
-import bibleTranslationClient from '../../shared/bibleTranslationClient';
+import bibleTranslationClient, {
+  BibleVerseTranslation,
+} from '../../shared/bibleTranslationClient';
 
 export const translationLanguageKey = 'translation-language';
 export const translationVerseIdKey = 'translation-verse-id';
@@ -178,23 +180,25 @@ export default function TranslationView() {
     },
   });
 
-  const [translationName, setTranslationName] = useState('');
-  const [verseTranslation, setVerseTranslation] = useState('');
-  useEffect(() => {
-    // Clear the current translation content while loading.
-    setVerseTranslation('');
-    bibleTranslationClient
-      .getTranslation(verseId, selectedLanguage?.bibleTranslationIds ?? [])
-      .then((translation) => {
-        if (translation) {
-          setTranslationName(translation.translationName);
-          setVerseTranslation(translation.verseTranslation);
-        } else {
-          setTranslationName('');
-          setVerseTranslation(t('translate:translation_not_found') ?? '');
-        }
+  const translationQuery = useQuery(
+    ['verse-translation', language, verseId],
+    () => {
+      return new Promise<BibleVerseTranslation>((resolve, reject) => {
+        bibleTranslationClient
+          .getTranslation(verseId, selectedLanguage?.bibleTranslationIds ?? [])
+          .then((translation) => {
+            if (translation) {
+              resolve(translation);
+            } else {
+              reject();
+            }
+          });
       });
-  }, [t, selectedLanguage, verseId]);
+    }
+  );
+  const translationName = translationQuery.data?.name ?? '';
+  const verseTranslation =
+    translationQuery.data?.translation ?? t('translate:translation_not_found');
 
   const userCan = useAccessControl();
 

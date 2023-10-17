@@ -7,6 +7,13 @@ export type BibleTranslation = {
   name: string;
 };
 
+export type BibleVerseTranslation = {
+  // The name of the bible translation
+  name: string;
+  // The content of the verse in that translation.
+  translation: string;
+};
+
 /**
  * This class acts as a wrapper over all interactions with fetch.bible.
  */
@@ -32,9 +39,7 @@ class BibleTranslationClient {
   async getTranslation(
     verseId: string,
     translationIds: string[]
-  ): Promise<
-    { translationName: string; verseTranslation: string } | undefined
-  > {
+  ): Promise<BibleVerseTranslation | undefined> {
     const { bookId, chapterNumber, verseNumber } = parseVerseId(verseId);
     const bookKey = bookKeys[bookId - 1].toLowerCase();
     const collection = await this.client.fetch_collection();
@@ -52,8 +57,8 @@ class BibleTranslationClient {
         if (translation) {
           const { name_local, name_english } = translation;
           return {
-            translationName: name_local ? name_local : name_english,
-            verseTranslation,
+            name: name_local ? name_local : name_english,
+            translation: verseTranslation,
           };
         }
       } catch (e) {
