@@ -314,7 +314,7 @@ export default function TranslationView() {
           return (
             <>
               <p
-                className="text-base my-8"
+                className="text-base my-8 mx-2"
                 style={{
                   fontFamily: expandFontFamily(
                     selectedLanguage?.font ?? 'Noto Sans'
