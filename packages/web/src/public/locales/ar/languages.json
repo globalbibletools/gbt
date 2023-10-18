@@ -19,7 +19,10 @@
   "language_other": "اللغات",
   "language_updated": "تم تحديث اللغة!",
   "languages": "اللغات",
+  "ltr": "من اليسار إلى اليمين",
   "manage": "إدارة",
   "new_language": "لغة جديدة",
-  "switch_language": "تغيير اللغة"
+  "rtl": "من اليمين إلى اليسار",
+  "switch_language": "تغيير اللغة",
+  "text_direction": "اتجاه النص"
 }

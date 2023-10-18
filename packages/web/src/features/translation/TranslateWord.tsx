@@ -12,6 +12,7 @@ import { expandFontFamily } from '../../shared/hooks/useFontLoader';
 import { useTextWidth } from '../../shared/hooks/useTextWidth';
 import { capitalize } from '../../shared/utils';
 import AutocompleteInput from '../../shared/components/form/AutocompleteInput';
+import { TextDirection } from '@translation/api-types';
 
 export interface TranslateWordProps {
   editable?: boolean;
@@ -19,9 +20,9 @@ export interface TranslateWordProps {
   originalLanguage: 'hebrew' | 'greek';
   status: 'empty' | 'saving' | 'saved' | 'approved';
   gloss?: string;
-  font?: string;
+  targetLanguage?: { textDirection: TextDirection; font: string };
   referenceGloss?: string;
-  previousGlosses: string[];
+  suggestions: string[];
   onChange(data: { gloss?: string; approved?: boolean }): void;
 }
 
@@ -37,9 +38,9 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
       originalLanguage,
       status,
       gloss,
-      font,
+      targetLanguage,
       referenceGloss,
-      previousGlosses,
+      suggestions,
       onChange,
     }: TranslateWordProps,
     ref
@@ -59,7 +60,7 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
 
     const glossWidth = useTextWidth({
       text: gloss ?? '',
-      fontFamily: expandFontFamily(font ?? 'Noto Sans'),
+      fontFamily: expandFontFamily(targetLanguage?.font ?? 'Noto Sans'),
       fontSize: '16px',
     });
     const ancientWord = useRef<HTMLSpanElement>(null);
@@ -114,12 +115,15 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
                 originalLanguage === 'hebrew' ? 'text-right' : 'text-left'
               }
               name="gloss"
-              value={gloss ?? ''}
+              value={gloss || suggestions[0]}
               // The extra 26 pixels give room for the padding and border.
               style={{
                 width: width + 26,
-                fontFamily: expandFontFamily(font ?? 'Noto Sans'),
+                fontFamily: expandFontFamily(
+                  targetLanguage?.font ?? 'Noto Sans'
+                ),
               }}
+              dir={targetLanguage?.textDirection ?? TextDirection.LTR}
               state={status === 'approved' ? 'success' : undefined}
               aria-describedby={`word-help-${word.id}`}
               aria-labelledby={`word-${word.id}`}
@@ -137,7 +141,7 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
                   case 'Enter': {
                     e.preventDefault();
                     if (status !== 'approved') {
-                      onChange({ approved: true });
+                      onChange({ gloss, approved: true });
                     }
                     if (e.shiftKey) {
                       const prev = root.current?.previousElementSibling;
@@ -157,7 +161,7 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
                   }
                 }
               }}
-              suggestions={previousGlosses}
+              suggestions={suggestions}
               ref={input}
             />
             <InputHelpText

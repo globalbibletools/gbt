@@ -19,7 +19,10 @@
   "language_other": "idiomas",
   "language_updated": "¡Idioma actualizado!",
   "languages": "Idiomas",
+  "ltr": "Izquierda a Derecha",
   "manage": "Administrar",
   "new_language": "Nuevo Idioma",
-  "switch_language": "Cambiar de Idioma"
+  "rtl": "Derecha a Izquierda",
+  "switch_language": "Cambiar de Idioma",
+  "text_direction": "Dirección del Texto"
 }

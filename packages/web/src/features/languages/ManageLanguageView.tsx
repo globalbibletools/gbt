@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { LanguageRole } from '@translation/api-types';
+import { LanguageRole, TextDirection } from '@translation/api-types';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -23,19 +23,19 @@ import Form from '../../shared/components/form/Form';
 import FormLabel from '../../shared/components/form/FormLabel';
 import InputError from '../../shared/components/form/InputError';
 import MultiselectInput from '../../shared/components/form/MultiselectInput';
-import SelectInput from '../../shared/components/form/SelectInput';
 import SubmittingIndicator from '../../shared/components/form/SubmittingIndicator';
 import TextInput from '../../shared/components/form/TextInput';
 import fontClient from '../../shared/fontClient';
 import { useFlash } from '../../shared/hooks/flash';
-import {
-  expandFontFamily,
-  useFontLoader,
-} from '../../shared/hooks/useFontLoader';
 import queryClient from '../../shared/queryClient';
 import bibleTranslationClient, {
   BibleTranslation,
 } from '../../shared/bibleTranslationClient';
+import {
+  ButtonSelectorInput,
+  ButtonSelectorOption,
+} from '../../shared/components/form/ButtonSelectorInput';
+import ComboboxInput from '../../shared/components/form/ComboboxInput';
 
 const languageQueryKey = (code: string) => ({
   queryKey: ['language', code],
@@ -113,6 +113,7 @@ function useLanguageMembersQuery(code: string) {
 interface FormData {
   name: string;
   font: string;
+  textDirection: TextDirection;
   bibleTranslationIds: string[];
 }
 
@@ -142,6 +143,7 @@ export default function ManageLanguageView() {
       await apiClient.languages.update(language.data.code, {
         name: data.name,
         font: data.font,
+        textDirection: data.textDirection,
         bibleTranslationIds: data.bibleTranslationIds,
       });
       flash.success(t('languages:language_updated'));
@@ -151,8 +153,6 @@ export default function ManageLanguageView() {
   }
 
   const [previewFont, setPreviewFont] = useState(language.data.font);
-
-  useFontLoader(fonts, true);
 
   return (
     <View fitToScreen className="flex justify-center items-start">
@@ -186,21 +186,34 @@ export default function ManageLanguageView() {
             <FormLabel htmlFor="font">
               {t('languages:font').toUpperCase()}
             </FormLabel>
-            <SelectInput
+            <ComboboxInput
               id="font"
               name="font"
-              className="w-full h-fit min-h-[40px]"
+              className="w-full h-10"
               required
               value={previewFont}
-              onChange={(event) => setPreviewFont(event.target.value)}
-              style={{ fontFamily: expandFontFamily(previewFont) }}
-            >
-              {fonts.map((font) => (
-                <option value={font} key={font} style={{ fontFamily: font }}>
-                  {font}
-                </option>
-              ))}
-            </SelectInput>
+              items={fonts.map((font) => ({ label: font, value: font }))}
+              onChange={(font) => setPreviewFont(font)}
+            />
+          </div>
+          <div className="mb-2">
+            <FormLabel id="text-direction-label">
+              {t('languages:text_direction').toUpperCase()}
+            </FormLabel>
+            <div>
+              <ButtonSelectorInput
+                name="textDirection"
+                aria-labelledby="text-direction-label"
+                defaultValue={language.data.textDirection}
+              >
+                <ButtonSelectorOption value={TextDirection.LTR}>
+                  {t('languages:ltr')}
+                </ButtonSelectorOption>
+                <ButtonSelectorOption value={TextDirection.RTL}>
+                  {t('languages:rtl')}
+                </ButtonSelectorOption>
+              </ButtonSelectorInput>
+            </div>
           </div>
           <div className="mb-2">
             <FormLabel htmlFor="bibleTranslationIds">

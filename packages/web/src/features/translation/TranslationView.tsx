@@ -377,9 +377,9 @@ export default function TranslationView() {
                       originalLanguage={isHebrew ? 'hebrew' : 'greek'}
                       status={status}
                       gloss={targetGloss?.gloss}
-                      font={selectedLanguage?.font}
+                      targetLanguage={selectedLanguage}
                       referenceGloss={referenceGlosses[i]?.gloss}
-                      previousGlosses={targetGlosses[i]?.suggestions}
+                      suggestions={targetGlosses[i]?.suggestions}
                       onChange={({ gloss, approved }) => {
                         glossMutation.mutate({
                           wordId: word.id,
