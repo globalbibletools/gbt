@@ -52,6 +52,21 @@ function useTranslationQueries(language: string, verseId: string) {
     () => apiClient.verses.findVerseGlosses(verseId, language)
   );
 
+  const translationLanguages = languagesQuery.data?.data ?? [];
+  const selectedLanguage = translationLanguages.find(
+    (l) => l.code === language
+  );
+
+  const translationQuery = useQuery(
+    ['verse-translation', language, verseId],
+    () =>
+      bibleTranslationClient.getTranslation(
+        verseId,
+        selectedLanguage?.bibleTranslationIds ?? []
+      ),
+    { enabled: !!selectedLanguage }
+  );
+
   const queryClient = useQueryClient();
 
   // This primes the cache with verse data for the next VERSES_TO_PREFETCH verses.
@@ -74,19 +89,31 @@ function useTranslationQueries(language: string, verseId: string) {
         queryFn: ({ queryKey }) =>
           apiClient.verses.findVerseGlosses(queryKey[2], queryKey[1]),
       });
+      if (selectedLanguage) {
+        queryClient.ensureQueryData({
+          queryKey: ['verse-translation', language, nextVerseId],
+          queryFn: ({ queryKey }) =>
+            bibleTranslationClient.getTranslation(
+              queryKey[2],
+              selectedLanguage.bibleTranslationIds
+            ),
+        });
+      }
     }
-  }, [language, verseId, queryClient]);
+  }, [language, verseId, queryClient, selectedLanguage]);
 
   return {
-    languagesQuery,
+    translationLanguages,
+    selectedLanguage,
     verseQuery,
     referenceGlossesQuery,
     targetGlossesQuery,
+    translationQuery,
   };
 }
 
 export default function TranslationView() {
-  const { t, i18n } = useTranslation('common');
+  const { t, i18n } = useTranslation(['common', 'translate']);
   const { language, verseId } = useParams() as {
     language: string;
     verseId: string;
@@ -103,16 +130,14 @@ export default function TranslationView() {
   const navigate = useNavigate();
 
   const {
-    languagesQuery,
+    translationLanguages,
+    selectedLanguage,
     verseQuery,
     referenceGlossesQuery,
     targetGlossesQuery,
+    translationQuery,
   } = useTranslationQueries(language, verseId);
 
-  const translationLanguages = languagesQuery.data?.data ?? [];
-  const selectedLanguage = translationLanguages.find(
-    (l) => l.code === language
-  );
   useFontLoader(selectedLanguage ? [selectedLanguage.font] : []);
 
   const [glossRequests, setGlossRequests] = useState<
@@ -179,24 +204,6 @@ export default function TranslationView() {
       }
     },
   });
-
-  const translationQuery = useQuery(
-    ['verse-translation', language, verseId],
-    () => {
-      return new Promise<BibleVerseTranslation>((resolve, reject) => {
-        bibleTranslationClient
-          .getTranslation(verseId, selectedLanguage?.bibleTranslationIds ?? [])
-          .then((translation) => {
-            if (translation) {
-              resolve(translation);
-            } else {
-              reject();
-            }
-          });
-      });
-    },
-    { enabled: !!selectedLanguage }
-  );
 
   const userCan = useAccessControl();
 
@@ -323,16 +330,21 @@ export default function TranslationView() {
                   ),
                 }}
               >
-                {translationQuery.isSuccess && (
+                {translationQuery.data ? (
                   <>
                     <span className="text-sm font-bold me-2">
-                      {translationQuery.data?.name}
+                      {translationQuery.data.name}
                     </span>
-                    <span>{translationQuery.data?.translation}</span>
+                    <span>{translationQuery.data.translation}</span>
                   </>
-                )}
-                {translationQuery.isError && (
-                  <span>{t('translate:translation_not_found')}</span>
+                ) : (
+                  <span>
+                    {t(
+                      translationQuery.isLoading
+                        ? 'common:loading'
+                        : 'translate:translation_not_found'
+                    )}
+                  </span>
                 )}
               </p>
               <ol
