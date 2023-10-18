@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   GetVerseGlossesResponseBody,
   GlossState,
+  TextDirection,
 } from '@translation/api-types';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -324,6 +325,7 @@ export default function TranslationView() {
             <>
               <p
                 className="text-base my-8 mx-2"
+                dir={selectedLanguage?.textDirection ?? TextDirection.LTR}
                 style={{
                   fontFamily: expandFontFamily(
                     selectedLanguage?.font ?? 'Noto Sans'
