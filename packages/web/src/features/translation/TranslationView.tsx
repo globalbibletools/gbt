@@ -194,7 +194,8 @@ export default function TranslationView() {
             }
           });
       });
-    }
+    },
+    { enabled: !!selectedLanguage }
   );
 
   const userCan = useAccessControl();
