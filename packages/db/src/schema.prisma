@@ -134,8 +134,6 @@ model Verse {
   bookId       Int
   /// The list of words in the verse.
   words        Word[]
-  /// This list of natural translations for this verse.
-  translations VerseTranslation[]
 
   @@unique([bookId, chapter, number])
 }
@@ -201,8 +199,6 @@ model Language {
   textDirection       TextDirection        @default(ltr)
   /// The list of Bible translation IDs associated with this language.
   bibleTranslationIds String[]
-  /// This list of verse translation in this language.
-  verseTranslations   VerseTranslation[]
   /// The list of glosses of different words for this language.
   glosses             Gloss[]
   /// The list of roles for members of this language.
@@ -245,22 +241,6 @@ model LanguageMemberRole {
   role       LanguageRole
 
   @@id([languageId, userId, role])
-}
-
-/// A natural translation for a verse.
-model VerseTranslation {
-  /// The verse being translated.
-  verse       Verse    @relation(fields: [verseId], references: [id])
-  /// The ID verse being translated.
-  verseId     String
-  /// The language of the translation.
-  language    Language @relation(fields: [languageId], references: [id])
-  /// The ID of the language of the translation.
-  languageId  String   @db.Uuid
-  /// The text of the translation.
-  translation String
-
-  @@id([verseId, languageId])
 }
 
 enum GlossState {
