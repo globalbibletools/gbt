@@ -324,7 +324,7 @@ export default function TranslationView() {
           return (
             <>
               <p
-                className="text-base my-8 mx-2"
+                className="text-base mt-4 mb-2 mx-2"
                 dir={selectedLanguage?.textDirection ?? TextDirection.LTR}
                 style={{
                   fontFamily: expandFontFamily(
