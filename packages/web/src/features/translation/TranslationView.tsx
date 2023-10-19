@@ -282,7 +282,7 @@ export default function TranslationView() {
   }, [loading, verseQuery.data]);
 
   return (
-    <div className="px-4 flex flex-grow flex-col gap-2">
+    <div className="px-4 flex flex-grow flex-col gap-8">
       <div className="flex gap-8 items-center">
         <VerseSelector
           verseId={verseId}
@@ -324,7 +324,7 @@ export default function TranslationView() {
           return (
             <>
               <p
-                className="text-base mt-4 mb-2 mx-2"
+                className="text-base mx-2"
                 dir={selectedLanguage?.textDirection ?? TextDirection.LTR}
                 style={{
                   fontFamily: expandFontFamily(
