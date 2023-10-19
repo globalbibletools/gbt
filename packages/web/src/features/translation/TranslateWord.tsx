@@ -128,10 +128,10 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
               aria-describedby={`word-help-${word.id}`}
               aria-labelledby={`word-${word.id}`}
               onChange={(value, implicit) => {
-                if (value !== gloss) {
+                if (value !== gloss || (!implicit && status !== 'approved')) {
                   onChange({
                     gloss: value,
-                    approved: !implicit,
+                    approved: !implicit && !!value,
                   });
                 }
               }}
@@ -140,9 +140,6 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
                 switch (e.key) {
                   case 'Enter': {
                     e.preventDefault();
-                    if (status !== 'approved') {
-                      onChange({ gloss, approved: true });
-                    }
                     if (e.shiftKey) {
                       const prev = root.current?.previousElementSibling;
                       prev?.querySelector('input')?.focus();

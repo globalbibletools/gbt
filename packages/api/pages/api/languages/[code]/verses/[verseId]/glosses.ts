@@ -1,9 +1,13 @@
-import {
-  GetVerseGlossesResponseBody,
-  GlossState,
-} from '@translation/api-types';
-import { client, Prisma } from '../../../../../../shared/db';
+import { GetVerseGlossesResponseBody } from '@translation/api-types';
+import { client, PrismaTypes } from '../../../../../../shared/db';
 import createRoute from '../../../../../../shared/Route';
+
+type WordsRawQuery = {
+  wordId: string;
+  gloss: string;
+  suggestions: string[];
+  state: PrismaTypes.GlossState;
+}[];
 
 export default createRoute<{ code: string; verseId: string }>()
   .get<void, GetVerseGlossesResponseBody>({
@@ -13,71 +17,51 @@ export default createRoute<{ code: string; verseId: string }>()
           code: req.query.code,
         },
       });
-
-      if (language) {
-        const verse = await client.verse.findUnique({
-          where: {
-            id: req.query.verseId,
-          },
-          include: {
-            words: {
-              include: {
-                glosses: {
-                  where: {
-                    languageId: language.id,
-                  },
-                },
-              },
-              orderBy: {
-                id: Prisma.SortOrder.asc,
-              },
-            },
-          },
-        });
-
-        if (verse) {
-          const glosses = await Promise.all(
-            verse.words.map(async (word) =>
-              client.gloss.groupBy({
-                by: ['gloss'],
-                where: {
-                  word: {
-                    formId: word.formId,
-                  },
-                  languageId: language.id,
-                  state: GlossState.Approved,
-                },
-                _count: {
-                  gloss: true,
-                },
-                orderBy: {
-                  _count: {
-                    gloss: Prisma.SortOrder.desc,
-                  },
-                },
-              })
-            )
-          );
-
-          res.ok({
-            data: verse.words.map((word, i) => {
-              const glossEntry = word.glosses.at(0);
-              const state = glossEntry?.state;
-              return {
-                wordId: word.id,
-                gloss: glossEntry?.gloss ?? undefined,
-                suggestions: glosses[i]
-                  .map((doc) => doc.gloss)
-                  .filter((gloss): gloss is string => !!gloss),
-                state: state ?? GlossState.Unapproved,
-              };
-            }),
-          });
-          return;
-        }
+      if (!language) {
+        return res.notFound();
       }
 
-      res.notFound();
+      const words = await client.$queryRaw<WordsRawQuery>`
+        -- First we create a query with the words in a verse.
+        WITH "VerseWord" AS (
+        	SELECT "Word"."id", "Word"."formId" FROM "Verse"
+        	JOIN "Word" ON "Verse"."id" = "Word"."verseId"
+        	WHERE "verseId" = ${req.query.verseId}
+        ),
+        -- Then we gather suggestions for each word in the verse.
+        -- First we count up each unique gloss across the entire text.
+        -- Then we can build an array of suggestions in descending order of use for each word.
+        "Suggestion" AS (
+        	SELECT "id", array_agg("gloss" ORDER BY "count" DESC) AS "suggestions" FROM (
+        		SELECT "VerseWord"."id", "Gloss"."gloss", COUNT(1) FROM "VerseWord"
+        		JOIN "Word" ON "Word"."formId" = "VerseWord"."formId"
+        		JOIN "Gloss" ON "Word"."id" = "Gloss"."wordId"
+        			AND "Gloss"."languageId" = ${language.id}::uuid
+        			AND "Gloss"."state" = 'APPROVED'
+              AND "Gloss"."gloss" IS NOT NULL
+        		GROUP BY "VerseWord"."id", "Gloss"."gloss"
+        	) AS "WordSuggestion"
+        	GROUP BY "id"
+        )
+        -- Now we can gather the suggestions and other data for each word in the verse.
+        SELECT
+          "VerseWord"."id" as "wordId",
+          COALESCE("Gloss"."gloss", '') AS "gloss",
+          COALESCE("Suggestion"."suggestions", '{}') AS "suggestions",
+          COALESCE("Gloss"."state", 'UNAPPROVED') AS "state"
+        FROM "VerseWord"
+        LEFT OUTER JOIN "Suggestion" ON "VerseWord"."id" = "Suggestion"."id"
+        LEFT OUTER JOIN "Gloss" ON "VerseWord"."id" = "wordId"
+          AND "Gloss"."languageId" = ${language.id}::uuid
+          AND "Gloss"."gloss" IS NOT NULL
+        ORDER BY "VerseWord"."id" ASC
+      `;
+
+      if (words.length === 0) {
+        res.notFound();
+      } else {
+        res.ok({ data: words });
+      }
     },
   })
   .build();
