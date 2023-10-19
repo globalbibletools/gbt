@@ -39,7 +39,7 @@ class BibleTranslationClient {
   async getTranslation(
     verseId: string,
     translationIds: string[]
-  ): Promise<BibleVerseTranslation | null> {
+  ): Promise<BibleVerseTranslation | undefined> {
     const { bookId, chapterNumber, verseNumber } = parseVerseId(verseId);
     const bookKey = bookKeys[bookId - 1].toLowerCase();
     const collection = await this.client.fetch_collection();
@@ -69,7 +69,7 @@ class BibleTranslationClient {
       }
     }
     // Must return null, not undefined, so that this will work with useQuery
-    return null;
+    return undefined;
   }
 }
 
