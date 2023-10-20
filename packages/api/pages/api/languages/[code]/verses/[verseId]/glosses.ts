@@ -1,12 +1,14 @@
 import { GetVerseGlossesResponseBody } from '@translation/api-types';
 import { client, PrismaTypes } from '../../../../../../shared/db';
 import createRoute from '../../../../../../shared/Route';
+import { machineTranslationClient } from '../../../../../../shared/machine-translation';
 
 type WordsRawQuery = {
   wordId: string;
-  gloss: string;
+  gloss?: string;
   suggestions: string[];
   state: PrismaTypes.GlossState;
+  refGloss?: string;
 }[];
 
 export default createRoute<{ code: string; verseId: string }>()
@@ -42,24 +44,39 @@ export default createRoute<{ code: string; verseId: string }>()
         		GROUP BY "VerseWord"."id", "Gloss"."gloss"
         	) AS "WordSuggestion"
         	GROUP BY "id"
+        ),
+        "RefLanguage" AS (
+          SELECT "id" FROM "Language"
+          WHERE "code" = 'eng'
         )
         -- Now we can gather the suggestions and other data for each word in the verse.
         SELECT
           "VerseWord"."id" as "wordId",
           COALESCE("Gloss"."gloss", '') AS "gloss",
           COALESCE("Suggestion"."suggestions", '{}') AS "suggestions",
-          COALESCE("Gloss"."state", 'UNAPPROVED') AS "state"
+          COALESCE("Gloss"."state", 'UNAPPROVED') AS "state",
+          "RefGloss"."gloss" AS "refGloss"
         FROM "VerseWord"
         LEFT OUTER JOIN "Suggestion" ON "VerseWord"."id" = "Suggestion"."id"
-        LEFT OUTER JOIN "Gloss" ON "VerseWord"."id" = "wordId"
+        LEFT OUTER JOIN "Gloss" ON "VerseWord"."id" = "Gloss"."wordId"
           AND "Gloss"."languageId" = ${language.id}::uuid
           AND "Gloss"."gloss" IS NOT NULL
+        LEFT OUTER JOIN "Gloss" AS "RefGloss" ON "VerseWord"."id" = "RefGloss"."wordId"
+          AND "RefGloss"."gloss" IS NOT NULL
+        JOIN "RefLanguage" ON "RefGloss"."languageId" = "RefLanguage"."id"
         ORDER BY "VerseWord"."id" ASC
       `;
 
       if (words.length === 0) {
         res.notFound();
       } else {
+        const start = performance.now();
+        const machineGlosses = await machineTranslationClient.translate(
+          words.map((w) => w.refGloss ?? ''),
+          'es'
+        );
+        console.log(machineGlosses);
+        console.log('timing', performance.now() - start);
         res.ok({ data: words });
       }
     },
