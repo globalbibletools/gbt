@@ -91,7 +91,7 @@ function useTranslationQueries(language: string, verseId: string) {
           apiClient.verses.findVerseGlosses(queryKey[2], queryKey[1]),
       });
       if (selectedLanguage) {
-        queryClient.ensureQueryData({
+        queryClient.prefetchQuery({
           queryKey: ['verse-translation', language, nextVerseId],
           queryFn: ({ queryKey }) =>
             bibleTranslationClient.getTranslation(
