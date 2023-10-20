@@ -114,7 +114,7 @@ function useTranslationQueries(language: string, verseId: string) {
 }
 
 export default function TranslationView() {
-  const { t, i18n } = useTranslation(['common', 'translate']);
+  const { t, i18n } = useTranslation(['common']);
   const { language, verseId } = useParams() as {
     language: string;
     verseId: string;
@@ -323,32 +323,22 @@ export default function TranslationView() {
           const isHebrew = bookId < 40;
           return (
             <>
-              <p
-                className="text-base mx-2"
-                dir={selectedLanguage?.textDirection ?? TextDirection.LTR}
-                style={{
-                  fontFamily: expandFontFamily(
-                    selectedLanguage?.font ?? 'Noto Sans'
-                  ),
-                }}
-              >
-                {translationQuery.data ? (
-                  <>
-                    <span className="text-sm font-bold me-2">
-                      {translationQuery.data.name}
-                    </span>
-                    <span>{translationQuery.data.translation}</span>
-                  </>
-                ) : (
-                  <span>
-                    {t(
-                      translationQuery.isLoading
-                        ? 'common:loading'
-                        : 'translate:translation_not_found'
-                    )}
+              {translationQuery.data && (
+                <p
+                  className="text-base mx-2"
+                  dir={selectedLanguage?.textDirection ?? TextDirection.LTR}
+                  style={{
+                    fontFamily: expandFontFamily(
+                      selectedLanguage?.font ?? 'Noto Sans'
+                    ),
+                  }}
+                >
+                  <span className="text-sm font-bold me-2">
+                    {translationQuery.data.name}
                   </span>
-                )}
-              </p>
+                  <span>{translationQuery.data.translation}</span>
+                </p>
+              )}
               <ol
                 className={`flex flex-wrap ${
                   isHebrew ? 'ltr:flex-row-reverse' : 'rtl:flex-row-reverse'
