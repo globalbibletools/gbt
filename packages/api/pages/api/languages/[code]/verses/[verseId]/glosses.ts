@@ -3,13 +3,37 @@ import { client, PrismaTypes } from '../../../../../../shared/db';
 import createRoute from '../../../../../../shared/Route';
 import { machineTranslationClient } from '../../../../../../shared/machine-translation';
 
-type WordsRawQuery = {
+interface WordQuery {
   wordId: string;
   gloss?: string;
   suggestions: string[];
   state: PrismaTypes.GlossState;
   refGloss?: string;
-}[];
+}
+
+// In order to generate glosses from Google Translate,
+// we need to filter out the words in the verse that have no reference gloss to translate from.
+async function generateMachineGlossesForVerse(
+  words: WordQuery[],
+  language: string
+): Promise<string[]> {
+  const charRegex = /\w/;
+  const refGlosses = words
+    .map((word, i) =>
+      word.refGloss?.match(charRegex)
+        ? { refGloss: word.refGloss, index: i }
+        : undefined
+    )
+    .filter((word): word is { refGloss: string; index: number } => !!word);
+  const machineGlosses = await machineTranslationClient.translate(
+    refGlosses.map((w) => w.refGloss),
+    language
+  );
+  return words.map(
+    (word, i) =>
+      machineGlosses[refGlosses.findIndex((gloss) => gloss.index === i)]
+  );
+}
 
 export default createRoute<{ code: string; verseId: string }>()
   .get<void, GetVerseGlossesResponseBody>({
@@ -23,7 +47,7 @@ export default createRoute<{ code: string; verseId: string }>()
         return res.notFound();
       }
 
-      const words = await client.$queryRaw<WordsRawQuery>`
+      const words = await client.$queryRaw<WordQuery[]>`
         -- First we create a query with the words in a verse.
         WITH "VerseWord" AS (
         	SELECT "Word"."id", "Word"."formId" FROM "Verse"
@@ -70,14 +94,19 @@ export default createRoute<{ code: string; verseId: string }>()
       if (words.length === 0) {
         res.notFound();
       } else {
-        const start = performance.now();
-        const machineGlosses = await machineTranslationClient.translate(
-          words.map((w) => w.refGloss ?? ''),
+        const machineGlosses = await generateMachineGlossesForVerse(
+          words,
           'es'
         );
-        console.log(machineGlosses);
-        console.log('timing', performance.now() - start);
-        res.ok({ data: words });
+        res.ok({
+          data: words.map((word, i) => ({
+            wordId: word.wordId,
+            gloss: word.gloss,
+            suggestions: word.suggestions,
+            state: word.state,
+            machineGloss: machineGlosses[i],
+          })),
+        });
       }
     },
   })

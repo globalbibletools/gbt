@@ -20,6 +20,7 @@ export interface TranslateWordProps {
   originalLanguage: 'hebrew' | 'greek';
   status: 'empty' | 'saving' | 'saved' | 'approved';
   gloss?: string;
+  machineGloss?: string;
   targetLanguage?: { textDirection: TextDirection; font: string };
   referenceGloss?: string;
   suggestions: string[];
@@ -38,6 +39,7 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
       originalLanguage,
       status,
       gloss,
+      machineGloss,
       targetLanguage,
       referenceGloss,
       suggestions,
@@ -115,7 +117,7 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
                 originalLanguage === 'hebrew' ? 'text-right' : 'text-left'
               }
               name="gloss"
-              value={gloss || suggestions[0]}
+              value={gloss || suggestions[0] || machineGloss}
               // The extra 26 pixels give room for the padding and border.
               style={{
                 width: width + 26,

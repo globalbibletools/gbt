@@ -171,6 +171,7 @@ export interface Gloss {
   gloss?: string;
   suggestions: string[];
   state: GlossState;
+  machineGloss?: string;
 }
 
 export interface GetVerseGlossesResponseBody {
