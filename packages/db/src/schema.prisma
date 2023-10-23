@@ -143,19 +143,21 @@ model Verse {
 /// A single word within a verse.
 model Word {
   /// The ID of the verse in the format `BBCCCVVVWW`. The last two digits are in order as the words appear in the verse.
-  id      String    @id
+  id             String         @id
   /// The text in Greek, Hebrew, or Aramaic as it appears in the critical text.
-  text    String
+  text           String
   /// The verse the word appears in.
-  verse   Verse     @relation(fields: [verseId], references: [id])
+  verse          Verse          @relation(fields: [verseId], references: [id])
   /// The ID of the verse the word appears in.
-  verseId String
+  verseId        String
   /// The specific form of the lemma for the word.
-  form    LemmaForm @relation(fields: [formId], references: [id])
+  form           LemmaForm      @relation(fields: [formId], references: [id])
   /// The ID of the specific form of the lemma for the word.
-  formId  String
+  formId         String
   /// The list of glosses in different languages for this word.
-  glosses Gloss[]
+  glosses        Gloss[]
+  /// The list of machine glosses in different langugages for this word.
+  machineGlosses MachineGloss[]
 }
 
 /// A form of a lemma. This are differentiated by grammatical forms, as well as suffixes and prefixes.
@@ -205,6 +207,8 @@ model Language {
   verseTranslations   VerseTranslation[]
   /// The list of glosses of different words for this language.
   glosses             Gloss[]
+  /// The list of machine glosses of different words for this language.
+  machineGlosses      MachineGloss[]
   /// The list of roles for members of this language.
   roles               LanguageMemberRole[]
   /// The pending import job if any.
@@ -282,6 +286,22 @@ model Gloss {
   gloss      String?
   /// The approval state of the gloss.
   state      GlossState @default(UNAPPROVED)
+
+  @@id([wordId, languageId])
+}
+
+/// A machine generated gloss of a word in a particular language.
+model MachineGloss {
+  /// The word being glossed.
+  word       Word     @relation(fields: [wordId], references: [id])
+  /// The ID of the word being glossed.
+  wordId     String
+  /// The language of the gloss.
+  language   Language @relation(fields: [languageId], references: [id])
+  /// The ID of the language of the gloss.
+  languageId String   @db.Uuid
+  /// The text of the gloss.
+  gloss      String?
 
   @@id([wordId, languageId])
 }

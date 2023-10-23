@@ -9,6 +9,7 @@ interface WordQuery {
   suggestions: string[];
   state: PrismaTypes.GlossState;
   refGloss?: string;
+  machineGloss?: string;
 }
 
 // In order to generate glosses from Google Translate,
@@ -16,23 +17,29 @@ interface WordQuery {
 async function generateMachineGlossesForVerse(
   words: WordQuery[],
   language: string
-): Promise<string[]> {
+): Promise<(string | undefined)[]> {
   const charRegex = /\w/;
-  const refGlosses = words
-    .map((word, i) =>
+  const wordsToTranslate = words.filter(
+    (word) =>
+      word.suggestions.length === 0 &&
+      !word.machineGloss &&
       word.refGloss?.match(charRegex)
-        ? { refGloss: word.refGloss, index: i }
-        : undefined
-    )
-    .filter((word): word is { refGloss: string; index: number } => !!word);
-  const machineGlosses = await machineTranslationClient.translate(
-    refGlosses.map((w) => w.refGloss),
-    language
   );
-  return words.map(
-    (word, i) =>
-      machineGlosses[refGlosses.findIndex((gloss) => gloss.index === i)]
-  );
+  let machineGlosses: string[] = [];
+  if (wordsToTranslate.length > 0) {
+    machineGlosses = await machineTranslationClient.translate(
+      wordsToTranslate.map((w) => w.refGloss ?? ''),
+      language
+    );
+  }
+  return words.map((word) => {
+    const index = wordsToTranslate.findIndex((w) => w === word);
+    if (index >= 0) {
+      return machineGlosses[index];
+    } else {
+      return;
+    }
+  });
 }
 
 export default createRoute<{ code: string; verseId: string }>()
@@ -79,7 +86,8 @@ export default createRoute<{ code: string; verseId: string }>()
           COALESCE("Gloss"."gloss", '') AS "gloss",
           COALESCE("Suggestion"."suggestions", '{}') AS "suggestions",
           COALESCE("Gloss"."state", 'UNAPPROVED') AS "state",
-          "RefGloss"."gloss" AS "refGloss"
+          "RefGloss"."gloss" AS "refGloss",
+          "MachineGloss"."gloss" AS "machineGloss"
         FROM "VerseWord"
         LEFT OUTER JOIN "Suggestion" ON "VerseWord"."id" = "Suggestion"."id"
         LEFT OUTER JOIN "Gloss" ON "VerseWord"."id" = "Gloss"."wordId"
@@ -87,6 +95,9 @@ export default createRoute<{ code: string; verseId: string }>()
           AND "Gloss"."gloss" IS NOT NULL
         LEFT OUTER JOIN "Gloss" AS "RefGloss" ON "VerseWord"."id" = "RefGloss"."wordId"
           AND "RefGloss"."gloss" IS NOT NULL
+        LEFT OUTER JOIN "MachineGloss" ON "VerseWord"."id" = "MachineGloss"."wordId"
+          AND "MachineGloss"."languageId" = ${language.id}::uuid
+          AND "MachineGloss"."gloss" IS NOT NULL
         JOIN "RefLanguage" ON "RefGloss"."languageId" = "RefLanguage"."id"
         ORDER BY "VerseWord"."id" ASC
       `;
@@ -98,15 +109,35 @@ export default createRoute<{ code: string; verseId: string }>()
           words,
           'es'
         );
+        const glossesToInsert: { gloss: string; wordId: string }[] = [];
         res.ok({
-          data: words.map((word, i) => ({
-            wordId: word.wordId,
-            gloss: word.gloss,
-            suggestions: word.suggestions,
-            state: word.state,
-            machineGloss: machineGlosses[i],
-          })),
+          data: words.map((word, i) => {
+            const machineGloss = machineGlosses[i];
+            if (machineGloss && !word.machineGloss) {
+              glossesToInsert.push({
+                wordId: word.wordId,
+                gloss: machineGloss,
+              });
+            }
+            return {
+              wordId: word.wordId,
+              gloss: word.gloss,
+              suggestions: word.suggestions,
+              state: word.state,
+              machineGloss: word.machineGloss ?? machineGlosses[i],
+            };
+          }),
         });
+        if (glossesToInsert.length > 0) {
+          await client.machineGloss.createMany({
+            data: glossesToInsert.map((gloss) => ({
+              wordId: gloss.wordId,
+              gloss: gloss.gloss,
+              languageId: language.id,
+            })),
+            skipDuplicates: true,
+          });
+        }
       }
     },
   })
