@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { LanguageRole } from '@translation/api-types';
+import { LanguageRole, TextDirection } from '@translation/api-types';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -31,6 +31,10 @@ import queryClient from '../../shared/queryClient';
 import bibleTranslationClient, {
   BibleTranslation,
 } from '../../shared/bibleTranslationClient';
+import {
+  ButtonSelectorInput,
+  ButtonSelectorOption,
+} from '../../shared/components/form/ButtonSelectorInput';
 import ComboboxInput from '../../shared/components/form/ComboboxInput';
 
 const languageQueryKey = (code: string) => ({
@@ -109,6 +113,7 @@ function useLanguageMembersQuery(code: string) {
 interface FormData {
   name: string;
   font: string;
+  textDirection: TextDirection;
   bibleTranslationIds: string[];
 }
 
@@ -138,6 +143,7 @@ export default function ManageLanguageView() {
       await apiClient.languages.update(language.data.code, {
         name: data.name,
         font: data.font,
+        textDirection: data.textDirection,
         bibleTranslationIds: data.bibleTranslationIds,
       });
       flash.success(t('languages:language_updated'));
@@ -189,6 +195,25 @@ export default function ManageLanguageView() {
               items={fonts.map((font) => ({ label: font, value: font }))}
               onChange={(font) => setPreviewFont(font)}
             />
+          </div>
+          <div className="mb-2">
+            <FormLabel id="text-direction-label">
+              {t('languages:text_direction').toUpperCase()}
+            </FormLabel>
+            <div>
+              <ButtonSelectorInput
+                name="textDirection"
+                aria-labelledby="text-direction-label"
+                defaultValue={language.data.textDirection}
+              >
+                <ButtonSelectorOption value={TextDirection.LTR}>
+                  {t('languages:ltr')}
+                </ButtonSelectorOption>
+                <ButtonSelectorOption value={TextDirection.RTL}>
+                  {t('languages:rtl')}
+                </ButtonSelectorOption>
+              </ButtonSelectorInput>
+            </div>
           </div>
           <div className="mb-2">
             <FormLabel htmlFor="bibleTranslationIds">

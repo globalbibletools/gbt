@@ -19,12 +19,14 @@ get:
                       - code: es
                         name: Español
                         font: Noto Serif
+                        textDirection: ltr
                         bibleTranslationIds:
                           - spa_bes
                           - spa_vbl
                       - code: en
                         name: English
                         font: Noto Sans
+                        textDirection: ltr
                         bibleTranslationIds:
                           - eng_abt
                           - eng_bsb
