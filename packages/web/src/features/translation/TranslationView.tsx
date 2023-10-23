@@ -54,22 +54,29 @@ function useTranslationQueries(language: string, verseId: string) {
     let nextVerseId = verseId;
     for (let i = 0; i < VERSES_TO_PREFETCH; i++) {
       nextVerseId = incrementVerseId(nextVerseId);
-      queryClient.ensureQueryData({
+      queryClient.prefetchQuery({
         queryKey: ['verse', nextVerseId],
         queryFn: ({ queryKey }) => apiClient.verses.findById(queryKey[1]),
       });
-      queryClient.ensureQueryData({
+      queryClient.prefetchQuery({
         queryKey: ['verse-glosses', 'eng', nextVerseId],
         queryFn: ({ queryKey }) =>
           apiClient.verses.findVerseGlosses(queryKey[2], 'eng'),
       });
-      queryClient.ensureQueryData({
+      queryClient.prefetchQuery({
         queryKey: ['verse-glosses', language, nextVerseId],
         queryFn: ({ queryKey }) =>
           apiClient.verses.findVerseGlosses(queryKey[2], queryKey[1]),
       });
     }
   }, [language, verseId, queryClient]);
+
+  // This ensures that when the verse changes, we have the latest gloss suggestions,
+  // but in the meantime, we can show what was prefetched.
+  const refetch = targetGlossesQuery.refetch;
+  useEffect(() => {
+    refetch();
+  }, [refetch, language, verseId]);
 
   return {
     languagesQuery,
