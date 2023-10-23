@@ -11,7 +11,10 @@
   "import_glosses_success": "Imported glosses successfully!",
   "import_glosses_title": "Import Glosses: {{languageName}}",
   "import_language": "Import Language",
-  "language_code_required": "Please enter the language code.",
+  "language_code_errors": {
+    "required": "Please enter the language code.",
+    "valid": "Please enter a valid ISO 639-3 language code."
+  },
   "language_created": "Language created!",
   "language_exists": "A language with code \"{{code}}\" already exists",
   "language_name_required": "Please enter the language name.",
