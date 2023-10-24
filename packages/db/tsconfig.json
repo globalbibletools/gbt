@@ -5,6 +5,7 @@
     "declaration": true,
     "types": ["node"],
     "module": "commonjs",
+    "lib": ["ES2021.String"],
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "noImplicitOverride": true,
