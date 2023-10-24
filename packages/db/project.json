@@ -24,7 +24,13 @@
     "seed": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "npx ts-node --project packages/db/tsconfig.json packages/db/src/seed.ts"
+        "command": "npx ts-node --project packages/db/tsconfig.json packages/db/src/scripts/seed.ts"
+      }
+    },
+    "import-bdb": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx ts-node --project packages/db/tsconfig.json packages/db/src/scripts/import-bdb.ts"
       }
     },
     "prisma": {
