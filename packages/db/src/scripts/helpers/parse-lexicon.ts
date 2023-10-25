@@ -37,5 +37,9 @@ const toMarkDown = (raw: string): string => {
   return raw
     .replaceAll('<br>', '\n\n')
     .replaceAll('<B>', '<BR>')
-    .replaceAll('<BR>', '\n\n');
+    .replaceAll('<BR>', '\n\n')
+    .replaceAll('<i>', '*')
+    .replaceAll('</i>', '*')
+    .replaceAll(/<ref=".*">/g, '')
+    .replaceAll('</ref>', '');
 };

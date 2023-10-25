@@ -1,6 +1,6 @@
 import { parseLexicon } from './helpers/parse-lexicon';
 
-const regex = /<(?!\/).*?>/g;
+const regex = /<.*?>/g;
 
 const importBdb = async () => {
   const parsed = await parseLexicon(
