@@ -42,6 +42,7 @@ const importBdb = async () => {
     });
   await client.$transaction(lemmaUpserts);
   await client.lemmaResource.createMany({ data });
+  console.log('Imported BDB definitions');
 };
 
 console.log('Import BDB definitions...');
