@@ -2,6 +2,7 @@ import { GetVerseGlossesResponseBody } from '@translation/api-types';
 import { client, PrismaTypes } from '../../../../../../shared/db';
 import createRoute from '../../../../../../shared/Route';
 import { machineTranslationClient } from '../../../../../../shared/machine-translation';
+import languageMap from '../../../../../../../../data/language-mapping.json';
 
 interface WordQuery {
   wordId: string;
@@ -102,12 +103,14 @@ export default createRoute<{ code: string; verseId: string }>()
         ORDER BY "VerseWord"."id" ASC
       `;
 
+      const languageCode =
+        languageMap[language.code as keyof typeof languageMap];
       if (words.length === 0) {
         res.notFound();
-      } else {
+      } else if (languageCode) {
         const machineGlosses = await generateMachineGlossesForVerse(
           words,
-          'es'
+          languageCode
         );
         const glossesToInsert: { gloss: string; wordId: string }[] = [];
         res.ok({
