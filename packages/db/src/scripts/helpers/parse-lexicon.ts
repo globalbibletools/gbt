@@ -1,6 +1,10 @@
 import { createReadStream } from 'fs';
 import { createInterface } from 'readline';
 
+/**
+ * This is used to parse our lexicon files, so that they can be inserted into
+ * the DB.
+ */
 export const parseLexicon = async (
   filename: string,
   keys: string[]
@@ -17,10 +21,8 @@ export const parseLexicon = async (
       if (currentId) {
         // Record the last data before overwriting the temporary variables.
         parsed[currentId] = currentData;
-        // console.log(currentId, currentData);
       }
       currentId = rest.replaceAll('=', '');
-      // console.log(currentId);
       currentData = {};
     } else if (indicator == '@') {
       const [key, value] = rest.split('=\t', 2);
