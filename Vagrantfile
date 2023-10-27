@@ -3,30 +3,17 @@
 
 # NOTES:
 # This version was tested using Windows 11 Home Edition
-# It uses the "vagrant-gatling-rsync" Vagrant plugin to sync host folder to guest folder
-# It uses the "vagrant-rsync-back" plugin to sync guest folder to host folder
-# The sync from host to guest happens automatically on "vagrant up" after a "vagrant halt"
-# Once the sync is complete, rsync will monitor the host folder for changes and sync them to the guest folder.
-# To sync from guest to host, you must manually run "vagrant rsync-back" in a terminal window in vagrant project folder
-# Please install these plugins before issuing "vagrant up" by running the 2 commands in a terminal window.
-# vagrant plugin install vagrant-gatling-rsync
-# vagrant plugin install vagrant-rsync-back
-
-# Customize the following constants to suit your needs
-HOST_FOLDER = "../gloss-translation"
-
 # All Vagrant configuration is done below. The "2" in Vagrant.configure
 # configures the configuration version (we support older styles for
 # backwards compatibility). Please don't change it unless you know what
 # you're doing.
 Vagrant.configure("2") do |config|
-  # The most common configuration options are documented and commented below.
-  # For a complete reference, please see the online documentation at
+  # For a complete reference of configuration options, please see the online documentation at
   # https://docs.vagrantup.com.
 
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://vagrantcloud.com/search.
-  config.vm.box = "generic/ubuntu2204"
+  config.vm.box = "generic/ubuntu2210"
 
   # Configure for application API
   config.vm.network "forwarded_port", guest: 4300, host: 4300, host_ip: "127.0.0.1"
@@ -34,18 +21,11 @@ Vagrant.configure("2") do |config|
   # Configure for application Web
   config.vm.network "forwarded_port", guest: 4200, host: 4200, host_ip: "127.0.0.1"
 
-  # Mount repo project root folder.
-  config.vm.synced_folder HOST_FOLDER, "/home/vagrant/vmrepo", type: "rsync",
-    rsync__exclude: [".git/",".vagrant/","docs/", "node_modules/","packages/api/.env.local","packages/db/.env.local"]
+  # Configure for database
+  config.vm.network "forwarded_port", guest: 5432, host: 5432, host_ip: "127.0.0.1"
 
-  # Configure the window for gatling to coalesce writes.
-  if Vagrant.has_plugin?("vagrant-gatling-rsync")
-    config.gatling.latency = 2.5
-    config.gatling.time_format = "%H:%M:%S"
-  end
-
-  # Automatically sync when machines with rsync folders come up.
-  config.gatling.rsync_on_startup = true
+  # Mount repo project root folder. 
+  config.vm.synced_folder ".", "/home/vagrant/vmrepo", type: "virtualbox"
 
   # Disable the default share of the current code directory. Doing this
   # provides improved isolation between the vagrant box and your host
@@ -62,17 +42,17 @@ Vagrant.configure("2") do |config|
     vb.customize ["setextradata", :id, "VBoxInternal2/SharedFoldersEnableSymlinksCreate//home/vagrant/vmrepo", "1"]
   end
 
+  # Install Node.js 18
   config.vm.provision "shell", name: "nodejs", inline: <<-SHELL
     echo "Provisioning with root access"
 
     # Update resynchronizes the package index files from their sources. 
-    sudo apt update
+    sudo apt-get update
 
-    # *** Install Node.js 18 ***
     echo "Installing Node.js 18..."
 
     # 1. Download and import the Nodesource GPG key
-    sudo apt install -y ca-certificates curl gnupg
+    sudo apt-get install -y ca-certificates curl gnupg
     sudo mkdir -p /etc/apt/keyrings
     curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
 
@@ -81,16 +61,16 @@ Vagrant.configure("2") do |config|
     echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" | sudo tee /etc/apt/sources.list.d/nodesource.list
 
     # 3. Run Update and Install
-    sudo apt update
-    sudo apt install nodejs -y
+    sudo apt-get update
+    sudo apt-get install nodejs -y
     echo "End of: Installing Node.js 18"
   SHELL
 
+  # Install Postgres 14
   config.vm.provision "shell", name: "postgres", inline: <<-SHELL
     echo "Starting Postgres 14..."
     echo "Provisioning with root access"
 
-    # *** Install Postgres 14 ***
     echo "Installing Postgres 14..."
 
     # 1. Create the file repository configuration:
@@ -100,11 +80,11 @@ Vagrant.configure("2") do |config|
     wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
 
     # 3. Update the package lists
-    sudo apt update
+    sudo apt-get update
 
     # 4. Install the latest version of PostgreSQL.
     # If you want a specific version, use 'postgresql-14' or similar instead of 'postgresql':
-    sudo apt -y install postgresql-14
+    sudo apt-get -y install postgresql-14
 
     # 5. Create a PostgreSQL user with CREATEDB and CREATEROLE privileges
     echo "sudo -u postgres psql -c \"CREATE USER vagrant WITH PASSWORD 'vagrant' CREATEDB CREATEROLE;\""
@@ -120,6 +100,7 @@ Vagrant.configure("2") do |config|
     echo "End of: Installing Postgres 14"
   SHELL
 
+  # Update .profile to cd into /home/vagrant/vmrepo
   config.vm.provision "shell", name: "profile", privileged: false, inline: <<-SHELL
     echo "Setting up profile for /home/vagrant/vmrepo"
     echo "Provisioning with user access"
@@ -130,6 +111,7 @@ Vagrant.configure("2") do |config|
     echo "End of profile"
   SHELL
 
+  # Create .env.local files
   config.vm.provision "shell", name: "env", privileged: false, inline: <<-SHELL
     echo "Setting up .env.local files"
     echo "Provisioning with user access"
@@ -142,6 +124,7 @@ Vagrant.configure("2") do |config|
     echo "End of .env.local files"
   SHELL
 
+  # Resolve File Watcher Limit Issue
   config.vm.provision "shell", name: "issue", inline: <<-SHELL
     echo "Resolving File Watcher Limit Issue..."
     echo "Provisioning with root access"
@@ -158,33 +141,32 @@ Vagrant.configure("2") do |config|
      fi
      echo "End of File Watcher Limit Issue"
   SHELL
-    
+   
+  # Install npm packages
   config.vm.provision "shell", name: "npm", privileged: false, inline: <<-SHELL
     echo "Setting up npm"
     echo "Provisioning with user access"
     echo "cd /home/vagrant/vmrepo"
     cd /home/vagrant/vmrepo
 
-    echo "Performing npm install..."
-    npm install
     echo "Setting nx as global..."
     sudo npm i -g nx
-    echo "npm provisioning completed."
 
-    echo "Recompiling project..."
-    nx build api
-    nx build web
+    echo "Performing npm install..."
+    npm install
+    echo "npm provisioning completed."
 
     echo "End of npm"
   SHELL
 
+  # Run db migrations with Nx Prisma and restore database from seed dump
   config.vm.provision "shell", name: "dbsetup", privileged: false, inline: <<-SHELL
     echo "Setting up database"
     echo "Provisioning with user access"
     echo "cd /home/vagrant/vmrepo"
     cd /home/vagrant/vmrepo
     echo "Running db migrations with Nx Prisma"
-    echo "nx prisma db migrate reset"
+    echo "nx prisma db migrate reset --force"
     nx prisma db migrate reset --force
 
     echo "Restoring database from seed dump"
@@ -192,5 +174,55 @@ Vagrant.configure("2") do |config|
     pg_restore -Fc --format=custom --dbname=postgres://vagrant:vagrant@localhost:5432/gloss_translation /home/vagrant/vmrepo/data/seed.dump
 
     echo "End of dbsetup"
+  SHELL
+
+  # Configure database for host access
+  config.vm.provision "shell", name: "dbconfig", inline: <<-SHELL
+    echo "Configuring database for host access"
+    echo "Provisioning with root access"
+
+    echo "Setting Progresql to listen on all interfaces"
+    # Define the search and replace strings
+    commented_str="#listen_addresses = 'localhost'"
+    replace_str="listen_addresses = '*'"
+
+    # Check if the search string exists in postgresql.conf
+    if grep -q "^ *$replace_str" /etc/postgresql/14/main/postgresql.conf; then
+      echo "String: $replace_str already exists in postgresql.conf"
+    else
+      # Check if the commented string exists in postgresql.conf
+      if grep -q "^ *$commented_str" /etc/postgresql/14/main/postgresql.conf; then
+        # Replace the commented string with the replace string
+        sudo sed -i "s/^ *$commented_str/$replace_str/" /etc/postgresql/14/main/postgresql.conf
+        echo "String: $replace_str has been setup in postgresql.conf"
+      else
+        # Append the replace string to postgresql.conf
+        echo "$replace_str" | sudo tee -a /etc/postgresql/14/main/postgresql.conf
+        echo "String: $replace_str has been appended to postgresql.conf"
+      fi
+    fi
+    echo "Adding host lines to pg_hba.conf"
+    # Get the default gateway IP address
+    gateway_IP=$(ip route | awk '/default/ { print $3 }')
+    echo "Default gateway IP address: $gateway_IP"
+
+    # Define the lines to append for database host access
+    line1="host    postgres    all    $gateway_IP/32    md5"
+    line2="host    gloss_translation    all    $gateway_IP/32    md5"
+
+    # Check if the lines already exist in pg_hba.conf
+    if grep -Fxq "$line1" /etc/postgresql/14/main/pg_hba.conf && grep -Fxq "$line2" /etc/postgresql/14/main/pg_hba.conf; then
+      echo "host lines already exist in pg_hba.conf"
+    else
+      # Append the lines to pg_hba.conf
+      echo "$line1" | sudo tee -a /etc/postgresql/14/main/pg_hba.conf
+      echo "$line2" | sudo tee -a /etc/postgresql/14/main/pg_hba.conf
+      echo "host lines have been added to pg_hba.conf"
+    fi
+
+    # Restart PostgreSQL to apply changes
+    sudo service postgresql restart
+
+    echo "End of database configuration"
   SHELL
 end
