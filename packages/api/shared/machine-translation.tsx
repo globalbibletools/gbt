@@ -17,7 +17,7 @@ export class MachineTranslationClient {
     const [response] = await this.client.translateText({
       contents: strings,
       targetLanguageCode: targetLanguage,
-      parent: 'projects/global-bible-too-1694742039480',
+      parent: process.env.GOOGLE_TRANSLATE_PROJECT,
     });
 
     return response.translations?.map((t) => t.translatedText ?? '') ?? [];
