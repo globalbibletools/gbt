@@ -60,8 +60,11 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
       []
     );
 
+    const glossValue = gloss || suggestions[0] || machineGloss;
+    const hasMachineSuggestion = !gloss && !suggestions[0] && !!machineGloss;
+
     const glossWidth = useTextWidth({
-      text: gloss ?? '',
+      text: glossValue ?? '',
       fontFamily: expandFontFamily(targetLanguage?.font ?? 'Noto Sans'),
       fontSize: '16px',
     });
@@ -73,10 +76,11 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
         Math.max(
           ancientWord.current?.clientWidth ?? 0,
           refGloss.current?.clientWidth ?? 0,
-          glossWidth
+          // The extra 24 pixels accomdates the google icon
+          glossWidth + (hasMachineSuggestion ? 24 : 0)
         )
       );
-    }, [glossWidth]);
+    }, [glossWidth, hasMachineSuggestion]);
 
     return (
       <li
@@ -108,16 +112,8 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
         </div>
         {editable && (
           <>
-            <AutocompleteInput
-              className={`
-                -m-px min-w-[80px]
-                ${originalLanguage === 'hebrew' ? 'text-right' : 'text-left'}
-              `}
-              inputClassName={
-                originalLanguage === 'hebrew' ? 'text-right' : 'text-left'
-              }
-              name="gloss"
-              value={gloss || suggestions[0] || machineGloss}
+            <div
+              className="relative min-w-[80px]"
               // The extra 26 pixels give room for the padding and border.
               style={{
                 width: width + 26,
@@ -125,44 +121,62 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
                   targetLanguage?.font ?? 'Noto Sans'
                 ),
               }}
-              dir={targetLanguage?.textDirection ?? TextDirection.LTR}
-              state={status === 'approved' ? 'success' : undefined}
-              aria-describedby={`word-help-${word.id}`}
-              aria-labelledby={`word-${word.id}`}
-              onChange={(value, implicit) => {
-                if (value !== gloss || (!implicit && status !== 'approved')) {
-                  onChange({
-                    gloss: value,
-                    approved: !implicit && !!value,
-                  });
+            >
+              {hasMachineSuggestion && (
+                <Icon
+                  className="absolute left-3 top-3"
+                  icon={['fab', 'google']}
+                />
+              )}
+              <AutocompleteInput
+                className={`
+                  w-full -m-px 
+                  ${originalLanguage === 'hebrew' ? 'text-right' : 'text-left'}
+                `}
+                inputClassName={
+                  originalLanguage === 'hebrew' ? 'text-right' : 'text-left'
                 }
-              }}
-              onKeyDown={(e) => {
-                if (e.metaKey || e.altKey || e.ctrlKey) return;
-                switch (e.key) {
-                  case 'Enter': {
-                    e.preventDefault();
-                    if (e.shiftKey) {
-                      const prev = root.current?.previousElementSibling;
-                      prev?.querySelector('input')?.focus();
-                    } else {
-                      const nextRoot = root.current?.nextElementSibling;
-                      const next =
-                        nextRoot?.querySelector('input') ??
-                        nextRoot?.querySelector('button');
-                      next?.focus();
+                name="gloss"
+                value={glossValue}
+                dir={targetLanguage?.textDirection ?? TextDirection.LTR}
+                state={status === 'approved' ? 'success' : undefined}
+                aria-describedby={`word-help-${word.id}`}
+                aria-labelledby={`word-${word.id}`}
+                onChange={(value, implicit) => {
+                  if (value !== gloss || (!implicit && status !== 'approved')) {
+                    onChange({
+                      gloss: value,
+                      approved: !implicit && !!value,
+                    });
+                  }
+                }}
+                onKeyDown={(e) => {
+                  if (e.metaKey || e.altKey || e.ctrlKey) return;
+                  switch (e.key) {
+                    case 'Enter': {
+                      e.preventDefault();
+                      if (e.shiftKey) {
+                        const prev = root.current?.previousElementSibling;
+                        prev?.querySelector('input')?.focus();
+                      } else {
+                        const nextRoot = root.current?.nextElementSibling;
+                        const next =
+                          nextRoot?.querySelector('input') ??
+                          nextRoot?.querySelector('button');
+                        next?.focus();
+                      }
+                      break;
                     }
-                    break;
+                    case 'Escape': {
+                      onChange({ approved: false });
+                      break;
+                    }
                   }
-                  case 'Escape': {
-                    onChange({ approved: false });
-                    break;
-                  }
-                }
-              }}
-              suggestions={suggestions}
-              ref={input}
-            />
+                }}
+                suggestions={suggestions}
+                ref={input}
+              />
+            </div>
             <InputHelpText
               id={`word-help-${word.id}`}
               className={
