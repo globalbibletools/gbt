@@ -121,10 +121,13 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
                   targetLanguage?.font ?? 'Noto Sans'
                 ),
               }}
+              dir={targetLanguage?.textDirection ?? TextDirection.LTR}
             >
               {hasMachineSuggestion && (
                 <Icon
-                  className="absolute left-3 top-3"
+                  className={`absolute top-3 ${
+                    originalLanguage === 'hebrew' ? 'left-3' : 'right-3'
+                  }`}
                   icon={['fab', 'google']}
                 />
               )}
@@ -136,9 +139,29 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
                 inputClassName={
                   originalLanguage === 'hebrew' ? 'text-right' : 'text-left'
                 }
+                renderOption={(item, i) => (
+                  <div
+                    className={
+                      machineGloss
+                        ? `relative ${
+                            originalLanguage === 'hebrew' ? 'pl-5' : 'pr-5'
+                          }`
+                        : ''
+                    }
+                  >
+                    {item}
+                    {i === suggestions.length ? (
+                      <Icon
+                        className={`absolute top-1 ${
+                          originalLanguage === 'hebrew' ? 'left-0' : 'right-0'
+                        }`}
+                        icon={['fab', 'google']}
+                      />
+                    ) : undefined}
+                  </div>
+                )}
                 name="gloss"
                 value={glossValue}
-                dir={targetLanguage?.textDirection ?? TextDirection.LTR}
                 state={status === 'approved' ? 'success' : undefined}
                 aria-describedby={`word-help-${word.id}`}
                 aria-labelledby={`word-${word.id}`}
@@ -173,7 +196,9 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
                     }
                   }
                 }}
-                suggestions={suggestions}
+                suggestions={
+                  machineGloss ? [...suggestions, machineGloss] : suggestions
+                }
                 ref={input}
               />
             </div>
