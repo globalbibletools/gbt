@@ -4,9 +4,10 @@ export class MachineTranslationClient {
   client: TranslationServiceClient;
   constructor() {
     this.client = new TranslationServiceClient({
-      credentials: JSON.parse(
-        process.env.GOOGLE_TRANSLATE_CREDENTIALS?.replaceAll('\n', '\\n') ?? ''
-      ),
+      credentials: {
+        client_email: process.env.GOOGLE_TRANSLATE_EMAIL,
+        private_key: process.env.GOOGLE_TRANSLATE_KEY,
+      },
     });
   }
 
