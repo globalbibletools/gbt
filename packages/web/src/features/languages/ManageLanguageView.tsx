@@ -191,7 +191,7 @@ export default function ManageLanguageView() {
               name="font"
               className="w-full h-10"
               required
-              value={previewFont}
+              defaultValue={previewFont}
               items={fonts.map((font) => ({ label: font, value: font }))}
               onChange={(font) => setPreviewFont(font)}
             />
