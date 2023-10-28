@@ -12,11 +12,10 @@ module.exports = {
     ...createGlobPatternsForDependencies(__dirname),
   ],
   theme: {
-    extend: {
-      fontFamily: {
-        hebrew: ['"SBL-Hebrew"', '"Times New Roman"', 'serif'],
-        greek: ['"SBL-Greek"', '"Times New Roman"', 'serif'],
-      },
+    fontFamily: {
+      sans: '"Noto Sans"',
+      hebrew: ['"SBL-Hebrew"', '"Times New Roman"', 'serif'],
+      greek: ['"SBL-Greek"', '"Times New Roman"', 'serif'],
     },
   },
   plugins: [utilities, require('@headlessui/tailwindcss')],
