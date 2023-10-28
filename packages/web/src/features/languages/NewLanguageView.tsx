@@ -7,7 +7,6 @@ import Card from '../../shared/components/Card';
 import View from '../../shared/components/View';
 import ViewTitle from '../../shared/components/ViewTitle';
 import Button from '../../shared/components/actions/Button';
-import ComboboxInput from '../../shared/components/form/ComboboxInput';
 import Form from '../../shared/components/form/Form';
 import FormLabel from '../../shared/components/form/FormLabel';
 import InputError from '../../shared/components/form/InputError';
@@ -60,21 +59,24 @@ export default function NewLanguageView() {
             <FormLabel htmlFor="code">
               {t('languages:code').toUpperCase()}
             </FormLabel>
-            <ComboboxInput
+            <TextInput
               id="code"
               name="code"
               className="w-full"
+              autoComplete="off"
               required
-              items={languageCodes.map((code, i) => ({
-                label: code,
-                value: code,
-              }))}
+              validate={{
+                valid: (code: string) => languageCodes.includes(code),
+              }}
               aria-describedby="code-error"
             />
             <InputError
               id="code-error"
               name="code"
-              messages={{ required: t('languages:language_code_required') }}
+              messages={{
+                required: t('languages:language_code_errors.required'),
+                valid: t('languages:language_code_errors.valid'),
+              }}
             />
           </div>
           <div className="mb-4">
