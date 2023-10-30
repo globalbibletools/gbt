@@ -1,5 +1,5 @@
 import { parseLexicon } from './helpers/parse-lexicon';
-import { PrismaClient } from '@prisma/client';
+import { Lemma, LemmaResource, PrismaClient } from '@prisma/client';
 
 const client = new PrismaClient();
 
@@ -11,8 +11,9 @@ const importBdb = async () => {
       resourceCode: 'BDB',
     },
   });
-  const lemmaUpserts: any[] = [];
-  const data = Object.keys(parsed)
+  const lemmaData: Lemma[] = [];
+  const resourceData: LemmaResource[] = [];
+  Object.keys(parsed)
     .filter((lemmaId) => {
       if (typeof parsed[lemmaId]['BdbMedDef'] === 'undefined') {
         console.error('Missing definition for', lemmaId);
@@ -20,28 +21,15 @@ const importBdb = async () => {
       }
       return true;
     })
-    .map((lemmaId) => {
-      // We have to create non-existent lemmas, so that the foreign key on lemma
-      // resources has something to point to.
-      lemmaUpserts.push(
-        client.lemma.upsert({
-          create: {
-            id: lemmaId,
-          },
-          update: {},
-          where: {
-            id: lemmaId,
-          },
-        })
-      );
-      return {
-        lemmaId,
-        resourceCode: 'BDB' as const,
-        content: parsed[lemmaId]['BdbMedDef'],
-      };
+    .forEach((lemmaId) => {
+      lemmaData.push({ id: lemmaId });
+      const content = parsed[lemmaId]['BdbMedDef'];
+      resourceData.push({ lemmaId, resourceCode: 'BDB' as const, content });
     });
-  await client.$transaction(lemmaUpserts);
-  await client.lemmaResource.createMany({ data });
+  // We have to create non-existent lemmas, so that the foreign key on lemma
+  // resources has something to point to.
+  await client.lemma.createMany({ data: lemmaData, skipDuplicates: true });
+  await client.lemmaResource.createMany({ data: resourceData });
   console.log('Imported BDB definitions');
 };
 
