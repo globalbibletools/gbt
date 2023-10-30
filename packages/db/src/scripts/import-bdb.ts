@@ -30,7 +30,7 @@ const importBdb = async () => {
   // resources has something to point to.
   await client.lemma.createMany({ data: lemmaData, skipDuplicates: true });
   await client.lemmaResource.createMany({ data: resourceData });
-  console.log('Imported BDB definitions');
+  console.log('Successfully imported BDB definitions');
 };
 
 console.log('Import BDB definitions...');
