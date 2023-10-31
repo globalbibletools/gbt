@@ -36,7 +36,7 @@ This was tested using:
 1. Verify installation by running `vagrant -v` in a terminal session.
 1. Install [VirtualBox](https://www.virtualbox.org/).
 1. If you have not already done so, fork repo to your local machine.
-1. Vagrant uses a special configuration file called: `Vagrantfile` that contains all the information required for the creation of a Virtual Machine (guest) on your workstation (host) . It is located n your repo root directory.
+1. Vagrant uses a special configuration file called `Vagrantfile` that contains all the information required for the creation of a Virtual Machine (guest) on your workstation (host) . It is located n your repo root directory.
 1. To start the creation of your virtual environment, run this command in the repo root directory. (This takes a while so be patient.)
 
    ```bash
@@ -74,10 +74,8 @@ This was tested using:
 1. For help on vagrant commands, at a terminal session enter:
 
    ```bash
-   vagrant -help
+   vagrant --help
    ```
-
-1. Once your VM environment is created, as an alternative to the vagrant commands listed above, you can use the `Oracle VM VirtualBox` application to manage the starting, stopping, and configuration of your VM. The `Help` menu provides detailed instructions on its use.
 
 ## Post-Installation Notes
 
