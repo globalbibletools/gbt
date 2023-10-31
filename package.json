@@ -90,6 +90,7 @@
     "zod": "3.21.4"
   },
   "prisma": {
-    "schema": "packages/db/src/schema.prisma"
+    "schema": "packages/db/src/schema.prisma",
+    "seed": "nx run db:seed"
   }
 }
