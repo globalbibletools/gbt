@@ -42,17 +42,24 @@ Vagrant.configure("2") do |config|
     vb.customize ["setextradata", :id, "VBoxInternal2/SharedFoldersEnableSymlinksCreate//home/vagrant/vmrepo", "1"]
   end
 
+  # Echo current start time stamp
+  config.vm.provision "shell", name: "starttimestamp", inline: <<-SHELL
+    echo " "  
+    echo "Provisioning started at: $(date +%Y-%m-%d_%H:%M:%S)"
+    echo " "
+  SHELL
+
   # Install Node.js 18
   config.vm.provision "shell", name: "nodejs", inline: <<-SHELL
+    echo " " 
+    echo "Installing Node.js 18..."
     echo "Provisioning with root access"
 
     # Update resynchronizes the package index files from their sources. 
-    sudo apt-get update
-
-    echo "Installing Node.js 18..."
+    sudo apt update
 
     # 1. Download and import the Nodesource GPG key
-    sudo apt-get install -y ca-certificates curl gnupg
+    sudo apt install -y ca-certificates curl gnupg
     sudo mkdir -p /etc/apt/keyrings
     curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
 
@@ -61,13 +68,14 @@ Vagrant.configure("2") do |config|
     echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" | sudo tee /etc/apt/sources.list.d/nodesource.list
 
     # 3. Run Update and Install
-    sudo apt-get update
-    sudo apt-get install nodejs -y
+    sudo apt update
+    sudo apt install nodejs -y
     echo "End of: Installing Node.js 18"
   SHELL
 
   # Install Postgres 14
   config.vm.provision "shell", name: "postgres", inline: <<-SHELL
+    echo " " 
     echo "Starting Postgres 14..."
     echo "Provisioning with root access"
 
@@ -80,11 +88,11 @@ Vagrant.configure("2") do |config|
     wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
 
     # 3. Update the package lists
-    sudo apt-get update
+    sudo apt update
 
     # 4. Install the latest version of PostgreSQL.
     # If you want a specific version, use 'postgresql-14' or similar instead of 'postgresql':
-    sudo apt-get -y install postgresql-14
+    sudo apt -y install postgresql-14
 
     # 5. Create a PostgreSQL user with CREATEDB and CREATEROLE privileges
     echo "sudo -u postgres psql -c \"CREATE USER vagrant WITH PASSWORD 'vagrant' CREATEDB CREATEROLE;\""
@@ -102,6 +110,7 @@ Vagrant.configure("2") do |config|
 
   # Update .profile to cd into /home/vagrant/vmrepo
   config.vm.provision "shell", name: "profile", privileged: false, inline: <<-SHELL
+    echo " " 
     echo "Setting up profile for /home/vagrant/vmrepo"
     echo "Provisioning with user access"
     if !(grep -q "cd /home/vagrant/vmrepo" /home/vagrant/.profile) then
@@ -113,6 +122,7 @@ Vagrant.configure("2") do |config|
 
   # Create .env.local files
   config.vm.provision "shell", name: "env", privileged: false, inline: <<-SHELL
+    echo " " 
     echo "Setting up .env.local files"
     echo "Provisioning with user access"
     echo "Performing database project setup..."
@@ -126,6 +136,7 @@ Vagrant.configure("2") do |config|
 
   # Resolve File Watcher Limit Issue
   config.vm.provision "shell", name: "issue", inline: <<-SHELL
+    echo " " 
     echo "Resolving File Watcher Limit Issue..."
     echo "Provisioning with root access"
     # Define the line to check for
@@ -144,6 +155,7 @@ Vagrant.configure("2") do |config|
    
   # Install npm packages
   config.vm.provision "shell", name: "npm", privileged: false, inline: <<-SHELL
+    echo " " 
     echo "Setting up npm"
     echo "Provisioning with user access"
     echo "cd /home/vagrant/vmrepo"
@@ -154,13 +166,13 @@ Vagrant.configure("2") do |config|
 
     echo "Performing npm install..."
     npm install
-    echo "npm provisioning completed."
 
-    echo "End of npm"
+    echo "npm provisioning completed."
   SHELL
 
   # Run db migrations with Nx Prisma and restore database from seed dump
   config.vm.provision "shell", name: "dbsetup", privileged: false, inline: <<-SHELL
+    echo " " 
     echo "Setting up database"
     echo "Provisioning with user access"
     echo "cd /home/vagrant/vmrepo"
@@ -178,6 +190,7 @@ Vagrant.configure("2") do |config|
 
   # Configure database for host access
   config.vm.provision "shell", name: "dbconfig", inline: <<-SHELL
+    echo " " 
     echo "Configuring database for host access"
     echo "Provisioning with root access"
 
@@ -225,4 +238,12 @@ Vagrant.configure("2") do |config|
 
     echo "End of database configuration"
   SHELL
-end
+
+    # Echo current end time stamp
+    config.vm.provision "shell", name: "endtimestamp", inline: <<-SHELL 
+      echo " "
+      echo "Provisioning ended at: $(date +%Y-%m-%d_%H:%M:%S)"
+      echo " "
+    SHELL
+    
+  end
