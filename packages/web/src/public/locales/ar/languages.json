@@ -11,7 +11,10 @@
   "import_glosses_success": "اللمعان المستورد بنجاح!",
   "import_glosses_title": "استيراد اللمعان: {{languageName}}",
   "import_language": "استيراد لغة",
-  "language_code_required": "يرجى إدخال رمز اللغة.",
+  "language_code_errors": {
+    "required": "يرجى إدخال رمز اللغة.",
+    "valid": "الرجاء إدخال رمز لغة ISO 639-3 صالح."
+  },
   "language_created": "تم إنشاء اللغة!",
   "language_exists": "يوجد لغة بالرمز \"{{code}}\" بالفعل",
   "language_name_required": "يرجى إدخال اسم اللغة.",
@@ -19,7 +22,10 @@
   "language_other": "اللغات",
   "language_updated": "تم تحديث اللغة!",
   "languages": "اللغات",
+  "ltr": "من اليسار إلى اليمين",
   "manage": "إدارة",
   "new_language": "لغة جديدة",
-  "switch_language": "تغيير اللغة"
+  "rtl": "من اليمين إلى اليسار",
+  "switch_language": "تغيير اللغة",
+  "text_direction": "اتجاه النص"
 }

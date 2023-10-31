@@ -1,4 +1,11 @@
-import { ComponentProps, forwardRef, useEffect, useRef, useState } from 'react';
+import {
+  ComponentProps,
+  ReactNode,
+  forwardRef,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 
 export interface AutocompleteInputProps
   extends Omit<ComponentProps<'input'>, 'value' | 'onChange'> {
@@ -15,6 +22,7 @@ export interface AutocompleteInputProps
    */
   onChange(value: string, implicit: boolean): void;
   suggestions: string[];
+  renderOption?(item: string, index: number): ReactNode;
 }
 
 function normalizeFilter(word: string) {
@@ -33,6 +41,7 @@ const AutocompleteInput = forwardRef<HTMLInputElement, AutocompleteInputProps>(
       onChange,
       onKeyDown,
       state,
+      renderOption,
       ...props
     },
     ref
@@ -219,7 +228,7 @@ const AutocompleteInput = forwardRef<HTMLInputElement, AutocompleteInputProps>(
                   close();
                 }}
               >
-                {suggestion}
+                {renderOption?.(suggestion, i) ?? suggestion}
               </li>
             ))}
           </ol>

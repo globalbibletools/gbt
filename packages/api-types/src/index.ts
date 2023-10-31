@@ -79,10 +79,17 @@ export interface UpdateUserRequestBody {
   systemRoles?: SystemRole[];
 }
 
+export const TextDirection = makeEnum({
+  RTL: 'rtl',
+  LTR: 'ltr',
+});
+export type TextDirection = typeof TextDirection[keyof typeof TextDirection];
+
 export interface Language {
   code: string;
   name: string;
   font: string;
+  textDirection: TextDirection;
   bibleTranslationIds: string[];
 }
 
@@ -164,6 +171,7 @@ export interface Gloss {
   gloss?: string;
   suggestions: string[];
   state: GlossState;
+  machineGloss?: string;
 }
 
 export interface GetVerseGlossesResponseBody {

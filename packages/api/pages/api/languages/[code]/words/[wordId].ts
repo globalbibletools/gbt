@@ -31,11 +31,14 @@ export default createRoute<{ code: string; wordId: string }>()
 
       const fields: { gloss?: string; state?: PrismaTypes.GlossState } = {};
 
-      if (typeof req.body.gloss !== 'undefined') {
-        fields.gloss = req.body.gloss.normalize('NFD');
-      }
       if (typeof req.body.state !== 'undefined') {
         fields.state = req.body.state;
+      }
+      if (typeof req.body.gloss !== 'undefined') {
+        fields.gloss = req.body.gloss.normalize('NFD');
+        if (!fields.gloss) {
+          fields.state = GlossState.Unapproved;
+        }
       }
 
       await client.gloss.upsert({

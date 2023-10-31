@@ -2,8 +2,9 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   GetVerseGlossesResponseBody,
   GlossState,
+  TextDirection,
 } from '@translation/api-types';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAccessControl } from '../../shared/accessControl';
 import apiClient from '../../shared/apiClient';
@@ -11,7 +12,10 @@ import LoadingSpinner from '../../shared/components/LoadingSpinner';
 import DropdownMenu, {
   DropdownMenuLink,
 } from '../../shared/components/actions/DropdownMenu';
-import { useFontLoader } from '../../shared/hooks/useFontLoader';
+import {
+  expandFontFamily,
+  useFontLoader,
+} from '../../shared/hooks/useFontLoader';
 import TranslateWord, { TranslateWordRef } from './TranslateWord';
 import { VerseSelector } from './VerseSelector';
 import {
@@ -24,6 +28,9 @@ import {
 import Button from '../../shared/components/actions/Button';
 import { Icon } from '../../shared/components/Icon';
 import { useTranslation } from 'react-i18next';
+import bibleTranslationClient, {
+  BibleVerseTranslation,
+} from '../../shared/bibleTranslationClient';
 
 export const translationLanguageKey = 'translation-language';
 export const translationVerseIdKey = 'translation-verse-id';
@@ -46,6 +53,21 @@ function useTranslationQueries(language: string, verseId: string) {
     () => apiClient.verses.findVerseGlosses(verseId, language)
   );
 
+  const translationLanguages = languagesQuery.data?.data ?? [];
+  const selectedLanguage = translationLanguages.find(
+    (l) => l.code === language
+  );
+
+  const translationQuery = useQuery(
+    ['verse-translation', language, verseId],
+    () =>
+      bibleTranslationClient.getTranslation(
+        verseId,
+        selectedLanguage?.bibleTranslationIds ?? []
+      ),
+    { enabled: !!selectedLanguage }
+  );
+
   const queryClient = useQueryClient();
 
   // This primes the cache with verse data for the next VERSES_TO_PREFETCH verses.
@@ -54,33 +76,52 @@ function useTranslationQueries(language: string, verseId: string) {
     let nextVerseId = verseId;
     for (let i = 0; i < VERSES_TO_PREFETCH; i++) {
       nextVerseId = incrementVerseId(nextVerseId);
-      queryClient.ensureQueryData({
+      queryClient.prefetchQuery({
         queryKey: ['verse', nextVerseId],
         queryFn: ({ queryKey }) => apiClient.verses.findById(queryKey[1]),
       });
-      queryClient.ensureQueryData({
+      queryClient.prefetchQuery({
         queryKey: ['verse-glosses', 'eng', nextVerseId],
         queryFn: ({ queryKey }) =>
           apiClient.verses.findVerseGlosses(queryKey[2], 'eng'),
       });
-      queryClient.ensureQueryData({
+      queryClient.prefetchQuery({
         queryKey: ['verse-glosses', language, nextVerseId],
         queryFn: ({ queryKey }) =>
           apiClient.verses.findVerseGlosses(queryKey[2], queryKey[1]),
       });
+      if (selectedLanguage) {
+        queryClient.prefetchQuery({
+          queryKey: ['verse-translation', language, nextVerseId],
+          queryFn: ({ queryKey }) =>
+            bibleTranslationClient.getTranslation(
+              queryKey[2],
+              selectedLanguage.bibleTranslationIds
+            ),
+        });
+      }
     }
-  }, [language, verseId, queryClient]);
+  }, [language, verseId, queryClient, selectedLanguage]);
+
+  // This ensures that when the verse changes, we have the latest gloss suggestions,
+  // but in the meantime, we can show what was prefetched.
+  const refetch = targetGlossesQuery.refetch;
+  useEffect(() => {
+    refetch();
+  }, [refetch, language, verseId]);
 
   return {
-    languagesQuery,
+    translationLanguages,
+    selectedLanguage,
     verseQuery,
     referenceGlossesQuery,
     targetGlossesQuery,
+    translationQuery,
   };
 }
 
 export default function TranslationView() {
-  const { t, i18n } = useTranslation('common');
+  const { t, i18n } = useTranslation(['common']);
   const { language, verseId } = useParams() as {
     language: string;
     verseId: string;
@@ -97,16 +138,14 @@ export default function TranslationView() {
   const navigate = useNavigate();
 
   const {
-    languagesQuery,
+    translationLanguages,
+    selectedLanguage,
     verseQuery,
     referenceGlossesQuery,
     targetGlossesQuery,
+    translationQuery,
   } = useTranslationQueries(language, verseId);
 
-  const translationLanguages = languagesQuery.data?.data ?? [];
-  const selectedLanguage = translationLanguages.find(
-    (l) => l.code === language
-  );
   useFontLoader(selectedLanguage ? [selectedLanguage.font] : []);
 
   const [glossRequests, setGlossRequests] = useState<
@@ -250,7 +289,7 @@ export default function TranslationView() {
   }, [loading, verseQuery.data]);
 
   return (
-    <div className="px-4 flex flex-grow flex-col gap-2">
+    <div className="px-4 flex flex-grow flex-col gap-8">
       <div className="flex gap-8 items-center">
         <VerseSelector
           verseId={verseId}
@@ -290,83 +329,105 @@ export default function TranslationView() {
 
           const isHebrew = bookId < 40;
           return (
-            <ol
-              className={`flex flex-wrap ${
-                isHebrew ? 'ltr:flex-row-reverse' : 'rtl:flex-row-reverse'
-              }`}
-            >
-              {verse.words.map((word, i) => {
-                const targetGloss = targetGlosses[i];
-                const isSaving = glossRequests.some(
-                  ({ wordId }) => wordId === word.id
-                );
-
-                let status: 'empty' | 'saving' | 'saved' | 'approved' = 'empty';
-                if (isSaving) {
-                  status = 'saving';
-                } else if (targetGloss.gloss) {
-                  status =
-                    targetGloss.state === GlossState.Approved
-                      ? 'approved'
-                      : 'saved';
-                }
-
-                return (
-                  <TranslateWord
-                    key={word.id}
-                    editable={canEdit}
-                    word={word}
-                    originalLanguage={isHebrew ? 'hebrew' : 'greek'}
-                    status={status}
-                    gloss={targetGloss?.gloss}
-                    font={selectedLanguage?.font}
-                    referenceGloss={referenceGlosses[i]?.gloss}
-                    suggestions={targetGlosses[i]?.suggestions}
-                    onChange={({ gloss, approved }) => {
-                      glossMutation.mutate({
-                        wordId: word.id,
-                        gloss,
-                        state:
-                          approved === true
-                            ? GlossState.Approved
-                            : approved === false
-                            ? GlossState.Unapproved
-                            : undefined,
-                      });
-                    }}
-                    ref={(() => {
-                      if (i === 0) {
-                        return firstWord;
-                      } else if (i === verse.words.length - 1) {
-                        return lastWord;
-                      }
-                    })()}
-                  />
-                );
-              })}
-              {canEdit && (
-                <li className="mx-2" dir={isHebrew ? 'rtl' : 'ltr'}>
-                  <Button
-                    variant="tertiary"
-                    className="mt-20"
-                    onClick={() => {
-                      loadedFromNextButton.current = true;
-                      navigate(
-                        `/languages/${language}/verses/${incrementVerseId(
-                          verseId
-                        )}`
-                      );
-                    }}
-                  >
-                    {isHebrew && <Icon icon="arrow-left" className="mr-1" />}
-                    <span dir={i18n.dir(i18n.language)}>
-                      {t('common:next')}
-                    </span>
-                    {!isHebrew && <Icon icon="arrow-right" className="ml-1" />}
-                  </Button>
-                </li>
+            <>
+              {translationQuery.data && (
+                <p
+                  className="text-base mx-2"
+                  dir={selectedLanguage?.textDirection ?? TextDirection.LTR}
+                  style={{
+                    fontFamily: expandFontFamily(
+                      selectedLanguage?.font ?? 'Noto Sans'
+                    ),
+                  }}
+                >
+                  <span className="text-sm font-bold me-2">
+                    {translationQuery.data.name}
+                  </span>
+                  <span>{translationQuery.data.translation}</span>
+                </p>
               )}
-            </ol>
+              <ol
+                className={`flex flex-wrap ${
+                  isHebrew ? 'ltr:flex-row-reverse' : 'rtl:flex-row-reverse'
+                }`}
+              >
+                {verse.words.map((word, i) => {
+                  const targetGloss = targetGlosses[i];
+                  const isSaving = glossRequests.some(
+                    ({ wordId }) => wordId === word.id
+                  );
+
+                  let status: 'empty' | 'saving' | 'saved' | 'approved' =
+                    'empty';
+                  if (isSaving) {
+                    status = 'saving';
+                  } else if (targetGloss.gloss) {
+                    status =
+                      targetGloss.state === GlossState.Approved
+                        ? 'approved'
+                        : 'saved';
+                  }
+
+                  return (
+                    <TranslateWord
+                      key={word.id}
+                      editable={canEdit}
+                      word={word}
+                      originalLanguage={isHebrew ? 'hebrew' : 'greek'}
+                      status={status}
+                      gloss={targetGloss?.gloss}
+                      machineGloss={targetGloss?.machineGloss}
+                      targetLanguage={selectedLanguage}
+                      referenceGloss={referenceGlosses[i]?.gloss}
+                      suggestions={targetGlosses[i]?.suggestions}
+                      onChange={({ gloss, approved }) => {
+                        glossMutation.mutate({
+                          wordId: word.id,
+                          gloss,
+                          state:
+                            approved === true
+                              ? GlossState.Approved
+                              : approved === false
+                              ? GlossState.Unapproved
+                              : undefined,
+                        });
+                      }}
+                      ref={(() => {
+                        if (i === 0) {
+                          return firstWord;
+                        } else if (i === verse.words.length - 1) {
+                          return lastWord;
+                        }
+                      })()}
+                    />
+                  );
+                })}
+                {canEdit && (
+                  <li className="mx-2" dir={isHebrew ? 'rtl' : 'ltr'}>
+                    <Button
+                      variant="tertiary"
+                      className="mt-20"
+                      onClick={() => {
+                        loadedFromNextButton.current = true;
+                        navigate(
+                          `/languages/${language}/verses/${incrementVerseId(
+                            verseId
+                          )}`
+                        );
+                      }}
+                    >
+                      {isHebrew && <Icon icon="arrow-left" className="mr-1" />}
+                      <span dir={i18n.dir(i18n.language)}>
+                        {t('common:next')}
+                      </span>
+                      {!isHebrew && (
+                        <Icon icon="arrow-right" className="ml-1" />
+                      )}
+                    </Button>
+                  </li>
+                )}
+              </ol>
+            </>
           );
         }
       })()}

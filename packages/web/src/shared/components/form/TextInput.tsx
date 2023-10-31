@@ -1,25 +1,32 @@
-import { forwardRef, ComponentProps } from 'react';
-import { useFormContext } from 'react-hook-form';
+import { ComponentProps, forwardRef } from 'react';
+import { Validate, useFormContext } from 'react-hook-form';
 import useMergedRef from '../../hooks/mergeRefs';
 
 export interface TextInputProps extends Omit<ComponentProps<'input'>, 'name'> {
   name: string;
   confirms?: string;
+  validate?: Record<string, Validate<any, any>>;
 }
 
 const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
-  ({ className = '', required, minLength, confirms, ...props }, ref) => {
+  (
+    { className = '', required, minLength, confirms, validate, ...props },
+    ref
+  ) => {
     const context = useFormContext();
     const hasErrors = !!context?.formState.errors[props.name];
+    validate ??= {};
+    if (confirms) {
+      validate.confirms = (value: unknown) =>
+        value === context.getValues()[confirms];
+    }
     const registerProps = context?.register(props.name, {
       required,
       minLength: minLength,
       ...(confirms && {
         deps: confirms,
-        validate: {
-          confirms: (value) => value === context.getValues()[confirms],
-        },
       }),
+      validate,
       onChange: props.onChange,
       onBlur: props.onBlur,
     });

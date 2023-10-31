@@ -11,7 +11,10 @@
   "import_glosses_success": "¡Gloses importados con éxito!",
   "import_glosses_title": "Importar Glosas: {{languageName}}",
   "import_language": "Lenguaje de importación",
-  "language_code_required": "Ingrese el código de idioma.",
+  "language_code_errors": {
+    "required": "Ingrese el código de idioma.",
+    "valid": "Ingrese un código de idioma ISO 639-3 válido."
+  },
   "language_created": "¡Idioma creado!",
   "language_exists": "Ya existe un idioma con el código \"{{code}}\"",
   "language_name_required": "Ingrese el nombre del idioma.",
@@ -19,7 +22,10 @@
   "language_other": "idiomas",
   "language_updated": "¡Idioma actualizado!",
   "languages": "Idiomas",
+  "ltr": "Izquierda a Derecha",
   "manage": "Administrar",
   "new_language": "Nuevo Idioma",
-  "switch_language": "Cambiar de Idioma"
+  "rtl": "Derecha a Izquierda",
+  "switch_language": "Cambiar de Idioma",
+  "text_direction": "Dirección del Texto"
 }
