@@ -21,10 +21,10 @@
         "lintFilePatterns": ["packages/db/**/*.ts"]
       }
     },
-    "seed": {
+    "import-bible": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "npx ts-node --project packages/db/tsconfig.json packages/db/src/scripts/seed.ts"
+        "command": "npx ts-node --project packages/db/tsconfig.json packages/db/src/scripts/import-bible.ts"
       }
     },
     "import-bdb": {
