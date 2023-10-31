@@ -1,12 +1,18 @@
 import { TranslationServiceClient } from '@google-cloud/translate';
 
+export interface MachineTranslationClientOptions {
+  clientEmail: string;
+  privateKey: string;
+  project: string;
+}
+
 export class MachineTranslationClient {
   client: TranslationServiceClient;
-  constructor() {
+  constructor(private readonly options: MachineTranslationClientOptions) {
     this.client = new TranslationServiceClient({
       credentials: {
-        client_email: process.env.GOOGLE_TRANSLATE_EMAIL,
-        private_key: process.env.GOOGLE_TRANSLATE_KEY,
+        client_email: options.clientEmail,
+        private_key: options.privateKey,
       },
     });
   }
@@ -18,11 +24,23 @@ export class MachineTranslationClient {
     const [response] = await this.client.translateText({
       contents: strings,
       targetLanguageCode: targetLanguage,
-      parent: process.env.GOOGLE_TRANSLATE_PROJECT,
+      parent: this.options.project,
     });
 
     return response.translations?.map((t) => t.translatedText ?? '') ?? [];
   }
 }
 
-export const machineTranslationClient = new MachineTranslationClient();
+let machineTranslationClient: MachineTranslationClient | undefined;
+if (
+  process.env.GOOGLE_TRANSLATE_EMAIL &&
+  process.env.GOOGLE_TRANSLATE_KEY &&
+  process.env.GOOGLE_TRANSLATE_PROJECT
+) {
+  machineTranslationClient = new MachineTranslationClient({
+    clientEmail: process.env.GOOGLE_TRANSLATE_EMAIL,
+    privateKey: process.env.GOOGLE_TRANSLATE_KEY,
+    project: process.env.GOOGLE_TRANSLATE_PROJECT,
+  });
+}
+export { machineTranslationClient };

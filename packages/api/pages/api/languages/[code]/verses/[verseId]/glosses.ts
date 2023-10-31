@@ -46,7 +46,7 @@ async function generateMachineGlossesForVerse(
   language: Language
 ): Promise<Record<string, string>> {
   const languageCode = languageMap[language.code as keyof typeof languageMap];
-  if (!languageCode) return {};
+  if (!languageCode || !machineTranslationClient) return {};
 
   const charRegex = /\w/;
   const wordsToTranslate = Array.from(
