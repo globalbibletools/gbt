@@ -376,6 +376,7 @@ export default function TranslationView() {
                       originalLanguage={isHebrew ? 'hebrew' : 'greek'}
                       status={status}
                       gloss={targetGloss?.gloss}
+                      machineGloss={targetGloss?.machineGloss}
                       targetLanguage={selectedLanguage}
                       referenceGloss={referenceGlosses[i]?.gloss}
                       suggestions={targetGlosses[i]?.suggestions}

@@ -40,18 +40,18 @@ function insetUtilities({ matchUtilities, theme }) {
   matchUtilities(
     {
       start: (value) => ({
-        '[dir="rtl"] &': {
+        '[dir="rtl"] &, &[dir="rtl"]': {
           right: value,
         },
-        '[dir="ltr"] &': {
+        '[dir="ltr"] &, &[dir="ltr"]': {
           left: value,
         },
       }),
       end: (value) => ({
-        '[dir="rtl"] &': {
+        '[dir="rtl"] &, &[dir="rtl"]': {
           left: value,
         },
-        '[dir="ltr"] &': {
+        '[dir="ltr"] &, &[dir="ltr"]': {
           right: value,
         },
       }),
