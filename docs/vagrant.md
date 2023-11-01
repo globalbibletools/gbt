@@ -9,7 +9,7 @@ Although Vagrant supports [VirtualBox](https://www.virtualbox.org/), [Hyper-V](h
 This was tested using:
 
 - Vagrant v2.4.0
-- VirutalBox v7.0.12
+- VirtualBox v7.0.12
 
 ## Prerequisites
 
@@ -21,13 +21,13 @@ This was tested using:
    Get-NetTCPConnection | Where-Object { $_.State -eq 'Listen' }
    ```
 
-1. `npm install` creates symbolic links. As a result, the VM user: `vagrant` requires `create symbolic link` authority. In some environements, only the administrator has this authority. To resolve this issue in Windows, the following steps can be performed:
+1. `npm install` creates symbolic links. As a result, the VM user: `vagrant` requires `create symbolic link` authority. In some environments, only the administrator has this authority. To resolve this issue in Windows, the following steps can be performed:
    1. Launch the `Local Security Policy` app from the `start menu` (or `Win+R`, then type `secpol.msc`)
    1. Navigate to `Local Policies` -> `User Rights Assignment`.
    1. Open the `Create symbolic links` property. By default it has only `Administrators` listed.
-   1. Click `Add User or Group...` button and type `Authenticated Users` in the `Enter the object names to select` field and then press the `OK` button. This will grant `symbolic link` priviledge to all users who log on with credetials.
+   1. Click `Add User or Group...` button and type `Authenticated Users` in the `Enter the object names to select` field and then press the `OK` button. This will grant `symbolic link` privilege to all users who log on with credentials.
    1. Close any open windows by clicking `OKs` and and then `log off` and `log on` to activate.
-   1. Symbolic links should now work in VirtualBox shared folders without administrator priviledges.
+   1. Symbolic links should now work in VirtualBox shared folders without administrator privileges.
 
 ## Setup Steps
 
@@ -36,40 +36,28 @@ This was tested using:
 1. Verify installation by running `vagrant -v` in a terminal session.
 1. Install [VirtualBox](https://www.virtualbox.org/).
 1. If you have not already done so, fork repo to your local machine.
-1. Vagrant uses a special configuration file called `Vagrantfile` that contains all the information required for the creation of a Virtual Machine (guest) on your workstation (host) . It is located n your repo root directory.
+1. Vagrant uses a special configuration file called `Vagrantfile` that contains all the information required for the creation of a Virtual Machine (guest) on your workstation (host). It is located in your repo root directory.
 1. To start the creation of your virtual environment, run this command in the repo root directory. (This takes a while so be patient.)
 
    ```bash
    vagrant up
    ```
 
-1. Once the `vagrant up` command completes, you can logon into your virutal machine using this command. (password: `vagrant`)
+1. Once the `vagrant up` command completes, you can logon into your virtual machine using this command. (password: `vagrant`)
 
    ```bash
    vagrant ssh
    ```
 
-1. Here is a list of useful Vagrant commands. Be sure that you are in the same directory as the Vagran­tfile when running these commands!
+1. Here is a list of common Vagrant commands. Be sure that you are in the same directory as the Vagrantfile when running these commands!
 
-   | Command                                       | Description                                                                                                                          |
-   | --------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-   | `vagrant up`                                  | starts vagrant enviro­nment (also provisions only on the FIRST vagrant up) Equivalent to pressing the power buttons on your servers. |
-   | `vagrant status`                              | outputs status of the vagrant machine                                                                                                |
-   | `vagrant halt`                                | stops the vagrant machine. Similar to shutdown.                                                                                      |
-   | `vagrant reload`                              | restarts vagrant machine, loads new Vagran­tfile configuration                                                                       |
-   | `vagrant provision`                           | forces reprovisioning of the vagrant machine                                                                                         |
-   | `vagrant ssh`                                 | connects to machine via SSH                                                                                                          |
-   | `vagrant destroy`                             | stops and deletes all traces of the vagrant machine                                                                                  |
-   | `vagrant suspend`                             | Suspends a virtual machine (remembers state). Starts faster.                                                                         |
-   | `vagrant resume`                              | Resume a suspended machine (vagrant up works just fine for this as well)                                                             |
-   | `vagrant reload` --provision                  | Restart the virtual machine and force provis­ioning                                                                                  |
-   | `vagrant provision` --debug                   | Use the debug flag to increase the verbosity of the output                                                                           |
-   | `vagrant box list`                            | List the installed boxes                                                                                                             |
-   | `vagrant box remove` [virtualbox name]        | delete a box                                                                                                                         |
-   | `vagrant global­-status`                      | outputs status of all vagrant machines                                                                                               |
-   | `vagrant global­-status` --prune              | same as above, but prunes invalid entries                                                                                            |
-   | `vagrant up` --provision \| tee provision.log | Runs vagrant up, forces provisioning and logs all output to a file                                                                   |
-   | `VAGRANT_LOG=info`                            | Use the environement variable VAGRANT_LOG to set verbosity. Enter this in terminal session before you run the `vagrant up` command   |
+   | Command           | Description                                                                                                                         |
+   | ----------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+   | `vagrant up`      | starts vagrant environment (also provisions only on the FIRST vagrant up) Equivalent to pressing the power buttons on your servers. |
+   | `vagrant ssh`     | connects to machine via SSH                                                                                                         |
+   | `vagrant suspend` | Suspends a virtual machine (remembers state). Starts faster.                                                                        |
+   | `vagrant halt`    | stops the vagrant machine. Similar to shutdown.                                                                                     |
+   | `vagrant status`  | outputs status of the vagrant machine                                                                                               |
 
 1. For help on vagrant commands, at a terminal session enter:
 
@@ -100,11 +88,11 @@ Accessing VM resources from Host.
 
 ### Accessing API app
 
-Open a web brower to URL: <http://localhost:4300>
+Open a web browser to URL: <http://localhost:4300>
 
 ### Accessing Web app
 
-Open a web brower to URL: <http://localhost:4200>
+Open a web browser to URL: <http://localhost:4200>
 
 ### Access VM via SSH application (such as PuTTY)
 
@@ -129,4 +117,13 @@ Open a web brower to URL: <http://localhost:4200>
 
    ```text
    npm install --save-dev husky
+   ```
+
+1. If you have postgres database running on your host machine at default port `5432`, ensure to shut it down before bring up your VM machine. This can be done by stopping the postgres Windows service. This is because postgres in your VM also listens at the same default port number. Failure to do so will result in the following error:
+
+   ```text
+   Vagrant cannot forward the specified ports on this VM, since they
+   would collide with some other application that is already listening
+   on these ports. The forwarded port to 5432 is already in use
+   on the host machine.
    ```
