@@ -77,14 +77,14 @@ Accessing VM resources from Host.
    - Name: _Enter name of your choice_
 1. `Connection` tab
 
-   | Setting               | Value       |
-   | --------------------- | ----------- |
-   | Host name:            | `127.0.0.1` |
-   | Port:                 | `5432`      |
-   | Maintenance database: | `postgres`  |
-   | Username:             | `vagrant`   |
-   | Password:             | `vagrant`   |
-   | Save password?:       | `Turn on`   |
+   | Setting              | Value       |
+   | -------------------- | ----------- |
+   | Host name            | `127.0.0.1` |
+   | Port                 | `5432`      |
+   | Maintenance database | `postgres`  |
+   | Username             | `vagrant`   |
+   | Password             | `vagrant`   |
+   | Save password?       | `Turn on`   |
 
 ### Accessing API app
 
