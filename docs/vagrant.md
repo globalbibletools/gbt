@@ -96,20 +96,20 @@ Open a web browser to URL: <http://localhost:4200>
 
 ### Access VM via SSH application (such as PuTTY)
 
-| Setting     | Value       |
-| ----------- | ----------- |
-| host Name:  | `localhost` |
-| Port:       | `2222`      |
-| login name: | `vagrant`   |
-| password:   | `vagrant`   |
+| Setting   | Value       |
+| --------- | ----------- |
+| host name | `localhost` |
+| port      | `2222`      |
+| username  | `vagrant`   |
+| password  | `vagrant`   |
 
 ## Caveat
 
-1. Before shutting down your host environment, be sure that your VM machine is not running. Failing to do so may corrupt your VM machine image.
+1. Before shutting down your host environment, be sure that your Vagrant machine is not running. Failing to do so may corrupt your Vagrant machine image.
 
 1. If after install, you get this error while performing a git commit:
 
-   ```bash
+   ```text
    git -c user.useConfigOnly=true commit --quiet --allow-empty-message --file - 'lint-staged' is not recognized as an internal or external command, operable program or batch file. husky - pre-commit hook exited with code 1 (error)
    ```
 
