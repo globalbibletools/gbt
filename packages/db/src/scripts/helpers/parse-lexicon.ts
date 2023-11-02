@@ -37,11 +37,17 @@ export const parseLexicon = async (
 
 const toMarkDown = (raw: string): string => {
   return raw
+    .replaceAll('<b>', '<br>')
+    .replaceAll('<br />', '<br>')
     .replaceAll('<br>', '\n\n')
     .replaceAll('<B>', '<BR>')
+    .replaceAll('<BR />', '<BR>')
     .replaceAll('<BR>', '\n\n')
     .replaceAll('<i>', '*')
     .replaceAll('</i>', '*')
     .replaceAll(/<ref=".*">/g, '')
-    .replaceAll('</ref>', '');
+    .replaceAll(/<ref='.*'>/g, '')
+    .replaceAll('</ref>', '')
+    .replaceAll(/<a.*>/g, '')
+    .replaceAll('</a>', '');
 };
