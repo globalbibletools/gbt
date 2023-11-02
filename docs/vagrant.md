@@ -51,13 +51,13 @@ This was tested using:
 
 1. Here is a list of common Vagrant commands. Be sure that you are in the same directory as the Vagrantfile when running these commands!
 
-   | Command           | Description                                                                                                                         |
-   | ----------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-   | `vagrant up`      | starts vagrant environment (also provisions only on the FIRST vagrant up) Equivalent to pressing the power buttons on your servers. |
-   | `vagrant ssh`     | connects to machine via SSH                                                                                                         |
-   | `vagrant suspend` | Suspends a virtual machine (remembers state). Starts faster.                                                                        |
-   | `vagrant halt`    | stops the vagrant machine. Similar to shutdown.                                                                                     |
-   | `vagrant status`  | outputs status of the vagrant machine                                                                                               |
+   | Command           | Description                                                             |
+   | ----------------- | ----------------------------------------------------------------------- |
+   | `vagrant up`      | starts and provisions (if needed, on first run) the Vagrant environment |
+   | `vagrant ssh`     | connects to the machine via SSH                                         |
+   | `vagrant suspend` | suspends the machine (maintains state) - next start will be faster      |
+   | `vagrant halt`    | stops the machine                                                       |
+   | `vagrant status`  | outputs status of the machine                                           |
 
 1. For help on vagrant commands, at a terminal session enter:
 
@@ -119,7 +119,7 @@ Open a web browser to URL: <http://localhost:4200>
    npm install --save-dev husky
    ```
 
-1. If you have postgres database running on your host machine at default port `5432`, ensure to shut it down before bring up your VM machine. This can be done by stopping the postgres Windows service. This is because postgres in your VM also listens at the same default port number. Failure to do so will result in the following error:
+1. If you have a postgres database running on your host machine at the default port `5432`, be sure to shut it down before starting up your Vagrant machine. On Windows, this can be done by stopping the postgres service. This is because postgres in your VM also listens to the same default port number. Failure to do so will result in the following error:
 
    ```text
    Vagrant cannot forward the specified ports on this VM, since they
