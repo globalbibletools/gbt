@@ -29,6 +29,10 @@ provider "postgresql" {
   superuser       = false
 }
 
+locals {
+  prod_db_connection_string = "postgresql://${var.app_prod_db_username}:${var.app_prod_db_password}@${aws_db_instance.prod.endpoint}?connection_limit=1"
+}
+
 
 ### Database
 
@@ -99,21 +103,65 @@ resource "aws_amplify_app" "api" {
     status = "404"
     target = "/index.html"
   }
-
 }
 
 resource "aws_amplify_branch" "master" {
   app_id      = aws_amplify_app.api.id
   branch_name = "main"
-
-  framework = "Next.js - SSR"
-  stage     = "PRODUCTION"
-
+  framework   = "Next.js - SSR"
+  stage       = "PRODUCTION"
   environment_variables = {
     API_ORIGIN       = "https://api.globalbibletools.com"
-    DATABASE_URL     = "postgresql://${var.app_prod_db_username}:${var.app_prod_db_password}@${aws_db_instance.prod.endpoint}?connection_limit=1"
+    DATABASE_URL     = local.prod_db_connection_string
     EMAIL_FROM       = "noreply@globalbibletools.com"
     ORIGIN_ALLOWLIST = "https://api.globalbibletools.com,https://interlinear.globalbibletools.com"
     REDIRECT_ORIGIN  = "https://interlinear.globalbibletools.com"
   }
+}
+
+resource "aws_iam_role" "import_glosses_lambda_role" {
+  name               = "import_glosses_lambda_role"
+  assume_role_policy = <<EOT
+{
+ "Version": "2012-10-17",
+ "Statement": [
+   {
+     "Action": "sts:AssumeRole",
+     "Principal": {
+       "Service": "lambda.amazonaws.com"
+     },
+     "Effect": "Allow",
+     "Sid": ""
+   }
+ ]
+}
+EOT
+}
+
+resource "aws_iam_role_policy_attachment" "import_glosses_policy_attachment" {
+  role       = aws_iam_role.import_glosses_lambda_role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+}
+
+data "archive_file" "import_glosses_zip" {
+  type        = "zip"
+  source_dir  = "${path.module}/../dist/packages/lambda-functions/"
+  output_path = "${path.module}/../dist/import_glosses.zip"
+}
+
+resource "aws_lambda_function" "test_lambda" {
+  filename         = "${path.module}/../dist/import_glosses.zip"
+  function_name    = "import_glosses"
+  handler          = "main.lambdaHandler"
+  role             = aws_iam_role.import_glosses_lambda_role.arn
+  source_code_hash = data.archive_file.import_glosses_zip.output_base64sha256
+  runtime          = "nodejs18.x"
+  timeout          = 300
+  memory_size      = 1024
+  environment {
+    variables = {
+      DATABASE_URL = local.prod_db_connection_string
+    }
+  }
+  depends_on = [aws_iam_role_policy_attachment.import_glosses_policy_attachment]
 }
