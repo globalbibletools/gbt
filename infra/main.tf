@@ -68,7 +68,7 @@ resource "postgresql_database" "prod" {
 }
 
 
-### Server Hosting
+### API Server Hosting
 resource "aws_iam_user" "app_prod" {
   name = "app-prod"
 }
@@ -114,17 +114,77 @@ resource "aws_amplify_app" "api" {
   }
 }
 
-resource "aws_amplify_branch" "master" {
+resource "aws_amplify_branch" "api_main" {
   app_id      = aws_amplify_app.api.id
   branch_name = "main"
   framework   = "Next.js - SSR"
   stage       = "PRODUCTION"
   environment_variables = {
-    API_ORIGIN       = "https://api.globalbibletools.com"
-    DATABASE_URL     = local.prod_db_connection_string
-    EMAIL_FROM       = "noreply@globalbibletools.com"
-    ORIGIN_ALLOWLIST = "https://api.globalbibletools.com,https://interlinear.globalbibletools.com"
-    REDIRECT_ORIGIN  = "https://interlinear.globalbibletools.com"
+    ACCESS_KEY_ID     = aws_iam_access_key.app_prod.id
+    API_ORIGIN        = "https://api.globalbibletools.com"
+    DATABASE_URL      = local.prod_db_connection_string
+    EMAIL_FROM        = "noreply@globalbibletools.com"
+    ORIGIN_ALLOWLIST  = "https://api.globalbibletools.com,https://interlinear.globalbibletools.com"
+    REDIRECT_ORIGIN   = "https://interlinear.globalbibletools.com"
+    SECRET_ACCESS_KEY = aws_iam_access_key.app_prod.secret
+  }
+}
+
+### Interlinear server hosting
+resource "aws_amplify_app" "interlinear" {
+  platform     = "WEB"
+  name         = "gbt-interlinear"
+  repository   = "https://github.com/arrocke/gloss-translation"
+  access_token = var.github_token
+
+  build_spec = <<-EOT
+    version: 1
+      applications:
+        - frontend:
+            phases:
+              preBuild:
+                commands:
+                  - npm install
+              build:
+                commands:
+                  - npx nx build web
+            artifacts:
+              baseDirectory: dist/packages/web
+              files:
+                - '**/*'
+            cache:
+              paths:
+                - node_modules/**/*
+            buildPath: /
+          appRoot: packages/web
+  EOT
+
+  custom_rule {
+    source = "https://globalbibletools.com"
+    status = "302"
+    target = "https://interlinear.globalbibletools.com"
+  }
+
+  custom_rule {
+    source = "/invite?token=<token>"
+    status = "200"
+    target = "/index.html?token=<token>"
+  }
+
+  custom_rule {
+    source = "</^[^.]+$|\\.(?!(css|gif|ico|jpg|js|png|txt|svg|woff|woff2|ttf|map|json|webp)$)([^.]+$)/>"
+    status = "200"
+    target = "/index.html"
+  }
+}
+
+resource "aws_amplify_branch" "interlinear_main" {
+  app_id      = aws_amplify_app.interlinear.id
+  branch_name = "main"
+  framework   = "React"
+  stage       = "PRODUCTION"
+  environment_variables = {
+    API_URL = "https://api.globalbibletools.com"
   }
 }
 
@@ -139,6 +199,16 @@ data "aws_iam_policy_document" "gloss_import_queue_policy" {
       identifiers = [aws_iam_role.import_glosses_lambda_role.arn]
     }
     actions   = ["sqs:DeleteMessage", "sqs:GetQueueAttributes", "sqs:ReceiveMessage"]
+    resources = [aws_sqs_queue.gloss_import.arn]
+  }
+  statement {
+    sid    = "head"
+    effect = "Allow"
+    principals {
+      type        = "AWS"
+      identifiers = [aws_iam_user.app_prod.arn]
+    }
+    actions   = ["sqs:SendMessage"]
     resources = [aws_sqs_queue.gloss_import.arn]
   }
 }
