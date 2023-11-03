@@ -69,6 +69,14 @@ resource "postgresql_database" "prod" {
 
 
 ### Server Hosting
+resource "aws_iam_user" "app_prod" {
+  name = "app-prod"
+}
+
+resource "aws_iam_access_key" "app_prod" {
+  user = aws_iam_user.app_prod.name
+}
+
 resource "aws_amplify_app" "api" {
   platform     = "WEB_COMPUTE"
   name         = "gbt-api"
@@ -121,31 +129,48 @@ resource "aws_amplify_branch" "master" {
 }
 
 ### Import Glosses Lambda and SQS Queue
+data "aws_iam_policy_document" "gloss_import_queue_policy" {
+  version = "2012-10-17"
+  statement {
+    sid    = "tail"
+    effect = "Allow"
+    principals {
+      type        = "AWS"
+      identifiers = [aws_iam_role.import_glosses_lambda_role.arn]
+    }
+    actions   = ["sqs:DeleteMessage", "sqs:GetQueueAttributes", "sqs:ReceiveMessage"]
+    resources = [aws_sqs_queue.gloss_import.arn]
+  }
+}
+
 resource "aws_sqs_queue" "gloss_import" {
   name                        = "gloss_import.fifo"
   fifo_queue                  = true
   content_based_deduplication = true
   visibility_timeout_seconds  = 300
+}
 
+resource "aws_sqs_queue_policy" "gloss_import" {
+  queue_url = aws_sqs_queue.gloss_import.id
+  policy    = data.aws_iam_policy_document.gloss_import_queue_policy.json
+}
+
+data "aws_iam_policy_document" "lambda_assume_role_policy" {
+  version = "2012-10-17"
+  statement {
+    sid     = "assumerole"
+    effect  = "Allow"
+    actions = ["sts:AssumeRole"]
+    principals {
+      type        = "Service"
+      identifiers = ["lambda.amazonaws.com"]
+    }
+  }
 }
 
 resource "aws_iam_role" "import_glosses_lambda_role" {
   name               = "import_glosses_lambda_role"
-  assume_role_policy = <<EOT
-{
- "Version": "2012-10-17",
- "Statement": [
-   {
-     "Action": "sts:AssumeRole",
-     "Principal": {
-       "Service": "lambda.amazonaws.com"
-     },
-     "Effect": "Allow",
-     "Sid": ""
-   }
- ]
-}
-EOT
+  assume_role_policy = data.aws_iam_policy_document.lambda_assume_role_policy.json
 }
 
 resource "aws_iam_role_policy_attachment" "import_glosses_policy_attachment" {
@@ -174,4 +199,11 @@ resource "aws_lambda_function" "test_lambda" {
     }
   }
   depends_on = [aws_iam_role_policy_attachment.import_glosses_policy_attachment]
+}
+
+resource "aws_lambda_event_source_mapping" "event_source_mapping" {
+  event_source_arn = aws_sqs_queue.gloss_import.arn
+  enabled          = true
+  function_name    = aws_lambda_function.test_lambda.arn
+  batch_size       = 1
 }
