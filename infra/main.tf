@@ -33,6 +33,10 @@ locals {
   prod_db_connection_string = "postgresql://${var.app_prod_db_username}:${var.app_prod_db_password}@${aws_db_instance.prod.endpoint}?connection_limit=1"
 }
 
+### DNS
+resource "aws_route53_zone" "main" {
+  name = "globalbibletools.com"
+}
 
 ### Database
 
