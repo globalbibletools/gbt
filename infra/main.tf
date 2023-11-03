@@ -67,6 +67,7 @@ resource "postgresql_database" "prod" {
   name = "prod"
 }
 
+
 ### Server Hosting
 resource "aws_amplify_app" "api" {
   platform     = "WEB_COMPUTE"
@@ -117,6 +118,15 @@ resource "aws_amplify_branch" "master" {
     ORIGIN_ALLOWLIST = "https://api.globalbibletools.com,https://interlinear.globalbibletools.com"
     REDIRECT_ORIGIN  = "https://interlinear.globalbibletools.com"
   }
+}
+
+### Import Glosses Lambda and SQS Queue
+resource "aws_sqs_queue" "gloss_import" {
+  name                        = "gloss_import.fifo"
+  fifo_queue                  = true
+  content_based_deduplication = true
+  visibility_timeout_seconds  = 300
+
 }
 
 resource "aws_iam_role" "import_glosses_lambda_role" {
