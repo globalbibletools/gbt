@@ -42,3 +42,6 @@ Thumbs.db
 .next
 
 .env.local
+
+# Vagrant environment
+.vagrant
