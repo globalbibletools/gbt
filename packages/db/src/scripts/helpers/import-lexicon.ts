@@ -3,7 +3,7 @@ import { parseLexicon } from './parse-lexicon';
 
 const client = new PrismaClient();
 
-const regex = /<(?!\/).*?>/g;
+const regex = /<.*?>/g;
 
 export const importLexicon = async (
   resourceCode: 'BDB' | 'LSJ',

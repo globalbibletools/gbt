@@ -46,3 +46,4 @@ nx run db:prisma migrate dev --name migration_name
 ```
 
 This will generate a SQL script to modify the database which will be automatically run in preview and production on release.
+**bold** _italics_
