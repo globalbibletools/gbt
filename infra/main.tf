@@ -28,6 +28,10 @@ provider "google" {
   region  = "us-central-1"
 }
 
+locals {
+  domain = "globalbibletools.com"
+}
+
 data "aws_caller_identity" "current" {}
 
 provider "postgresql" {
@@ -42,12 +46,11 @@ provider "postgresql" {
 }
 
 locals {
-  prod_db_connection_string = "postgresql://${var.app_prod_db_username}:${var.app_prod_db_password}@${aws_db_instance.prod.endpoint}/${postgresql_database.prod.name}?connection_limit=1"
 }
 
 ### DNS
 resource "aws_route53_zone" "main" {
-  name = "globalbibletools.com"
+  name = local.domain
 }
 
 ### Database
@@ -226,20 +229,20 @@ resource "aws_amplify_branch" "api_main" {
   stage       = "PRODUCTION"
   environment_variables = {
     ACCESS_KEY_ID                = aws_iam_access_key.app_prod.id
-    API_ORIGIN                   = "https://api.globalbibletools.com"
+    API_ORIGIN                   = "https://api.${local.domain}"
     DATABASE_URL                 = local.prod_db_connection_string
-    EMAIL_FROM                   = "noreply@globalbibletools.com"
+    EMAIL_FROM                   = "noreply@${local.domain}"
     EMAIL_SERVER                 = "smtp://${aws_iam_access_key.smtp_user.id}:${aws_iam_access_key.smtp_user.secret}@email-smtp.us-east-1.amazonaws.com:587"
     GOOGLE_TRANSLATE_CREDENTIALS = google_service_account_key.default.private_key
-    ORIGIN_ALLOWLIST             = "https://api.globalbibletools.com,https://interlinear.globalbibletools.com"
-    REDIRECT_ORIGIN              = "https://interlinear.globalbibletools.com"
+    ORIGIN_ALLOWLIST             = "https://api.${local.domain},https://interlinear.${local.domain}"
+    REDIRECT_ORIGIN              = "https://interlinear.${local.domain}"
     SECRET_ACCESS_KEY            = aws_iam_access_key.app_prod.secret
   }
 }
 
 resource "aws_amplify_domain_association" "api" {
   app_id      = aws_amplify_app.api.id
-  domain_name = "globalbibletools.com"
+  domain_name = local.domain
 
   sub_domain {
     branch_name = aws_amplify_branch.api_main.branch_name
@@ -278,9 +281,9 @@ resource "aws_amplify_app" "interlinear" {
   EOT
 
   custom_rule {
-    source = "https://globalbibletools.com"
+    source = "https://${local.domain}"
     status = "302"
-    target = "https://interlinear.globalbibletools.com"
+    target = "https://interlinear.${local.domain}"
   }
 
   custom_rule {
@@ -302,14 +305,14 @@ resource "aws_amplify_branch" "interlinear_main" {
   framework   = "React"
   stage       = "PRODUCTION"
   environment_variables = {
-    API_URL                = "https://api.globalbibletools.com"
+    API_URL                = "https://api.${local.domain}"
     NX_GOOGLE_FONT_API_KEY = var.google_font_api_token
   }
 }
 
 resource "aws_amplify_domain_association" "interlinear" {
   app_id      = aws_amplify_app.interlinear.id
-  domain_name = "globalbibletools.com"
+  domain_name = local.domain
 
   sub_domain {
     branch_name = aws_amplify_branch.interlinear_main.branch_name
@@ -439,12 +442,12 @@ resource "aws_iam_user_policy_attachment" "smtp_user" {
 }
 
 resource "aws_ses_domain_identity" "default" {
-  domain = "globalbibletools.com"
+  domain = local.domain
 }
 
 resource "aws_route53_record" "ses_verification" {
   zone_id = aws_route53_zone.main.id
-  name    = "_amazonses.globalbibletools.com"
+  name    = "_amazonses.${local.domain}"
   type    = "TXT"
   records = [aws_ses_domain_identity.default.verification_token]
   ttl     = "600"
@@ -511,7 +514,7 @@ resource "aws_sns_topic" "ses_notifications" {
 resource "aws_sns_topic_subscription" "ses_notifications_to_server" {
   topic_arn = aws_sns_topic.ses_notifications.arn
   protocol  = "https"
-  endpoint  = "https://api.globalbibletools.com/api/email/notifications"
+  endpoint  = "https://api.${local.domain}/api/email/notifications"
   delivery_policy = jsonencode({
     "healthyRetryPolicy" : {
       "numRetries" : 3,
