@@ -9,6 +9,11 @@ terraform {
       source  = "cyrilgdn/postgresql"
       version = "~> 1.21"
     }
+
+    google = {
+      source  = "hashicorp/google"
+      version = "~> 5.4"
+    }
   }
 
   required_version = ">= 1.2.0"
@@ -16,6 +21,11 @@ terraform {
 
 provider "aws" {
   region = "us-east-1"
+}
+
+provider "google" {
+  project = var.google_project
+  region  = "us-central-1"
 }
 
 data "aws_caller_identity" "current" {}
@@ -215,14 +225,15 @@ resource "aws_amplify_branch" "api_main" {
   framework   = "Next.js - SSR"
   stage       = "PRODUCTION"
   environment_variables = {
-    ACCESS_KEY_ID     = aws_iam_access_key.app_prod.id
-    API_ORIGIN        = "https://api.globalbibletools.com"
-    DATABASE_URL      = local.prod_db_connection_string
-    EMAIL_FROM        = "noreply@globalbibletools.com"
-    EMAIL_SERVER      = "smtp://${aws_iam_access_key.smtp_user.id}:${aws_iam_access_key.smtp_user.secret}@email-smtp.us-east-1.amazonaws.com:587"
-    ORIGIN_ALLOWLIST  = "https://api.globalbibletools.com,https://interlinear.globalbibletools.com"
-    REDIRECT_ORIGIN   = "https://interlinear.globalbibletools.com"
-    SECRET_ACCESS_KEY = aws_iam_access_key.app_prod.secret
+    ACCESS_KEY_ID                = aws_iam_access_key.app_prod.id
+    API_ORIGIN                   = "https://api.globalbibletools.com"
+    DATABASE_URL                 = local.prod_db_connection_string
+    EMAIL_FROM                   = "noreply@globalbibletools.com"
+    EMAIL_SERVER                 = "smtp://${aws_iam_access_key.smtp_user.id}:${aws_iam_access_key.smtp_user.secret}@email-smtp.us-east-1.amazonaws.com:587"
+    GOOGLE_TRANSLATE_CREDENTIALS = google_service_account_key.default.private_key
+    ORIGIN_ALLOWLIST             = "https://api.globalbibletools.com,https://interlinear.globalbibletools.com"
+    REDIRECT_ORIGIN              = "https://interlinear.globalbibletools.com"
+    SECRET_ACCESS_KEY            = aws_iam_access_key.app_prod.secret
   }
 }
 
@@ -291,7 +302,8 @@ resource "aws_amplify_branch" "interlinear_main" {
   framework   = "React"
   stage       = "PRODUCTION"
   environment_variables = {
-    API_URL = "https://api.globalbibletools.com"
+    API_URL                = "https://api.globalbibletools.com"
+    NX_GOOGLE_FONT_API_KEY = var.google_font_api_token
   }
 }
 
@@ -500,9 +512,44 @@ resource "aws_sns_topic_subscription" "ses_notifications_to_server" {
   topic_arn = aws_sns_topic.ses_notifications.arn
   protocol  = "https"
   endpoint  = "https://api.globalbibletools.com/api/email/notifications"
+  delivery_policy = jsonencode({
+    "healthyRetryPolicy" : {
+      "numRetries" : 3,
+      "numNoDelayRetries" : null,
+      "minDelayTarget" : 20,
+      "maxDelayTarget" : 20,
+      "numMinDelayRetries" : null,
+      "numMaxDelayRetries" : null,
+      "backoffFunction" : "linear"
+    },
+    "requestPolicy" : {
+      "headerContentType" : "application/json"
+    }
+  })
 }
 
 resource "aws_sns_topic_policy" "ses_notifications" {
   arn    = aws_sns_topic.ses_notifications.arn
   policy = data.aws_iam_policy_document.ses_notifications.json
+}
+
+### Google Translate API
+resource "google_service_account" "default" {
+  account_id   = "global-bible-tools-api"
+  display_name = "Global Bible Tools API"
+  description  = "Enables API server to use Google Translate"
+}
+
+resource "google_service_account_key" "default" {
+  service_account_id = google_service_account.default.name
+}
+
+resource "google_service_account_iam_binding" "cloud_translate_user" {
+  service_account_id = google_service_account.default.name
+  role               = "roles/cloudtranslate.user"
+  members            = []
+}
+
+resource "google_project_service" "cloud_translation" {
+  service = "translate.googleapis.com"
 }
