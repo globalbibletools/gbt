@@ -134,6 +134,16 @@ resource "aws_amplify_branch" "api_main" {
   }
 }
 
+resource "aws_amplify_domain_association" "api" {
+  app_id      = aws_amplify_app.api.id
+  domain_name = "globalbibletools.com"
+
+  sub_domain {
+    branch_name = aws_amplify_branch.api_main.branch_name
+    prefix      = "api"
+  }
+}
+
 ### Interlinear server hosting
 resource "aws_amplify_app" "interlinear" {
   platform     = "WEB"
@@ -189,6 +199,21 @@ resource "aws_amplify_branch" "interlinear_main" {
   stage       = "PRODUCTION"
   environment_variables = {
     API_URL = "https://api.globalbibletools.com"
+  }
+}
+
+resource "aws_amplify_domain_association" "interlinear" {
+  app_id      = aws_amplify_app.interlinear.id
+  domain_name = "globalbibletools.com"
+
+  sub_domain {
+    branch_name = aws_amplify_branch.interlinear_main.branch_name
+    prefix      = "interlinear"
+  }
+
+  sub_domain {
+    branch_name = aws_amplify_branch.interlinear_main.branch_name
+    prefix      = ""
   }
 }
 
