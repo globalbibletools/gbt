@@ -164,6 +164,7 @@ resource "aws_amplify_branch" "api_main" {
     API_ORIGIN        = "https://api.globalbibletools.com"
     DATABASE_URL      = local.prod_db_connection_string
     EMAIL_FROM        = "noreply@globalbibletools.com"
+    EMAIL_SERVER      = "smtp://${aws_iam_access_key.smtp_user.id}:${aws_iam_access_key.smtp_user.secret}@email-smtp.us-east-1.amazonaws.com:587"
     ORIGIN_ALLOWLIST  = "https://api.globalbibletools.com,https://interlinear.globalbibletools.com"
     REDIRECT_ORIGIN   = "https://interlinear.globalbibletools.com"
     SECRET_ACCESS_KEY = aws_iam_access_key.app_prod.secret
@@ -344,6 +345,31 @@ resource "aws_lambda_event_source_mapping" "event_source_mapping" {
 }
 
 ### Email
+resource "aws_iam_user" "smtp_user" {
+  name = "smtp-user"
+}
+
+resource "aws_iam_access_key" "smtp_user" {
+  user = aws_iam_user.smtp_user.name
+}
+
+data "aws_iam_policy_document" "ses_send" {
+  statement {
+    actions   = ["ses:SendEmail", "ses:SendRawEmail"]
+    resources = [aws_ses_domain_identity.default.arn]
+  }
+}
+
+resource "aws_iam_policy" "ses_send" {
+  name   = "SES-Send"
+  policy = data.aws_iam_policy_document.ses_send.json
+}
+
+resource "aws_iam_user_policy_attachment" "smtp_user" {
+  user       = aws_iam_user.smtp_user.name
+  policy_arn = aws_iam_policy.ses_send.arn
+}
+
 resource "aws_ses_domain_identity" "default" {
   domain = "globalbibletools.com"
 }
