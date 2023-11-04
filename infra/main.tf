@@ -30,7 +30,7 @@ provider "postgresql" {
 }
 
 locals {
-  prod_db_connection_string = "postgresql://${var.app_prod_db_username}:${var.app_prod_db_password}@${aws_db_instance.prod.endpoint}?connection_limit=1"
+  prod_db_connection_string = "postgresql://${var.app_prod_db_username}:${var.app_prod_db_password}@${aws_db_instance.prod.endpoint}/${postgresql_database.prod.name}?connection_limit=1"
 }
 
 ### DNS
@@ -40,7 +40,35 @@ resource "aws_route53_zone" "main" {
 
 ### Database
 
-# TODO: security group settings
+resource "aws_default_vpc" "default" {
+  tags = {
+    Name = "Default VPC"
+  }
+}
+
+resource "aws_default_security_group" "default" {
+  vpc_id = aws_default_vpc.default.id
+
+  ingress {
+    protocol  = -1
+    self      = true
+    from_port = 0
+    to_port   = 0
+  }
+  ingress {
+    protocol    = -1
+    cidr_blocks = ["0.0.0.0/0"]
+    from_port   = 0
+    to_port     = 0
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
 
 resource "aws_db_instance" "prod" {
   engine                       = "postgres"
@@ -56,10 +84,10 @@ resource "aws_db_instance" "prod" {
   performance_insights_enabled = true
   deletion_protection          = true
   storage_encrypted            = true
-
-  # TODO: backups
+  backup_window                = "09:12-09:42"
+  backup_retention_period      = 3
+  apply_immediately            = true
 }
-
 
 resource "postgresql_role" "app" {
   login    = true
@@ -69,6 +97,14 @@ resource "postgresql_role" "app" {
 
 resource "postgresql_database" "prod" {
   name = "prod"
+}
+
+resource "postgresql_grant" "create" {
+  database    = "prod"
+  role        = postgresql_role.app.name
+  schema      = "public"
+  object_type = "database"
+  privileges  = ["CREATE"]
 }
 
 
@@ -153,24 +189,24 @@ resource "aws_amplify_app" "interlinear" {
 
   build_spec = <<-EOT
     version: 1
-      applications:
-        - frontend:
-            phases:
-              preBuild:
-                commands:
-                  - npm install
-              build:
-                commands:
-                  - npx nx build web
-            artifacts:
-              baseDirectory: dist/packages/web
-              files:
-                - '**/*'
-            cache:
-              paths:
-                - node_modules/**/*
-            buildPath: /
-          appRoot: packages/web
+    applications:
+      - frontend:
+          phases:
+            preBuild:
+              commands:
+                - npm install
+            build:
+              commands:
+                - npx nx build web
+          artifacts:
+            baseDirectory: dist/packages/web
+            files:
+              - '**/*'
+          cache:
+            paths:
+              - node_modules/**/*
+          buildPath: /
+        appRoot: packages/web
   EOT
 
   custom_rule {
@@ -305,4 +341,57 @@ resource "aws_lambda_event_source_mapping" "event_source_mapping" {
   enabled          = true
   function_name    = aws_lambda_function.test_lambda.arn
   batch_size       = 1
+}
+
+### Email
+resource "aws_ses_domain_identity" "default" {
+  domain = "globalbibletools.com"
+}
+
+resource "aws_route53_record" "ses_verification" {
+  zone_id = aws_route53_zone.main.id
+  name    = "_amazonses.globalbibletools.com"
+  type    = "TXT"
+  records = [aws_ses_domain_identity.default.verification_token]
+  ttl     = "600"
+}
+
+resource "aws_ses_domain_identity_verification" "example_verification" {
+  domain = aws_ses_domain_identity.default.id
+
+  depends_on = [aws_route53_record.ses_verification]
+}
+
+resource "aws_ses_domain_dkim" "default" {
+  domain = aws_ses_domain_identity.default.domain
+}
+
+resource "aws_route53_record" "ses_dkim_record" {
+  count   = 3
+  zone_id = aws_route53_zone.main.id
+  name    = "${aws_ses_domain_dkim.default.dkim_tokens[count.index]}._domainkey"
+  type    = "CNAME"
+  ttl     = "600"
+  records = ["${aws_ses_domain_dkim.default.dkim_tokens[count.index]}.dkim.amazonses.com"]
+}
+
+resource "aws_ses_domain_mail_from" "default" {
+  domain           = aws_ses_domain_identity.default.domain
+  mail_from_domain = "bounce.${aws_ses_domain_identity.default.domain}"
+}
+
+resource "aws_route53_record" "ses_domain_mail_from_mx" {
+  zone_id = aws_route53_zone.main.id
+  name    = aws_ses_domain_mail_from.default.mail_from_domain
+  type    = "MX"
+  ttl     = "600"
+  records = ["10 feedback-smtp.us-east-1.amazonses.com"]
+}
+
+resource "aws_route53_record" "ses_domain_mail_from_txt" {
+  zone_id = aws_route53_zone.main.id
+  name    = aws_ses_domain_mail_from.default.mail_from_domain
+  type    = "TXT"
+  ttl     = "600"
+  records = ["v=spf1 include:amazonses.com -all"]
 }
