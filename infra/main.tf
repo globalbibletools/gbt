@@ -18,6 +18,8 @@ provider "aws" {
   region = "us-east-1"
 }
 
+data "aws_caller_identity" "current" {}
+
 provider "postgresql" {
   host            = aws_db_instance.prod.address
   port            = aws_db_instance.prod.port
@@ -39,7 +41,6 @@ resource "aws_route53_zone" "main" {
 }
 
 ### Database
-
 resource "aws_default_vpc" "default" {
   tags = {
     Name = "Default VPC"
@@ -109,6 +110,59 @@ resource "postgresql_grant" "create" {
 
 
 ### API Server Hosting
+data "aws_iam_policy_document" "amplify_assume_role_policy" {
+  version = "2012-10-17"
+  statement {
+    sid     = "assumerole"
+    effect  = "Allow"
+    actions = ["sts:AssumeRole"]
+    principals {
+      type        = "Service"
+      identifiers = ["amplify.amazonaws.com"]
+    }
+  }
+}
+
+data "aws_iam_policy_document" "amplify_logging" {
+  version = "2012-10-17"
+  statement {
+    sid    = "push"
+    effect = "Allow"
+    actions = [
+      "logs:CreateLogStream",
+      "logs:PutLogEvents"
+    ]
+    resources = ["arn:aws:logs:us-east-1:${data.aws_caller_identity.current.account_id}:log-group:/aws/amplify/*:log-stream:*"]
+  }
+  statement {
+    sid       = "create"
+    effect    = "Allow"
+    actions   = ["logs:CreateLogGroup"]
+    resources = ["arn:aws:logs:us-east-1:${data.aws_caller_identity.current.account_id}:log-group:/aws/amplify/*"]
+  }
+  statement {
+    sid       = "describe"
+    effect    = "Allow"
+    actions   = ["logs:DescribeLogGroups"]
+    resources = ["arn:aws:logs:us-east-1:${data.aws_caller_identity.current.account_id}:log-group:*"]
+  }
+}
+
+resource "aws_iam_role" "amplify" {
+  name               = "amplify"
+  assume_role_policy = data.aws_iam_policy_document.amplify_assume_role_policy.json
+}
+
+resource "aws_iam_policy" "amplify_logging" {
+  name   = "AmplifyLogging"
+  policy = data.aws_iam_policy_document.amplify_logging.json
+}
+
+resource "aws_iam_role_policy_attachment" "amplify" {
+  role       = aws_iam_role.amplify.name
+  policy_arn = aws_iam_policy.amplify_logging.arn
+}
+
 resource "aws_iam_user" "app_prod" {
   name = "app-prod"
 }
@@ -118,10 +172,11 @@ resource "aws_iam_access_key" "app_prod" {
 }
 
 resource "aws_amplify_app" "api" {
-  platform     = "WEB_COMPUTE"
-  name         = "gbt-api"
-  repository   = "https://github.com/arrocke/gloss-translation"
-  access_token = var.github_token
+  platform             = "WEB_COMPUTE"
+  name                 = "gbt-api"
+  repository           = "https://github.com/arrocke/gloss-translation"
+  access_token         = var.github_token
+  iam_service_role_arn = aws_iam_role.amplify.arn
 
   build_spec = <<-EOT
     version: 1
@@ -183,10 +238,11 @@ resource "aws_amplify_domain_association" "api" {
 
 ### Interlinear server hosting
 resource "aws_amplify_app" "interlinear" {
-  platform     = "WEB"
-  name         = "gbt-interlinear"
-  repository   = "https://github.com/arrocke/gloss-translation"
-  access_token = var.github_token
+  platform             = "WEB"
+  name                 = "gbt-interlinear"
+  repository           = "https://github.com/arrocke/gloss-translation"
+  access_token         = var.github_token
+  iam_service_role_arn = aws_iam_role.amplify.arn
 
   build_spec = <<-EOT
     version: 1
@@ -421,3 +477,32 @@ resource "aws_route53_record" "ses_domain_mail_from_txt" {
   ttl     = "600"
   records = ["v=spf1 include:amazonses.com -all"]
 }
+
+data "aws_iam_policy_document" "ses-notifications" {
+  version = "2008-10-17"
+  statement {
+    sid    = "send"
+    effect = "Allow"
+    principals {
+      type        = "AWS"
+      identifiers = [aws_ses_domain_identity.default.arn]
+    }
+    actions   = ["sns:Publish"]
+    resources = [aws_sns_topic.ses_notifications.arn]
+  }
+}
+
+resource "aws_sns_topic" "ses_notifications" {
+  name = "ses-notifications"
+}
+
+resource "aws_sns_topic_subscription" "ses_notifications_to_server" {
+  topic_arn = aws_sns_topic.ses_notifications.arn
+  protocol  = "https"
+  endpoint  = "https://api.globalbibletools.com/api/email/notifications"
+}
+
+# resource "aws_sns_topic_policy" "ses_notifications" {
+#   arn    = aws_sns_topic.ses_notifications.arn
+#   policy = data.aws_iam_policy_document.gloss_import_queue_policy.json
+# }
