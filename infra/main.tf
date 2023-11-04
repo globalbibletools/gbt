@@ -478,14 +478,14 @@ resource "aws_route53_record" "ses_domain_mail_from_txt" {
   records = ["v=spf1 include:amazonses.com -all"]
 }
 
-data "aws_iam_policy_document" "ses-notifications" {
-  version = "2008-10-17"
+data "aws_iam_policy_document" "ses_notifications" {
+  version = "2012-10-17"
   statement {
     sid    = "send"
     effect = "Allow"
     principals {
       type        = "AWS"
-      identifiers = [aws_ses_domain_identity.default.arn]
+      identifiers = [aws_iam_user.smtp_user.arn]
     }
     actions   = ["sns:Publish"]
     resources = [aws_sns_topic.ses_notifications.arn]
@@ -502,7 +502,7 @@ resource "aws_sns_topic_subscription" "ses_notifications_to_server" {
   endpoint  = "https://api.globalbibletools.com/api/email/notifications"
 }
 
-# resource "aws_sns_topic_policy" "ses_notifications" {
-#   arn    = aws_sns_topic.ses_notifications.arn
-#   policy = data.aws_iam_policy_document.gloss_import_queue_policy.json
-# }
+resource "aws_sns_topic_policy" "ses_notifications" {
+  arn    = aws_sns_topic.ses_notifications.arn
+  policy = data.aws_iam_policy_document.ses_notifications.json
+}
