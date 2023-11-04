@@ -9,6 +9,35 @@ variable "domain" {
   type        = string
 }
 
+variable "amplify_role" {
+  description = "The AWS role to create for the amplify servers."
+  type        = string
+  default     = "amplify"
+}
+
+variable "api_user" {
+  description = "The AWS user for the API server to access AWS resources"
+  type        = string
+  default     = "app-prod"
+}
+
+variable "api_branch" {
+  description = "The branch to deploy the API server from"
+  type        = string
+  default     = "main"
+}
+
+variable "interlinear_branch" {
+  description = "The branch to deploy the interlinear server from"
+  type        = string
+  default     = "main"
+}
+
+variable "repo" {
+  description = "The GitHub repo to connect amplify to"
+  type        = string
+}
+
 variable "database_url" {
   description = "The postgresql connection string for the server."
   type        = string

@@ -1,3 +1,14 @@
+variable "domain" {
+  description = "The domain to connect everything to"
+  type        = string
+  default     = "globalbibletools.com"
+}
+
+variable "repo" {
+  description = "The repo to deploy from"
+  type        = string
+}
+
 variable "admin_prod_db_username" {
   description = "Database administrator username"
   type        = string

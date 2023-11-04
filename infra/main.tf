@@ -28,10 +28,6 @@ provider "google" {
   region  = "us-central-1"
 }
 
-locals {
-  domain = "globalbibletools.com"
-}
-
 provider "postgresql" {
   host            = module.database.host
   port            = module.database.port
@@ -43,12 +39,10 @@ provider "postgresql" {
   superuser       = false
 }
 
-### DNS
 resource "aws_route53_zone" "main" {
-  name = local.domain
+  name = var.domain
 }
 
-### Database
 module "database" {
   source = "./modules/database"
 
@@ -58,35 +52,34 @@ module "database" {
   app_prod_db_password   = var.app_prod_db_password
 }
 
-### API Server Hosting
 module "amplify" {
   source = "./modules/amplify"
 
   github_token          = var.github_token
-  domain                = local.domain
+  domain                = var.domain
   database_url          = module.database.connection_string
   email_server          = module.email.stmp_url
   translate_credentials = module.google_translate.credentials
   google_font_api_token = var.google_font_api_token
+  repo                  = var.repo
 }
 
-### Import Glosses Lambda and SQS Queue
 module "lambda_import" {
   source = "./modules/lambda-import"
 
   database_connection_string = module.database.connection_string
   app_user_arn               = module.amplify.server_user_arn
+  lambda_source_dir          = "${path.module}/../dist/packages/lambda-functions/"
 }
 
-### Email
 module "email" {
   source = "./modules/email"
 
-  domain              = local.domain
-  aws_route53_zone_id = aws_route53_zone.main.id
+  domain                  = var.domain
+  aws_route53_zone_id     = aws_route53_zone.main.id
+  bounce_subscription_url = "https://api.${var.domain}/api/email/notifications"
 }
 
-### Google Translate API
 module "google_translate" {
   source = "./modules/google-translate"
 }

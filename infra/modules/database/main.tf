@@ -14,12 +14,13 @@ terraform {
   required_version = ">= 1.2.0"
 }
 
+# Security settings to make database available to amplify on the open internet.
+# Opening up to the internet isn't ideal, but that's required for amplify.
 resource "aws_default_vpc" "default" {
   tags = {
     Name = "Default VPC"
   }
 }
-
 resource "aws_default_security_group" "default" {
   vpc_id = aws_default_vpc.default.id
 
@@ -44,9 +45,10 @@ resource "aws_default_security_group" "default" {
   }
 }
 
+# Create the database instance and initial database
 resource "aws_db_instance" "prod" {
   engine                       = "postgres"
-  identifier                   = "prod"
+  identifier                   = var.db_instance_name
   allocated_storage            = 20
   engine_version               = "14.9"
   instance_class               = "db.t3.micro"
@@ -62,21 +64,21 @@ resource "aws_db_instance" "prod" {
   backup_retention_period      = 3
   apply_immediately            = true
 }
+resource "postgresql_database" "prod" {
+  name = var.db_name
+}
 
+# Database user for the api server
 resource "postgresql_role" "app" {
   login    = true
   name     = var.app_prod_db_username
   password = var.app_prod_db_password
 }
-
-resource "postgresql_database" "prod" {
-  name = "prod"
-}
-
 resource "postgresql_grant" "create" {
-  database    = "prod"
+  database    = postgresql_database.prod.name
   role        = postgresql_role.app.name
   schema      = "public"
   object_type = "database"
   privileges  = ["CREATE"]
 }
+

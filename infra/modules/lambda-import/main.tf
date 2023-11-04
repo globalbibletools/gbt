@@ -9,6 +9,15 @@ terraform {
   required_version = ">= 1.2.0"
 }
 
+# The SQS queue for processing gloss imports
+# with the policy that gives api server access to put stuff in
+# and the lambda to take stuff out.
+resource "aws_sqs_queue" "gloss_import" {
+  name                        = var.queue_name
+  fifo_queue                  = true
+  content_based_deduplication = true
+  visibility_timeout_seconds  = 300
+}
 data "aws_iam_policy_document" "gloss_import_queue_policy" {
   version = "2012-10-17"
   statement {
@@ -32,19 +41,12 @@ data "aws_iam_policy_document" "gloss_import_queue_policy" {
     resources = [aws_sqs_queue.gloss_import.arn]
   }
 }
-
-resource "aws_sqs_queue" "gloss_import" {
-  name                        = "gloss_import.fifo"
-  fifo_queue                  = true
-  content_based_deduplication = true
-  visibility_timeout_seconds  = 300
-}
-
 resource "aws_sqs_queue_policy" "gloss_import" {
   queue_url = aws_sqs_queue.gloss_import.id
   policy    = data.aws_iam_policy_document.gloss_import_queue_policy.json
 }
 
+# The policy and role for the lambda function
 data "aws_iam_policy_document" "lambda_assume_role_policy" {
   version = "2012-10-17"
   statement {
@@ -57,27 +59,25 @@ data "aws_iam_policy_document" "lambda_assume_role_policy" {
     }
   }
 }
-
 resource "aws_iam_role" "import_glosses_lambda_role" {
-  name               = "import_glosses_lambda_role"
+  name               = var.lambda_role
   assume_role_policy = data.aws_iam_policy_document.lambda_assume_role_policy.json
 }
-
 resource "aws_iam_role_policy_attachment" "import_glosses_policy_attachment" {
   role       = aws_iam_role.import_glosses_lambda_role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
+# The lambda and source code
 data "archive_file" "import_glosses_zip" {
   type        = "zip"
-  source_dir  = "${path.root}/../dist/packages/lambda-functions/"
-  output_path = "${path.root}/../dist/import_glosses.zip"
+  source_dir  = var.lambda_source_dir
+  output_path = "${var.lambda_source_dir}../lambda.zip"
 }
-
 resource "aws_lambda_function" "test_lambda" {
-  filename         = "${path.root}/../dist/import_glosses.zip"
+  filename         = "${var.lambda_source_dir}../lambda.zip"
   function_name    = "import_glosses"
-  handler          = "main.lambdaHandler"
+  handler          = var.lambda_handler
   role             = aws_iam_role.import_glosses_lambda_role.arn
   source_code_hash = data.archive_file.import_glosses_zip.output_base64sha256
   runtime          = "nodejs18.x"
@@ -91,6 +91,7 @@ resource "aws_lambda_function" "test_lambda" {
   depends_on = [aws_iam_role_policy_attachment.import_glosses_policy_attachment]
 }
 
+# connect the lambda to the SQS queue
 resource "aws_lambda_event_source_mapping" "event_source_mapping" {
   event_source_arn = aws_sqs_queue.gloss_import.arn
   enabled          = true

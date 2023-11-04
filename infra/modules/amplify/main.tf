@@ -11,6 +11,7 @@ terraform {
 
 data "aws_caller_identity" "current" {}
 
+# AWS service role for amplify
 data "aws_iam_policy_document" "amplify_assume_role_policy" {
   version = "2012-10-17"
   statement {
@@ -23,7 +24,12 @@ data "aws_iam_policy_document" "amplify_assume_role_policy" {
     }
   }
 }
+resource "aws_iam_role" "amplify" {
+  name               = var.amplify_role
+  assume_role_policy = data.aws_iam_policy_document.amplify_assume_role_policy.json
+}
 
+# Policy for amplify role so that it can create logs in CloudWatch.
 data "aws_iam_policy_document" "amplify_logging" {
   version = "2012-10-17"
   statement {
@@ -48,35 +54,28 @@ data "aws_iam_policy_document" "amplify_logging" {
     resources = ["arn:aws:logs:us-east-1:${data.aws_caller_identity.current.account_id}:log-group:*"]
   }
 }
-
-resource "aws_iam_role" "amplify" {
-  name               = "amplify"
-  assume_role_policy = data.aws_iam_policy_document.amplify_assume_role_policy.json
-}
-
 resource "aws_iam_policy" "amplify_logging" {
   name   = "AmplifyLogging"
   policy = data.aws_iam_policy_document.amplify_logging.json
 }
-
 resource "aws_iam_role_policy_attachment" "amplify" {
   role       = aws_iam_role.amplify.name
   policy_arn = aws_iam_policy.amplify_logging.arn
 }
 
-### API server
+# API server user and key for accessing AWS resources
 resource "aws_iam_user" "app_prod" {
-  name = "app-prod"
+  name = var.api_user
 }
-
 resource "aws_iam_access_key" "app_prod" {
   user = aws_iam_user.app_prod.name
 }
 
+# Amplify configuration for API server
 resource "aws_amplify_app" "api" {
   platform             = "WEB_COMPUTE"
   name                 = "gbt-api"
-  repository           = "https://github.com/arrocke/gloss-translation"
+  repository           = var.repo
   access_token         = var.github_token
   iam_service_role_arn = aws_iam_role.amplify.arn
 
@@ -111,9 +110,10 @@ resource "aws_amplify_app" "api" {
   }
 }
 
+# Amplify branch to build and connect to api subdomain
 resource "aws_amplify_branch" "api_main" {
   app_id      = aws_amplify_app.api.id
-  branch_name = "main"
+  branch_name = var.api_branch
   framework   = "Next.js - SSR"
   stage       = "PRODUCTION"
   environment_variables = {
@@ -128,7 +128,6 @@ resource "aws_amplify_branch" "api_main" {
     SECRET_ACCESS_KEY            = aws_iam_access_key.app_prod.secret
   }
 }
-
 resource "aws_amplify_domain_association" "api" {
   app_id      = aws_amplify_app.api.id
   domain_name = var.domain
@@ -139,11 +138,11 @@ resource "aws_amplify_domain_association" "api" {
   }
 }
 
-### Interlinear server hosting
+# Amplify configuration for interlinear server
 resource "aws_amplify_app" "interlinear" {
   platform             = "WEB"
   name                 = "gbt-interlinear"
-  repository           = "https://github.com/arrocke/gloss-translation"
+  repository           = var.repo
   access_token         = var.github_token
   iam_service_role_arn = aws_iam_role.amplify.arn
 
@@ -188,9 +187,10 @@ resource "aws_amplify_app" "interlinear" {
   }
 }
 
+# Amplify branch to build and connect to interlinear subdomain
 resource "aws_amplify_branch" "interlinear_main" {
   app_id      = aws_amplify_app.interlinear.id
-  branch_name = "main"
+  branch_name = var.interlinear_branch
   framework   = "React"
   stage       = "PRODUCTION"
   environment_variables = {
@@ -198,7 +198,6 @@ resource "aws_amplify_branch" "interlinear_main" {
     NX_GOOGLE_FONT_API_KEY = var.google_font_api_token
   }
 }
-
 resource "aws_amplify_domain_association" "interlinear" {
   app_id      = aws_amplify_app.interlinear.id
   domain_name = var.domain
