@@ -1,4 +1,11 @@
 terraform {
+  cloud {
+    organization = "global-bible-tools"
+    workspaces {
+      name = "prod"
+    }
+  }
+
   required_providers {
     aws = {
       source  = "hashicorp/aws"
@@ -41,6 +48,15 @@ provider "postgresql" {
 
 resource "aws_route53_zone" "main" {
   name = var.domain
+}
+
+module "cloud" {
+  source = "./modules/cloud"
+
+  tfc_organization_name = "global-bible-tools"
+  tfc_project_name      = "Default Project"
+  tfc_workspace_name    = "prod"
+  gcp_project_id        = var.google_project
 }
 
 module "database" {
