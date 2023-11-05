@@ -69,7 +69,6 @@ module "lambda_import" {
 
   database_connection_string = module.database.connection_string
   app_user_arn               = module.amplify.server_user_arn
-  lambda_source_dir          = "${path.module}/../dist/packages/lambda-functions/"
 }
 
 module "email" {

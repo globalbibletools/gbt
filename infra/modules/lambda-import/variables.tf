@@ -10,11 +10,6 @@ variable "lambda_role" {
   default     = "import_glosses_lambda_role"
 }
 
-variable "lambda_source_dir" {
-  description = "The directory of the lambda source code"
-  type        = string
-}
-
 variable "lambda_handler" {
   description = "The handler function in the lambda source code"
   type        = string

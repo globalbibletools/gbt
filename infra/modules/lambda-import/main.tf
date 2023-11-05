@@ -68,21 +68,19 @@ resource "aws_iam_role_policy_attachment" "import_glosses_policy_attachment" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
-# The lambda and source code
-data "archive_file" "import_glosses_zip" {
-  type        = "zip"
-  source_dir  = var.lambda_source_dir
-  output_path = "${var.lambda_source_dir}../lambda.zip"
+# The lambda function and queue trigger 
+resource "aws_s3_bucket" "lambda" {
+  bucket = "gbt-lambda"
 }
 resource "aws_lambda_function" "test_lambda" {
-  filename         = "${var.lambda_source_dir}../lambda.zip"
-  function_name    = "import_glosses"
-  handler          = var.lambda_handler
-  role             = aws_iam_role.import_glosses_lambda_role.arn
-  source_code_hash = data.archive_file.import_glosses_zip.output_base64sha256
-  runtime          = "nodejs18.x"
-  timeout          = 300
-  memory_size      = 1024
+  s3_bucket     = aws_s3_bucket.lambda.bucket
+  s3_key        = "import_glosses.zip"
+  function_name = "import_glosses"
+  handler       = var.lambda_handler
+  role          = aws_iam_role.import_glosses_lambda_role.arn
+  runtime       = "nodejs18.x"
+  timeout       = 300
+  memory_size   = 1024
   environment {
     variables = {
       DATABASE_URL = var.database_connection_string
@@ -90,8 +88,6 @@ resource "aws_lambda_function" "test_lambda" {
   }
   depends_on = [aws_iam_role_policy_attachment.import_glosses_policy_attachment]
 }
-
-# connect the lambda to the SQS queue
 resource "aws_lambda_event_source_mapping" "event_source_mapping" {
   event_source_arn = aws_sqs_queue.gloss_import.arn
   enabled          = true
