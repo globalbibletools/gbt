@@ -16,15 +16,19 @@ resource "google_project_service" "cloud_translation" {
 
 # Service user for translate requests
 resource "google_service_account" "default" {
-  account_id   = var.service_user
-  display_name = "Global Bible Tools API"
+  account_id   = var.service_user.id
+  display_name = var.service_user.name
   description  = "Enables API server to use Google Translate"
 }
 resource "google_service_account_key" "default" {
   service_account_id = google_service_account.default.name
 }
-resource "google_service_account_iam_binding" "cloud_translate_user" {
-  service_account_id = google_service_account.default.name
-  role               = "roles/cloudtranslate.user"
-  members            = []
+data "google_project" "project" {
+}
+resource "google_project_iam_binding" "project" {
+  project = data.google_project.project.id
+  role    = "roles/cloudtranslate.user"
+  members = [
+    google_service_account.default.member
+  ]
 }

@@ -44,9 +44,3 @@ variable "google_project" {
   type        = string
   sensitive   = true
 }
-
-variable "google_font_api_token" {
-  description = "Google Font API Token"
-  type        = string
-  sensitive   = true
-}

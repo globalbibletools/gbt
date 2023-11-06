@@ -1,5 +1,7 @@
 variable "service_user" {
-  description = "The id of service user for the translate api"
-  type        = string
-  default     = "global-bible-tools-api"
+  description = "The service user for the translate api"
+  type = object({
+    id   = string
+    name = string
+  })
 }

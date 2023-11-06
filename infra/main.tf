@@ -35,6 +35,32 @@ provider "google" {
   region  = "us-central-1"
 }
 
+resource "google_project_service" "api_keys" {
+  service = "apikeys.googleapis.com"
+}
+
+resource "google_apikeys_key" "webfonts_key" {
+  name         = "webfont-key"
+  display_name = "Web Fonts API Key"
+
+  restrictions {
+    api_targets {
+      service = "webfonts.googleapis.com"
+    }
+  }
+}
+
+resource "google_apikeys_key" "webfonts_key_dev" {
+  name         = "webfont-key-dev"
+  display_name = "Web Fonts API Key (Dev)"
+
+  restrictions {
+    api_targets {
+      service = "webfonts.googleapis.com"
+    }
+  }
+}
+
 provider "postgresql" {
   host            = module.database.host
   port            = module.database.port
@@ -76,7 +102,7 @@ module "amplify" {
   database_url          = module.database.connection_string
   email_server          = module.email.stmp_url
   translate_credentials = module.google_translate.credentials
-  google_font_api_token = var.google_font_api_token
+  google_font_api_token = google_apikeys_key.webfonts_key.key_string
   repo                  = var.repo
 }
 
@@ -97,4 +123,16 @@ module "email" {
 
 module "google_translate" {
   source = "./modules/google-translate"
+  service_user = {
+    id   = "api-prod"
+    name = "API Server"
+  }
+}
+
+module "google_translate_dev" {
+  source = "./modules/google-translate"
+  service_user = {
+    id   = "api-dev"
+    name = "API Server (Dev)"
+  }
 }
