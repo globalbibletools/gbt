@@ -15,7 +15,7 @@ resource "aws_iam_access_key" "smtp_user" {
 data "aws_iam_policy_document" "ses_send" {
   statement {
     actions   = ["ses:SendEmail", "ses:SendRawEmail"]
-    resources = [aws_ses_domain_identity.default.arn]
+    resources = ["*"]
   }
 }
 resource "aws_iam_policy" "ses_send" {
@@ -84,8 +84,8 @@ data "aws_iam_policy_document" "ses_notifications" {
     sid    = "send"
     effect = "Allow"
     principals {
-      type        = "AWS"
-      identifiers = [aws_iam_user.smtp_user.arn]
+      type        = "Service"
+      identifiers = ["ses.amazonaws.com"]
     }
     actions   = ["sns:Publish"]
     resources = [aws_sns_topic.ses_notifications.arn]
@@ -113,4 +113,16 @@ resource "aws_sns_topic_subscription" "ses_notifications_to_server" {
 resource "aws_sns_topic_policy" "ses_notifications" {
   arn    = aws_sns_topic.ses_notifications.arn
   policy = data.aws_iam_policy_document.ses_notifications.json
+}
+
+# Attach the SNS topic to the SES identity
+resource "aws_ses_identity_notification_topic" "bounce" {
+  topic_arn         = aws_sns_topic.ses_notifications.arn
+  notification_type = "Bounce"
+  identity          = aws_ses_domain_identity.default.domain
+}
+resource "aws_ses_identity_notification_topic" "complaint" {
+  topic_arn         = aws_sns_topic.ses_notifications.arn
+  notification_type = "Complaint"
+  identity          = aws_ses_domain_identity.default.domain
 }
