@@ -39,6 +39,12 @@
         "command": "npx ts-node --project packages/db/tsconfig.json packages/db/src/scripts/import-bdb.ts"
       }
     },
+    "import-lsj": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx ts-node --project packages/db/tsconfig.json packages/db/src/scripts/import-lsj.ts"
+      }
+    },
     "prisma": {
       "executor": "@translation/nx-plugin:prisma",
       "options": {
