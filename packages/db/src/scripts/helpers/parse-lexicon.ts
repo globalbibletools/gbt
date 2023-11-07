@@ -22,12 +22,13 @@ export const parseLexicon = async (
         // Record the last data before overwriting the temporary variables.
         parsed[currentId] = currentData;
       }
-      currentId = rest.replaceAll('=', '');
       currentData = {};
     } else if (indicator == '@') {
       const [key, value] = rest.split('=\t', 2);
       if (keys.includes(key)) {
         currentData[key] = toMarkDown(value);
+      } else if (key == 'StrNo') {
+        currentId = value;
       }
     }
   }
