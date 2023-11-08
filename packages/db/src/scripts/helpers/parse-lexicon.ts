@@ -22,12 +22,13 @@ export const parseLexicon = async (
         // Record the last data before overwriting the temporary variables.
         parsed[currentId] = currentData;
       }
-      currentId = rest.replaceAll('=', '');
       currentData = {};
     } else if (indicator == '@') {
       const [key, value] = rest.split('=\t', 2);
       if (keys.includes(key)) {
         currentData[key] = toMarkDown(value);
+      } else if (key == 'StrNo') {
+        currentId = value;
       }
     }
   }
@@ -37,11 +38,31 @@ export const parseLexicon = async (
 
 const toMarkDown = (raw: string): string => {
   return raw
+    .replaceAll('<Level1>', '\n# ')
+    .replaceAll('<Level2>', '\n## ')
+    .replaceAll('<Level3>', '\n### ')
+    .replaceAll('<Level4>', '\n#### ')
+    .replaceAll('</Level1>', '\n')
+    .replaceAll('</Level2>', '\n')
+    .replaceAll('</Level3>', '\n')
+    .replaceAll('</Level4>', '\n')
+    .replaceAll('<b>', '**')
+    .replaceAll('</b>', '**')
     .replaceAll('<br>', '\n\n')
-    .replaceAll('<B>', '<BR>')
+    .replaceAll('<br />', '\n\n')
+    .replaceAll('<lb />', '\n\n') // I think it is short for "line break"
     .replaceAll('<BR>', '\n\n')
+    .replaceAll('<B>', '\n\n')
+    .replaceAll('<BR />', '\n\n')
     .replaceAll('<i>', '*')
     .replaceAll('</i>', '*')
     .replaceAll(/<ref=".*">/g, '')
-    .replaceAll('</ref>', '');
+    .replaceAll(/<ref='.*'>/g, '')
+    .replaceAll('</ref>', '')
+    .replaceAll(/<a.*>/g, '')
+    .replaceAll('</a>', '')
+    .replaceAll('<u>', '') // Markdown doesn't have underline
+    .replaceAll('</u>', '')
+    .replaceAll('<date>', '')
+    .replaceAll('</date>', '');
 };
