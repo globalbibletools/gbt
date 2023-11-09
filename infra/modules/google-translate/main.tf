@@ -25,10 +25,8 @@ resource "google_service_account_key" "default" {
 }
 data "google_project" "project" {
 }
-resource "google_project_iam_binding" "project" {
+resource "google_project_iam_member" "project" {
   project = data.google_project.project.id
   role    = "roles/cloudtranslate.user"
-  members = [
-    google_service_account.default.member
-  ]
+  member  = google_service_account.default.member
 }
