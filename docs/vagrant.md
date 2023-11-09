@@ -127,3 +127,19 @@ Open a web browser to URL: <http://localhost:4200>
    on these ports. The forwarded port to 5432 is already in use
    on the host machine.
    ```
+
+1. If you experience a long pause, after issuing a `vagrant up` command at the point in the process shown below, the VM is up and running, but vagrant is trying to establish a SSH session to it. Sometimes it hangs indefinitely and eventually times out. The cause is unknown.
+
+   ```bash
+   => default: Waiting for machine to boot. This may take a few minutes...
+      default: SSH address: 127.0.0.1:2222
+      default: SSH username: vagrant
+      default: SSH auth method: private key
+   ```
+
+   To free up the process before it times out, perform the following steps:
+
+   1. Open `Oracle VM VirtualBox Manager`.
+   2. Click on the name of your VM machine in the left panel. The name starts with the name of the root folder of your repository. In our case it would be `gloss-translation_....`
+   3. If the VM is running, you will see a green right arrow called `Show`. It opens a new panel where you can monitor the boot process of your VM. This should free up the vagrant session and then the boot process should continue to completion.
+   4. Once the vagrant session is up, you can close down the panel, without shutting down the VM, by clicking menu `Machine/Detach GUI`.
