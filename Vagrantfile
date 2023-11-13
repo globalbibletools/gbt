@@ -1,26 +1,8 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-require 'optparse'
-
-# Get provider from command line
-def get_provider
-  provider_index = ARGV.index { |arg| arg == '--provider' }
-  if provider_index
-    provider = ARGV[provider_index + 1]
-    unless ['docker', 'virtualbox'].include?(provider)
-      puts "Error: Provider #{provider} is not supported. Please use 'docker' or 'virtualbox'."
-      exit 1
-    end
-  else
-    provider = 'virtualbox'  # Default to 'virtualbox' if no provider is set
-  end
-  provider
-end
-
-# Store provider in variable for later use below  
-provider = get_provider
-
+# NOTES:
+# This version was tested using Windows 11 Home Edition
 # All Vagrant configuration is done below. The "2" in Vagrant.configure
 # configures the configuration version (we support older styles for
 # backwards compatibility). Please don't change it unless you know what
@@ -31,22 +13,7 @@ Vagrant.configure("2") do |config|
 
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://vagrantcloud.com/search.
- 
-  # Use VBoxManage to customize the VM.
-  # Enable creation of symbolic links on dir /home/vagrant/vmrepo
-  if provider == "virtualbox"
-    config.vm.provider "virtualbox" do |vb|
-      config.vm.box = "generic/ubuntu2210"
-      vb.memory = 4096  # Set RAM in MB (4GB in this example)
-      vb.cpus = 2      # Set the number of CPU cores
-      vb.customize ["setextradata", :id, "VBoxInternal2/SharedFoldersEnableSymlinksCreate//home/vagrant/vmrepo", "1"]
-    end
-  end
-
-  if provider == "docker"
-    config.vm.box="tknerr/baseimage-ubuntu-22.04"
-    config.vm.box_version = "1.0.0"
-  end
+  config.vm.box = "generic/ubuntu2210"
 
   # Configure for application API
   config.vm.network "forwarded_port", guest: 4300, host: 4300, host_ip: "127.0.0.1"
@@ -58,7 +25,7 @@ Vagrant.configure("2") do |config|
   config.vm.network "forwarded_port", guest: 5432, host: 5432, host_ip: "127.0.0.1"
 
   # Mount repo project root folder. 
-  config.vm.synced_folder ".", "/home/vagrant/vmrepo"
+  config.vm.synced_folder ".", "/home/vagrant/vmrepo", type: "virtualbox"
 
   # Disable the default share of the current code directory. Doing this
   # provides improved isolation between the vagrant box and your host
@@ -67,6 +34,14 @@ Vagrant.configure("2") do |config|
   # shown above.
   config.vm.synced_folder ".", "/vagrant", disabled: true
 
+  # Use VBoxManage to customize the VM.
+  # Enable creation of symbolic links on dir /home/vagrant/vmrepo
+  config.vm.provider "virtualbox" do |vb|
+    vb.memory = 4096  # Set RAM in MB (4GB in this example)
+    vb.cpus = 2      # Set the number of CPU cores
+    vb.customize ["setextradata", :id, "VBoxInternal2/SharedFoldersEnableSymlinksCreate//home/vagrant/vmrepo", "1"]
+  end
+
   # Echo current start time stamp
   config.vm.provision "shell", name: "starttimestamp", inline: <<-SHELL
     echo " "  
@@ -74,24 +49,6 @@ Vagrant.configure("2") do |config|
     echo " "
   SHELL
 
-  # Install packages missing in docker image
-  if provider == "docker"
-    config.vm.provision "shell", name: "docker", inline: <<-SHELL
-      echo " "
-      echo "Installing Ubuntu packages missing in docker image..."  
-      echo "Provisioning with root access"  
-      sudo apt-get -y update
-      echo "installing vim"
-      sudo apt-get install vim
-      # Install iproute2 to get the default gateway IP address
-      sudo apt-get update
-      echo "Installing iproute2"
-      sudo apt-get -y install iproute2
-
-      echo "End of: Installing packages missing in docker image"
-    SHELL
-  end
- 
   # Install Node.js 18
   config.vm.provision "shell", name: "nodejs", inline: <<-SHELL
     echo " " 
@@ -99,10 +56,10 @@ Vagrant.configure("2") do |config|
     echo "Provisioning with root access"
 
     # Update resynchronizes the package index files from their sources. 
-    sudo apt-get update
+    sudo apt update
 
     # 1. Download and import the Nodesource GPG key
-    sudo apt-get install -y ca-certificates curl gnupg
+    sudo apt install -y ca-certificates curl gnupg
     sudo mkdir -p /etc/apt/keyrings
     curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
 
@@ -111,16 +68,9 @@ Vagrant.configure("2") do |config|
     echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" | sudo tee /etc/apt/sources.list.d/nodesource.list
 
     # 3. Run Update and Install
-    sudo apt-get update
-    sudo apt-get install nodejs -y
+    sudo apt update
+    sudo apt install nodejs -y
     echo "End of: Installing Node.js 18"
-  SHELL
-
-  # This may be required for Postgres 14 installation depending on your setup
-  config.vm.provision "shell", name: "timezone", inline: <<-SHELL
-    export DEBIAN_FRONTEND=noninteractive
-    export TZ="America/New_York"  # Set your desired timezone here
-    ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
   SHELL
 
   # Install Postgres 14
@@ -138,31 +88,21 @@ Vagrant.configure("2") do |config|
     wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
 
     # 3. Update the package lists
-    sudo apt-get update
+    sudo apt update
 
     # 4. Install the latest version of PostgreSQL.
     # If you want a specific version, use 'postgresql-14' or similar instead of 'postgresql':
-    sudo apt-get -y install postgresql-14
+    sudo apt -y install postgresql-14
 
-    # Allow postgres user to access /home/vagrant
-    # This prevents error: "could not change directory to "/home/vagrant": Permission denied"
-    echo "sudo chmod a+rx /home/vagrant"
-    chmod a+rx /home/vagrant
-
-    # 5. Start PostgreSQL
-    # This is necessary for docker
-    echo "Starting postgresql"
-    service postgresql start
-
-    # 6. Create a PostgreSQL user with CREATEDB and CREATEROLE privileges
-    echo "running: CREATE USER vagrant WITH PASSWORD 'vagrant' CREATEDB CREATEROLE;"
+    # 5. Create a PostgreSQL user with CREATEDB and CREATEROLE privileges
+    echo "sudo -u postgres psql -c \"CREATE USER vagrant WITH PASSWORD 'vagrant' CREATEDB CREATEROLE;\""
     sudo -u postgres psql -c "CREATE USER vagrant WITH PASSWORD 'vagrant' CREATEDB CREATEROLE;"
 
-    # 7. Create a new database owned by the 'vagrant' user
-    echo "running: CREATE DATABASE gloss_translation OWNER vagrant;"
+    # 6. Create a new database owned by the 'vagrant' user
+    echo "sudo -u postgres psql -c \"CREATE DATABASE gloss_translation OWNER vagrant;\""
     sudo -u postgres psql -c "CREATE DATABASE gloss_translation OWNER vagrant;"
 
-    # 8. Restart PostgreSQL to apply changes (may be necessary depending on your setup)    
+    # 7. Restart PostgreSQL to apply changes (may be necessary depending on your setup)    
     sudo service postgresql restart
 
     echo "End of: Installing Postgres 14"

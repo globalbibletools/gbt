@@ -2,15 +2,14 @@
 
 You can optionally setup a virtual Ubuntu environment using Vagrant. It is a tool used for building and managing virtual machine environments in a single workflow.
 
-Although Vagrant supports [VirtualBox](https://www.virtualbox.org/), [Hyper-V](https://learn.microsoft.com/en-us/virtualization/hyper-v-on-windows/quick-start/enable-hyper-v), [Docker](https://www.docker.com/), or [VMware Fusion](https://customerconnect.vmware.com/downloads/get-download?downloadGroup=FUS-PUBTP-2021H1), `VirtualBox` and `Docker` are the only environments that has been developed and tested thus far. If you have a need to use `Hyper-V`, or `VMware`, please create an issue and request a new feature.
+Although Vagrant supports [VirtualBox](https://www.virtualbox.org/), [Hyper-V](https://learn.microsoft.com/en-us/virtualization/hyper-v-on-windows/quick-start/enable-hyper-v), [Docker](https://www.docker.com/), or [VMware Fusion](https://customerconnect.vmware.com/downloads/get-download?downloadGroup=FUS-PUBTP-2021H1), `VirtualBox` is the only environment that has been developed and tested thus far. If you have need to use Hyper-V, Docker, or VMware, please create an issue and request a new feature.
 
 ## Notes
 
 This was tested using:
 
-- Vagrant v2.3.7
+- Vagrant v2.4.0
 - VirtualBox v7.0.12
-- Docker Desktop v4.25.0
 
 ## Prerequisites
 
@@ -22,7 +21,7 @@ This was tested using:
    Get-NetTCPConnection | Where-Object { $_.State -eq 'Listen' }
    ```
 
-1. `npm install` creates symbolic links. As a result, the Virtual Machine (VM) user: `vagrant` requires `create symbolic link` authority. In some environments, only the administrator has this authority. To resolve this issue in Windows, the following steps can be performed:
+1. `npm install` creates symbolic links. As a result, the VM user: `vagrant` requires `create symbolic link` authority. In some environments, only the administrator has this authority. To resolve this issue in Windows, the following steps can be performed:
    1. Launch the `Local Security Policy` app from the `start menu` (or `Win+R`, then type `secpol.msc`)
    1. Navigate to `Local Policies` -> `User Rights Assignment`.
    1. Open the `Create symbolic links` property. By default it has only `Administrators` listed.
@@ -32,22 +31,17 @@ This was tested using:
 
 ## Setup Steps
 
-1. [Download](https://releases.hashicorp.com/vagrant/2.3.7/) Vagrant v2.3.7. _(Vagrant v2.4.0 introduced a bug that prevents the creation of a docker container. This is to be fixed in v2.4.1.)_
+1. [Download](https://developer.hashicorp.com/vagrant/downloads?ajs_aid=ba208f95-d5a1-457d-abeb-49d458b95eec&product_intent=vagrant) Vagrant software.
 1. Reference these [installation](https://developer.hashicorp.com/vagrant/docs/installation) instructions.
 1. Verify installation by running `vagrant -v` in a terminal session.
-1. Install your provider of choice:
-
-   - [VirtualBox](https://www.virtualbox.org/)
-   - [Docker Desktop](https://docs.docker.com/desktop/)
-
+1. Install [VirtualBox](https://www.virtualbox.org/).
 1. If you have not already done so, fork repo to your local machine.
 1. Vagrant uses a special configuration file called `Vagrantfile` that contains all the information required for the creation of a Virtual Machine (guest) on your workstation (host). It is located in your repo root directory.
-1. To start the creation of your virtual environment, run one of these commands in the repo root directory. (This takes a while so be patient.)
+1. To start the creation of your virtual environment, run this command in the repo root directory. (This takes a while so be patient.)
 
-   | Provider     | Command                      |
-   | ------------ | ---------------------------- |
-   | `VirtualBox` | vagrant up                   |
-   | `Docker`     | vagrant up --provider docker |
+   ```bash
+   vagrant up
+   ```
 
 1. Once the `vagrant up` command completes, you can logon into your virtual machine using this command. (password: `vagrant`)
 
@@ -57,14 +51,13 @@ This was tested using:
 
 1. Here is a list of common Vagrant commands. Be sure that you are in the same directory as the Vagrantfile when running these commands!
 
-   | Command                        | Description                                                                                                                                                   |
-   | ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-   | `vagrant up`                   | For VirtualBox, creates and provisions on first run a virtual machine. After initial run, it is used to start an existing environment regardless of provider. |
-   | `vagrant up --provider docker` | Starts and provisions on first run a docker container. After that, use `vagrant up` to start container.                                                       |
-   | `vagrant ssh`                  | connects to the machine via SSH                                                                                                                               |
-   | `vagrant suspend`              | suspends the machine (maintains state) - next start will be faster                                                                                            |
-   | `vagrant halt`                 | stops the machine                                                                                                                                             |
-   | `vagrant status`               | outputs status of the machine                                                                                                                                 |
+   | Command           | Description                                                             |
+   | ----------------- | ----------------------------------------------------------------------- |
+   | `vagrant up`      | starts and provisions (if needed, on first run) the Vagrant environment |
+   | `vagrant ssh`     | connects to the machine via SSH                                         |
+   | `vagrant suspend` | suspends the machine (maintains state) - next start will be faster      |
+   | `vagrant halt`    | stops the machine                                                       |
+   | `vagrant status`  | outputs status of the machine                                           |
 
 1. For help on vagrant commands, at a terminal session enter:
 
@@ -135,7 +128,7 @@ Open a web browser to URL: <http://localhost:4200>
    on the host machine.
    ```
 
-1. **For VirtualBox only**, if you experience a long pause, after issuing a `vagrant up` command at the point in the process shown below, the VM is up and running, but vagrant is trying to establish a SSH session to it. Sometimes it hangs indefinitely and eventually times out. The cause is unknown.
+1. If you experience a long pause, after issuing a `vagrant up` command at the point in the process shown below, the VM is up and running, but vagrant is trying to establish a SSH session to it. Sometimes it hangs indefinitely and eventually times out. The cause is unknown.
 
    ```bash
    => default: Waiting for machine to boot. This may take a few minutes...
