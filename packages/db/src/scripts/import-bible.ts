@@ -64,10 +64,9 @@ async function run() {
 
           // We clean the strongs codes since the hebrew ones have some extra characters.
           // We also prefix the code with a language code based on the book.
-          const strongs = `${book.id < 40 ? 'H' : 'G'}${rawStrongs.replace(
-            STRONGS_REGEX,
-            ''
-          )}`;
+          const strongs = `${book.id < 40 ? 'H' : 'G'}${rawStrongs
+            .replace(STRONGS_REGEX, '')
+            .padStart(4, '0')}`;
 
           // We have to accumulate word data until we have inserted all of the lemma data.
           const wordId = `${verseId}${(wordIndex + 1)
@@ -98,7 +97,7 @@ async function run() {
           forms: {
             createMany: {
               data: Object.keys(forms).map((grammar, i) => {
-                const id = `${lemma}-${i + 1}`;
+                const id = `${lemma}-${(i + 1).toString().padStart(3, '0')}`;
                 lemmas[lemma][grammar].formId = id;
                 return {
                   id,
