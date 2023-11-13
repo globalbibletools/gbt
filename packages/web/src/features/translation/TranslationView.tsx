@@ -4,11 +4,15 @@ import {
   GlossState,
   TextDirection,
 } from '@translation/api-types';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAccessControl } from '../../shared/accessControl';
 import apiClient from '../../shared/apiClient';
+import bibleTranslationClient from '../../shared/bibleTranslationClient';
+import { Icon } from '../../shared/components/Icon';
 import LoadingSpinner from '../../shared/components/LoadingSpinner';
+import Button from '../../shared/components/actions/Button';
 import DropdownMenu, {
   DropdownMenuLink,
 } from '../../shared/components/actions/DropdownMenu';
@@ -25,12 +29,6 @@ import {
   incrementVerseId,
   parseVerseId,
 } from './verse-utils';
-import Button from '../../shared/components/actions/Button';
-import { Icon } from '../../shared/components/Icon';
-import { useTranslation } from 'react-i18next';
-import bibleTranslationClient, {
-  BibleVerseTranslation,
-} from '../../shared/bibleTranslationClient';
 
 export const translationLanguageKey = 'translation-language';
 export const translationVerseIdKey = 'translation-verse-id';
@@ -288,149 +286,157 @@ export default function TranslationView() {
     }
   }, [loading, verseQuery.data]);
 
+  console.log('hello');
+
   return (
-    <div className="px-4 flex flex-grow flex-col gap-8">
-      <div className="flex gap-8 items-center">
-        <VerseSelector
-          verseId={verseId}
-          onVerseChange={(verseId) =>
-            navigate(`/languages/${language}/verses/${verseId}`)
-          }
-        />
-        <DropdownMenu text={selectedLanguage?.name ?? 'Language'}>
-          {translationLanguages.map((language) => (
-            <DropdownMenuLink
-              key={language.code}
-              to={`/languages/${language.code}/verses/${verseId}`}
-            >
-              {language.name}
-            </DropdownMenuLink>
-          ))}
-        </DropdownMenu>
-      </div>
-      {(() => {
-        if (loading) {
-          return (
-            <div className="flex-grow flex items-center justify-center">
-              <LoadingSpinner />
-            </div>
-          );
-        } else {
-          const verse = verseQuery.data.data;
-          const referenceGlosses = referenceGlossesQuery.data.data;
-          const targetGlosses = targetGlossesQuery.data.data;
-
-          const { bookId } = parseVerseId(verse.id);
-
-          const canEdit = userCan('translate', {
-            type: 'Language',
-            id: language,
-          });
-
-          const isHebrew = bookId < 40;
-          return (
-            <>
-              {translationQuery.data && (
-                <p
-                  className="text-base mx-2"
-                  dir={selectedLanguage?.textDirection ?? TextDirection.LTR}
-                  style={{
-                    fontFamily: expandFontFamily(
-                      selectedLanguage?.font ?? 'Noto Sans'
-                    ),
-                  }}
-                >
-                  <span className="text-sm font-bold me-2">
-                    {translationQuery.data.name}
-                  </span>
-                  <span>{translationQuery.data.translation}</span>
-                </p>
-              )}
-              <ol
-                className={`flex flex-wrap ${
-                  isHebrew ? 'ltr:flex-row-reverse' : 'rtl:flex-row-reverse'
-                }`}
+    <div className="flex flex-row gap-2 flex-grow">
+      <div className="px-4 flex flex-grow flex-col gap-8">
+        <div className="flex gap-8 items-center">
+          <VerseSelector
+            verseId={verseId}
+            onVerseChange={(verseId) =>
+              navigate(`/languages/${language}/verses/${verseId}`)
+            }
+          />
+          <DropdownMenu text={selectedLanguage?.name ?? 'Language'}>
+            {translationLanguages.map((language) => (
+              <DropdownMenuLink
+                key={language.code}
+                to={`/languages/${language.code}/verses/${verseId}`}
               >
-                {verse.words.map((word, i) => {
-                  const targetGloss = targetGlosses[i];
-                  const isSaving = glossRequests.some(
-                    ({ wordId }) => wordId === word.id
-                  );
+                {language.name}
+              </DropdownMenuLink>
+            ))}
+          </DropdownMenu>
+        </div>
+        {(() => {
+          if (loading) {
+            return (
+              <div className="flex-grow flex items-center justify-center">
+                <LoadingSpinner />
+              </div>
+            );
+          } else {
+            const verse = verseQuery.data.data;
+            const referenceGlosses = referenceGlossesQuery.data.data;
+            const targetGlosses = targetGlossesQuery.data.data;
 
-                  let status: 'empty' | 'saving' | 'saved' | 'approved' =
-                    'empty';
-                  if (isSaving) {
-                    status = 'saving';
-                  } else if (targetGloss.gloss) {
-                    status =
-                      targetGloss.state === GlossState.Approved
-                        ? 'approved'
-                        : 'saved';
-                  }
+            const { bookId } = parseVerseId(verse.id);
 
-                  return (
-                    <TranslateWord
-                      key={word.id}
-                      editable={canEdit}
-                      word={word}
-                      originalLanguage={isHebrew ? 'hebrew' : 'greek'}
-                      status={status}
-                      gloss={targetGloss?.gloss}
-                      machineGloss={targetGloss?.machineGloss}
-                      targetLanguage={selectedLanguage}
-                      referenceGloss={referenceGlosses[i]?.gloss}
-                      suggestions={targetGlosses[i]?.suggestions}
-                      onChange={({ gloss, approved }) => {
-                        glossMutation.mutate({
-                          wordId: word.id,
-                          gloss,
-                          state:
-                            approved === true
-                              ? GlossState.Approved
-                              : approved === false
-                              ? GlossState.Unapproved
-                              : undefined,
-                        });
-                      }}
-                      ref={(() => {
-                        if (i === 0) {
-                          return firstWord;
-                        } else if (i === verse.words.length - 1) {
-                          return lastWord;
-                        }
-                      })()}
-                    />
-                  );
-                })}
-                {canEdit && (
-                  <li className="mx-2" dir={isHebrew ? 'rtl' : 'ltr'}>
-                    <Button
-                      variant="tertiary"
-                      className="mt-20"
-                      onClick={() => {
-                        loadedFromNextButton.current = true;
-                        navigate(
-                          `/languages/${language}/verses/${incrementVerseId(
-                            verseId
-                          )}`
-                        );
-                      }}
-                    >
-                      {isHebrew && <Icon icon="arrow-left" className="mr-1" />}
-                      <span dir={i18n.dir(i18n.language)}>
-                        {t('common:next')}
-                      </span>
-                      {!isHebrew && (
-                        <Icon icon="arrow-right" className="ml-1" />
-                      )}
-                    </Button>
-                  </li>
+            const canEdit = userCan('translate', {
+              type: 'Language',
+              id: language,
+            });
+
+            const isHebrew = bookId < 40;
+            return (
+              <>
+                {translationQuery.data && (
+                  <p
+                    className="text-base mx-2"
+                    dir={selectedLanguage?.textDirection ?? TextDirection.LTR}
+                    style={{
+                      fontFamily: expandFontFamily(
+                        selectedLanguage?.font ?? 'Noto Sans'
+                      ),
+                    }}
+                  >
+                    <span className="text-sm font-bold me-2">
+                      {translationQuery.data.name}
+                    </span>
+                    <span>{translationQuery.data.translation}</span>
+                  </p>
                 )}
-              </ol>
-            </>
-          );
-        }
-      })()}
+                <ol
+                  className={`flex flex-wrap ${
+                    isHebrew ? 'ltr:flex-row-reverse' : 'rtl:flex-row-reverse'
+                  }`}
+                >
+                  {verse.words.map((word, i) => {
+                    const targetGloss = targetGlosses[i];
+                    const isSaving = glossRequests.some(
+                      ({ wordId }) => wordId === word.id
+                    );
+
+                    let status: 'empty' | 'saving' | 'saved' | 'approved' =
+                      'empty';
+                    if (isSaving) {
+                      status = 'saving';
+                    } else if (targetGloss.gloss) {
+                      status =
+                        targetGloss.state === GlossState.Approved
+                          ? 'approved'
+                          : 'saved';
+                    }
+
+                    return (
+                      <TranslateWord
+                        key={word.id}
+                        editable={canEdit}
+                        word={word}
+                        originalLanguage={isHebrew ? 'hebrew' : 'greek'}
+                        status={status}
+                        gloss={targetGloss?.gloss}
+                        machineGloss={targetGloss?.machineGloss}
+                        targetLanguage={selectedLanguage}
+                        referenceGloss={referenceGlosses[i]?.gloss}
+                        suggestions={targetGlosses[i]?.suggestions}
+                        onChange={({ gloss, approved }) => {
+                          glossMutation.mutate({
+                            wordId: word.id,
+                            gloss,
+                            state:
+                              approved === true
+                                ? GlossState.Approved
+                                : approved === false
+                                ? GlossState.Unapproved
+                                : undefined,
+                          });
+                        }}
+                        ref={(() => {
+                          if (i === 0) {
+                            return firstWord;
+                          } else if (i === verse.words.length - 1) {
+                            return lastWord;
+                          }
+                        })()}
+                      />
+                    );
+                  })}
+                  {canEdit && (
+                    <li className="mx-2" dir={isHebrew ? 'rtl' : 'ltr'}>
+                      <Button
+                        variant="tertiary"
+                        className="mt-20"
+                        onClick={() => {
+                          loadedFromNextButton.current = true;
+                          navigate(
+                            `/languages/${language}/verses/${incrementVerseId(
+                              verseId
+                            )}`
+                          );
+                        }}
+                      >
+                        {isHebrew && (
+                          <Icon icon="arrow-left" className="mr-1" />
+                        )}
+                        <span dir={i18n.dir(i18n.language)}>
+                          {t('common:next')}
+                        </span>
+                        {!isHebrew && (
+                          <Icon icon="arrow-right" className="ml-1" />
+                        )}
+                      </Button>
+                    </li>
+                  )}
+                </ol>
+              </>
+            );
+          }
+        })()}
+      </div>
+      <div className="w-[1px] bg-black"></div>
+      <div>Sidebar!!</div>
     </div>
   );
 }
