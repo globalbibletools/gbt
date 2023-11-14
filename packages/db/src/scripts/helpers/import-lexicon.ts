@@ -11,7 +11,6 @@ export const importLexicon = async (
   console.log(`Importing ${resourceCode} definitions...`);
   const parsed = await parseLexicon(filename, [definitionField]);
   console.log(`Parsed ${Object.keys(parsed).length} words`);
-  console.log(JSON.stringify(Object.keys(parsed), null, 2));
   await client.lemmaResource.deleteMany({ where: { resourceCode } });
   const lemmaData: Lemma[] = [];
   const resourceData: LemmaResource[] = [];
