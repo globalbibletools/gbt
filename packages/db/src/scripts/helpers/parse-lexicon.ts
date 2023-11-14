@@ -59,7 +59,8 @@ const toMarkDown = (raw: string): string => {
     .replaceAll(/<ref=".*">/g, '')
     .replaceAll(/<ref='.*'>/g, '')
     .replaceAll('</ref>', '')
-    .replaceAll(/<a.*>/g, '')
+    .replaceAll(/\[?<a[^>]*>/g, '')
+    .replaceAll('</a>]', '')
     .replaceAll('</a>', '')
     .replaceAll('<u>', '') // Markdown doesn't have underline
     .replaceAll('</u>', '')
