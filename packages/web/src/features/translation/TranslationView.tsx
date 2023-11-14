@@ -417,15 +417,13 @@ export default function TranslationView() {
                           );
                         }}
                       >
-                        {isHebrew && (
-                          <Icon icon="arrow-left" className="mr-1" />
-                        )}
                         <span dir={i18n.dir(i18n.language)}>
                           {t('common:next')}
                         </span>
-                        {!isHebrew && (
-                          <Icon icon="arrow-right" className="ml-1" />
-                        )}
+                        <Icon
+                          icon={isHebrew ? 'arrow-left' : 'arrow-right'}
+                          className="ms-1"
+                        />
                       </Button>
                     </li>
                   )}
