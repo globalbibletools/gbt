@@ -1,11 +1,16 @@
-import { Lemma, LemmaResource, PrismaClient } from '@prisma/client';
+import {
+  Lemma,
+  LemmaResource,
+  PrismaClient,
+  ResourceCode,
+} from '@prisma/client';
 import { greekStrongsData, hebrewStrongsData } from '../../../../data/strongs';
 
 const client = new PrismaClient();
 
 const importStrongs = async () => {
   await client.lemmaResource.deleteMany({
-    where: { resourceCode: 'STRONGS' as const },
+    where: { resourceCode: ResourceCode.STRONGS },
   });
   console.log('Importing hebrew strongs definitions...');
   await importStrongsData(hebrewStrongsData);
@@ -30,9 +35,16 @@ const importStrongsData = async (
       return true;
     })
     .forEach((lemmaId) => {
-      lemmaData.push({ id: lemmaId });
+      const normalizedId = `${lemmaId[0]}${lemmaId
+        .substring(1)
+        .padStart(4, '0')}`;
+      lemmaData.push({ id: normalizedId });
       const content = data[lemmaId]['strongs_def'];
-      resourceData.push({ lemmaId, resourceCode: 'STRONGS' as const, content });
+      resourceData.push({
+        lemmaId: normalizedId,
+        resourceCode: ResourceCode.STRONGS,
+        content,
+      });
     });
   // We have to create non-existent lemmas, so that the foreign key on lemma
   // resources has something to point to.
