@@ -35,7 +35,9 @@ export default createRoute<{ code: string; wordId: string }>()
         fields.state = req.body.state;
       }
       if (typeof req.body.gloss !== 'undefined') {
-        fields.gloss = req.body.gloss.normalize('NFD');
+        // This ensures that glosses are coded consistently,
+        // while also being compatible with fonts.
+        fields.gloss = req.body.gloss.normalize('NFC');
         if (!fields.gloss) {
           fields.state = GlossState.Unapproved;
         }
