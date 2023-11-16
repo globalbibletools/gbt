@@ -1,6 +1,7 @@
 {
   "accept": "Aceptar",
   "confirm_password": "Confirmar Contraseña",
+  "create_account": "Crear cuenta",
   "email": "correo electrónico",
   "email_status": "Estado",
   "email_status_bounced": "Rebotado",
@@ -19,9 +20,11 @@
     "user_email_required": "Por favor ingrese la dirección de correo electrónico del usuario.",
     "user_exists": "Ya existe un usuario con correo electrónico \"{{email}}\""
   },
+  "first_name": "Nombre",
   "invitation": "Invitación",
   "invite": "Invitar",
   "invite_user": "Invitar Usuario",
+  "last_name": "Apellido",
   "log_in": "Acceso",
   "log_out": "Cerrar sesión",
   "password": "Contraseña",
