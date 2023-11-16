@@ -25,6 +25,7 @@ export interface TranslateWordProps {
   referenceGloss?: string;
   suggestions: string[];
   onChange(data: { gloss?: string; approved?: boolean }): void;
+  onOriginalLanguageClick?: () => void;
 }
 
 export interface TranslateWordRef {
@@ -44,6 +45,7 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
       referenceGloss,
       suggestions,
       onChange,
+      onOriginalLanguageClick,
     }: TranslateWordProps,
     ref
   ) => {
@@ -95,6 +97,7 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
               ? 'text-2xl text-right font-hebrew pr-3'
               : 'text-lg text-left font-greek pl-3'
           }`}
+          onClick={() => onOriginalLanguageClick?.()}
         >
           <span className="inline-block" ref={ancientWord}>
             {word.text}

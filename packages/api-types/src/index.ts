@@ -204,5 +204,5 @@ export interface Resource {
 }
 
 export interface GetLemmaResourcesResponseBody {
-  data: Resource[];
+  data: Resource[][];
 }
