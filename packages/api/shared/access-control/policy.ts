@@ -8,7 +8,13 @@ export type Subject = Subjects<{
   AuthUser: AuthUser;
 }>;
 export type RawSubject = Extract<Subject, string>;
-export type Action = 'create' | 'read' | 'translate' | 'administer' | 'update';
+export type Action =
+  | 'create'
+  | 'read'
+  | 'translate'
+  | 'administer'
+  | 'update'
+  | 'administer-members';
 
 export type Policy = PureAbility<[Action, Subject], PrismaQuery>;
 
@@ -53,6 +59,7 @@ export function createPolicyFor(user?: Actor) {
       can('create', 'Language');
       can('read', 'Language');
       can('administer', 'Language');
+      can('administer-members', 'Language');
 
       can('create', 'AuthUser');
       can('read', 'AuthUser');

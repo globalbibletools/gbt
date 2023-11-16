@@ -36,6 +36,7 @@ import {
   ButtonSelectorOption,
 } from '../../shared/components/form/ButtonSelectorInput';
 import ComboboxInput from '../../shared/components/form/ComboboxInput';
+import { useAccessControl } from '../../shared/accessControl';
 
 const languageQueryKey = (code: string) => ({
   queryKey: ['language', code],
@@ -120,6 +121,7 @@ interface FormData {
 export default function ManageLanguageView() {
   const params = useParams() as { code: string };
   const flash = useFlash();
+  const userCan = useAccessControl();
 
   const { data: language } = useLanguageQuery(params.code);
   const { data: members } = useLanguageMembersQuery(params.code);
@@ -133,6 +135,16 @@ export default function ManageLanguageView() {
   }));
 
   const { t } = useTranslation(['common', 'languages', 'users']);
+  const ROLES = [
+    {
+      label: t('users:role_admin'),
+      value: LanguageRole.Admin,
+    },
+    {
+      label: t('users:role_translator'),
+      value: LanguageRole.Translator,
+    },
+  ];
 
   const removeMemberMutation = useRemoveLanguageMemberMutation();
   const updateMemberMutation = useUpdateLanguageMemberMutation();
@@ -153,6 +165,11 @@ export default function ManageLanguageView() {
   }
 
   const [previewFont, setPreviewFont] = useState(language.data.font);
+
+  const canManageMembers = userCan('administer-members', {
+    type: 'Language',
+    id: params.code,
+  });
 
   return (
     <View fitToScreen className="flex justify-center items-start">
@@ -242,56 +259,61 @@ export default function ManageLanguageView() {
             <ListHeaderCell className="min-w-[120px]">
               {t('users:roles').toUpperCase()}
             </ListHeaderCell>
-            <ListHeaderCell />
+            {canManageMembers && <ListHeaderCell />}
           </ListHeader>
-          <ListRowAction colSpan={4}>
-            <Link to="./invite">
-              <Icon icon="plus" className="me-1" />
-              {t('users:invite_user')}
-            </Link>
-          </ListRowAction>
+          {canManageMembers && (
+            <ListRowAction colSpan={4}>
+              <Link to="./invite">
+                <Icon icon="plus" className="me-1" />
+                {t('users:invite_user')}
+              </Link>
+            </ListRowAction>
+          )}
           <ListBody>
             {members.data.map((member) => (
               <ListRow key={member.userId}>
                 <ListCell header>{member.name}</ListCell>
                 <ListCell>{member.email}</ListCell>
                 <ListCell>
-                  <MultiselectInput
-                    className="w-full"
-                    name="roles"
-                    value={member.roles}
-                    items={[
-                      {
-                        label: t('users:role_admin'),
-                        value: LanguageRole.Admin,
-                      },
-                      {
-                        label: t('users:role_translator'),
-                        value: LanguageRole.Translator,
-                      },
-                    ]}
-                    onChange={(roles) =>
-                      updateMemberMutation.mutate({
-                        code: params.code,
-                        userId: member.userId,
-                        roles: roles as LanguageRole[],
-                      })
-                    }
-                  />
+                  {canManageMembers ? (
+                    <MultiselectInput
+                      className="w-full"
+                      name="roles"
+                      value={member.roles}
+                      items={ROLES}
+                      onChange={(roles) =>
+                        updateMemberMutation.mutate({
+                          code: params.code,
+                          userId: member.userId,
+                          roles: roles as LanguageRole[],
+                        })
+                      }
+                    />
+                  ) : (
+                    <>
+                      {member.roles
+                        .map(
+                          (role) => ROLES.find((r) => r.value === role)?.label
+                        )
+                        .join(', ')}
+                    </>
+                  )}
                 </ListCell>
-                <ListCell>
-                  <Button
-                    variant="tertiary"
-                    onClick={() =>
-                      removeMemberMutation.mutate({
-                        userId: member.userId,
-                        code: params.code,
-                      })
-                    }
-                  >
-                    Remove
-                  </Button>
-                </ListCell>
+                {canManageMembers && (
+                  <ListCell>
+                    <Button
+                      variant="tertiary"
+                      onClick={() =>
+                        removeMemberMutation.mutate({
+                          userId: member.userId,
+                          code: params.code,
+                        })
+                      }
+                    >
+                      Remove
+                    </Button>
+                  </ListCell>
+                )}
               </ListRow>
             ))}
           </ListBody>

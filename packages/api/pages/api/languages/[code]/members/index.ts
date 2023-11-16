@@ -70,7 +70,7 @@ export default createRoute<{ code: string }>()
   })
   .post<PostLanguageMemberRequestBody, void>({
     authorize: authorize((req) => ({
-      action: 'administer',
+      action: 'administer-members',
       subject: 'Language',
       subjectId: req.query.code,
     })),

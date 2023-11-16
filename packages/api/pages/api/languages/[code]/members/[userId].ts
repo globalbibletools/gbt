@@ -16,7 +16,7 @@ export default createRoute<{ code: string; userId: string }>()
       ),
     }),
     authorize: authorize((req) => ({
-      action: 'administer',
+      action: 'administer-members',
       subject: 'Language',
       subjectId: req.query.code,
     })),
@@ -62,7 +62,7 @@ export default createRoute<{ code: string; userId: string }>()
   })
   .delete<void, void>({
     authorize: authorize((req) => ({
-      action: 'administer',
+      action: 'administer-members',
       subject: 'Language',
       subjectId: req.query.code,
     })),

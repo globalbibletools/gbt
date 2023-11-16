@@ -14,7 +14,12 @@ interface Actor {
   }[];
 }
 
-export type Action = 'create' | 'read' | 'translate' | 'administer';
+export type Action =
+  | 'create'
+  | 'read'
+  | 'translate'
+  | 'administer'
+  | 'administer-members';
 export type SubjectType = 'User' | 'Language';
 export type Subject = SubjectType | { id: string };
 export type Policy = PureAbility<[Action, Subject]>;
@@ -58,6 +63,7 @@ export function createPolicyFor(user?: Actor) {
       can('create', 'Language');
       can('read', 'Language');
       can('administer', 'Language');
+      can('administer-members', 'Language');
 
       can('create', 'User');
       can('read', 'User');
