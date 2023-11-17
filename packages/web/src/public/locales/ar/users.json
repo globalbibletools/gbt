@@ -1,6 +1,7 @@
 {
   "accept": "قبول",
   "confirm_password": "تأكيد كلمة المرور",
+  "create_account": "إنشاء حساب",
   "email": "البريد الإلكتروني",
   "email_status": "الحالة",
   "email_status_bounced": "تم الارتداد",
@@ -19,9 +20,11 @@
     "user_email_required": "يرجى إدخال عنوان البريد الإلكتروني للمستخدم.",
     "user_exists": "يوجد مستخدم بالبريد الإلكتروني \"{{email}}\" بالفعل."
   },
+  "first_name": "الاسم الأول",
   "invitation": "دعوة",
   "invite": "دعوة",
   "invite_user": "دعوة مستخدم",
+  "last_name": "الاسم الأخير",
   "log_in": "تسجيل الدخول",
   "log_out": "تسجيل الخروج",
   "password": "كلمة المرور",
