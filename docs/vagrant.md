@@ -40,7 +40,7 @@ This was tested using:
    - [VirtualBox](https://www.virtualbox.org/)
    - [Docker Desktop](https://docs.docker.com/desktop/)
 
-1. Install the notify forwarder plugin with the command `vagrant plugin install vagrant-notify-forwarder`
+1. Install the notify forwarder plugin with the command `vagrant plugin install vagrant-fsnotify`
 1. If you have not already done so, fork repo to your local machine.
 1. Vagrant uses a special configuration file called `Vagrantfile` that contains all the information required for the creation of a Virtual Machine (guest) on your workstation (host). It is located in your repo root directory.
 1. To start the creation of your virtual environment, run one of these commands in the repo root directory. (This takes a while so be patient.)
@@ -55,6 +55,8 @@ This was tested using:
    ```bash
    vagrant ssh
    ```
+
+1. In order for the dev servers to be able to react to file changes, run `vagrant fsnotify`.
 
 1. Here is a list of common Vagrant commands. Be sure that you are in the same directory as the Vagrantfile when running these commands!
 

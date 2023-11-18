@@ -58,7 +58,7 @@ Vagrant.configure("2") do |config|
   config.vm.network "forwarded_port", guest: 5432, host: 5432, host_ip: "127.0.0.1"
 
   # Mount repo project root folder. 
-  config.vm.synced_folder ".", "/home/vagrant/vmrepo"
+  config.vm.synced_folder ".", "/home/vagrant/vmrepo", fsnotify: true
 
   # Disable the default share of the current code directory. Doing this
   # provides improved isolation between the vagrant box and your host
