@@ -1,6 +1,7 @@
 {
   "accept": "Accept",
   "confirm_password": "Confirm Password",
+  "create_account": "Create Account",
   "email": "email",
   "email_status": "Status",
   "email_status_bounced": "Bounced",
@@ -19,9 +20,11 @@
     "user_email_required": "Please enter the user's email address.",
     "user_exists": "A user with email \"{{email}}\" already exists."
   },
+  "first_name": "First Name",
   "invitation": "Invitation",
   "invite": "Invite",
   "invite_user": "Invite User",
+  "last_name": "Last Name",
   "log_in": "Log In",
   "log_out": "Log Out",
   "password": "Password",
