@@ -61,3 +61,8 @@ variable "google_font_api_token" {
   type        = string
   sensitive   = true
 }
+
+variable "queue_url" {
+  description = "The URL of the queue to post import jobs to"
+  type        = string
+}

@@ -97,13 +97,14 @@ module "database" {
 module "amplify" {
   source = "./modules/amplify"
 
-  github_token          = var.github_token
-  domain                = var.domain
   database_url          = module.database.connection_string
+  domain                = var.domain
   email_server          = module.email.stmp_url
-  translate_credentials = module.google_translate.credentials
+  github_token          = var.github_token
   google_font_api_token = google_apikeys_key.webfonts_key.key_string
+  queue_url             = module.lambda_import.queue_url
   repo                  = var.repo
+  translate_credentials = module.google_translate.credentials
 }
 
 module "lambda_import" {
