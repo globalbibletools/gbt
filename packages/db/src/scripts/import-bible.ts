@@ -55,12 +55,9 @@ async function run() {
           },
         });
 
-        // Some entries in the words list are text in between words, so we ignore them.
-        const filteredWords = words.filter((word) => word.length === 6);
-
-        for (let wordIndex = 0; wordIndex < filteredWords.length; wordIndex++) {
-          const [text, , english, grammar, rawStrongs] =
-            filteredWords[wordIndex];
+        for (let wordIndex = 0; wordIndex < words.length; wordIndex++) {
+          const [text, , english, grammar = '', rawStrongs = '????'] =
+            words[wordIndex];
 
           // We clean the strongs codes since the hebrew ones have some extra characters.
           // We also prefix the code with a language code based on the book.
