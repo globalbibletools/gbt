@@ -132,6 +132,8 @@ export default function TranslationView() {
     language: string;
     verseId: string;
   };
+  const [sidebarWordIndex, setSidebarWordIndex] = useState(0);
+  const [showSidebar, setShowSidebar] = useState(true);
 
   useEffect(() => {
     localStorage.setItem(translationLanguageKey, language);
@@ -139,6 +141,7 @@ export default function TranslationView() {
 
   useEffect(() => {
     localStorage.setItem(translationVerseIdKey, verseId);
+    setSidebarWordIndex(0);
   }, [verseId]);
 
   const navigate = useNavigate();
@@ -295,9 +298,6 @@ export default function TranslationView() {
     }
   }, [loading, verseQuery.data]);
 
-  const [sidebarWord, setSidebarWord] = useState<VerseWord | null>(null);
-  const [showSidebar, setShowSidebar] = useState(false);
-
   return (
     <div className="px-4 flex flex-grow flex-col gap-8">
       <div className="flex gap-8 items-center">
@@ -404,8 +404,7 @@ export default function TranslationView() {
                         });
                       }}
                       onOriginalLanguageClick={() => {
-                        console.log('CLICK!', word);
-                        setSidebarWord(word);
+                        setSidebarWordIndex(i);
                         setShowSidebar(true);
                       }}
                       ref={(() => {
@@ -443,8 +442,11 @@ export default function TranslationView() {
                   </li>
                 )}
               </ol>
-              {showSidebar && sidebarWord != null && (
-                <TranslationSidebar verseId={verse.id} word={sidebarWord} />
+              {showSidebar && sidebarWordIndex < verse.words.length && (
+                <TranslationSidebar
+                  verseId={verse.id}
+                  word={verse.words[sidebarWordIndex]}
+                />
               )}
             </div>
           );

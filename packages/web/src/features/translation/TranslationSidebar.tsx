@@ -13,7 +13,8 @@ export const TranslationSidebar = ({
   const { bookId } = parseVerseId(verseId);
   const isHebrew = bookId < 40;
   return (
-    <div className="border-l w-80 p-2">
+    // TODO: handle mobile styling
+    <div className="border-l min-w-[200px] p-2">
       <div className="flex flex-row gap-4 items-center">
         <span className={`text-4xl ${isHebrew ? 'font-hebrew' : 'font-greek'}`}>
           {word.text}
