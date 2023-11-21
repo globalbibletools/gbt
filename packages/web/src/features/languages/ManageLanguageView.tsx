@@ -224,6 +224,7 @@ export default function ManageLanguageView() {
               className="w-full"
               defaultValue={language.data.bibleTranslationIds}
               items={translationOptions}
+              placeholder={t('languages:select_translations').toString()}
             />
           </div>
           <div>

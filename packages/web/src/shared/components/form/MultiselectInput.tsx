@@ -22,6 +22,7 @@ export default function MultiselectInput(props: MultiselectInputProps) {
             {...field}
             items={props.items}
             hasErrors={!!fieldState.error}
+            placeholder={props.placeholder}
           />
         )}
       />
@@ -38,6 +39,7 @@ interface BaseMultiselectInputProps {
   value?: string[];
   defaultValue?: string[];
   hasErrors?: boolean;
+  placeholder?: string;
   onChange?(value: string[]): void;
   onBlur?(): void;
 }
@@ -56,6 +58,7 @@ const BaseMultiselectInput = forwardRef<
       items,
       name,
       defaultValue,
+      placeholder,
     },
     ref
   ) => {
@@ -89,6 +92,7 @@ const BaseMultiselectInput = forwardRef<
                   .map((v) => items.find((i) => i.value === v)?.label ?? '')
                   .join(', ')
               }
+              placeholder={placeholder}
             />
             <Combobox.Button className="w-8">
               {({ open }) => <Icon icon={open ? 'caret-up' : 'caret-down'} />}
