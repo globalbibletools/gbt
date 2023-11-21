@@ -159,7 +159,7 @@ export function bookName(bookId: number, t: TFunction) {
  * @returns The verse ID if it can be determined, otherwise `null`.
  */
 export function parseReference(reference: string, t: TFunction): string | null {
-  const referenceRegex = /^(.+?)(?:\s+(\d+)(?:([:.,]|\s+)(\d+))?)?$/;
+  const referenceRegex = /^(.+?)(?:\s*(\d+)(?:([:.,]|\s)(\d+))?)?$/;
 
   // Parse the reference into three parts.
   const matches = reference.match(referenceRegex);
