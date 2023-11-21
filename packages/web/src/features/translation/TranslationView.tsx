@@ -30,6 +30,7 @@ import {
   incrementVerseId,
   parseVerseId,
 } from './verse-utils';
+import { TranslationSidebar } from './TranslationSidebar';
 
 export const translationLanguageKey = 'translation-language';
 export const translationVerseIdKey = 'translation-verse-id';
@@ -443,18 +444,7 @@ export default function TranslationView() {
                 )}
               </ol>
               {showSidebar && sidebarWord != null && (
-                <div className="border-l w-80 p-2">
-                  <div className="flex flex-row gap-4 items-center">
-                    <span
-                      className={`text-4xl ${
-                        isHebrew ? 'font-hebrew' : 'font-greek'
-                      }`}
-                    >
-                      {sidebarWord.text}
-                    </span>
-                    <span>{sidebarWord.lemmaId}</span>
-                  </div>
-                </div>
+                <TranslationSidebar verseId={verse.id} word={sidebarWord} />
               )}
             </div>
           );
