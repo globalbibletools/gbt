@@ -45,7 +45,8 @@ const useInviteQuery = (token?: string) => {
 };
 
 interface FormData {
-  name: string;
+  firstName: string;
+  lastName: string;
   password: string;
   confirmPassword: string;
 }
@@ -59,14 +60,18 @@ export default function AcceptInviteView() {
   const { data: invite } = useInviteQuery(token);
 
   const navigate = useNavigate();
-  const { t } = useTranslation(['users']);
+  const { t } = useTranslation(['users', 'common']);
   const flash = useFlash();
 
   const formContext = useForm<FormData>();
-  const onSubmit: SubmitHandler<FormData> = async ({ name, password }) => {
+  const onSubmit: SubmitHandler<FormData> = async ({
+    firstName,
+    lastName,
+    password,
+  }) => {
     try {
       await apiClient.auth.acceptInvite({
-        name,
+        name: `${firstName} ${lastName}`,
         token: token ?? '',
         password,
       });
@@ -84,7 +89,7 @@ export default function AcceptInviteView() {
   return (
     <View fitToScreen className="flex justify-center items-start">
       <Card className="mx-4 mt-4 w-96 flex-shrink p-6">
-        <ViewTitle>{t('users:invitation')}</ViewTitle>
+        <ViewTitle>{t('users:create_account')}</ViewTitle>
         <Form context={formContext} onSubmit={onSubmit}>
           <div className="mb-4">
             <FormLabel htmlFor="email">
@@ -97,23 +102,43 @@ export default function AcceptInviteView() {
               defaultValue={invite.email}
             />
           </div>
-          <div className="mb-2">
-            <FormLabel htmlFor="name">
-              {t('users:name').toUpperCase()}
-            </FormLabel>
-            <TextInput
-              id="name"
-              name="name"
-              className="w-full"
-              autoComplete="name"
-              required
-              aria-describedby="name-error"
-            />
-            <InputError
-              id="name-error"
-              name="name"
-              messages={{ required: t('users:errors.name_required') }}
-            />
+          <div className="mb-2 flex gap-4">
+            <div className="w-full flex-1">
+              <FormLabel htmlFor="first-name">
+                {t('users:first_name').toUpperCase()}
+              </FormLabel>
+              <TextInput
+                id="first-name"
+                name="firstName"
+                className="w-full"
+                autoComplete="given-name"
+                required
+                aria-describedby="first-name-error"
+              />
+              <InputError
+                id="first-name-error"
+                name="firstName"
+                messages={{ required: t('users:errors.name_required') }}
+              />
+            </div>
+            <div className="w-full flex-1">
+              <FormLabel htmlFor="last-name">
+                {t('users:last_name').toUpperCase()}
+              </FormLabel>
+              <TextInput
+                id="last-name"
+                name="lastName"
+                className="w-full"
+                autoComplete="family-name"
+                required
+                aria-describedby="last-name-error"
+              />
+              <InputError
+                id="last-name-error"
+                name="lastName"
+                messages={{ required: t('users:errors.name_required') }}
+              />
+            </div>
           </div>
           <div className="mb-2">
             <FormLabel htmlFor="password">
@@ -158,7 +183,7 @@ export default function AcceptInviteView() {
             />
           </div>
           <div>
-            <Button type="submit">{t('users:accept')}</Button>
+            <Button type="submit">{t('common:create')}</Button>
             <SubmittingIndicator className="ms-3" />
           </div>
         </Form>

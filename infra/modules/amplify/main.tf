@@ -123,6 +123,7 @@ resource "aws_amplify_branch" "api_main" {
     EMAIL_FROM                   = "noreply@${var.domain}"
     EMAIL_SERVER                 = var.email_server
     GOOGLE_TRANSLATE_CREDENTIALS = var.translate_credentials
+    LANGUAGE_IMPORT_QUEUE_URL    = var.queue_url
     ORIGIN_ALLOWLIST             = "https://api.${var.domain},https://interlinear.${var.domain}"
     REDIRECT_ORIGIN              = "https://interlinear.${var.domain}"
     SECRET_ACCESS_KEY            = aws_iam_access_key.app_prod.secret
