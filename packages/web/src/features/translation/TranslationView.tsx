@@ -340,7 +340,7 @@ export default function TranslationView() {
 
           const isHebrew = bookId < 40;
           return (
-            <div className="flex flex-row gap-2 flex-grow">
+            <div className="flex flex-col sm:flex-row gap-2 flex-grow w-full">
               {translationQuery.data && (
                 <p
                   className="text-base mx-2"
@@ -447,6 +447,7 @@ export default function TranslationView() {
                   verseId={verse.id}
                   word={verse.words[sidebarWordIndex]}
                   resources={lemmaResourcesQuery.data.data[sidebarWordIndex]}
+                  onClose={() => setShowSidebar(false)}
                 />
               )}
             </div>
