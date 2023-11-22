@@ -288,7 +288,8 @@ export default function TranslationView() {
   const loading =
     !verseQuery.isSuccess ||
     !referenceGlossesQuery.isSuccess ||
-    !targetGlossesQuery.isSuccess;
+    !targetGlossesQuery.isSuccess ||
+    !lemmaResourcesQuery.isSuccess;
 
   const loadedFromNextButton = useRef(false);
   useEffect(() => {
@@ -326,7 +327,6 @@ export default function TranslationView() {
             </div>
           );
         } else {
-          console.log(lemmaResourcesQuery.isSuccess);
           const verse = verseQuery.data.data;
           const referenceGlosses = referenceGlossesQuery.data.data;
           const targetGlosses = targetGlossesQuery.data.data;
@@ -446,6 +446,7 @@ export default function TranslationView() {
                 <TranslationSidebar
                   verseId={verse.id}
                   word={verse.words[sidebarWordIndex]}
+                  resources={lemmaResourcesQuery.data.data[sidebarWordIndex]}
                 />
               )}
             </div>
