@@ -3,22 +3,32 @@ import { useTranslation } from 'react-i18next';
 import Markdown from 'react-markdown';
 import { Icon } from '../../shared/components/Icon';
 import { parseVerseId } from './verse-utils';
+import apiClient from '../../shared/apiClient';
+import { useQuery } from '@tanstack/react-query';
+import LoadingSpinner from '../../shared/components/LoadingSpinner';
 
 type TranslationSidebarProps = {
+  language: string;
   verseId: string;
   word: VerseWord;
-  resources: Resource[];
   onClose: () => void;
 };
 
 export const TranslationSidebar = ({
+  language,
   verseId,
   word,
-  resources,
   onClose,
 }: TranslationSidebarProps) => {
   const { bookId } = parseVerseId(verseId);
   const isHebrew = bookId < 40;
+  const lemmaResourcesQuery = useQuery(
+    ['verse-lemma-resources', language, verseId],
+    () => apiClient.verses.findLemmaResources(verseId)
+  );
+  const resources = lemmaResourcesQuery.isSuccess
+    ? lemmaResourcesQuery.data.data[0]
+    : [];
   const strongsResource = resources.find(
     ({ resource }) => resource === 'STRONGS'
   );
@@ -40,18 +50,27 @@ export const TranslationSidebar = ({
         </span>
         <span>{word.lemmaId}</span>
       </div>
-      <div className="overflow-y-auto">
-        <div>
-          <div className="text-sm font-bold me-2">Strongs</div>
-          <span>{strongsEntry} </span>
-        </div>
-        {lexiconEntry && (
-          <div>
-            <span className="text-sm font-bold me-2">
-              {lexiconResource?.resource}
-            </span>
-            <Markdown>{lexiconEntry}</Markdown>
+      <div className="overflow-y-auto grow">
+        {lemmaResourcesQuery.isLoading && (
+          <div className="h-full w-full flex items-center justify-center">
+            <LoadingSpinner />
           </div>
+        )}
+        {lemmaResourcesQuery.isSuccess && (
+          <>
+            <div>
+              <div className="text-sm font-bold me-2">Strongs</div>
+              <span>{strongsEntry} </span>
+            </div>
+            {lexiconEntry && (
+              <div>
+                <span className="text-sm font-bold me-2">
+                  {lexiconResource?.resource}
+                </span>
+                <Markdown>{lexiconEntry}</Markdown>
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>

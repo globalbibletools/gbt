@@ -3,7 +3,6 @@ import {
   GetVerseGlossesResponseBody,
   GlossState,
   TextDirection,
-  VerseWord,
 } from '@translation/api-types';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -22,6 +21,7 @@ import {
   useFontLoader,
 } from '../../shared/hooks/useFontLoader';
 import TranslateWord, { TranslateWordRef } from './TranslateWord';
+import { TranslationSidebar } from './TranslationSidebar';
 import { VerseSelector } from './VerseSelector';
 import {
   bookFirstVerseId,
@@ -30,7 +30,6 @@ import {
   incrementVerseId,
   parseVerseId,
 } from './verse-utils';
-import { TranslationSidebar } from './TranslationSidebar';
 
 export const translationLanguageKey = 'translation-language';
 export const translationVerseIdKey = 'translation-verse-id';
@@ -66,11 +65,6 @@ function useTranslationQueries(language: string, verseId: string) {
         selectedLanguage?.bibleTranslationIds ?? []
       ),
     { enabled: !!selectedLanguage }
-  );
-
-  const lemmaResourcesQuery = useQuery(
-    ['verse-lemma-resources', language, verseId],
-    () => apiClient.verses.findLemmaResources(verseId)
   );
 
   const queryClient = useQueryClient();
@@ -122,7 +116,6 @@ function useTranslationQueries(language: string, verseId: string) {
     referenceGlossesQuery,
     targetGlossesQuery,
     translationQuery,
-    lemmaResourcesQuery,
   };
 }
 
@@ -153,7 +146,6 @@ export default function TranslationView() {
     referenceGlossesQuery,
     targetGlossesQuery,
     translationQuery,
-    lemmaResourcesQuery,
   } = useTranslationQueries(language, verseId);
 
   useFontLoader(selectedLanguage ? [selectedLanguage.font] : []);
@@ -288,8 +280,7 @@ export default function TranslationView() {
   const loading =
     !verseQuery.isSuccess ||
     !referenceGlossesQuery.isSuccess ||
-    !targetGlossesQuery.isSuccess ||
-    !lemmaResourcesQuery.isSuccess;
+    !targetGlossesQuery.isSuccess;
 
   const loadedFromNextButton = useRef(false);
   useEffect(() => {
@@ -444,9 +435,9 @@ export default function TranslationView() {
               </ol>
               {showSidebar && sidebarWordIndex < verse.words.length && (
                 <TranslationSidebar
+                  language={language}
                   verseId={verse.id}
                   word={verse.words[sidebarWordIndex]}
-                  resources={lemmaResourcesQuery.data.data[sidebarWordIndex]}
                   onClose={() => setShowSidebar(false)}
                 />
               )}
