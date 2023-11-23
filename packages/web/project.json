@@ -59,7 +59,7 @@
         "buildTarget": "web:build",
         "hmr": true,
         "host": "0.0.0.0",
-        "port": 4201
+        "port": 4200
       },
       "configurations": {
         "development": {
