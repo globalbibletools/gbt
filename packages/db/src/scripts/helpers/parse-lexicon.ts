@@ -23,7 +23,7 @@ export const parseLsj = async (filename: string) => {
   const parsed: Record<string, string> = {};
   await lineByLine(filename, (line) => {
     const split = line.split('\t');
-    const id = split[1].split('=')[0].trim();
+    const id = split[0];
     const definition = toMarkDown(split[7]);
     parsed[id] = definition;
   });
@@ -54,16 +54,16 @@ const toMarkDown = (raw: string): string => {
     .replaceAll('</Level2>', '\n')
     .replaceAll('</Level3>', '\n')
     .replaceAll('</Level4>', '\n')
-    .replaceAll('<b>', '**')
-    .replaceAll('</b>', '**')
+    .replaceAll(/<b>\s*/g, '**')
+    .replaceAll(/\s*<\/b>/g, '**')
     .replaceAll('<br>', '\n\n')
     .replaceAll('<br />', '\n\n')
     .replaceAll('<lb />', '\n\n') // I think it is short for "line break"
     .replaceAll('<BR>', '\n\n')
     .replaceAll('<B>', '\n\n')
     .replaceAll('<BR />', '\n\n')
-    .replaceAll('<i>', '*')
-    .replaceAll('</i>', '*')
+    .replaceAll(/<i>\s*/g, '*')
+    .replaceAll(/\s*<\/i>/g, '*')
     .replaceAll(/<ref=".*">/g, '')
     .replaceAll(/<ref='.*'>/g, '')
     .replaceAll('</ref>', '')
