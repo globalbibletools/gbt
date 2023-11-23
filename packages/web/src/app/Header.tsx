@@ -9,7 +9,7 @@ import useAuth from '../shared/hooks/useAuth';
 import { NavLink } from 'react-router-dom';
 import { useAccessControl } from '../shared/accessControl';
 
-function navLinkClasses(props: { isActive: boolean; isPending: boolean }) {
+function navLinkClasses(props: { isActive: boolean }) {
   return `
     focus:outline-none focus:underline px-2 pt-3 pb-1 mb-2 font-bold rounded-b
     ${props.isActive ? 'bg-slate-800 text-white shadow-md' : ''}
