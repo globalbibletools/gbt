@@ -15,7 +15,7 @@ async function parseBook(bookId: number, usfmFile: string): Promise<void> {
   ).toString();
   const parser = new USFMParser(file);
 
-  const dbData = await client.word.findMany({
+  let dbData = await client.word.findMany({
     where: { verse: { bookId } },
     include: {
       form: true,
@@ -24,7 +24,29 @@ async function parseBook(bookId: number, usfmFile: string): Promise<void> {
       id: 'asc',
     },
   });
+  dbData = dbData
+    .filter(
+      (row) => row.text !== 'פ' && row.text !== 'ס' && !row.text.startsWith('(')
+    )
+    .flatMap((row) =>
+      row.text
+        .split('־')
+        .filter((text) => !!text)
+        .map((text, i, list) => ({
+          ...row,
+          text: `${text}${i + 1 < list.length ? '־' : ''}`,
+        }))
+    )
+    .flatMap((row) =>
+      row.text
+        .replace(' ׀', '')
+        .split(' ')
+        .filter((text) => !!text)
+        .map((text) => ({ ...row, text }))
+    );
   let dbw = 0;
+
+  const unique = new Set<string>();
 
   const json = parser.toJSON();
   for (let c = 1; c <= json.chapters.length; c++) {
@@ -33,23 +55,13 @@ async function parseBook(bookId: number, usfmFile: string): Promise<void> {
 
     for (let v = 1; v <= verses.length; v++) {
       const verse = verses[v - 1];
-      const words = verse.contents
-        .flatMap((el: any) =>
-          typeof el === 'object' && 'footnote' in el
-            ? el.footnote.filter((el: any) => '+w' in el)
-            : el
-        )
-        .filter(
-          (el: any) => typeof el === 'object' && ('w' in el || '+w' in el)
-        );
+      const words = verse.contents.filter(
+        (el: any) => typeof el === 'object' && 'w' in el
+      );
 
       for (let w = 1; w <= words.length; w++) {
         const word = words[w - 1];
-        let dbWord = dbData[dbw++];
-        // Skip section markers
-        if (dbWord.text === 'פ' || dbWord.text === 'ס') {
-          dbWord = dbData[dbw++];
-        }
+        const dbWord = dbData[dbw++];
 
         const lemmaId = word.attributes.find(
           (el: any) => 'strong' in el
@@ -57,20 +69,26 @@ async function parseBook(bookId: number, usfmFile: string): Promise<void> {
         const cleanedLemmaId = `H${
           STRONGS_REGEX.exec(lemmaId)?.[0] ?? lemmaId
         }`;
-        // TODO: figure out how to reconcile words where we've combined 2+ words into a single database entry, and unfolding word has not
-        if (cleanedLemmaId.slice(0, 5) !== dbWord.form.lemmaId) {
+        if (
+          cleanedLemmaId.slice(0, 5) !== dbWord.form.lemmaId &&
+          dbWord.form.lemmaId !== 'H????'
+        ) {
+          unique.add(`${cleanedLemmaId}-${dbWord.form.lemmaId}`);
           console.log(
             dbWord.id,
-            word.w[0],
+            word.w?.[0],
             dbWord.text,
             cleanedLemmaId,
-            dbWord.form.lemmaId
+            dbWord.form.lemmaId,
+            cleanedLemmaId.slice(0, 5) !== dbWord.form.lemmaId
           );
         }
       }
     }
   }
+
+  console.log(unique);
 }
 
 // parseBook(31, '31-OBA.usfm');
-parseBook(1, '01-GEN.usfm');
+parseBook(2, '02-EXO.usfm').catch(console.error);
