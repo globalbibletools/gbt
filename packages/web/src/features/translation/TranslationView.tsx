@@ -410,7 +410,7 @@ export default function TranslationView() {
                       onClick={() => {
                         loadedFromNextButton.current = true;
                         navigate(
-                          `/languages/${language}/verses/${incrementVerseId(
+                          `/interlinear/${language}/verses/${incrementVerseId(
                             verseId
                           )}`
                         );
