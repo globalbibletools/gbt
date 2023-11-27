@@ -42,15 +42,31 @@ async function parseBook(bookId: number, usfmFile: string): Promise<void> {
           e += 1;
         }
 
-        const footnote = findFootnote(verse.contents[e + 1]);
-
         let dbWord = dbData[dbw++];
+
+        let footnote:
+          | {
+              type: any;
+              lemmaId: string;
+              text: any;
+            }
+          | undefined;
+        // Numbers 23:13 has a k/q pair that has a different order
+        if (dbWord.id === '0402301304') {
+          footnote = findFootnote(verse.contents[e + 2]);
+          e -= 1;
+        } else if (dbWord.id === '0402301306') {
+          footnote = undefined;
+        } else {
+          footnote = findFootnote(verse.contents[e + 1]);
+        }
 
         // Genesis 30:11 and Exodus 4:2 have two quere words missing.
         if (dbWord.id === '0200400205' || dbWord.id === '0103001104') {
           dbw += 1;
           dbWord = dbData[dbw++];
         }
+
         // Ruth 3:12 word 5 has a ketiv with an empty quere, so unfolding word does not have a word here.
         // if (dbWord.id === '0800301205') {
         //   dbWord = dbData[dbw++];
@@ -67,8 +83,6 @@ async function parseBook(bookId: number, usfmFile: string): Promise<void> {
             : undefined;
           const dbQuere = dbWord.text.includes('(') ? dbWord : otherDbWord;
           const dbKetiv = dbWord.text.includes('[') ? dbWord : otherDbWord;
-
-          console.log(dbWord, otherDbWord);
 
           compareWord(
             dbKetiv
@@ -220,8 +234,8 @@ async function run() {
   // await parseBook(1, '01-GEN.usfm');
   // await parseBook(2, '02-EXO.usfm');
   // await parseBook(3, '03-LEV.usfm');
-  await parseBook(4, '04-NUM.usfm');
-  // await parseBook(5, '05-DEU.usfm');
+  // await parseBook(4, '04-NUM.usfm');
+  await parseBook(5, '05-DEU.usfm');
   // await parseBook(6, '06-JOS.usfm');
   // await parseBook(7, '07-JDG.usfm');
   // await parseBook(8, '08-RUT.usfm');
