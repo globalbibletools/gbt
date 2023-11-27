@@ -1,0 +1,1425 @@
+\id SNG unfoldingWord® Hebrew Bible
+\usfm 3.0
+\ide UTF-8
+\h Song of Songs
+\toc1 The Song of Songs
+\toc2 Song of Songs
+\toc3 Sng
+\mt Song of Songs
+
+\c 1
+\p
+
+\v 1
+\w שִׁ֥יר|lemma="שִׁיר" strong="H7892a" x-morph="He,Ncbsc"\w*
+\w הַ⁠שִּׁירִ֖ים|lemma="שִׁיר" strong="d:H7892a" x-morph="He,Td:Ncbpa"\w*
+\w אֲשֶׁ֥ר|lemma="אֲשֶׁר" strong="H0834a" x-morph="He,Tr"\w*
+\w לִ⁠שְׁלֹמֹֽה|lemma="שְׁלֹמֹה" strong="l:H8010" x-morph="He,R:Np"\w*׃
+
+\v 2
+\w יִשָּׁקֵ֨⁠נִי֙|lemma="נָשַׁק" strong="H5401a" x-morph="He,Vqi3ms:Sp1cs"\w*
+\w מִ⁠נְּשִׁיק֣וֹת|lemma="נְשִׁיקָה" strong="m:H5390" x-morph="He,R:Ncfpc"\w*
+\w פִּ֔י⁠הוּ|lemma="פֶּה" strong="H6310" x-morph="He,Ncmsc:Sp3ms"\w*
+\w כִּֽי|lemma="כִּי" strong="H3588a" x-morph="He,C"\w*־\w טוֹבִ֥ים|lemma="טוֹב" strong="H2896a" x-morph="He,Aampa"\w*
+\w דֹּדֶ֖י⁠ךָ|lemma="דּוֹד" strong="H1730" x-morph="He,Ncmpc:Sp2ms"\w*
+\w מִ⁠יָּֽיִן|lemma="יַיִן" strong="m:H3196" x-morph="He,R:Ncmsa"\w*׃
+
+\v 3
+\w לְ⁠רֵ֨יחַ֙|lemma="רֵיחַ" strong="l:H7381" x-morph="He,R:Ncmsa"\w*
+\w שְׁמָנֶ֣י⁠ךָ|lemma="שֶׁמֶן" strong="H8081" x-morph="He,Ncmpc:Sp2ms"\w*
+\w טוֹבִ֔ים|lemma="טוֹב" strong="H2896a" x-morph="He,Aampa"\w*
+\w שֶׁ֖מֶן|lemma="שֶׁמֶן" strong="H8081" x-morph="He,Ncmsa"\w*
+\w תּוּרַ֣ק|lemma="רוּק" strong="H7324" x-morph="He,VHi3fs"\w*
+\w שְׁמֶ֑⁠ךָ|lemma="שֵׁם" strong="H8034" x-morph="He,Ncmsc:Sp2ms"\w*
+\w עַל|lemma="עַל" strong="H5921a" x-morph="He,R"\w*־\w כֵּ֖ן|lemma="כֵּן" strong="H3651c" x-morph="He,Tm"\w*
+\w עֲלָמ֥וֹת|lemma="עַלְמָה" strong="H5959" x-morph="He,Ncfpa"\w*
+\w אֲהֵבֽוּ⁠ךָ|lemma="אָהַב" strong="H0157" x-morph="He,Vqp3cp:Sp2ms"\w*׃
+
+\v 4
+\w מָשְׁכֵ֖⁠נִי|lemma="מָשַׁךְ" strong="H4900" x-morph="He,Vqv2ms:Sp1cs"\w*
+\w אַחֲרֶ֣י⁠ךָ|lemma="אַחַר" strong="H0310a" x-morph="He,R:Sp2ms"\w*
+\w נָּר֑וּצָה|lemma="רוּץ" strong="H7323" x-morph="He,Vqh1cp"\w*
+\w הֱבִיאַ֨⁠נִי|lemma="בּוֹא" strong="H0935" x-morph="He,Vhp3ms:Sp1cs"\w*
+\w הַ⁠מֶּ֜לֶךְ|lemma="מֶלֶךְ" strong="d:H4428" x-morph="He,Td:Ncmsa"\w*
+\w חֲדָרָ֗י⁠ו|lemma="חֶדֶר" strong="H2315" x-morph="He,Ncmpc:Sp3ms"\w*
+\w נָגִ֤ילָה|lemma="גִּיל" strong="H1523" x-morph="He,Vqh1cp"\w*
+\w וְ⁠נִשְׂמְחָה֙|lemma="שָׂמַח" strong="c:H8055" x-morph="He,C:Vqh1cp"\w*
+\w בָּ֔⁠ךְ|lemma="" strong="b" x-morph="He,R:Sp2fs"\w*
+\w נַזְכִּ֤ירָה|lemma="זָכַר" strong="H2142" x-morph="He,Vhh1cp"\w*
+\w דֹדֶ֨י⁠ךָ֙|lemma="דּוֹד" strong="H1730" x-morph="He,Ncmpc:Sp2ms"\w*
+\w מִ⁠יַּ֔יִן|lemma="יַיִן" strong="m:H3196" x-morph="He,R:Ncmsa"\w*
+\w מֵישָׁרִ֖ים|lemma="מֵישָׁר" strong="H4339" x-morph="He,Ncmpa"\w*
+\w אֲהֵבֽוּ⁠ךָ|lemma="אָהַב" strong="H0157" x-morph="He,Vqp3cp:Sp2ms"\w*׃ס
+
+\v 5
+\w שְׁחוֹרָ֤ה|lemma="שָׁחֹר" strong="H7838" x-morph="He,Aafsa"\w*
+\w אֲנִי֙|lemma="אֲנִי" strong="H0589" x-morph="He,Pp1cs"\w*
+\w וְֽ⁠נָאוָ֔ה|lemma="נָאוֶה" strong="c:H5000" x-morph="He,C:Aafsa"\w*
+\w בְּנ֖וֹת|lemma="בַּת" strong="H1323" x-morph="He,Ncfpc"\w*
+\w יְרוּשָׁלִָ֑ם|lemma="יְרוּשָׁלִַ͏ם" strong="H3389" x-morph="He,Np"\w*
+\w כְּ⁠אָהֳלֵ֣י|lemma="אֹהֶל" strong="k:H0168" x-morph="He,R:Ncmpc"\w*
+\w קֵדָ֔ר|lemma="קֵדָר" strong="H6938" x-morph="He,Np"\w*
+\w כִּ⁠ירִיע֖וֹת|lemma="יְרִיעָה" strong="k:H3407" x-morph="He,R:Ncfpc"\w*
+\w שְׁלֹמֹֽה|lemma="שְׁלֹמֹה" strong="H8010" x-morph="He,Np"\w*׃
+
+\v 6
+\w אַל|lemma="אַל" strong="H0408" x-morph="He,Tn"\w*־\w תִּרְא֨וּ⁠נִי֙|lemma="רָאָה" strong="H7200" x-morph="He,Vqj2mp:Sp1cs"\w*
+\w שֶׁ⁠אֲנִ֣י|lemma="אֲנִי" strong="s:H0589" x-morph="He,Tr:Pp1cs"\w*
+\w שְׁחַרְחֹ֔רֶת|lemma="שְׁחַרְחֹרֶת" strong="H7840" x-morph="He,Aafsa"\w*
+\w שֶׁ⁠שֱּׁזָפַ֖תְ⁠נִי|lemma="שָׁזַף" strong="s:H7805" x-morph="He,Tr:Vqp3fs:Sp1cs"\w*
+\w הַ⁠שָּׁ֑מֶשׁ|lemma="שֶׁמֶשׁ" strong="d:H8121" x-morph="He,Td:Ncbsa"\w*
+\w בְּנֵ֧י|lemma="בֵּן" strong="H1121a" x-morph="He,Ncmpc"\w*
+\w אִמִּ֣⁠י|lemma="אֵם" strong="H0517" x-morph="He,Ncfsc:Sp1cs"\w*
+\w נִֽחֲרוּ|lemma="חָרַר" strong="H2787" x-morph="He,VNp3cp"\w*־\w בִ֗⁠י|lemma="" strong="b" x-morph="He,R:Sp1cs"\w*
+\w שָׂמֻ֨⁠נִי֙|lemma="שׂוּם" strong="H7760a" x-morph="He,Vqp3cp:Sp1cs"\w*
+\w נֹטֵרָ֣ה|lemma="נָטַר" strong="H5201" x-morph="He,Vqrfsa"\w*
+\w אֶת|lemma="אֵת" strong="H0853" x-morph="He,To"\w*־\w הַ⁠כְּרָמִ֔ים|lemma="כֶּרֶם" strong="d:H3754" x-morph="He,Td:Ncbpa"\w*
+\w כַּרְמִ֥⁠י|lemma="כֶּרֶם" strong="H3754" x-morph="He,Ncbsc:Sp1cs"\w*
+\w שֶׁ⁠לִּ֖⁠י|lemma="" strong="s:l" x-morph="He,Tr:R:Sp1cs"\w*
+\w לֹ֥א|lemma="לֹא" strong="H3808" x-morph="He,Tn"\w*
+\w נָטָֽרְתִּי|lemma="נָטַר" strong="H5201" x-morph="He,Vqp1cs"\w*׃
+
+\v 7
+\w הַגִּ֣ידָ⁠ה|lemma="נָגַד" strong="H5046" x-morph="He,Vhv2ms:Sh"\w*
+\w לִּ֗⁠י|lemma="" strong="l" x-morph="He,R:Sp1cs"\w*
+\w שֶׁ֤⁠אָהֲבָה֙|lemma="אָהַב" strong="s:H0157" x-morph="He,Tr:Vqp3fs"\w*
+\w נַפְשִׁ֔⁠י|lemma="נֶפֶשׁ" strong="H5315" x-morph="He,Ncbsc:Sp1cs"\w*
+\w אֵיכָ֣ה|lemma="אֵיךְ" strong="H0349b" x-morph="He,Ti"\w*
+\w תִרְעֶ֔ה|lemma="רָעָה" strong="H7462b" x-morph="He,Vqi2ms"\w*
+\w אֵיכָ֖ה|lemma="אֵיךְ" strong="H0349b" x-morph="He,Ti"\w*
+\w תַּרְבִּ֣יץ|lemma="רָבַץ" strong="H7257" x-morph="He,Vhi2ms"\w*
+\w בַּֽ⁠צָּהֳרָ֑יִם|lemma="צֹהַר" strong="b:H6672a" x-morph="He,Rd:Ncmpa"\w*
+\w שַׁ⁠לָּ⁠מָ֤ה|lemma="מָה" strong="s:l:H4100" x-morph="He,Tr:R:Ti"\w*
+\w אֶֽהְיֶה֙|lemma="הָיָה" strong="H1961" x-morph="He,Vqi1cs"\w*
+\w כְּ⁠עֹ֣טְיָ֔ה|lemma="עָטָה" strong="k:H5844a" x-morph="He,R:Vqrfsa"\w*
+\w עַ֖ל|lemma="עַל" strong="H5921a" x-morph="He,R"\w*
+\w עֶדְרֵ֥י|lemma="עֵדֶר" strong="H5739" x-morph="He,Ncmpc"\w*
+\w חֲבֵרֶֽי⁠ךָ|lemma="חָבֵר" strong="H2270" x-morph="He,Ncmpc:Sp2ms"\w*׃
+
+\v 8
+\w אִם|lemma="אִם" strong="H0518a" x-morph="He,C"\w*־\w לֹ֤א|lemma="לֹא" strong="H3808" x-morph="He,Tn"\w*
+\w תֵדְעִי֙|lemma="יָדַע" strong="H3045" x-morph="He,Vqi2fs"\w*
+\w לָ֔⁠ךְ|lemma="" strong="l" x-morph="He,R:Sp2fs"\w*
+\w הַ⁠יָּפָ֖ה|lemma="יָפֶה" strong="d:H3303" x-morph="He,Td:Aafsa"\w*
+\w בַּ⁠נָּשִׁ֑ים|lemma="אִשָּׁה" strong="b:H0802" x-morph="He,Rd:Ncfpa"\w*
+\w צְֽאִי|lemma="יָצָא" strong="H3318" x-morph="He,Vqv2fs"\w*־\w לָ֞⁠ךְ|lemma="" strong="l" x-morph="He,R:Sp2fs"\w*
+\w בְּ⁠עִקְבֵ֣י|lemma="עָקֵב" strong="b:H6119" x-morph="He,R:Ncmpc"\w*
+\w הַ⁠צֹּ֗אן|lemma="צֹאן" strong="d:H6629" x-morph="He,Td:Ncbsa"\w*
+\w וּ⁠רְעִי֙|lemma="רָעָה" strong="c:H7462b" x-morph="He,C:Vqv2fs"\w*
+\w אֶת|lemma="אֵת" strong="H0853" x-morph="He,To"\w*־\w גְּדִיֹּתַ֔יִ⁠ךְ|lemma="גְּדִיָּה" strong="H1429" x-morph="He,Ncfpc:Sp2fs"\w*
+\w עַ֖ל|lemma="עַל" strong="H5921a" x-morph="He,R"\w*
+\w מִשְׁכְּנ֥וֹת|lemma="מִשְׁכָּן" strong="H4908" x-morph="He,Ncmpc"\w*
+\w הָ⁠רֹעִֽים|lemma="רָעָה" strong="d:H7462b" x-morph="He,Td:Vqrmpa"\w*׃ס
+
+\v 9
+\w לְ⁠סֻסָתִ⁠י֙|lemma="סוּסָה" strong="l:H5484" x-morph="He,R:Ncfsc:Sp1cs"\w*
+\w בְּ⁠רִכְבֵ֣י|lemma="רֶכֶב" strong="b:H7393" x-morph="He,R:Ncmpc"\w*
+\w פַרְעֹ֔ה|lemma="פַּרְעֹה" strong="H6547" x-morph="He,Np"\w*
+\w דִּמִּיתִ֖י⁠ךְ|lemma="דָּמָה" strong="H1819" x-morph="He,Vpp1cs:Sp2fs"\w*
+\w רַעְיָתִֽ⁠י|lemma="רַעְיָה" strong="H7474" x-morph="He,Ncfsc:Sp1cs"\w*׃
+
+\v 10
+\w נָאו֤וּ|lemma="נָאָה" strong="H4998" x-morph="He,Vqp3cp"\w*
+\w לְחָיַ֨יִ⁠ךְ֙|lemma="לְחִי" strong="H3895" x-morph="He,Ncbdc:Sp2fs"\w*
+\w בַּ⁠תֹּרִ֔ים|lemma="תּוֹר" strong="b:H8447" x-morph="He,Rd:Ncmpa"\w*
+\w צַוָּארֵ֖⁠ךְ|lemma="צַוָּאר" strong="H6677a" x-morph="He,Ncmsc:Sp2fs"\w*
+\w בַּ⁠חֲרוּזִֽים|lemma="חָרוּז" strong="b:H2737" x-morph="He,Rd:Ncmpa"\w*׃
+
+\v 11
+\w תּוֹרֵ֤י|lemma="תּוֹר" strong="H8447" x-morph="He,Ncmpc"\w*
+\w זָהָב֙|lemma="זָהָב" strong="H2091" x-morph="He,Ncmsa"\w*
+\w נַעֲשֶׂה|lemma="עָשָׂה" strong="H6213a" x-morph="He,Vqi1cp"\w*־\w לָּ֔⁠ךְ|lemma="" strong="l" x-morph="He,R:Sp2fs"\w*
+\w עִ֖ם|lemma="עִם" strong="H5973a" x-morph="He,R"\w*
+\w נְקֻדּ֥וֹת|lemma="נְקֻדָּה" strong="H5351" x-morph="He,Ncfpc"\w*
+\w הַ⁠כָּֽסֶף|lemma="כֶּסֶף" strong="d:H3701" x-morph="He,Td:Ncmsa"\w*׃
+
+\v 12
+\w עַד|lemma="עַד" strong="H5704" x-morph="He,R"\w*־\w שֶׁ֤⁠הַ⁠מֶּ֨לֶךְ֙|lemma="מֶלֶךְ" strong="s:d:H4428" x-morph="He,Tr:Td:Ncmsa"\w*
+\w בִּ⁠מְסִבּ֔⁠וֹ|lemma="מֵסַב" strong="b:H4524" x-morph="He,R:Ncbsc:Sp3ms"\w*
+\w נִרְדִּ֖⁠י|lemma="נֵרְדְּ" strong="H5373" x-morph="He,Ncmsc:Sp1cs"\w*
+\w נָתַ֥ן|lemma="נָתַן" strong="H5414" x-morph="He,Vqp3ms"\w*
+\w רֵיחֽ⁠וֹ|lemma="רֵיחַ" strong="H7381" x-morph="He,Ncmsc:Sp3ms"\w*׃
+
+\v 13
+\w צְר֨וֹר|lemma="צְרוֹר" strong="H6872a" x-morph="He,Ncmsc"\w*
+\w הַ⁠מֹּ֤ר|lemma="מֹר" strong="d:H4753" x-morph="He,Td:Ncmsa"\w* ׀
+\w דּוֹדִ⁠י֙|lemma="דּוֹד" strong="H1730" x-morph="He,Ncmsc:Sp1cs"\w*
+\w לִ֔⁠י|lemma="" strong="l" x-morph="He,R:Sp1cs"\w*
+\w בֵּ֥ין|lemma="בֵּין" strong="H0996" x-morph="He,R"\w*
+\w שָׁדַ֖⁠י|lemma="שַׁד" strong="H7699a" x-morph="He,Ncmdc:Sp1cs"\w*
+\w יָלִֽין|lemma="לוּן" strong="H3885a" x-morph="He,Vqi3ms"\w*׃
+
+\v 14
+\w אֶשְׁכֹּ֨ל|lemma="אֶשְׁכּוֹל" strong="H0811" x-morph="He,Ncmsc"\w*
+\w הַ⁠כֹּ֤פֶר|lemma="כֹּפֶר" strong="d:H3724c" x-morph="He,Td:Ncmsa"\w* ׀
+\w דּוֹדִ⁠י֙|lemma="דּוֹד" strong="H1730" x-morph="He,Ncmsc:Sp1cs"\w*
+\w לִ֔⁠י|lemma="" strong="l" x-morph="He,R:Sp1cs"\w*
+\w בְּ⁠כַרְמֵ֖י|lemma="כֶּרֶם" strong="b:H3754" x-morph="He,R:Ncbpc"\w*
+\w עֵ֥ין|lemma="עֵין גֶּדִי" strong="H5872" x-morph="He,Np"\w*
+\w גֶּֽדִי|lemma="עֵין גֶּדִי" strong="H5872" x-morph="He,Np"\w*׃ס
+
+\v 15
+\w הִנָּ֤⁠ךְ|lemma="הִנֵּה" strong="H2009" x-morph="He,Tm:Sp2fs"\w*
+\w יָפָה֙|lemma="יָפֶה" strong="H3303" x-morph="He,Aafsa"\w*
+\w רַעְיָתִ֔⁠י|lemma="רַעְיָה" strong="H7474" x-morph="He,Ncfsc:Sp1cs"\w*
+\w הִנָּ֥⁠ךְ|lemma="הִנֵּה" strong="H2009" x-morph="He,Tm:Sp2fs"\w*
+\w יָפָ֖ה|lemma="יָפֶה" strong="H3303" x-morph="He,Aafsa"\w*
+\w עֵינַ֥יִ⁠ךְ|lemma="עַיִן" strong="H5869a" x-morph="He,Ncbdc:Sp2fs"\w*
+\w יוֹנִֽים|lemma="יוֹנָה" strong="H3123" x-morph="He,Ncfpa"\w*׃
+
+\v 16
+\w הִנְּ⁠ךָ֨|lemma="הִנֵּה" strong="H2009" x-morph="He,Tm:Sp2ms"\w*
+\w יָפֶ֤ה|lemma="יָפֶה" strong="H3303" x-morph="He,Aamsa"\w*
+\w דוֹדִ⁠י֙|lemma="דּוֹד" strong="H1730" x-morph="He,Ncmsc:Sp1cs"\w*
+\w אַ֣ף|lemma="אַף" strong="H0637" x-morph="He,Ta"\w*
+\w נָעִ֔ים|lemma="נָעִים" strong="H5273a" x-morph="He,Aamsa"\w*
+\w אַף|lemma="אַף" strong="H0637" x-morph="He,Ta"\w*־\w עַרְשֵׂ֖⁠נוּ|lemma="עֶרֶשׂ" strong="H6210" x-morph="He,Ncfsc:Sp1cp"\w*
+\w רַעֲנָנָֽה|lemma="רַעֲנָן" strong="H7488b" x-morph="He,Aafsa"\w*׃
+
+\v 17
+\w קֹר֤וֹת|lemma="קוֹרָה" strong="H6982" x-morph="He,Ncfpc"\w*
+\w בָּתֵּ֨י⁠נוּ֙|lemma="בַּיִת" strong="H1004b" x-morph="He,Ncmpc:Sp1cp"\w*
+\w אֲרָזִ֔ים|lemma="אֶרֶז" strong="H0730" x-morph="He,Ncmpa"\w*
+\w רַהִיטֵ֖נוּ|lemma="רָהִיט" strong="H7351" x-morph="He,Ncmsc:Sp1cp"\w*
+\f + \ft K \+w רחיט⁠נו|lemma="רָהִיט" strong="H7351" x-morph="He,Ncmsc:Sp1cp"\+w*\f*
+\w בְּרוֹתִֽים|lemma="בְּרוֹת" strong="H1266" x-morph="He,Ncmpa"\w*׃
+
+\c 2
+\p
+
+\v 1
+\w אֲנִי֙|lemma="אֲנִי" strong="H0589" x-morph="He,Pp1cs"\w*
+\w חֲבַצֶּ֣לֶת|lemma="חֲבַצֶּלֶת" strong="H2261" x-morph="He,Ncfsc"\w*
+\w הַ⁠שָּׁר֔וֹן|lemma="שָׁרוֹן" strong="d:H8289" x-morph="He,Td:Np"\w*
+\w שֽׁוֹשַׁנַּ֖ת|lemma="שׁוּשַׁן" strong="H7799" x-morph="He,Ncbsc"\w*
+\w הָ⁠עֲמָקִֽים|lemma="עֵמֶק" strong="d:H6010" x-morph="He,Td:Ncmpa"\w*׃
+
+\v 2
+\w כְּ⁠שֽׁוֹשַׁנָּה֙|lemma="שׁוּשַׁן" strong="k:H7799" x-morph="He,R:Ncbsa"\w*
+\w בֵּ֣ין|lemma="בֵּין" strong="H0996" x-morph="He,R"\w*
+\w הַ⁠חוֹחִ֔ים|lemma="חוֹחַ" strong="d:H2336" x-morph="He,Td:Ncmpa"\w*
+\w כֵּ֥ן|lemma="כֵּן" strong="H3651c" x-morph="He,Tm"\w*
+\w רַעְיָתִ֖⁠י|lemma="רַעְיָה" strong="H7474" x-morph="He,Ncfsc:Sp1cs"\w*
+\w בֵּ֥ין|lemma="בֵּין" strong="H0996" x-morph="He,R"\w*
+\w הַ⁠בָּנֽוֹת|lemma="בַּת" strong="d:H1323" x-morph="He,Td:Ncfpa"\w*׃
+
+\v 3
+\w כְּ⁠תַפּ֨וּחַ֙|lemma="תַּפּוּחַ" strong="k:H8598" x-morph="He,R:Ncmsa"\w*
+\w בַּ⁠עֲצֵ֣י|lemma="עֵץ" strong="b:H6086" x-morph="He,R:Ncmpc"\w*
+\w הַ⁠יַּ֔עַר|lemma="יַעַר" strong="d:H3293a" x-morph="He,Td:Ncmsa"\w*
+\w כֵּ֥ן|lemma="כֵּן" strong="H3651c" x-morph="He,Tm"\w*
+\w דּוֹדִ֖⁠י|lemma="דּוֹד" strong="H1730" x-morph="He,Ncmsc:Sp1cs"\w*
+\w בֵּ֣ין|lemma="בֵּין" strong="H0996" x-morph="He,R"\w*
+\w הַ⁠בָּנִ֑ים|lemma="בֵּן" strong="d:H1121a" x-morph="He,Td:Ncmpa"\w*
+\w בְּ⁠צִלּ⁠וֹ֙|lemma="צֵל" strong="b:H6738" x-morph="He,R:Ncmsc:Sp3ms"\w*
+\w חִמַּ֣דְתִּי|lemma="חָמַד" strong="H2530a" x-morph="He,Vpp1cs"\w*
+\w וְ⁠יָשַׁ֔בְתִּי|lemma="יָשַׁב" strong="c:H3427" x-morph="He,C:Vqp1cs"\w*
+\w וּ⁠פִרְי֖⁠וֹ|lemma="פְּרִי" strong="c:H6529" x-morph="He,C:Ncmsc:Sp3ms"\w*
+\w מָת֥וֹק|lemma="מָתוֹק" strong="H4966" x-morph="He,Aamsa"\w*
+\w לְ⁠חִכִּֽ⁠י|lemma="חֵךְ" strong="l:H2441" x-morph="He,R:Ncmsc:Sp1cs"\w*׃
+
+\v 4
+\w הֱבִיאַ֨⁠נִי֙|lemma="בּוֹא" strong="H0935" x-morph="He,Vhp3ms:Sp1cs"\w*
+\w אֶל|lemma="אֵל" strong="H0413" x-morph="He,R"\w*־\w בֵּ֣ית|lemma="בַּיִת" strong="H1004b" x-morph="He,Ncmsc"\w*
+\w הַ⁠יָּ֔יִן|lemma="יַיִן" strong="d:H3196" x-morph="He,Td:Ncmsa"\w*
+\w וְ⁠דִגְל֥⁠וֹ|lemma="דֶּגֶל" strong="c:H1714" x-morph="He,C:Ncmsc:Sp3ms"\w*
+\w עָלַ֖⁠י|lemma="עַל" strong="H5921a" x-morph="He,R:Sp1cs"\w*
+\w אַהֲבָֽה|lemma="אַהֲבָה" strong="H0160" x-morph="He,Ncfsa"\w*׃
+
+\v 5
+\w סַמְּכ֨וּ⁠נִי֙|lemma="סָמַךְ" strong="H5564" x-morph="He,Vpv2mp:Sp1cs"\w*
+\w בָּֽ⁠אֲשִׁישׁ֔וֹת|lemma="אֲשִׁישָׁה" strong="b:H0809" x-morph="He,Rd:Ncfpa"\w*
+\w רַפְּד֖וּ⁠נִי|lemma="רָפַד" strong="H7502" x-morph="He,Vpv2mp:Sp1cs"\w*
+\w בַּ⁠תַּפּוּחִ֑ים|lemma="תַּפּוּחַ" strong="b:H8598" x-morph="He,Rd:Ncmpa"\w*
+\w כִּי|lemma="כִּי" strong="H3588a" x-morph="He,C"\w*־\w חוֹלַ֥ת|lemma="חָלָה" strong="H2470a" x-morph="He,Vqrfsc"\w*
+\w אַהֲבָ֖ה|lemma="אַהֲבָה" strong="H0160" x-morph="He,Ncfsa"\w*
+\w אָֽנִי|lemma="אֲנִי" strong="H0589" x-morph="He,Pp1cs"\w*׃
+
+\v 6
+\w שְׂמֹאל⁠וֹ֙|lemma="שְׂמֹאול" strong="H8040" x-morph="He,Ncmsc:Sp3ms"\w*
+\w תַּ֣חַת|lemma="תַּחַת" strong="H8478" x-morph="He,R"\w*
+\w לְ⁠רֹאשִׁ֔⁠י|lemma="רֹאשׁ" strong="l:H7218a" x-morph="He,R:Ncmsc:Sp1cs"\w*
+\w וִ⁠ימִינ֖⁠וֹ|lemma="יָמִין" strong="c:H3225" x-morph="He,C:Ncfsc:Sp3ms"\w*
+\w תְּחַבְּקֵֽ⁠נִי|lemma="חָבַק" strong="H2263" x-morph="He,Vpi3fs:Sp1cs"\w*׃
+
+\v 7
+\w הִשְׁבַּ֨עְתִּי|lemma="שָׁבַע" strong="H7650" x-morph="He,Vhp1cs"\w*
+\w אֶתְ⁠כֶ֜ם|lemma="אֵת" strong="H0853" x-morph="He,To:Sp2mp"\w*
+\w בְּנ֤וֹת|lemma="בַּת" strong="H1323" x-morph="He,Ncfpc"\w*
+\w יְרוּשָׁלִַ֨ם֙|lemma="יְרוּשָׁלִַ͏ם" strong="H3389" x-morph="He,Np"\w*
+\w בִּ⁠צְבָא֔וֹת|lemma="צְבִי" strong="b:H6643b" x-morph="He,R:Ncbpa"\w*
+\w א֖וֹ|lemma="אוֹ" strong="H0176a" x-morph="He,C"\w*
+\w בְּ⁠אַיְל֣וֹת|lemma="אַיָּלָה" strong="b:H0355" x-morph="He,R:Ncfpc"\w*
+\w הַ⁠שָּׂדֶ֑ה|lemma="שָׂדֶה" strong="d:H7704b" x-morph="He,Td:Ncmsa"\w*
+\w אִם|lemma="אִם" strong="H0518a" x-morph="He,C"\w*־\w תָּעִ֧ירוּ|lemma="עוּר" strong="H5782" x-morph="He,Vhi2mp"\w* ׀
+\w וְֽ⁠אִם|lemma="אִם" strong="c:H0518a" x-morph="He,C:C"\w*־\w תְּעֽוֹרְר֛וּ|lemma="עוּר" strong="H5782" x-morph="He,Voi2mp"\w*
+\w אֶת|lemma="אֵת" strong="H0853" x-morph="He,To"\w*־\w הָ⁠אַהֲבָ֖ה|lemma="אַהֲבָה" strong="d:H0160" x-morph="He,Td:Ncfsa"\w*
+\w עַ֥ד|lemma="עַד" strong="H5704" x-morph="He,R"\w*
+\w שֶׁ⁠תֶּחְפָּֽץ|lemma="חָפֵץ" strong="s:H2654a" x-morph="He,Tr:Vqi3fs"\w*׃ס
+
+\v 8
+\w ק֣וֹל|lemma="קוֹל" strong="H6963a" x-morph="He,Ncmsc"\w*
+\w דּוֹדִ֔⁠י|lemma="דּוֹד" strong="H1730" x-morph="He,Ncmsc:Sp1cs"\w*
+\w הִנֵּה|lemma="הִנֵּה" strong="H2009" x-morph="He,Tm"\w*־\w זֶ֖ה|lemma="זֶה" strong="H2088" x-morph="He,Pdxms"\w*
+\w בָּ֑א|lemma="בּוֹא" strong="H0935" x-morph="He,Vqrmsa"\w*
+\w מְדַלֵּג֙|lemma="דָּלַג" strong="H1801" x-morph="He,Vprmsa"\w*
+\w עַל|lemma="עַל" strong="H5921a" x-morph="He,R"\w*־\w הֶ֣⁠הָרִ֔ים|lemma="הַר" strong="d:H2022" x-morph="He,Td:Ncmpa"\w*
+\w מְקַפֵּ֖ץ|lemma="קָפַץ" strong="H7092" x-morph="He,Vprmsa"\w*
+\w עַל|lemma="עַל" strong="H5921a" x-morph="He,R"\w*־\w הַ⁠גְּבָעֽוֹת|lemma="גִּבְעָה" strong="d:H1389" x-morph="He,Td:Ncfpa"\w*׃
+
+\v 9
+\w דּוֹמֶ֤ה|lemma="דָּמָה" strong="H1819" x-morph="He,Vqrmsa"\w*
+\w דוֹדִ⁠י֙|lemma="דּוֹד" strong="H1730" x-morph="He,Ncmsc:Sp1cs"\w*
+\w לִ⁠צְבִ֔י|lemma="צְבִי" strong="l:H6643b" x-morph="He,R:Ncbsa"\w*
+\w א֖וֹ|lemma="אוֹ" strong="H0176a" x-morph="He,C"\w*
+\w לְ⁠עֹ֣פֶר|lemma="עֹפֶר" strong="l:H6082" x-morph="He,R:Ncmsc"\w*
+\w הָֽ⁠אַיָּלִ֑ים|lemma="אַיָּל" strong="d:H0354" x-morph="He,Td:Ncbpa"\w*
+\w הִנֵּה|lemma="הִנֵּה" strong="H2009" x-morph="He,Tm"\w*־\w זֶ֤ה|lemma="זֶה" strong="H2088" x-morph="He,Pdxms"\w*
+\w עוֹמֵד֙|lemma="עָמַד" strong="H5975" x-morph="He,Vqrmsa"\w*
+\w אַחַ֣ר|lemma="אַחַר" strong="H0310a" x-morph="He,R"\w*
+\w כָּתְלֵ֔⁠נוּ|lemma="כֹּתֶל" strong="H3796" x-morph="He,Ncmsc:Sp1cp"\w*
+\w מַשְׁגִּ֨יחַ֙|lemma="שָׁגַח" strong="H7688" x-morph="He,Vhrmsa"\w*
+\w מִן|lemma="מִן" strong="H4480a" x-morph="He,R"\w*־\w הַֽ⁠חֲלֹּנ֔וֹת|lemma="חַלּוֹן" strong="d:H2474" x-morph="He,Td:Ncbpa"\w*
+\w מֵצִ֖יץ|lemma="צוּץ" strong="H6692b" x-morph="He,Vhrmsa"\w*
+\w מִן|lemma="מִן" strong="H4480a" x-morph="He,R"\w*־\w הַֽ⁠חֲרַכִּֽים|lemma="חֶרֶךְ" strong="d:H2762" x-morph="He,Td:Ncmpa"\w*׃
+
+\v 10
+\w עָנָ֥ה|lemma="עָנָה" strong="H6030b" x-morph="He,Vqp3ms"\w*
+\w דוֹדִ֖⁠י|lemma="דּוֹד" strong="H1730" x-morph="He,Ncmsc:Sp1cs"\w*
+\w וְ⁠אָ֣מַר|lemma="אָמַר" strong="c:H0559" x-morph="He,C:Vqp3ms"\w*
+\w לִ֑⁠י|lemma="" strong="l" x-morph="He,R:Sp1cs"\w*
+\w ק֥וּמִי|lemma="קוּם" strong="H6965b" x-morph="He,Vqv2fs"\w*
+\w לָ֛⁠ךְ|lemma="" strong="l" x-morph="He,R:Sp2fs"\w*
+\w רַעְיָתִ֥⁠י|lemma="רַעְיָה" strong="H7474" x-morph="He,Ncfsc:Sp1cs"\w*
+\w יָפָתִ֖⁠י|lemma="יָפֶה" strong="H3303" x-morph="He,Aafsc:Sp1cs"\w*
+\w וּ⁠לְכִי|lemma="יָלַךְ" strong="c:H3212" x-morph="He,C:Vqv2fs"\w*־\w לָֽ⁠ךְ|lemma="" strong="l" x-morph="He,R:Sp2fs"\w*׃
+
+\v 11
+\w כִּֽי|lemma="כִּי" strong="H3588a" x-morph="He,C"\w*־\w הִנֵּ֥ה|lemma="הִנֵּה" strong="H2009" x-morph="He,Tm"\w*
+\w ה⁠סתו|lemma="סְתָו" strong="d:H5638" x-morph="He,Td:Ncmsa"\w*
+\f + \ft Q \+w הַסְּתָ֖יו|lemma="סְתָו" strong="d:H5638" x-morph="He,Td:Ncmsa"\+w*\f*
+\w עָבָ֑ר|lemma="עָבַר" strong="H5674a" x-morph="He,Vqp3ms"\w*
+\w הַ⁠גֶּ֕שֶׁם|lemma="גֶּשֶׁם" strong="d:H1653" x-morph="He,Td:Ncmsa"\w*
+\w חָלַ֖ף|lemma="חָלַף" strong="H2498" x-morph="He,Vqp3ms"\w*
+\w הָלַ֥ךְ|lemma="הָלַךְ" strong="H1980" x-morph="He,Vqp3ms"\w*
+\w לֽ⁠וֹ|lemma="" strong="l" x-morph="He,R:Sp3ms"\w*׃
+
+\v 12
+\w הַ⁠נִּצָּנִים֙|lemma="נִצָּן" strong="d:H5339" x-morph="He,Td:Ncmpa"\w*
+\w נִרְא֣וּ|lemma="רָאָה" strong="H7200" x-morph="He,VNp3cp"\w*
+\w בָ⁠אָ֔רֶץ|lemma="אֶרֶץ" strong="b:H0776" x-morph="He,Rd:Ncbsa"\w*
+\w עֵ֥ת|lemma="עֵת" strong="H6256" x-morph="He,Ncbsc"\w*
+\w הַ⁠זָּמִ֖יר|lemma="זָמִיר" strong="d:H2159" x-morph="He,Td:Ncmsa"\w*
+\w הִגִּ֑יעַ|lemma="נָגַע" strong="H5060" x-morph="He,Vhp3ms"\w*
+\w וְ⁠ק֥וֹל|lemma="קוֹל" strong="c:H6963a" x-morph="He,C:Ncmsc"\w*
+\w הַ⁠תּ֖וֹר|lemma="תּוֹר" strong="d:H8449" x-morph="He,Td:Ncbsa"\w*
+\w נִשְׁמַ֥ע|lemma="שָׁמַע" strong="H8085" x-morph="He,VNp3ms"\w*
+\w בְּ⁠אַרְצֵֽ⁠נוּ|lemma="אֶרֶץ" strong="b:H0776" x-morph="He,R:Ncbsc:Sp1cp"\w*׃
+
+\v 13
+\w הַ⁠תְּאֵנָה֙|lemma="תְּאֵן" strong="d:H8384" x-morph="He,Td:Ncfsa"\w*
+\w חָֽנְטָ֣ה|lemma="חָנַט" strong="H2590a" x-morph="He,Vqp3fs"\w*
+\w פַגֶּ֔י⁠הָ|lemma="פַּג" strong="H6291" x-morph="He,Ncmpc:Sp3fs"\w*
+\w וְ⁠הַ⁠גְּפָנִ֥ים|lemma="גֶּפֶן" strong="c:d:H1612" x-morph="He,C:Td:Ncbpa"\w* ׀
+\w סְמָדַ֖ר|lemma="סְמָדַר" strong="H5563" x-morph="He,Ncmsa"\w*
+\w נָ֣תְנוּ|lemma="נָתַן" strong="H5414" x-morph="He,Vqp3cp"\w*
+\w רֵ֑יחַ|lemma="רֵיחַ" strong="H7381" x-morph="He,Ncmsa"\w*
+\w ק֥וּמִי|lemma="קוּם" strong="H6965b" x-morph="He,Vqv2fs"\w*
+\w לכי|lemma="הָלַךְ" strong="H3212" x-morph="He,Vqv2fs"\w*
+\f + \ft Q \+w לָךְ|lemma="" strong="l" x-morph="He,R:Sp2fs"\+w*\f*
+\w רַעְיָתִ֥⁠י|lemma="רַעְיָה" strong="H7474" x-morph="He,Ncfsc:Sp1cs"\w*
+\w יָפָתִ֖⁠י|lemma="יָפֶה" strong="H3303" x-morph="He,Aafsc:Sp1cs"\w*
+\w וּ⁠לְכִי|lemma="יָלַךְ" strong="c:H3212" x-morph="He,C:Vqv2fs"\w*־\w לָֽ⁠ךְ|lemma="" strong="l" x-morph="He,R:Sp2fs"\w*׃ס
+
+\v 14
+\w יוֹנָתִ֞⁠י|lemma="יוֹנָה" strong="H3123" x-morph="He,Ncfsc:Sp1cs"\w*
+\w בְּ⁠חַגְוֵ֣י|lemma="חֲגָו" strong="b:H2288" x-morph="He,R:Ncmpc"\w*
+\w הַ⁠סֶּ֗לַע|lemma="סֶלַע" strong="d:H5553" x-morph="He,Td:Ncmsa"\w*
+\w בְּ⁠סֵ֨תֶר֙|lemma="סֵתֶר" strong="b:H5643a" x-morph="He,R:Ncmsc"\w*
+\w הַ⁠מַּדְרֵגָ֔ה|lemma="מַדְרֵגָה" strong="d:H4095" x-morph="He,Td:Ncfsa"\w*
+\w הַרְאִ֨י⁠נִי֙|lemma="רָאָה" strong="H7200" x-morph="He,Vhv2fs:Sp1cs"\w*
+\w אֶתּ|lemma="אֵת" strong="H0853" x-morph="He,To"\w*־\w מַרְאַ֔יִ⁠ךְ|lemma="מַרְאֶה" strong="H4758" x-morph="He,Ncmpc:Sp2fs"\w*
+\w הַשְׁמִיעִ֖י⁠נִי|lemma="שָׁמַע" strong="H8085" x-morph="He,Vhv2fs:Sp1cs"\w*
+\w אֶת|lemma="אֵת" strong="H0853" x-morph="He,To"\w*־\w קוֹלֵ֑⁠ךְ|lemma="קוֹל" strong="H6963a" x-morph="He,Ncmsc:Sp2fs"\w*
+\w כִּי|lemma="כִּי" strong="H3588a" x-morph="He,C"\w*־\w קוֹלֵ֥⁠ךְ|lemma="קוֹל" strong="H6963a" x-morph="He,Ncmsc:Sp2fs"\w*
+\w עָרֵ֖ב|lemma="עָרֵב" strong="H6156" x-morph="He,Aamsa"\w*
+\w וּ⁠מַרְאֵ֥י⁠ךְ|lemma="מַרְאֶה" strong="c:H4758" x-morph="He,C:Ncmsc:Sp2fs"\w*
+\w נָאוֶֽה|lemma="נָאוֶה" strong="H5000" x-morph="He,Aamsa"\w*׃ס
+
+\v 15
+\w אֶֽחֱזוּ|lemma="אָחַז" strong="H0270" x-morph="He,Vqv2mp"\w*־\w לָ֨⁠נוּ֙|lemma="" strong="l" x-morph="He,R:Sp1cp"\w*
+\w שֽׁוּעָלִ֔ים|lemma="שׁוּעָל" strong="H7776" x-morph="He,Ncmpa"\w*
+\w שֽׁוּעָלִ֥ים|lemma="שׁוּעָל" strong="H7776" x-morph="He,Ncmpa"\w*
+\w קְטַנִּ֖ים|lemma="קָטָן" strong="H6996a" x-morph="He,Aampa"\w*
+\w מְחַבְּלִ֣ים|lemma="חָבַל" strong="H2254b" x-morph="He,Vprmpa"\w*
+\w כְּרָמִ֑ים|lemma="כֶּרֶם" strong="H3754" x-morph="He,Ncbpa"\w*
+\w וּ⁠כְרָמֵ֖י⁠נוּ|lemma="כֶּרֶם" strong="c:H3754" x-morph="He,C:Ncbpc:Sp1cp"\w*
+\w סְמָדַֽר|lemma="סְמָדַר" strong="H5563" x-morph="He,Ncmsa"\w*׃
+
+\v 16
+\w דּוֹדִ֥⁠י|lemma="דּוֹד" strong="H1730" x-morph="He,Ncmsc:Sp1cs"\w*
+\w לִ⁠י֙|lemma="" strong="l" x-morph="He,R:Sp1cs"\w*
+\w וַ⁠אֲנִ֣י|lemma="אֲנִי" strong="c:H0589" x-morph="He,C:Pp1cs"\w*
+\w ל֔⁠וֹ|lemma="" strong="l" x-morph="He,R:Sp3ms"\w*
+\w הָ⁠רֹעֶ֖ה|lemma="רָעָה" strong="d:H7462b" x-morph="He,Td:Vqrmsa"\w*
+\w בַּ⁠שּׁוֹשַׁנִּֽים|lemma="שׁוּשַׁן" strong="b:H7799" x-morph="He,Rd:Ncbpa"\w*׃
+
+\v 17
+\w עַ֤ד|lemma="עַד" strong="H5704" x-morph="He,R"\w*
+\w שֶׁ⁠יָּפ֨וּחַ֙|lemma="פּוּחַ" strong="s:H6315" x-morph="He,Tr:Vqi3ms"\w*
+\w הַ⁠יּ֔וֹם|lemma="יוֹם" strong="d:H3117" x-morph="He,Td:Ncmsa"\w*
+\w וְ⁠נָ֖סוּ|lemma="נוּס" strong="c:H5127" x-morph="He,C:Vqq3cp"\w*
+\w הַ⁠צְּלָלִ֑ים|lemma="צֵלֶל" strong="d:H6752" x-morph="He,Td:Ncmpa"\w*
+\w סֹב֩|lemma="סָבַב" strong="H5437" x-morph="He,Vqv2ms"\w*
+\w דְּמֵה|lemma="דָּמָה" strong="H1819" x-morph="He,Vqv2ms"\w*־\w לְ⁠ךָ֨|lemma="" strong="l" x-morph="He,R:Sp2ms"\w*
+\w דוֹדִ֜⁠י|lemma="דּוֹד" strong="H1730" x-morph="He,Ncmsc:Sp1cs"\w*
+\w לִ⁠צְבִ֗י|lemma="צְבִי" strong="l:H6643b" x-morph="He,R:Ncbsa"\w*
+\w א֛וֹ|lemma="אוֹ" strong="H0176a" x-morph="He,C"\w*
+\w לְ⁠עֹ֥פֶר|lemma="עֹפֶר" strong="l:H6082" x-morph="He,R:Ncmsc"\w*
+\w הָ⁠אַיָּלִ֖ים|lemma="אַיָּל" strong="d:H0354" x-morph="He,Td:Ncbpa"\w*
+\w עַל|lemma="עַל" strong="H5921a" x-morph="He,R"\w*־\w הָ֥רֵי|lemma="הַר" strong="H2022" x-morph="He,Ncmpc"\w*
+\w בָֽתֶר|lemma="בֶּתֶר" strong="H1336" x-morph="He,Ncmpa"\w*׃ס
+
+\c 3
+\p
+
+\v 1
+\w עַל|lemma="עַל" strong="H5921a" x-morph="He,R"\w*־\w מִשְׁכָּבִ⁠י֙|lemma="מִשְׁכָּב" strong="H4904" x-morph="He,Ncmsc:Sp1cs"\w*
+\w בַּ⁠לֵּיל֔וֹת|lemma="לַיִל" strong="b:H3915" x-morph="He,Rd:Ncmpa"\w*
+\w בִּקַּ֕שְׁתִּי|lemma="בָּקַשׁ" strong="H1245" x-morph="He,Vpp1cs"\w*
+\w אֵ֥ת|lemma="אֵת" strong="H0853" x-morph="He,To"\w*
+\w שֶׁ⁠אָהֲבָ֖ה|lemma="אָהַב" strong="s:H0157" x-morph="He,Tr:Vqp3fs"\w*
+\w נַפְשִׁ֑⁠י|lemma="נֶפֶשׁ" strong="H5315" x-morph="He,Ncbsc:Sp1cs"\w*
+\w בִּקַּשְׁתִּ֖י⁠ו|lemma="בָּקַשׁ" strong="H1245" x-morph="He,Vpp1cs:Sp3ms"\w*
+\w וְ⁠לֹ֥א|lemma="לֹא" strong="c:H3808" x-morph="He,C:Tn"\w*
+\w מְצָאתִֽי⁠ו|lemma="מָצָא" strong="H4672" x-morph="He,Vqp1cs:Sp3ms"\w*׃
+
+\v 2
+\w אָק֨וּמָה|lemma="קוּם" strong="H6965b" x-morph="He,Vqh1cs"\w*
+\w נָּ֜א|lemma="נָא" strong="H4994" x-morph="He,Tj"\w*
+\w וַ⁠אֲסוֹבְבָ֣ה|lemma="סָבַב" strong="c:H5437" x-morph="He,C:Vmh1cs"\w*
+\w בָ⁠עִ֗יר|lemma="עִיר" strong="b:H5892b" x-morph="He,Rd:Ncfsa"\w*
+\w בַּ⁠שְּׁוָקִים֙|lemma="שׁוּק" strong="b:H7784" x-morph="He,Rd:Ncmpa"\w*
+\w וּ⁠בָ֣⁠רְחֹב֔וֹת|lemma="רְחֹב" strong="c:b:H7339" x-morph="He,C:Rd:Ncfpa"\w*
+\w אֲבַקְשָׁ֕ה|lemma="בָּקַשׁ" strong="H1245" x-morph="He,Vph1cs"\w*
+\w אֵ֥ת|lemma="אֵת" strong="H0853" x-morph="He,To"\w*
+\w שֶׁ⁠אָהֲבָ֖ה|lemma="אָהַב" strong="s:H0157" x-morph="He,Tr:Vqp3fs"\w*
+\w נַפְשִׁ֑⁠י|lemma="נֶפֶשׁ" strong="H5315" x-morph="He,Ncbsc:Sp1cs"\w*
+\w בִּקַּשְׁתִּ֖י⁠ו|lemma="בָּקַשׁ" strong="H1245" x-morph="He,Vpp1cs:Sp3ms"\w*
+\w וְ⁠לֹ֥א|lemma="לֹא" strong="c:H3808" x-morph="He,C:Tn"\w*
+\w מְצָאתִֽי⁠ו|lemma="מָצָא" strong="H4672" x-morph="He,Vqp1cs:Sp3ms"\w*׃
+
+\v 3
+\w מְצָא֨וּ⁠נִי֙|lemma="מָצָא" strong="H4672" x-morph="He,Vqp3cp:Sp1cs"\w*
+\w הַ⁠שֹּׁ֣מְרִ֔ים|lemma="שָׁמַר" strong="d:H8104" x-morph="He,Td:Vqrmpa"\w*
+\w הַ⁠סֹּבְבִ֖ים|lemma="סָבַב" strong="d:H5437" x-morph="He,Td:Vqrmpa"\w*
+\w בָּ⁠עִ֑יר|lemma="עִיר" strong="b:H5892b" x-morph="He,Rd:Ncfsa"\w*
+\w אֵ֛ת|lemma="אֵת" strong="H0853" x-morph="He,To"\w*
+\w שֶׁ⁠אָהֲבָ֥ה|lemma="אָהַב" strong="s:H0157" x-morph="He,Tr:Vqp3fs"\w*
+\w נַפְשִׁ֖⁠י|lemma="נֶפֶשׁ" strong="H5315" x-morph="He,Ncbsc:Sp1cs"\w*
+\w רְאִיתֶֽם|lemma="רָאָה" strong="H7200" x-morph="He,Vqp2mp"\w*׃
+
+\v 4
+\w כִּ⁠מְעַט֙|lemma="מְעַט" strong="k:H4592" x-morph="He,R:Ncmsa"\w*
+\w שֶׁ⁠עָבַ֣רְתִּי|lemma="עָבַר" strong="s:H5674a" x-morph="He,Tr:Vqp1cs"\w*
+\w מֵ⁠הֶ֔ם|lemma="" strong="m" x-morph="He,R:Sp3mp"\w*
+\w עַ֣ד|lemma="עַד" strong="H5704" x-morph="He,R"\w*
+\w שֶֽׁ⁠מָּצָ֔אתִי|lemma="מָצָא" strong="s:H4672" x-morph="He,Tr:Vqp1cs"\w*
+\w אֵ֥ת|lemma="אֵת" strong="H0853" x-morph="He,To"\w*
+\w שֶׁ⁠אָהֲבָ֖ה|lemma="אָהַב" strong="s:H0157" x-morph="He,Tr:Vqp3fs"\w*
+\w נַפְשִׁ֑⁠י|lemma="נֶפֶשׁ" strong="H5315" x-morph="He,Ncbsc:Sp1cs"\w*
+\w אֲחַזְתִּי⁠ו֙|lemma="אָחַז" strong="H0270" x-morph="He,Vqp1cs:Sp3ms"\w*
+\w וְ⁠לֹ֣א|lemma="לֹא" strong="c:H3808" x-morph="He,C:Tn"\w*
+\w אַרְפֶּ֔⁠נּוּ|lemma="רָפָה" strong="H7503" x-morph="He,Vhi1cs:Sp3ms"\w*
+\w עַד|lemma="עַד" strong="H5704" x-morph="He,R"\w*־\w שֶׁ֤⁠הֲבֵיאתִי⁠ו֙|lemma="בּוֹא" strong="s:H0935" x-morph="He,Tr:Vhp1cs:Sp3ms"\w*
+\w אֶל|lemma="אֵל" strong="H0413" x-morph="He,R"\w*־\w בֵּ֣ית|lemma="בַּיִת" strong="H1004b" x-morph="He,Ncmsc"\w*
+\w אִמִּ֔⁠י|lemma="אֵם" strong="H0517" x-morph="He,Ncfsc:Sp1cs"\w*
+\w וְ⁠אֶל|lemma="אֵל" strong="c:H0413" x-morph="He,C:R"\w*־\w חֶ֖דֶר|lemma="חֶדֶר" strong="H2315" x-morph="He,Ncmsc"\w*
+\w הוֹרָתִֽ⁠י|lemma="הָרָה" strong="H2029" x-morph="He,Vqrfsc:Sp1cs"\w*׃
+
+\v 5
+\w הִשְׁבַּ֨עְתִּי|lemma="שָׁבַע" strong="H7650" x-morph="He,Vhp1cs"\w*
+\w אֶתְ⁠כֶ֜ם|lemma="אֵת" strong="H0853" x-morph="He,To:Sp2mp"\w*
+\w בְּנ֤וֹת|lemma="בַּת" strong="H1323" x-morph="He,Ncfpc"\w*
+\w יְרוּשָׁלִַ֨ם֙|lemma="יְרוּשָׁלִַ͏ם" strong="H3389" x-morph="He,Np"\w*
+\w בִּ⁠צְבָא֔וֹת|lemma="צְבִי" strong="b:H6643b" x-morph="He,R:Ncbpa"\w*
+\w א֖וֹ|lemma="אוֹ" strong="H0176a" x-morph="He,C"\w*
+\w בְּ⁠אַיְל֣וֹת|lemma="אַיָּלָה" strong="b:H0355" x-morph="He,R:Ncfpc"\w*
+\w הַ⁠שָּׂדֶ֑ה|lemma="שָׂדֶה" strong="d:H7704b" x-morph="He,Td:Ncmsa"\w*
+\w אִם|lemma="אִם" strong="H0518a" x-morph="He,C"\w*־\w תָּעִ֧ירוּ|lemma="עוּר" strong="H5782" x-morph="He,Vhi2mp"\w* ׀
+\w וְֽ⁠אִם|lemma="אִם" strong="c:H0518a" x-morph="He,C:C"\w*־\w תְּעֽוֹרְר֛וּ|lemma="עוּר" strong="H5782" x-morph="He,Voi2mp"\w*
+\w אֶת|lemma="אֵת" strong="H0853" x-morph="He,To"\w*־\w הָ⁠אַהֲבָ֖ה|lemma="אַהֲבָה" strong="d:H0160" x-morph="He,Td:Ncfsa"\w*
+\w עַ֥ד|lemma="עַד" strong="H5704" x-morph="He,R"\w*
+\w שֶׁ⁠תֶּחְפָּֽץ|lemma="חָפֵץ" strong="s:H2654a" x-morph="He,Tr:Vqi3fs"\w*׃ס
+
+\v 6
+\w מִ֣י|lemma="מִי" strong="H4310" x-morph="He,Ti"\w*
+\w זֹ֗את|lemma="זֹאת" strong="H2063" x-morph="He,Pdxfs"\w*
+\w עֹלָה֙|lemma="עָלָה" strong="H5927" x-morph="He,Vqrfsa"\w*
+\w מִן|lemma="מִן" strong="H4480a" x-morph="He,R"\w*־\w הַ⁠מִּדְבָּ֔ר|lemma="מִדְבָּר" strong="d:H4057b" x-morph="He,Td:Ncmsa"\w*
+\w כְּ⁠תִֽימֲר֖וֹת|lemma="תִּימָרָה" strong="k:H8490" x-morph="He,R:Ncfpc"\w*
+\w עָשָׁ֑ן|lemma="עָשָׁן" strong="H6227" x-morph="He,Ncmsa"\w*
+\w מְקֻטֶּ֤רֶת|lemma="קָטַר" strong="H6999a" x-morph="He,VPsfsc"\w*
+\w מוֹר֙|lemma="מֹר" strong="H4753" x-morph="He,Ncmsa"\w*
+\w וּ⁠לְבוֹנָ֔ה|lemma="לְבוֹנָה" strong="c:H3828" x-morph="He,C:Ncfsa"\w*
+\w מִ⁠כֹּ֖ל|lemma="כֹּל" strong="m:H3605" x-morph="He,R:Ncmsc"\w*
+\w אַבְקַ֥ת|lemma="אֲבָקָה" strong="H0081" x-morph="He,Ncfsc"\w*
+\w רוֹכֵֽל|lemma="רָכַל" strong="H7402" x-morph="He,Vqrmsa"\w*׃
+
+\v 7
+\w הִנֵּ֗ה|lemma="הִנֵּה" strong="H2009" x-morph="He,Tm"\w*
+\w מִטָּת⁠וֹ֙|lemma="מִטָּה" strong="H4296" x-morph="He,Ncfsc:Sp3ms"\w*
+\w שֶׁ⁠לִּ⁠שְׁלֹמֹ֔ה|lemma="שְׁלֹמֹה" strong="s:l:H8010" x-morph="He,Tr:R:Np"\w*
+\w שִׁשִּׁ֥ים|lemma="שִׁשִּׁים" strong="H8346" x-morph="He,Acbpa"\w*
+\w גִּבֹּרִ֖ים|lemma="גִּבּוֹר" strong="H1368" x-morph="He,Aampa"\w*
+\w סָבִ֣יב|lemma="סָבִיב" strong="H5439" x-morph="He,Ncbsa"\w*
+\w לָ֑⁠הּ|lemma="" strong="l" x-morph="He,R:Sp3fs"\w*
+\w מִ⁠גִּבֹּרֵ֖י|lemma="גִּבּוֹר" strong="m:H1368" x-morph="He,R:Aampc"\w*
+\w יִשְׂרָאֵֽל|lemma="יִשְׂרָאֵל" strong="H3478" x-morph="He,Np"\w*׃
+
+\v 8
+\w כֻּלָּ⁠ם֙|lemma="כֹּל" strong="H3605" x-morph="He,Ncmsc:Sp3mp"\w*
+\w אֲחֻ֣זֵי|lemma="אָחַז" strong="H0270" x-morph="He,Vqsmpc"\w*
+\w חֶ֔רֶב|lemma="חֶרֶב" strong="H2719" x-morph="He,Ncfsa"\w*
+\w מְלֻמְּדֵ֖י|lemma="לָמַד" strong="H3925" x-morph="He,VPsmpc"\w*
+\w מִלְחָמָ֑ה|lemma="מִלְחָמָה" strong="H4421" x-morph="He,Ncfsa"\w*
+\w אִ֤ישׁ|lemma="אִישׁ" strong="H0376" x-morph="He,Ncmsa"\w*
+\w חַרְבּ⁠וֹ֙|lemma="חֶרֶב" strong="H2719" x-morph="He,Ncfsc:Sp3ms"\w*
+\w עַל|lemma="עַל" strong="H5921a" x-morph="He,R"\w*־\w יְרֵכ֔⁠וֹ|lemma="יָרֵךְ" strong="H3409" x-morph="He,Ncfsc:Sp3ms"\w*
+\w מִ⁠פַּ֖חַד|lemma="פַּחַד" strong="m:H6343" x-morph="He,R:Ncmsa"\w*
+\w בַּ⁠לֵּילּֽוֹת|lemma="לַיִל" strong="b:H3915" x-morph="He,Rd:Ncmpa"\w*׃ס
+
+\v 9
+\w אַפִּרְי֗וֹן|lemma="אַפִּרְיוֹן" strong="H0668" x-morph="He,Ncmsa"\w*
+\w עָ֤שָׂה|lemma="עָשָׂה" strong="H6213a" x-morph="He,Vqp3ms"\w*
+\w ל⁠וֹ֙|lemma="" strong="l" x-morph="He,R:Sp3ms"\w*
+\w הַ⁠מֶּ֣לֶךְ|lemma="מֶלֶךְ" strong="d:H4428" x-morph="He,Td:Ncmsa"\w*
+\w שְׁלֹמֹ֔ה|lemma="שְׁלֹמֹה" strong="H8010" x-morph="He,Np"\w*
+\w מֵ⁠עֲצֵ֖י|lemma="עֵץ" strong="m:H6086" x-morph="He,R:Ncmpc"\w*
+\w הַ⁠לְּבָנֽוֹן|lemma="לְבָנוֹן" strong="d:H3844" x-morph="He,Td:Np"\w*׃
+
+\v 10
+\w עַמּוּדָי⁠ו֙|lemma="עַמּוּד" strong="H5982" x-morph="He,Ncmpc:Sp3ms"\w*
+\w עָ֣שָׂה|lemma="עָשָׂה" strong="H6213a" x-morph="He,Vqp3ms"\w*
+\w כֶ֔סֶף|lemma="כֶּסֶף" strong="H3701" x-morph="He,Ncmsa"\w*
+\w רְפִידָת֣⁠וֹ|lemma="רְפִידָה" strong="H7507" x-morph="He,Ncfsc:Sp3ms"\w*
+\w זָהָ֔ב|lemma="זָהָב" strong="H2091" x-morph="He,Ncmsa"\w*
+\w מֶרְכָּב֖⁠וֹ|lemma="מֶרְכָּב" strong="H4817" x-morph="He,Ncmsc:Sp3ms"\w*
+\w אַרְגָּמָ֑ן|lemma="אַרְגָּמָן" strong="H0713" x-morph="He,Ncmsa"\w*
+\w תּוֹכ⁠וֹ֙|lemma="תָּוֶךְ" strong="H8432" x-morph="He,Ncmsc:Sp3ms"\w*
+\w רָצ֣וּף|lemma="רָצַף" strong="H7528" x-morph="He,Vqsmsa"\w*
+\w אַהֲבָ֔ה|lemma="אַהֲבָה" strong="H0160" x-morph="He,Ncfsa"\w*
+\w מִ⁠בְּנ֖וֹת|lemma="בַּת" strong="m:H1323" x-morph="He,R:Ncfpc"\w*
+\w יְרוּשָׁלִָֽם|lemma="יְרוּשָׁלִַ͏ם" strong="H3389" x-morph="He,Np"\w*׃
+
+\v 11
+\w צְאֶ֧ינָה|lemma="יָצָא" strong="H3318" x-morph="He,Vqv2fp"\w* ׀
+\w וּֽ⁠רְאֶ֛ינָה|lemma="רָאָה" strong="c:H7200" x-morph="He,C:Vqv2fp"\w*
+\w בְּנ֥וֹת|lemma="בַּת" strong="H1323" x-morph="He,Ncfpc"\w*
+\w צִיּ֖וֹן|lemma="צִיּוֹן" strong="H6726" x-morph="He,Np"\w*
+\w בַּ⁠מֶּ֣לֶךְ|lemma="מֶלֶךְ" strong="b:H4428" x-morph="He,Rd:Ncmsa"\w*
+\w שְׁלֹמֹ֑ה|lemma="שְׁלֹמֹה" strong="H8010" x-morph="He,Np"\w*
+\w בָּ⁠עֲטָרָ֗ה|lemma="עֲטָרָה" strong="b:H5850" x-morph="He,Rd:Ncfsa"\w*
+\w שֶׁ⁠עִטְּרָה|lemma="עָטַר" strong="s:H5849b" x-morph="He,Tr:Vpp3fs"\w*־\w לּ֤⁠וֹ|lemma="" strong="l" x-morph="He,R:Sp3ms"\w*
+\w אִמּ⁠וֹ֙|lemma="אֵם" strong="H0517" x-morph="He,Ncfsc:Sp3ms"\w*
+\w בְּ⁠י֣וֹם|lemma="יוֹם" strong="b:H3117" x-morph="He,R:Ncmsc"\w*
+\w חֲתֻנָּת֔⁠וֹ|lemma="חֲתֻנָּה" strong="H2861" x-morph="He,Ncfsc:Sp3ms"\w*
+\w וּ⁠בְ⁠י֖וֹם|lemma="יוֹם" strong="c:b:H3117" x-morph="He,C:R:Ncmsc"\w*
+\w שִׂמְחַ֥ת|lemma="שִׂמְחָה" strong="H8057" x-morph="He,Ncfsc"\w*
+\w לִבּֽ⁠וֹ|lemma="לֵב" strong="H3820a" x-morph="He,Ncmsc:Sp3ms"\w*׃ס
+
+\c 4
+\p
+
+\v 1
+\w הִנָּ֨⁠ךְ|lemma="הִנֵּה" strong="H2009" x-morph="He,Tm:Sp2fs"\w*
+\w יָפָ֤ה|lemma="יָפֶה" strong="H3303" x-morph="He,Aafsa"\w*
+\w רַעְיָתִ⁠י֙|lemma="רַעְיָה" strong="H7474" x-morph="He,Ncfsc:Sp1cs"\w*
+\w הִנָּ֣⁠ךְ|lemma="הִנֵּה" strong="H2009" x-morph="He,Tm:Sp2fs"\w*
+\w יָפָ֔ה|lemma="יָפֶה" strong="H3303" x-morph="He,Aafsa"\w*
+\w עֵינַ֣יִ⁠ךְ|lemma="עַיִן" strong="H5869a" x-morph="He,Ncbdc:Sp2fs"\w*
+\w יוֹנִ֔ים|lemma="יוֹנָה" strong="H3123" x-morph="He,Ncfpa"\w*
+\w מִ⁠בַּ֖עַד|lemma="בְּעַד" strong="m:H1157" x-morph="He,R:R"\w*
+\w לְ⁠צַמָּתֵ֑⁠ךְ|lemma="צַמָּה" strong="l:H6777" x-morph="He,R:Ncfsc:Sp2fs"\w*
+\w שַׂעְרֵ⁠ךְ֙|lemma="שֵׂעָר" strong="H8181" x-morph="He,Ncmsc:Sp2fs"\w*
+\w כְּ⁠עֵ֣דֶר|lemma="עֵדֶר" strong="k:H5739" x-morph="He,R:Ncmsc"\w*
+\w הָֽ⁠עִזִּ֔ים|lemma="עֵז" strong="d:H5795" x-morph="He,Td:Ncfpa"\w*
+\w שֶׁ⁠גָּלְשׁ֖וּ|lemma="גָּלַשׁ" strong="s:H1570" x-morph="He,Tr:Vqp3cp"\w*
+\w מֵ⁠הַ֥ר|lemma="הַר" strong="m:H2022" x-morph="He,R:Ncmsc"\w*
+\w גִּלְעָֽד|lemma="גִּלְעָד" strong="H1568" x-morph="He,Np"\w*׃
+
+\v 2
+\w שִׁנַּ֨יִ⁠ךְ֙|lemma="שֵׁן" strong="H8127" x-morph="He,Ncbdc:Sp2fs"\w*
+\w כְּ⁠עֵ֣דֶר|lemma="עֵדֶר" strong="k:H5739" x-morph="He,R:Ncmsc"\w*
+\w הַ⁠קְּצוּב֔וֹת|lemma="קָצַב" strong="d:H7094" x-morph="He,Td:Vqsfpa"\w*
+\w שֶׁ⁠עָל֖וּ|lemma="עָלָה" strong="s:H5927" x-morph="He,Tr:Vqp3cp"\w*
+\w מִן|lemma="מִן" strong="H4480a" x-morph="He,R"\w*־\w הָ⁠רַחְצָ֑ה|lemma="רַחְצָה" strong="d:H7367" x-morph="He,Td:Ncfsa"\w*
+\w שֶׁ⁠כֻּלָּ⁠ם֙|lemma="כֹּל" strong="s:H3605" x-morph="He,Tr:Ncmsc:Sp3mp"\w*
+\w מַתְאִימ֔וֹת|lemma="תָּאַם" strong="H8382" x-morph="He,Vhrfpa"\w*
+\w וְ⁠שַׁכֻּלָ֖ה|lemma="שַׁכּוּל" strong="c:H7909" x-morph="He,C:Aafsa"\w*
+\w אֵ֥ין|lemma="אַיִן" strong="H0369" x-morph="He,Tn"\w*
+\w בָּ⁠הֶֽם|lemma="" strong="b" x-morph="He,R:Sp3mp"\w*׃
+
+\v 3
+\w כְּ⁠ח֤וּט|lemma="חוּט" strong="k:H2339" x-morph="He,R:Ncmsc"\w*
+\w הַ⁠שָּׁנִי֙|lemma="שָׁנִי" strong="d:H8144" x-morph="He,Td:Ncmsa"\w*
+\w שִׂפְתֹתַ֔יִ⁠ךְ|lemma="שָׂפָה" strong="H8193" x-morph="He,Ncfpc:Sp2fs"\w*
+\w וּ⁠מִדְבָּרֵ֖י⁠ךְ|lemma="מִדְבָּר" strong="c:H4057a" x-morph="He,C:Ncmsc:Sp2fs"\w*
+\w נָאוֶ֑ה|lemma="נָאוֶה" strong="H5000" x-morph="He,Aamsa"\w*
+\w כְּ⁠פֶ֤לַח|lemma="פֶּלַח" strong="k:H6400" x-morph="He,R:Ncfsc"\w*
+\w הָֽ⁠רִמּוֹן֙|lemma="רִמּוֹן" strong="d:H7416" x-morph="He,Td:Ncmsa"\w*
+\w רַקָּתֵ֔⁠ךְ|lemma="רַקָּה" strong="H7541" x-morph="He,Ncfsc:Sp2fs"\w*
+\w מִ⁠בַּ֖עַד|lemma="בְּעַד" strong="m:H1157" x-morph="He,R:R"\w*
+\w לְ⁠צַמָּתֵֽ⁠ךְ|lemma="צַמָּה" strong="l:H6777" x-morph="He,R:Ncfsc:Sp2fs"\w*׃
+
+\v 4
+\w כְּ⁠מִגְדַּ֤ל|lemma="מִגְדָּל" strong="k:H4026" x-morph="He,R:Ncbsc"\w*
+\w דָּוִיד֙|lemma="דָּוִד" strong="H1732" x-morph="He,Np"\w*
+\w צַוָּארֵ֔⁠ךְ|lemma="צַוָּאר" strong="H6677a" x-morph="He,Ncmsc:Sp2fs"\w*
+\w בָּנ֖וּי|lemma="בָּנָה" strong="H1129" x-morph="He,Vqsmsa"\w*
+\w לְ⁠תַלְפִּיּ֑וֹת|lemma="תַּלְפִּיָּה" strong="l:H8530" x-morph="He,R:Ncfpa"\w*
+\w אֶ֤לֶף|lemma="אֶלֶף" strong="H0505" x-morph="He,Acbsa"\w*
+\w הַ⁠מָּגֵן֙|lemma="מָגֵן" strong="d:H4043" x-morph="He,Td:Ncbsa"\w*
+\w תָּל֣וּי|lemma="תָּלָה" strong="H8518" x-morph="He,Vqsmsa"\w*
+\w עָלָ֔י⁠ו|lemma="עַל" strong="H5921a" x-morph="He,R:Sp3ms"\w*
+\w כֹּ֖ל|lemma="כֹּל" strong="H3605" x-morph="He,Ncmsc"\w*
+\w שִׁלְטֵ֥י|lemma="שֶׁלֶט" strong="H7982" x-morph="He,Ncmpc"\w*
+\w הַ⁠גִּבּוֹרִֽים|lemma="גִּבּוֹר" strong="d:H1368" x-morph="He,Td:Aampa"\w*׃
+
+\v 5
+\w שְׁנֵ֥י|lemma="שְׁנַיִם" strong="H8147" x-morph="He,Acmdc"\w*
+\w שָׁדַ֛יִ⁠ךְ|lemma="שַׁד" strong="H7699a" x-morph="He,Ncmdc:Sp2fs"\w*
+\w כִּ⁠שְׁנֵ֥י|lemma="שְׁנַיִם" strong="k:H8147" x-morph="He,R:Acmdc"\w*
+\w עֳפָרִ֖ים|lemma="עֹפֶר" strong="H6082" x-morph="He,Ncmpa"\w*
+\w תְּאוֹמֵ֣י|lemma="תָּאוֹם" strong="H8380" x-morph="He,Ncmpc"\w*
+\w צְבִיָּ֑ה|lemma="צְבִיָּה" strong="H6646" x-morph="He,Ncfsa"\w*
+\w הָ⁠רוֹעִ֖ים|lemma="רָעָה" strong="d:H7462b" x-morph="He,Td:Vqrmpa"\w*
+\w בַּ⁠שּׁוֹשַׁנִּֽים|lemma="שׁוּשַׁן" strong="b:H7799" x-morph="He,Rd:Ncbpa"\w*׃
+
+\v 6
+\w עַ֤ד|lemma="עַד" strong="H5704" x-morph="He,R"\w*
+\w שֶׁ⁠יָּפ֨וּחַ֙|lemma="פּוּחַ" strong="s:H6315" x-morph="He,Tr:Vqi3ms"\w*
+\w הַ⁠יּ֔וֹם|lemma="יוֹם" strong="d:H3117" x-morph="He,Td:Ncmsa"\w*
+\w וְ⁠נָ֖סוּ|lemma="נוּס" strong="c:H5127" x-morph="He,C:Vqq3cp"\w*
+\w הַ⁠צְּלָלִ֑ים|lemma="צֵלֶל" strong="d:H6752" x-morph="He,Td:Ncmpa"\w*
+\w אֵ֤לֶךְ|lemma="יָלַךְ" strong="H3212" x-morph="He,Vqi1cs"\w*
+\w לִ⁠י֙|lemma="" strong="l" x-morph="He,R:Sp1cs"\w*
+\w אֶל|lemma="אֵל" strong="H0413" x-morph="He,R"\w*־\w הַ֣ר|lemma="הַר" strong="H2022" x-morph="He,Ncmsc"\w*
+\w הַ⁠מּ֔וֹר|lemma="מֹר" strong="d:H4753" x-morph="He,Td:Ncmsa"\w*
+\w וְ⁠אֶל|lemma="אֵל" strong="c:H0413" x-morph="He,C:R"\w*־\w גִּבְעַ֖ת|lemma="גִּבְעָה" strong="H1389" x-morph="He,Ncfsc"\w*
+\w הַ⁠לְּבוֹנָֽה|lemma="לְבוֹנָה" strong="d:H3828" x-morph="He,Td:Ncfsa"\w*׃
+
+\v 7
+\w כֻּלָּ֤⁠ךְ|lemma="כֹּל" strong="H3605" x-morph="He,Ncmsc:Sp2fs"\w*
+\w יָפָה֙|lemma="יָפֶה" strong="H3303" x-morph="He,Aafsa"\w*
+\w רַעְיָתִ֔⁠י|lemma="רַעְיָה" strong="H7474" x-morph="He,Ncfsc:Sp1cs"\w*
+\w וּ⁠מ֖וּם|lemma="מאוּם" strong="c:H3971b" x-morph="He,C:Ncmsa"\w*
+\w אֵ֥ין|lemma="אַיִן" strong="H0369" x-morph="He,Tn"\w*
+\w בָּֽ⁠ךְ|lemma="" strong="b" x-morph="He,R:Sp2fs"\w*׃ס
+
+\v 8
+\w אִתִּ֤⁠י|lemma="אֵת" strong="H0854" x-morph="He,R:Sp1cs"\w*
+\w מִ⁠לְּבָנוֹן֙|lemma="לְבָנוֹן" strong="m:H3844" x-morph="He,R:Np"\w*
+\w כַּלָּ֔ה|lemma="כַּלָּה" strong="H3618" x-morph="He,Ncfsa"\w*
+\w אִתִּ֖⁠י|lemma="אֵת" strong="H0854" x-morph="He,R:Sp1cs"\w*
+\w מִ⁠לְּבָנ֣וֹן|lemma="לְבָנוֹן" strong="m:H3844" x-morph="He,R:Np"\w*
+\w תָּב֑וֹאִי|lemma="בּוֹא" strong="H0935" x-morph="He,Vqj2fs"\w*
+\w תָּשׁ֣וּרִי|lemma="שׁוּר" strong="H7789" x-morph="He,Vqi2fs"\w* ׀
+\w מֵ⁠רֹ֣אשׁ|lemma="רֹאשׁ" strong="m:H7218a" x-morph="He,R:Ncmsc"\w*
+\w אֲמָנָ֗ה|lemma="אֲמָנָה" strong="H0549" x-morph="He,Np"\w*
+\w מֵ⁠רֹ֤אשׁ|lemma="רֹאשׁ" strong="m:H7218a" x-morph="He,R:Ncmsc"\w*
+\w שְׂנִיר֙|lemma="שְׁנִיר" strong="H8149" x-morph="He,Np"\w*
+\w וְ⁠חֶרְמ֔וֹן|lemma="חֶרְמוֹן" strong="c:H2768" x-morph="He,C:Np"\w*
+\w מִ⁠מְּעֹנ֣וֹת|lemma="מְעוֹנָה" strong="m:H4585" x-morph="He,R:Ncbpc"\w*
+\w אֲרָי֔וֹת|lemma="אֲרִי" strong="H0738a" x-morph="He,Ncmpa"\w*
+\w מֵֽ⁠הַרְרֵ֖י|lemma="הָרָר" strong="m:H2042" x-morph="He,R:Ncmpc"\w*
+\w נְמֵרִֽים|lemma="נָמֵר" strong="H5246" x-morph="He,Ncmpa"\w*׃
+
+\v 9
+\w לִבַּבְתִּ֖⁠נִי|lemma="לָבַב" strong="H3823a" x-morph="He,Vpp2fs:Sp1cs"\w*
+\w אֲחֹתִ֣⁠י|lemma="אָחוֹת" strong="H0269" x-morph="He,Ncfsc:Sp1cs"\w*
+\w כַלָּ֑ה|lemma="כַּלָּה" strong="H3618" x-morph="He,Ncfsa"\w*
+\w לִבַּבְתִּ֨י⁠נִי֙|lemma="לָבַב" strong="H3823a" x-morph="He,Vpp2fs:Sp1cs"\w*
+\w בְּאַחַ֣ת|lemma="אֶחָד" strong="b:H0259" x-morph="He,R:Acfsa"\w*
+\f + \ft K \+w ב⁠אחד|lemma="אֶחָד" strong="b:H0259" x-morph="He,R:Acmsa"\+w*\f*
+\w מֵ⁠עֵינַ֔יִ⁠ךְ|lemma="עַיִן" strong="m:H5869a" x-morph="He,R:Ncbdc:Sp2fs"\w*
+\w בְּ⁠אַחַ֥ד|lemma="אֶחָד" strong="b:H0259" x-morph="He,R:Acmsc"\w*
+\w עֲנָ֖ק|lemma="עָנָק" strong="H6060b" x-morph="He,Ncmsa"\w*
+\w מִ⁠צַּוְּרֹנָֽיִ⁠ךְ|lemma="צַוָּאר" strong="m:H6677b" x-morph="He,R:Ncmpc:Sp2fs"\w*׃
+
+\v 10
+\w מַה|lemma="מָה" strong="H4100" x-morph="He,Ti"\w*־\w יָּפ֥וּ|lemma="יָפָה" strong="H3302" x-morph="He,Vqp3cp"\w*
+\w דֹדַ֖יִ⁠ךְ|lemma="דּוֹד" strong="H1730" x-morph="He,Ncmpc:Sp2fs"\w*
+\w אֲחֹתִ֣⁠י|lemma="אָחוֹת" strong="H0269" x-morph="He,Ncfsc:Sp1cs"\w*
+\w כַלָּ֑ה|lemma="כַּלָּה" strong="H3618" x-morph="He,Ncfsa"\w*
+\w מַה|lemma="מָה" strong="H4100" x-morph="He,Ti"\w*־\w טֹּ֤בוּ|lemma="טוֹב" strong="H2895" x-morph="He,Vqp3cp"\w*
+\w דֹדַ֨יִ⁠ךְ֙|lemma="דּוֹד" strong="H1730" x-morph="He,Ncmpc:Sp2fs"\w*
+\w מִ⁠יַּ֔יִן|lemma="יַיִן" strong="m:H3196" x-morph="He,R:Ncmsa"\w*
+\w וְ⁠רֵ֥יחַ|lemma="רֵיחַ" strong="c:H7381" x-morph="He,C:Ncmsc"\w*
+\w שְׁמָנַ֖יִ⁠ךְ|lemma="שֶׁמֶן" strong="H8081" x-morph="He,Ncmpc:Sp2fs"\w*
+\w מִ⁠כָּל|lemma="כֹּל" strong="m:H3605" x-morph="He,R:Ncmsc"\w*־\w בְּשָׂמִֽים|lemma="בֶּשֶׂם" strong="H1314" x-morph="He,Ncmpa"\w*׃
+
+\v 11
+\w נֹ֛פֶת|lemma="נֹפֶת" strong="H5317" x-morph="He,Ncmsa"\w*
+\w תִּטֹּ֥פְנָה|lemma="נָטַף" strong="H5197" x-morph="He,Vqi3fp"\w*
+\w שִׂפְתוֹתַ֖יִ⁠ךְ|lemma="שָׂפָה" strong="H8193" x-morph="He,Ncfpc:Sp2fs"\w*
+\w כַּלָּ֑ה|lemma="כַּלָּה" strong="H3618" x-morph="He,Ncfsa"\w*
+\w דְּבַ֤שׁ|lemma="דְּבַשׁ" strong="H1706" x-morph="He,Ncmsa"\w*
+\w וְ⁠חָלָב֙|lemma="חָלָב" strong="c:H2461" x-morph="He,C:Ncmsa"\w*
+\w תַּ֣חַת|lemma="תַּחַת" strong="H8478" x-morph="He,R"\w*
+\w לְשׁוֹנֵ֔⁠ךְ|lemma="לָשׁוֹן" strong="H3956" x-morph="He,Ncbsc:Sp2fs"\w*
+\w וְ⁠רֵ֥יחַ|lemma="רֵיחַ" strong="c:H7381" x-morph="He,C:Ncmsc"\w*
+\w שַׂלְמֹתַ֖יִ⁠ךְ|lemma="שַׂלְמָה" strong="H8008" x-morph="He,Ncfpc:Sp2fs"\w*
+\w כְּ⁠רֵ֥יחַ|lemma="רֵיחַ" strong="k:H7381" x-morph="He,R:Ncmsc"\w*
+\w לְבָנֽוֹן|lemma="לְבָנוֹן" strong="H3844" x-morph="He,Np"\w*׃ס
+
+\v 12
+\w גַּ֥ן|lemma="גַּן" strong="H1588" x-morph="He,Ncbsa"\w* ׀
+\w נָע֖וּל|lemma="נָעַל" strong="H5274a" x-morph="He,Vqsmsa"\w*
+\w אֲחֹתִ֣⁠י|lemma="אָחוֹת" strong="H0269" x-morph="He,Ncfsc:Sp1cs"\w*
+\w כַלָּ֑ה|lemma="כַּלָּה" strong="H3618" x-morph="He,Ncfsa"\w*
+\w גַּ֥ל|lemma="גַּל" strong="H1530" x-morph="He,Ncmsa"\w*
+\w נָע֖וּל|lemma="נָעַל" strong="H5274a" x-morph="He,Vqsmsa"\w*
+\w מַעְיָ֥ן|lemma="מַעְיָן" strong="H4599" x-morph="He,Ncmsa"\w*
+\w חָתֽוּם|lemma="חָתַם" strong="H2856" x-morph="He,Vqsmsa"\w*׃
+
+\v 13
+\w שְׁלָחַ֨יִ⁠ךְ֙|lemma="שֶׁלַח" strong="H7973" x-morph="He,Ncmpc:Sp2fs"\w*
+\w פַּרְדֵּ֣ס|lemma="פַּרְדֵּס" strong="H6508" x-morph="He,Ncmsc"\w*
+\w רִמּוֹנִ֔ים|lemma="רִמּוֹן" strong="H7416" x-morph="He,Ncmpa"\w*
+\w עִ֖ם|lemma="עִם" strong="H5973a" x-morph="He,R"\w*
+\w פְּרִ֣י|lemma="פְּרִי" strong="H6529" x-morph="He,Ncmsc"\w*
+\w מְגָדִ֑ים|lemma="מֶגֶד" strong="H4022" x-morph="He,Ncmpa"\w*
+\w כְּפָרִ֖ים|lemma="כֹּפֶר" strong="H3724c" x-morph="He,Ncmpa"\w*
+\w עִם|lemma="עִם" strong="H5973a" x-morph="He,R"\w*־\w נְרָדִֽים|lemma="נֵרְדְּ" strong="H5373" x-morph="He,Ncmpa"\w*׃
+
+\v 14
+\w נֵ֣רְדְּ|lemma="נֵרְדְּ" strong="H5373" x-morph="He,Ncmsa"\w* ׀
+\w וְ⁠כַרְכֹּ֗ם|lemma="כַּרְכֹּם" strong="c:H3750" x-morph="He,C:Ncmsa"\w*
+\w קָנֶה֙|lemma="קָנֶה" strong="H7070" x-morph="He,Ncmsa"\w*
+\w וְ⁠קִנָּמ֔וֹן|lemma="קִנָּמוֹן" strong="c:H7076" x-morph="He,C:Ncmsa"\w*
+\w עִ֖ם|lemma="עִם" strong="H5973a" x-morph="He,R"\w*
+\w כָּל|lemma="כֹּל" strong="H3605" x-morph="He,Ncmsc"\w*־\w עֲצֵ֣י|lemma="עֵץ" strong="H6086" x-morph="He,Ncmpc"\w*
+\w לְבוֹנָ֑ה|lemma="לְבוֹנָה" strong="H3828" x-morph="He,Ncfsa"\w*
+\w מֹ֚ר|lemma="מֹר" strong="H4753" x-morph="He,Ncmsa"\w*
+\w וַ⁠אֲהָל֔וֹת|lemma="אֲהָלִים" strong="c:H0174" x-morph="He,C:Ncmpa"\w*
+\w עִ֖ם|lemma="עִם" strong="H5973a" x-morph="He,R"\w*
+\w כָּל|lemma="כֹּל" strong="H3605" x-morph="He,Ncmsc"\w*־\w רָאשֵׁ֥י|lemma="רֹאשׁ" strong="H7218a" x-morph="He,Ncmpc"\w*
+\w בְשָׂמִֽים|lemma="בֶּשֶׂם" strong="H1314" x-morph="He,Ncmpa"\w*׃
+
+\v 15
+\w מַעְיַ֣ן|lemma="מַעְיָן" strong="H4599" x-morph="He,Ncmsc"\w*
+\w גַּנִּ֔ים|lemma="גַּן" strong="H1588" x-morph="He,Ncbpa"\w*
+\w בְּאֵ֖ר|lemma="בְּאֵר" strong="H0875" x-morph="He,Ncfsc"\w*
+\w מַ֣יִם|lemma="מַיִם" strong="H4325" x-morph="He,Ncmpa"\w*
+\w חַיִּ֑ים|lemma="חַי" strong="H2416a" x-morph="He,Aampa"\w*
+\w וְ⁠נֹזְלִ֖ים|lemma="נָזַל" strong="c:H5140" x-morph="He,C:Vqrmpa"\w*
+\w מִן|lemma="מִן" strong="H4480a" x-morph="He,R"\w*־\w לְבָנֽוֹן|lemma="לְבָנוֹן" strong="H3844" x-morph="He,Np"\w*׃
+
+\v 16
+\w ע֤וּרִי|lemma="עוּר" strong="H5782" x-morph="He,Vqv2fs"\w*
+\w צָפוֹן֙|lemma="צָפוֹן" strong="H6828" x-morph="He,Ncfsa"\w*
+\w וּ⁠ב֣וֹאִי|lemma="בּוֹא" strong="c:H0935" x-morph="He,C:Vqv2fs"\w*
+\w תֵימָ֔ן|lemma="תֵּימָן" strong="H8486" x-morph="He,Ncfsa"\w*
+\w הָפִ֥יחִי|lemma="פּוּחַ" strong="H6315" x-morph="He,Vhv2fs"\w*
+\w גַנִּ֖⁠י|lemma="גַּן" strong="H1588" x-morph="He,Ncbsc:Sp1cs"\w*
+\w יִזְּל֣וּ|lemma="נָזַל" strong="H5140" x-morph="He,Vqj3mp"\w*
+\w בְשָׂמָ֑י⁠ו|lemma="בֶּשֶׂם" strong="H1314" x-morph="He,Ncmpc:Sp3ms"\w*
+\w יָבֹ֤א|lemma="בּוֹא" strong="H0935" x-morph="He,Vqj3ms"\w*
+\w דוֹדִ⁠י֙|lemma="דּוֹד" strong="H1730" x-morph="He,Ncmsc:Sp1cs"\w*
+\w לְ⁠גַנּ֔⁠וֹ|lemma="גַּן" strong="l:H1588" x-morph="He,R:Ncbsc:Sp3ms"\w*
+\w וְ⁠יֹאכַ֖ל|lemma="אָכַל" strong="c:H0398" x-morph="He,C:Vqj3ms"\w*
+\w פְּרִ֥י|lemma="פְּרִי" strong="H6529" x-morph="He,Ncmsc"\w*
+\w מְגָדָֽי⁠ו|lemma="מֶגֶד" strong="H4022" x-morph="He,Ncmpc:Sp3ms"\w*׃
+
+\c 5
+\p
+
+\v 1
+\w בָּ֣אתִי|lemma="בּוֹא" strong="H0935" x-morph="He,Vqp1cs"\w*
+\w לְ⁠גַנִּ⁠י֮|lemma="גַּן" strong="l:H1588" x-morph="He,R:Ncbsc:Sp1cs"\w*
+\w אֲחֹתִ֣⁠י|lemma="אָחוֹת" strong="H0269" x-morph="He,Ncfsc:Sp1cs"\w*
+\w כַלָּה֒|lemma="כַּלָּה" strong="H3618" x-morph="He,Ncfsa"\w*
+\w אָרִ֤יתִי|lemma="אָרָה" strong="H0717" x-morph="He,Vqp1cs"\w*
+\w מוֹרִ⁠י֙|lemma="מֹר" strong="H4753" x-morph="He,Ncmsc:Sp1cs"\w*
+\w עִם|lemma="עִם" strong="H5973a" x-morph="He,R"\w*־\w בְּשָׂמִ֔⁠י|lemma="בָּשָׂם" strong="H1313" x-morph="He,Ncmsc:Sp1cs"\w*
+\w אָכַ֤לְתִּי|lemma="אָכַל" strong="H0398" x-morph="He,Vqp1cs"\w*
+\w יַעְרִ⁠י֙|lemma="יַעַר" strong="H3293b" x-morph="He,Ncmsc:Sp1cs"\w*
+\w עִם|lemma="עִם" strong="H5973a" x-morph="He,R"\w*־\w דִּבְשִׁ֔⁠י|lemma="דְּבַשׁ" strong="H1706" x-morph="He,Ncmsc:Sp1cs"\w*
+\w שָׁתִ֥יתִי|lemma="שָׁתָה" strong="H8354" x-morph="He,Vqp1cs"\w*
+\w יֵינִ֖⁠י|lemma="יַיִן" strong="H3196" x-morph="He,Ncmsc:Sp1cs"\w*
+\w עִם|lemma="עִם" strong="H5973a" x-morph="He,R"\w*־\w חֲלָבִ֑⁠י|lemma="חָלָב" strong="H2461" x-morph="He,Ncmsc:Sp1cs"\w*
+\w אִכְל֣וּ|lemma="אָכַל" strong="H0398" x-morph="He,Vqv2mp"\w*
+\w רֵעִ֔ים|lemma="רֵעַ" strong="H7453" x-morph="He,Ncmpa"\w*
+\w שְׁת֥וּ|lemma="שָׁתָה" strong="H8354" x-morph="He,Vqv2mp"\w*
+\w וְ⁠שִׁכְר֖וּ|lemma="שָׁכַר" strong="c:H7937" x-morph="He,C:Vqv2mp"\w*
+\w דּוֹדִֽים|lemma="דּוֹד" strong="H1730" x-morph="He,Ncmpa"\w*׃ס
+
+\v 2
+\w אֲנִ֥י|lemma="אֲנִי" strong="H0589" x-morph="He,Pp1cs"\w*
+\w יְשֵׁנָ֖ה|lemma="יָשֵׁן" strong="H3463" x-morph="He,Aafsa"\w*
+\w וְ⁠לִבִּ֣⁠י|lemma="לֵב" strong="c:H3820a" x-morph="He,C:Ncmsc:Sp1cs"\w*
+\w עֵ֑ר|lemma="עוּר" strong="H5782" x-morph="He,Vqrmsa"\w*
+\w ק֣וֹל|lemma="קוֹל" strong="H6963a" x-morph="He,Ncmsc"\w* ׀
+\w דּוֹדִ֣⁠י|lemma="דּוֹד" strong="H1730" x-morph="He,Ncmsc:Sp1cs"\w*
+\w דוֹפֵ֗ק|lemma="דָּפַק" strong="H1849" x-morph="He,Vqrmsa"\w*
+\w פִּתְחִי|lemma="פָּתַח" strong="H6605a" x-morph="He,Vqv2fs"\w*־\w לִ֞⁠י|lemma="" strong="l" x-morph="He,R:Sp1cs"\w*
+\w אֲחֹתִ֤⁠י|lemma="אָחוֹת" strong="H0269" x-morph="He,Ncfsc:Sp1cs"\w*
+\w רַעְיָתִ⁠י֙|lemma="רַעְיָה" strong="H7474" x-morph="He,Ncfsc:Sp1cs"\w*
+\w יוֹנָתִ֣⁠י|lemma="יוֹנָה" strong="H3123" x-morph="He,Ncfsc:Sp1cs"\w*
+\w תַמָּתִ֔⁠י|lemma="תָּם" strong="H8535" x-morph="He,Aafsc:Sp1cs"\w*
+\w שֶׁ⁠רֹּאשִׁ⁠י֙|lemma="רֹאשׁ" strong="s:H7218a" x-morph="He,Tr:Ncmsc:Sp1cs"\w*
+\w נִמְלָא|lemma="מָלֵא" strong="H4390" x-morph="He,VNsmsa"\w*־\w טָ֔ל|lemma="טַל" strong="H2919" x-morph="He,Ncmsa"\w*
+\w קְוֻּצּוֹתַ֖⁠י|lemma="קְוֻצָּה" strong="H6977" x-morph="He,Ncfpc:Sp1cs"\w*
+\w רְסִ֥יסֵי|lemma="רָסִיס" strong="H7447a" x-morph="He,Ncmpc"\w*
+\w לָֽיְלָה|lemma="לַיִל" strong="H3915" x-morph="He,Ncmsa"\w*׃
+
+\v 3
+\w פָּשַׁ֨טְתִּי֙|lemma="פָּשַׁט" strong="H6584" x-morph="He,Vqp1cs"\w*
+\w אֶת|lemma="אֵת" strong="H0853" x-morph="He,To"\w*־\w כֻּתָּנְתִּ֔⁠י|lemma="כְּתֹנֶת" strong="H3801" x-morph="He,Ncfsc:Sp1cs"\w*
+\w אֵיכָ֖כָה|lemma="אֵיךְ" strong="H0349c" x-morph="He,Ti"\w*
+\w אֶלְבָּשֶׁ֑⁠נָּה|lemma="לָבַשׁ" strong="H3847" x-morph="He,Vqi1cs:Sp3fs"\w*
+\w רָחַ֥צְתִּי|lemma="רָחַץ" strong="H7364" x-morph="He,Vqp1cs"\w*
+\w אֶת|lemma="אֵת" strong="H0853" x-morph="He,To"\w*־\w רַגְלַ֖⁠י|lemma="רֶגֶל" strong="H7272" x-morph="He,Ncfdc:Sp1cs"\w*
+\w אֵיכָ֥כָה|lemma="אֵיךְ" strong="H0349c" x-morph="He,Ti"\w*
+\w אֲטַנְּפֵֽ⁠ם|lemma="טָנַף" strong="H2936" x-morph="He,Vpi1cs:Sp3mp"\w*׃
+
+\v 4
+\w דּוֹדִ֗⁠י|lemma="דּוֹד" strong="H1730" x-morph="He,Ncmsc:Sp1cs"\w*
+\w שָׁלַ֤ח|lemma="שָׁלַח" strong="H7971" x-morph="He,Vqp3ms"\w*
+\w יָד⁠וֹ֙|lemma="יָד" strong="H3027" x-morph="He,Ncbsc:Sp3ms"\w*
+\w מִן|lemma="מִן" strong="H4480a" x-morph="He,R"\w*־\w הַ⁠חֹ֔ר|lemma="חוֹר" strong="d:H2356" x-morph="He,Td:Ncmsa"\w*
+\w וּ⁠מֵעַ֖⁠י|lemma="מֵעֶה" strong="c:H4578" x-morph="He,C:Ncmpc:Sp1cs"\w*
+\w הָמ֥וּ|lemma="הָמָה" strong="H1993" x-morph="He,Vqp3cp"\w*
+\w עָלָֽי⁠ו|lemma="עַל" strong="H5921a" x-morph="He,R:Sp3ms"\w*׃
+
+\v 5
+\w קַ֥מְתִּֽי|lemma="קוּם" strong="H6965b" x-morph="He,Vqp1cs"\w*
+\w אֲנִ֖י|lemma="אֲנִי" strong="H0589" x-morph="He,Pp1cs"\w*
+\w לִ⁠פְתֹּ֣חַ|lemma="פָּתַח" strong="l:H6605a" x-morph="He,R:Vqc"\w*
+\w לְ⁠דוֹדִ֑⁠י|lemma="דּוֹד" strong="l:H1730" x-morph="He,R:Ncmsc:Sp1cs"\w*
+\w וְ⁠יָדַ֣⁠י|lemma="יָד" strong="c:H3027" x-morph="He,C:Ncbdc:Sp1cs"\w*
+\w נָֽטְפוּ|lemma="נָטַף" strong="H5197" x-morph="He,Vqp3cp"\w*־\w מ֗וֹר|lemma="מֹר" strong="H4753" x-morph="He,Ncmsa"\w*
+\w וְ⁠אֶצְבְּעֹתַ⁠י֙|lemma="אֶצְבַּע" strong="c:H0676" x-morph="He,C:Ncfpc:Sp1cs"\w*
+\w מ֣וֹר|lemma="מֹר" strong="H4753" x-morph="He,Ncmsa"\w*
+\w עֹבֵ֔ר|lemma="עָבַר" strong="H5674a" x-morph="He,Vqrmsa"\w*
+\w עַ֖ל|lemma="עַל" strong="H5921a" x-morph="He,R"\w*
+\w כַּפּ֥וֹת|lemma="כַּף" strong="H3709" x-morph="He,Ncfpc"\w*
+\w הַ⁠מַּנְעֽוּל|lemma="מַנְעוּל" strong="d:H4514" x-morph="He,Td:Ncmsa"\w*׃
+
+\v 6
+\w פָּתַ֤חְתִּֽי|lemma="פָּתַח" strong="H6605a" x-morph="He,Vqp1cs"\w*
+\w אֲנִי֙|lemma="אֲנִי" strong="H0589" x-morph="He,Pp1cs"\w*
+\w לְ⁠דוֹדִ֔⁠י|lemma="דּוֹד" strong="l:H1730" x-morph="He,R:Ncmsc:Sp1cs"\w*
+\w וְ⁠דוֹדִ֖⁠י|lemma="דּוֹד" strong="c:H1730" x-morph="He,C:Ncmsc:Sp1cs"\w*
+\w חָמַ֣ק|lemma="חָמַק" strong="H2559" x-morph="He,Vqp3ms"\w*
+\w עָבָ֑ר|lemma="עָבַר" strong="H5674a" x-morph="He,Vqp3ms"\w*
+\w נַפְשִׁ⁠י֙|lemma="נֶפֶשׁ" strong="H5315" x-morph="He,Ncbsc:Sp1cs"\w*
+\w יָֽצְאָ֣ה|lemma="יָצָא" strong="H3318" x-morph="He,Vqp3fs"\w*
+\w בְ⁠דַבְּר֔⁠וֹ|lemma="דָבַר" strong="b:H1696" x-morph="He,R:Vpc:Sp3ms"\w*
+\w בִּקַּשְׁתִּ֨י⁠הוּ֙|lemma="בָּקַשׁ" strong="H1245" x-morph="He,Vpp1cs:Sp3ms"\w*
+\w וְ⁠לֹ֣א|lemma="לֹא" strong="c:H3808" x-morph="He,C:Tn"\w*
+\w מְצָאתִ֔י⁠הוּ|lemma="מָצָא" strong="H4672" x-morph="He,Vqp1cs:Sp3ms"\w*
+\w קְרָאתִ֖י⁠ו|lemma="קָרָא" strong="H7121" x-morph="He,Vqp1cs:Sp3ms"\w*
+\w וְ⁠לֹ֥א|lemma="לֹא" strong="c:H3808" x-morph="He,C:Tn"\w*
+\w עָנָֽ⁠נִי|lemma="עָנָה" strong="H6030b" x-morph="He,Vqp3ms:Sp1cs"\w*׃
+
+\v 7
+\w מְצָאֻ֧⁠נִי|lemma="מָצָא" strong="H4672" x-morph="He,Vqp3cp:Sp1cs"\w*
+\w הַ⁠שֹּׁמְרִ֛ים|lemma="שָׁמַר" strong="d:H8104" x-morph="He,Td:Vqrmpa"\w*
+\w הַ⁠סֹּבְבִ֥ים|lemma="סָבַב" strong="d:H5437" x-morph="He,Td:Vqrmpa"\w*
+\w בָּ⁠עִ֖יר|lemma="עִיר" strong="b:H5892b" x-morph="He,Rd:Ncfsa"\w*
+\w הִכּ֣וּ⁠נִי|lemma="נָכָה" strong="H5221" x-morph="He,Vhp3cp:Sp1cs"\w*
+\w פְצָע֑וּ⁠נִי|lemma="פָּצַע" strong="H6481" x-morph="He,Vqp3cp:Sp1cs"\w*
+\w נָשְׂא֤וּ|lemma="נָשָׂא" strong="H5375" x-morph="He,Vqp3cp"\w*
+\w אֶת|lemma="אֵת" strong="H0853" x-morph="He,To"\w*־\w רְדִידִ⁠י֙|lemma="רָדִיד" strong="H7289" x-morph="He,Ncmsc:Sp1cs"\w*
+\w מֵֽ⁠עָלַ֔⁠י|lemma="עַל" strong="m:H5921a" x-morph="He,R:R:Sp1cs"\w*
+\w שֹׁמְרֵ֖י|lemma="שָׁמַר" strong="H8104" x-morph="He,Vqrmpc"\w*
+\w הַ⁠חֹמֽוֹת|lemma="חוֹמָה" strong="d:H2346" x-morph="He,Td:Ncfpa"\w*׃
+
+\v 8
+\w הִשְׁבַּ֥עְתִּי|lemma="שָׁבַע" strong="H7650" x-morph="He,Vhp1cs"\w*
+\w אֶתְ⁠כֶ֖ם|lemma="אֵת" strong="H0853" x-morph="He,To:Sp2mp"\w*
+\w בְּנ֣וֹת|lemma="בַּת" strong="H1323" x-morph="He,Ncfpc"\w*
+\w יְרוּשָׁלִָ֑ם|lemma="יְרוּשָׁלִַ͏ם" strong="H3389" x-morph="He,Np"\w*
+\w אִֽם|lemma="אִם" strong="H0518a" x-morph="He,C"\w*־\w תִּמְצְאוּ֙|lemma="מָצָא" strong="H4672" x-morph="He,Vqi2mp"\w*
+\w אֶת|lemma="אֵת" strong="H0853" x-morph="He,To"\w*־\w דּוֹדִ֔⁠י|lemma="דּוֹד" strong="H1730" x-morph="He,Ncmsc:Sp1cs"\w*
+\w מַה|lemma="מָה" strong="H4100" x-morph="He,Ti"\w*־\w תַּגִּ֣ידוּ|lemma="נָגַד" strong="H5046" x-morph="He,Vhi2mp"\w*
+\w ל֔⁠וֹ|lemma="" strong="l" x-morph="He,R:Sp3ms"\w*
+\w שֶׁ⁠חוֹלַ֥ת|lemma="חָלָה" strong="s:H2470a" x-morph="He,Tr:Vqrfsc"\w*
+\w אַהֲבָ֖ה|lemma="אַהֲבָה" strong="H0160" x-morph="He,Ncfsa"\w*
+\w אָֽנִי|lemma="אֲנִי" strong="H0589" x-morph="He,Pp1cs"\w*׃
+
+\v 9
+\w מַה|lemma="מָה" strong="H4100" x-morph="He,Ti"\w*־\w דּוֹדֵ֣⁠ךְ|lemma="דּוֹד" strong="H1730" x-morph="He,Ncmsc:Sp2fs"\w*
+\w מִ⁠דּ֔וֹד|lemma="דּוֹד" strong="m:H1730" x-morph="He,R:Ncmsa"\w*
+\w הַ⁠יָּפָ֖ה|lemma="יָפֶה" strong="d:H3303" x-morph="He,Td:Aafsa"\w*
+\w בַּ⁠נָּשִׁ֑ים|lemma="אִשָּׁה" strong="b:H0802" x-morph="He,Rd:Ncfpa"\w*
+\w מַה|lemma="מָה" strong="H4100" x-morph="He,Ti"\w*־\w דּוֹדֵ֣⁠ךְ|lemma="דּוֹד" strong="H1730" x-morph="He,Ncmsc:Sp2fs"\w*
+\w מִ⁠דּ֔וֹד|lemma="דּוֹד" strong="m:H1730" x-morph="He,R:Ncmsa"\w*
+\w שֶׁ⁠כָּ֖כָה|lemma="כָּכָה" strong="s:H3602" x-morph="He,Tr:D"\w*
+\w הִשְׁבַּעְתָּֽ⁠נוּ|lemma="שָׁבַע" strong="H7650" x-morph="He,Vhp2fs:Sp1cp"\w*׃
+
+\v 10
+\w דּוֹדִ֥⁠י|lemma="דּוֹד" strong="H1730" x-morph="He,Ncmsc:Sp1cs"\w*
+\w צַח֙|lemma="צַח" strong="H6703" x-morph="He,Aamsa"\w*
+\w וְ⁠אָד֔וֹם|lemma="אָדֹם" strong="c:H0122a" x-morph="He,C:Aamsa"\w*
+\w דָּג֖וּל|lemma="דָּגַל" strong="H1713a" x-morph="He,Vqsmsa"\w*
+\w מֵ⁠רְבָבָֽה|lemma="רְבָבָה" strong="m:H7233" x-morph="He,R:Ncfsa"\w*׃
+
+\v 11
+\w רֹאשׁ֖⁠וֹ|lemma="רֹאשׁ" strong="H7218a" x-morph="He,Ncmsc:Sp3ms"\w*
+\w כֶּ֣תֶם|lemma="כֶּתֶם" strong="H3800" x-morph="He,Ncmsc"\w*
+\w פָּ֑ז|lemma="פָּז" strong="H6337" x-morph="He,Ncmsa"\w*
+\w קְוּצּוֹתָי⁠ו֙|lemma="קְוֻצָּה" strong="H6977" x-morph="He,Ncfpc:Sp3ms"\w*
+\w תַּלְתַּלִּ֔ים|lemma="תַּלְתַּל" strong="H8534" x-morph="He,Ncfpa"\w*
+\w שְׁחֹר֖וֹת|lemma="שָׁחֹר" strong="H7838" x-morph="He,Aafpa"\w*
+\w כָּ⁠עוֹרֵֽב|lemma="עֹרֵב" strong="k:H6158" x-morph="He,Rd:Ncmsa"\w*׃
+
+\v 12
+\w עֵינָ֕י⁠ו|lemma="עַיִן" strong="H5869a" x-morph="He,Ncbdc:Sp3ms"\w*
+\w כְּ⁠יוֹנִ֖ים|lemma="יוֹנָה" strong="k:H3123" x-morph="He,R:Ncfpa"\w*
+\w עַל|lemma="עַל" strong="H5921a" x-morph="He,R"\w*־\w אֲפִ֣יקֵי|lemma="אָפִיק" strong="H0650" x-morph="He,Ncmpc"\w*
+\w מָ֑יִם|lemma="מַיִם" strong="H4325" x-morph="He,Ncmpa"\w*
+\w רֹֽחֲצוֹת֙|lemma="רָחַץ" strong="H7364" x-morph="He,Vqrfpa"\w*
+\w בֶּֽ⁠חָלָ֔ב|lemma="חָלָב" strong="b:H2461" x-morph="He,R:Ncmsa"\w*
+\w יֹשְׁב֖וֹת|lemma="יָשַׁב" strong="H3427" x-morph="He,Vqrfpa"\w*
+\w עַל|lemma="עַל" strong="H5921a" x-morph="He,R"\w*־\w מִלֵּֽאת|lemma="מִלֵּאת" strong="H4402" x-morph="He,Ncfsa"\w*׃
+
+\v 13
+\w לְחָיָ⁠ו֙|lemma="לְחִי" strong="H3895" x-morph="He,Ncbdc:Sp3ms"\w*
+\w כַּ⁠עֲרוּגַ֣ת|lemma="עֲרוּגָה" strong="k:H6170" x-morph="He,R:Ncfsc"\w*
+\w הַ⁠בֹּ֔שֶׂם|lemma="בֶּשֶׂם" strong="d:H1314" x-morph="He,Td:Ncmsa"\w*
+\w מִגְדְּל֖וֹת|lemma="מִגְדָּל" strong="H4026" x-morph="He,Ncbpc"\w*
+\w מֶרְקָחִ֑ים|lemma="מֶרְקָח" strong="H4840" x-morph="He,Ncmpa"\w*
+\w שִׂפְתוֹתָי⁠ו֙|lemma="שָׂפָה" strong="H8193" x-morph="He,Ncfpc:Sp3ms"\w*
+\w שֽׁוֹשַׁנִּ֔ים|lemma="שׁוּשַׁן" strong="H7799" x-morph="He,Ncbpa"\w*
+\w נֹטְפ֖וֹת|lemma="נָטַף" strong="H5197" x-morph="He,Vqrfpa"\w*
+\w מ֥וֹר|lemma="מֹר" strong="H4753" x-morph="He,Ncmsa"\w*
+\w עֹבֵֽר|lemma="עָבַר" strong="H5674a" x-morph="He,Vqrmsa"\w*׃
+
+\v 14
+\w יָדָי⁠ו֙|lemma="יָד" strong="H3027" x-morph="He,Ncbdc:Sp3ms"\w*
+\w גְּלִילֵ֣י|lemma="גָּלִיל" strong="H1550b" x-morph="He,Ncmpc"\w*
+\w זָהָ֔ב|lemma="זָהָב" strong="H2091" x-morph="He,Ncmsa"\w*
+\w מְמֻלָּאִ֖ים|lemma="מָלֵא" strong="H4390" x-morph="He,VPsmpa"\w*
+\w בַּ⁠תַּרְשִׁ֑ישׁ|lemma="תַּרְשִׁישׁ" strong="b:H8658" x-morph="He,Rd:Ncmsa"\w*
+\w מֵעָי⁠ו֙|lemma="מֵעֶה" strong="H4578" x-morph="He,Ncmpc:Sp3ms"\w*
+\w עֶ֣שֶׁת|lemma="עֶשֶׁת" strong="H6247" x-morph="He,Ncmsc"\w*
+\w שֵׁ֔ן|lemma="שֵׁן" strong="H8127" x-morph="He,Ncbsa"\w*
+\w מְעֻלֶּ֖פֶת|lemma="עָלַף" strong="H5968" x-morph="He,VPsfsa"\w*
+\w סַפִּירִֽים|lemma="סַפִּיר" strong="H5601" x-morph="He,Ncmpa"\w*׃
+
+\v 15
+\w שׁוֹקָי⁠ו֙|lemma="שׁוֹק" strong="H7785" x-morph="He,Ncfdc:Sp3ms"\w*
+\w עַמּ֣וּדֵי|lemma="עַמּוּד" strong="H5982" x-morph="He,Ncmpc"\w*
+\w שֵׁ֔שׁ|lemma="שֵׁשׁ" strong="H8336a" x-morph="He,Acfsa"\w*
+\w מְיֻסָּדִ֖ים|lemma="יָסַד" strong="H3245" x-morph="He,VPsmpa"\w*
+\w עַל|lemma="עַל" strong="H5921a" x-morph="He,R"\w*־\w אַדְנֵי|lemma="אֶדֶן" strong="H0134" x-morph="He,Ncmpc"\w*־\w פָ֑ז|lemma="פָּז" strong="H6337" x-morph="He,Ncmsa"\w*
+\w מַרְאֵ֨⁠הוּ֙|lemma="מַרְאֶה" strong="H4758" x-morph="He,Ncmsc:Sp3ms"\w*
+\w כַּ⁠לְּבָנ֔וֹן|lemma="לְבָנוֹן" strong="k:H3844" x-morph="He,Rd:Np"\w*
+\w בָּח֖וּר|lemma="בָּחַר" strong="H0977" x-morph="He,Vqsmsa"\w*
+\w כָּ⁠אֲרָזִֽים|lemma="אֶרֶז" strong="k:H0730" x-morph="He,Rd:Ncmpa"\w*׃
+
+\v 16
+\w חִכּ⁠וֹ֙|lemma="חֵךְ" strong="H2441" x-morph="He,Ncmsc:Sp3ms"\w*
+\w מַֽמְתַקִּ֔ים|lemma="מַמְתַּק" strong="H4477" x-morph="He,Ncmpa"\w*
+\w וְ⁠כֻלּ֖⁠וֹ|lemma="כֹּל" strong="c:H3605" x-morph="He,C:Ncmsc:Sp3ms"\w*
+\w מַחֲמַדִּ֑ים|lemma="מַחְמָד" strong="H4261" x-morph="He,Ncmpa"\w*
+\w זֶ֤ה|lemma="זֶה" strong="H2088" x-morph="He,Pdxms"\w*
+\w דוֹדִ⁠י֙|lemma="דּוֹד" strong="H1730" x-morph="He,Ncmsc:Sp1cs"\w*
+\w וְ⁠זֶ֣ה|lemma="זֶה" strong="c:H2088" x-morph="He,C:Pdxms"\w*
+\w רֵעִ֔⁠י|lemma="רֵעַ" strong="H7453" x-morph="He,Ncmsc:Sp1cs"\w*
+\w בְּנ֖וֹת|lemma="בַּת" strong="H1323" x-morph="He,Ncfpc"\w*
+\w יְרוּשָׁלִָֽם|lemma="יְרוּשָׁלִַ͏ם" strong="H3389" x-morph="He,Np"\w*׃
+
+\c 6
+\p
+
+\v 1
+\w אָ֚נָה|lemma="אָן" strong="H0575" x-morph="He,D"\w*
+\w הָלַ֣ךְ|lemma="הָלַךְ" strong="H1980" x-morph="He,Vqp3ms"\w*
+\w דּוֹדֵ֔⁠ךְ|lemma="דּוֹד" strong="H1730" x-morph="He,Ncmsc:Sp2fs"\w*
+\w הַ⁠יָּפָ֖ה|lemma="יָפֶה" strong="d:H3303" x-morph="He,Td:Aafsa"\w*
+\w בַּ⁠נָּשִׁ֑ים|lemma="אִשָּׁה" strong="b:H0802" x-morph="He,Rd:Ncfpa"\w*
+\w אָ֚נָה|lemma="אָן" strong="H0575" x-morph="He,D"\w*
+\w פָּנָ֣ה|lemma="פָּנָה" strong="H6437" x-morph="He,Vqp3ms"\w*
+\w דוֹדֵ֔⁠ךְ|lemma="דּוֹד" strong="H1730" x-morph="He,Ncmsc:Sp2fs"\w*
+\w וּ⁠נְבַקְשֶׁ֖⁠נּוּ|lemma="בָּקַשׁ" strong="c:H1245" x-morph="He,C:Vpi1cp:Sp3ms"\w*
+\w עִמָּֽ⁠ךְ|lemma="עִם" strong="H5973a" x-morph="He,R:Sp2fs"\w*׃
+
+\v 2
+\w דּוֹדִ⁠י֙|lemma="דּוֹד" strong="H1730" x-morph="He,Ncmsc:Sp1cs"\w*
+\w יָרַ֣ד|lemma="יָרַד" strong="H3381" x-morph="He,Vqp3ms"\w*
+\w לְ⁠גַנּ֔⁠וֹ|lemma="גַּן" strong="l:H1588" x-morph="He,R:Ncbsc:Sp3ms"\w*
+\w לַ⁠עֲרוּג֖וֹת|lemma="עֲרוּגָה" strong="l:H6170" x-morph="He,R:Ncfpc"\w*
+\w הַ⁠בֹּ֑שֶׂם|lemma="בֶּשֶׂם" strong="d:H1314" x-morph="He,Td:Ncmsa"\w*
+\w לִ⁠רְעוֹת֙|lemma="רָעָה" strong="l:H7462b" x-morph="He,R:Vqc"\w*
+\w בַּ⁠גַּנִּ֔ים|lemma="גַּן" strong="b:H1588" x-morph="He,Rd:Ncbpa"\w*
+\w וְ⁠לִ⁠לְקֹ֖ט|lemma="לָקַט" strong="c:l:H3950" x-morph="He,C:R:Vqc"\w*
+\w שֽׁוֹשַׁנִּֽים|lemma="שׁוּשַׁן" strong="H7799" x-morph="He,Ncbpa"\w*׃
+
+\v 3
+\w אֲנִ֤י|lemma="אֲנִי" strong="H0589" x-morph="He,Pp1cs"\w*
+\w לְ⁠דוֹדִ⁠י֙|lemma="דּוֹד" strong="l:H1730" x-morph="He,R:Ncmsc:Sp1cs"\w*
+\w וְ⁠דוֹדִ֣⁠י|lemma="דּוֹד" strong="c:H1730" x-morph="He,C:Ncmsc:Sp1cs"\w*
+\w לִ֔⁠י|lemma="" strong="l" x-morph="He,R:Sp1cs"\w*
+\w הָ⁠רֹעֶ֖ה|lemma="רָעָה" strong="d:H7462b" x-morph="He,Td:Vqrmsa"\w*
+\w בַּ⁠שׁוֹשַׁנִּֽים|lemma="שׁוּשַׁן" strong="b:H7799" x-morph="He,Rd:Ncbpa"\w*׃ס
+
+\v 4
+\w יָפָ֨ה|lemma="יָפֶה" strong="H3303" x-morph="He,Aafsa"\w*
+\w אַ֤תְּ|lemma="אַתָּה" strong="H0859c" x-morph="He,Pp2fs"\w*
+\w רַעְיָתִ⁠י֙|lemma="רַעְיָה" strong="H7474" x-morph="He,Ncfsc:Sp1cs"\w*
+\w כְּ⁠תִרְצָ֔ה|lemma="תִּרְצָה" strong="k:H8656" x-morph="He,R:Np"\w*
+\w נָאוָ֖ה|lemma="נָאוֶה" strong="H5000" x-morph="He,Aafsa"\w*
+\w כִּ⁠ירוּשָׁלִָ֑ם|lemma="יְרוּשָׁלִַ͏ם" strong="k:H3389" x-morph="He,R:Np"\w*
+\w אֲיֻמָּ֖ה|lemma="אָיֹם" strong="H0366" x-morph="He,Aafsa"\w*
+\w כַּ⁠נִּדְגָּלֽוֹת|lemma="דָּגַל" strong="k:H1713b" x-morph="He,Rd:VNrfpa"\w*׃
+
+\v 5
+\w הָסֵ֤בִּי|lemma="סָבַב" strong="H5437" x-morph="He,Vhv2fs"\w*
+\w עֵינַ֨יִ⁠ךְ֙|lemma="עַיִן" strong="H5869a" x-morph="He,Ncbdc:Sp2fs"\w*
+\w מִ⁠נֶּגְדִּ֔⁠י|lemma="נֶגֶד" strong="m:H5048" x-morph="He,R:R:Sp1cs"\w*
+\w שֶׁ֥⁠הֵ֖ם|lemma="הֵם" strong="s:H1992" x-morph="He,Tr:Sp3mp"\w*
+\w הִרְהִיבֻ֑⁠נִי|lemma="רָהַב" strong="H7292" x-morph="He,Vhp3cp:Sp1cs"\w*
+\w שַׂעְרֵ⁠ךְ֙|lemma="שֵׂעָר" strong="H8181" x-morph="He,Ncmsc:Sp2fs"\w*
+\w כְּ⁠עֵ֣דֶר|lemma="עֵדֶר" strong="k:H5739" x-morph="He,R:Ncmsc"\w*
+\w הָֽ⁠עִזִּ֔ים|lemma="עֵז" strong="d:H5795" x-morph="He,Td:Ncfpa"\w*
+\w שֶׁ⁠גָּלְשׁ֖וּ|lemma="גָּלַשׁ" strong="s:H1570" x-morph="He,Tr:Vqp3cp"\w*
+\w מִן|lemma="מִן" strong="H4480a" x-morph="He,R"\w*־\w הַ⁠גִּלְעָֽד|lemma="גִּלְעָד" strong="d:H1568" x-morph="He,Td:Np"\w*׃
+
+\v 6
+\w שִׁנַּ֨יִ⁠ךְ֙|lemma="שֵׁן" strong="H8127" x-morph="He,Ncbdc:Sp2fs"\w*
+\w כְּ⁠עֵ֣דֶר|lemma="עֵדֶר" strong="k:H5739" x-morph="He,R:Ncmsc"\w*
+\w הָֽ⁠רְחֵלִ֔ים|lemma="רָחֵל" strong="d:H7353" x-morph="He,Td:Ncfpa"\w*
+\w שֶׁ⁠עָל֖וּ|lemma="עָלָה" strong="s:H5927" x-morph="He,Tr:Vqp3cp"\w*
+\w מִן|lemma="מִן" strong="H4480a" x-morph="He,R"\w*־\w הָ⁠רַחְצָ֑ה|lemma="רַחְצָה" strong="d:H7367" x-morph="He,Td:Ncfsa"\w*
+\w שֶׁ⁠כֻּלָּ⁠ם֙|lemma="כֹּל" strong="s:H3605" x-morph="He,Tr:Ncmsc:Sp3mp"\w*
+\w מַתְאִימ֔וֹת|lemma="תָּאַם" strong="H8382" x-morph="He,Vhrfpa"\w*
+\w וְ⁠שַׁכֻּלָ֖ה|lemma="שַׁכּוּל" strong="c:H7909" x-morph="He,C:Aafsa"\w*
+\w אֵ֥ין|lemma="אַיִן" strong="H0369" x-morph="He,Tn"\w*
+\w בָּ⁠הֶֽם|lemma="" strong="b" x-morph="He,R:Sp3mp"\w*׃
+
+\v 7
+\w כְּ⁠פֶ֤לַח|lemma="פֶּלַח" strong="k:H6400" x-morph="He,R:Ncfsc"\w*
+\w הָ⁠רִמּוֹן֙|lemma="רִמּוֹן" strong="d:H7416" x-morph="He,Td:Ncmsa"\w*
+\w רַקָּתֵ֔⁠ךְ|lemma="רַקָּה" strong="H7541" x-morph="He,Ncfsc:Sp2fs"\w*
+\w מִ⁠בַּ֖עַד|lemma="בְּעַד" strong="m:H1157" x-morph="He,R:R"\w*
+\w לְ⁠צַמָּתֵֽ⁠ךְ|lemma="צַמָּה" strong="l:H6777" x-morph="He,R:Ncfsc:Sp2fs"\w*׃
+
+\v 8
+\w שִׁשִּׁ֥ים|lemma="שִׁשִּׁים" strong="H8346" x-morph="He,Acbpa"\w*
+\w הֵ֨מָּה֙|lemma="הֵם" strong="H1992" x-morph="He,Pp3mp"\w*
+\w מְּלָכ֔וֹת|lemma="מַלְכָּה" strong="H4436" x-morph="He,Ncfpa"\w*
+\w וּ⁠שְׁמֹנִ֖ים|lemma="שְׁמֹנִים" strong="c:H8084" x-morph="He,C:Acbpa"\w*
+\w פִּֽילַגְשִׁ֑ים|lemma="פִּילֶגֶשׁ" strong="H6370" x-morph="He,Ncfpa"\w*
+\w וַ⁠עֲלָמ֖וֹת|lemma="עַלְמָה" strong="c:H5959" x-morph="He,C:Ncfpa"\w*
+\w אֵ֥ין|lemma="אַיִן" strong="H0369" x-morph="He,Tn"\w*
+\w מִסְפָּֽר|lemma="מִסְפָּר" strong="H4557" x-morph="He,Ncmsa"\w*׃
+
+\v 9
+\w אַחַ֥ת|lemma="אֶחָד" strong="H0259" x-morph="He,Acfsa"\w*
+\w הִיא֙|lemma="הוּא" strong="H1931" x-morph="He,Pp3fs"\w*
+\w יוֹנָתִ֣⁠י|lemma="יוֹנָה" strong="H3123" x-morph="He,Ncfsc:Sp1cs"\w*
+\w תַמָּתִ֔⁠י|lemma="תָּם" strong="H8535" x-morph="He,Aafsc:Sp1cs"\w*
+\w אַחַ֥ת|lemma="אֶחָד" strong="H0259" x-morph="He,Acfsa"\w*
+\w הִיא֙|lemma="הוּא" strong="H1931" x-morph="He,Pp3fs"\w*
+\w לְ⁠אִמָּ֔⁠הּ|lemma="אֵם" strong="l:H0517" x-morph="He,R:Ncfsc:Sp3fs"\w*
+\w בָּרָ֥ה|lemma="בַּר" strong="H1249" x-morph="He,Aafsa"\w*
+\w הִ֖יא|lemma="הוּא" strong="H1931" x-morph="He,Pp3fs"\w*
+\w לְ⁠יֽוֹלַדְתָּ֑⁠הּ|lemma="יָלַד" strong="l:H3205" x-morph="He,R:Vqrfsc:Sp3fs"\w*
+\w רָא֤וּ⁠הָ|lemma="רָאָה" strong="H7200" x-morph="He,Vqp3cp:Sp3fs"\w*
+\w בָנוֹת֙|lemma="בַּת" strong="H1323" x-morph="He,Ncfpa"\w*
+\w וַֽ⁠יְאַשְּׁר֔וּ⁠הָ|lemma="אָשַׁר" strong="c:H0833" x-morph="He,C:Vpw3mp:Sp3fs"\w*
+\w מְלָכ֥וֹת|lemma="מַלְכָּה" strong="H4436" x-morph="He,Ncfpa"\w*
+\w וּ⁠פִֽילַגְשִׁ֖ים|lemma="פִּילֶגֶשׁ" strong="c:H6370" x-morph="He,C:Ncfpa"\w*
+\w וַֽ⁠יְהַלְלֽוּ⁠הָ|lemma="הָלַל" strong="c:H1984b" x-morph="He,C:Vpw3mp:Sp3fs"\w*׃ס
+
+\v 10
+\w מִי|lemma="מִי" strong="H4310" x-morph="He,Ti"\w*־\w זֹ֥את|lemma="זֹאת" strong="H2063" x-morph="He,Pdxfs"\w*
+\w הַ⁠נִּשְׁקָפָ֖ה|lemma="שָׁקַף" strong="d:H8259" x-morph="He,Td:VNrfsa"\w*
+\w כְּמוֹ|lemma="כְּמוֹ" strong="H3644" x-morph="He,R"\w*־\w שָׁ֑חַר|lemma="שַׁחַר" strong="H7837" x-morph="He,Ncmsa"\w*
+\w יָפָ֣ה|lemma="יָפֶה" strong="H3303" x-morph="He,Aafsa"\w*
+\w כַ⁠לְּבָנָ֗ה|lemma="לְבָנָה" strong="k:H3842" x-morph="He,Rd:Ncfsa"\w*
+\w בָּרָה֙|lemma="בַּר" strong="H1249" x-morph="He,Aafsa"\w*
+\w כַּֽ⁠חַמָּ֔ה|lemma="חַמָּה" strong="k:H2535" x-morph="He,Rd:Ncfsa"\w*
+\w אֲיֻמָּ֖ה|lemma="אָיֹם" strong="H0366" x-morph="He,Aafsa"\w*
+\w כַּ⁠נִּדְגָּלֽוֹת|lemma="דָּגַל" strong="k:H1713b" x-morph="He,Rd:VNrfpa"\w*׃ס
+
+\v 11
+\w אֶל|lemma="אֵל" strong="H0413" x-morph="He,R"\w*־\w גִּנַּ֤ת|lemma="גִּנָּה" strong="H1594" x-morph="He,Ncfsc"\w*
+\w אֱגוֹז֙|lemma="אֱגוֹז" strong="H0093" x-morph="He,Ncmsa"\w*
+\w יָרַ֔דְתִּי|lemma="יָרַד" strong="H3381" x-morph="He,Vqp1cs"\w*
+\w לִ⁠רְא֖וֹת|lemma="רָאָה" strong="l:H7200" x-morph="He,R:Vqc"\w*
+\w בְּ⁠אִבֵּ֣י|lemma="אֵב" strong="b:H0003" x-morph="He,R:Ncmpc"\w*
+\w הַ⁠נָּ֑חַל|lemma="נַחַל" strong="d:H5158a" x-morph="He,Td:Ncmsa"\w*
+\w לִ⁠רְאוֹת֙|lemma="רָאָה" strong="l:H7200" x-morph="He,R:Vqc"\w*
+\w הֲ⁠פָֽרְחָ֣ה|lemma="פָּרַח" strong="i:H6524a" x-morph="He,Td:Vqp3fs"\w*
+\w הַ⁠גֶּ֔פֶן|lemma="גֶּפֶן" strong="d:H1612" x-morph="He,Td:Ncbsa"\w*
+\w הֵנֵ֖צוּ|lemma="נוּץ" strong="H5132b" x-morph="He,Vhp3cp"\w*
+\w הָ⁠רִמֹּנִֽים|lemma="רִמּוֹן" strong="d:H7416" x-morph="He,Td:Ncmpa"\w*׃
+
+\v 12
+\w לֹ֣א|lemma="לֹא" strong="H3808" x-morph="He,Tn"\w*
+\w יָדַ֔עְתִּי|lemma="יָדַע" strong="H3045" x-morph="He,Vqp1cs"\w*
+\w נַפְשִׁ֣⁠י|lemma="נֶפֶשׁ" strong="H5315" x-morph="He,Ncbsc:Sp1cs"\w*
+\w שָׂמַ֔תְ⁠נִי|lemma="שׂוּם" strong="H7760a" x-morph="He,Vqp3fs:Sp1cs"\w*
+\w מַרְכְּב֖וֹת|lemma="מֶרְכָּבָה" strong="H4818" x-morph="He,Ncfpc"\w*
+\w עַמִּ⁠י|lemma="עַם" strong="H5971a" x-morph="He,Ncmsc:Sp1cs"\w*־\w נָדִֽיב|lemma="נָדִיב" strong="H5081" x-morph="He,Aamsa"\w*׃
+
+
+\p
+\v 13
+
+\w שׁ֤וּבִי|lemma="שׁוּב" strong="H7725" x-morph="He,Vqv2fs"\w*
+\w שׁ֨וּבִי֙|lemma="שׁוּב" strong="H7725" x-morph="He,Vqv2fs"\w*
+\w הַ⁠שּׁ֣וּלַמִּ֔ית|lemma="שׁוּלַמִּית" strong="d:H7759" x-morph="He,Td:Ngfsa"\w*
+\w שׁ֥וּבִי|lemma="שׁוּב" strong="H7725" x-morph="He,Vqv2fs"\w*
+\w שׁ֖וּבִי|lemma="שׁוּב" strong="H7725" x-morph="He,Vqv2fs"\w*
+\w וְ⁠נֶחֱזֶה|lemma="חָזָה" strong="c:H2372" x-morph="He,C:Vqi1cp"\w*־\w בָּ֑⁠ךְ|lemma="" strong="b" x-morph="He,R:Sp2fs"\w*
+\w מַֽה|lemma="מָה" strong="H4100" x-morph="He,Ti"\w*־\w תֶּחֱזוּ֙|lemma="חָזָה" strong="H2372" x-morph="He,Vqi2mp"\w*
+\w בַּ⁠שּׁ֣וּלַמִּ֔ית|lemma="שׁוּלַמִּית" strong="b:H7759" x-morph="He,Rd:Ngfsa"\w*
+\w כִּ⁠מְחֹלַ֖ת|lemma="מְחֹלָה" strong="k:H4246" x-morph="He,R:Ncfsc"\w*
+\w הַֽ⁠מַּחֲנָֽיִם|lemma="מַחֲנֶה" strong="d:H4264" x-morph="He,Td:Ncbda"\w*׃
+
+
+\c 7
+\p
+\v 1
+
+\w מַה|lemma="מָה" strong="H4100" x-morph="He,Ti"\w*־\w יָּפ֧וּ|lemma="יָפֶה" strong="H3303" x-morph="He,Vqp3cp"\w*
+\w פְעָמַ֛יִ⁠ךְ|lemma="פַּעַם" strong="H6471" x-morph="He,Ncfdc:Sp2fs"\w*
+\w בַּ⁠נְּעָלִ֖ים|lemma="נַעַל" strong="b:H5275" x-morph="He,Rd:Ncfpa"\w*
+\w בַּת|lemma="בַּת" strong="H1323" x-morph="He,Ncfsc"\w*־\w נָדִ֑יב|lemma="נָדִיב" strong="H5081" x-morph="He,Aamsa"\w*
+\w חַמּוּקֵ֣י|lemma="חַמּוּק" strong="H2542" x-morph="He,Ncmpc"\w*
+\w יְרֵכַ֔יִ⁠ךְ|lemma="יָרֵךְ" strong="H3409" x-morph="He,Ncfdc:Sp2fs"\w*
+\w כְּמ֣וֹ|lemma="כְּמוֹ" strong="H3644" x-morph="He,R"\w*
+\w חֲלָאִ֔ים|lemma="חֲלִי" strong="H2481" x-morph="He,Ncmpa"\w*
+\w מַעֲשֵׂ֖ה|lemma="מַעֲשֶׂה" strong="H4639" x-morph="He,Ncmsc"\w*
+\w יְדֵ֥י|lemma="יָד" strong="H3027" x-morph="He,Ncbdc"\w*
+\w אָמָּֽן|lemma="אָמָן" strong="H0542" x-morph="He,Ncmsa"\w*׃
+
+\v 2
+
+\w שָׁרְרֵ⁠ךְ֙|lemma="שֹׁרֶר" strong="H8326" x-morph="He,Ncmsc:Sp2fs"\w*
+\w אַגַּ֣ן|lemma="אַגָּן" strong="H0101" x-morph="He,Ncmsc"\w*
+\w הַ⁠סַּ֔הַר|lemma="סַהַר" strong="d:H5469" x-morph="He,Td:Ncmsa"\w*
+\w אַל|lemma="אַל" strong="H0408" x-morph="He,Tn"\w*־\w יֶחְסַ֖ר|lemma="חָסֵר" strong="H2637" x-morph="He,Vqi3ms"\w*
+\w הַ⁠מָּ֑זֶג|lemma="מֶזֶג" strong="d:H4197" x-morph="He,Td:Ncmsa"\w*
+\w בִּטְנֵ⁠ךְ֙|lemma="בֶּטֶן" strong="H0990" x-morph="He,Ncfsc:Sp2fs"\w*
+\w עֲרֵמַ֣ת|lemma="עָרֵם" strong="H6194" x-morph="He,Ncfsc"\w*
+\w חִטִּ֔ים|lemma="חִטָּה" strong="H2406" x-morph="He,Ncfpa"\w*
+\w סוּגָ֖ה|lemma="סוּג" strong="H5473" x-morph="He,VQsfsa"\w*
+\w בַּ⁠שּׁוֹשַׁנִּֽים|lemma="שׁוּשַׁן" strong="b:H7799" x-morph="He,Rd:Ncbpa"\w*׃
+
+\v 3
+
+\w שְׁנֵ֥י|lemma="שְׁנַיִם" strong="H8147" x-morph="He,Acmdc"\w*
+\w שָׁדַ֛יִ⁠ךְ|lemma="שַׁד" strong="H7699a" x-morph="He,Ncmdc:Sp2fs"\w*
+\w כִּ⁠שְׁנֵ֥י|lemma="שְׁנַיִם" strong="k:H8147" x-morph="He,R:Acmdc"\w*
+\w עֳפָרִ֖ים|lemma="עֹפֶר" strong="H6082" x-morph="He,Ncmpa"\w*
+\w תָּאֳמֵ֥י|lemma="תָּאוֹם" strong="H8380" x-morph="He,Ncmpc"\w*
+\w צְבִיָּֽה|lemma="צְבִיָּה" strong="H6646" x-morph="He,Ncfsa"\w*׃
+
+\v 4
+
+\w צַוָּארֵ֖⁠ךְ|lemma="צַוָּאר" strong="H6677a" x-morph="He,Ncmsc:Sp2fs"\w*
+\w כְּ⁠מִגְדַּ֣ל|lemma="מִגְדָּל" strong="k:H4026" x-morph="He,R:Ncbsc"\w*
+\w הַ⁠שֵּׁ֑ן|lemma="שֵׁן" strong="d:H8127" x-morph="He,Td:Ncbsa"\w*
+\w עֵינַ֜יִ⁠ךְ|lemma="עַיִן" strong="H5869a" x-morph="He,Ncbdc:Sp2fs"\w*
+\w בְּרֵכ֣וֹת|lemma="בְּרֵכָה" strong="H1295" x-morph="He,Ncfpa"\w*
+\w בְּ⁠חֶשְׁבּ֗וֹן|lemma="חֶשְׁבּוֹן" strong="b:H2809" x-morph="He,R:Np"\w*
+\w עַל|lemma="עַל" strong="H5921a" x-morph="He,R"\w*־\w שַׁ֨עַר֙|lemma="שַׁעַר" strong="H8179" x-morph="He,Ncmsc"\w*
+\w בַּת|lemma="בַּת רַבִּים" strong="H1337" x-morph="He,Np"\w*־\w רַבִּ֔ים|lemma="בַּת רַבִּים" strong="H1337" x-morph="He,Np"\w*
+\w אַפֵּ⁠ךְ֙|lemma="אַף" strong="H0639" x-morph="He,Ncmsc:Sp2fs"\w*
+\w כְּ⁠מִגְדַּ֣ל|lemma="מִגְדָּל" strong="k:H4026" x-morph="He,R:Ncbsc"\w*
+\w הַ⁠לְּבָנ֔וֹן|lemma="לְבָנוֹן" strong="d:H3844" x-morph="He,Td:Np"\w*
+\w צוֹפֶ֖ה|lemma="צָפָה" strong="H6822" x-morph="He,Vqrmsa"\w*
+\w פְּנֵ֥י|lemma="פָּנִים" strong="H6440" x-morph="He,Ncbpc"\w*
+\w דַמָּֽשֶׂק|lemma="דַּמֶּשֶׂק" strong="H1834" x-morph="He,Np"\w*׃
+
+\v 5
+
+\w רֹאשֵׁ֤⁠ךְ|lemma="רֹאשׁ" strong="H7218a" x-morph="He,Ncmsc:Sp2fs"\w*
+\w עָלַ֨יִ⁠ךְ֙|lemma="עַל" strong="H5921a" x-morph="He,R:Sp2fs"\w*
+\w כַּ⁠כַּרְמֶ֔ל|lemma="כַּרְמֶל" strong="k:H3760" x-morph="He,Rd:Np"\w*
+\w וְ⁠דַלַּ֥ת|lemma="דַּלָּה" strong="c:H1803a" x-morph="He,C:Ncfsc"\w*
+\w רֹאשֵׁ֖⁠ךְ|lemma="רֹאשׁ" strong="H7218a" x-morph="He,Ncmsc:Sp2fs"\w*
+\w כָּ⁠אַרְגָּמָ֑ן|lemma="אַרְגָּמָן" strong="k:H0713" x-morph="He,Rd:Ncmsa"\w*
+\w מֶ֖לֶךְ|lemma="מֶלֶךְ" strong="H4428" x-morph="He,Ncmsa"\w*
+\w אָס֥וּר|lemma="אָסַר" strong="H0631" x-morph="He,Vqsmsa"\w*
+\w בָּ⁠רְהָטִֽים|lemma="רַהַט" strong="b:H7298b" x-morph="He,Rd:Ncmpa"\w*׃
+
+\v 6
+
+\w מַה|lemma="מָה" strong="H4100" x-morph="He,Ti"\w*־\w יָּפִית֙|lemma="יָפָה" strong="H3302" x-morph="He,Vqp2fs"\w*
+\w וּ⁠מַה|lemma="מָה" strong="c:H4100" x-morph="He,C:Ti"\w*־\w נָּעַ֔מְתְּ|lemma="נָעֵם" strong="H5276" x-morph="He,Vqp2fs"\w*
+\w אַהֲבָ֖ה|lemma="אַהֲבָה" strong="H0160" x-morph="He,Ncfsa"\w*
+\w בַּ⁠תַּֽעֲנוּגִֽים|lemma="תַּעֲנוּג" strong="b:H8588" x-morph="He,Rd:Ncmpa"\w*׃
+
+\v 7
+
+\w זֹ֤את|lemma="זֹאת" strong="H2063" x-morph="He,Pdxfs"\w*
+\w קֽוֹמָתֵ⁠ךְ֙|lemma="קוֹמָה" strong="H6967" x-morph="He,Ncfsc:Sp2fs"\w*
+\w דָּֽמְתָ֣ה|lemma="דָּמָה" strong="H1819" x-morph="He,Vqp3fs"\w*
+\w לְ⁠תָמָ֔ר|lemma="תָּמָר" strong="l:H8558" x-morph="He,R:Ncmsa"\w*
+\w וְ⁠שָׁדַ֖יִ⁠ךְ|lemma="שַׁד" strong="c:H7699a" x-morph="He,C:Ncmdc:Sp2fs"\w*
+\w לְ⁠אַשְׁכֹּלֽוֹת|lemma="אֶשְׁכּוֹל" strong="l:H0811" x-morph="He,R:Ncmpa"\w*׃
+
+\v 8
+
+\w אָמַ֨רְתִּי֙|lemma="אָמַר" strong="H0559" x-morph="He,Vqp1cs"\w*
+\w אֶעֱלֶ֣ה|lemma="עָלָה" strong="H5927" x-morph="He,Vqh1cs"\w*
+\w בְ⁠תָמָ֔ר|lemma="תָּמָר" strong="b:H8558" x-morph="He,R:Ncmsa"\w*
+\w אֹֽחֲזָ֖ה|lemma="אָחַז" strong="H0270" x-morph="He,Vqh1cs"\w*
+\w בְּ⁠סַנְסִנָּ֑י⁠ו|lemma="סַנְסִן" strong="b:H5577" x-morph="He,R:Ncmpc:Sp3ms"\w*
+\w וְ⁠יִֽהְיוּ|lemma="הָיָה" strong="c:H1961" x-morph="He,C:Vqj3mp"\w*־\w נָ֤א|lemma="נָא" strong="H4994" x-morph="He,Te"\w*
+\w שָׁדַ֨יִ⁠ךְ֙|lemma="שַׁד" strong="H7699a" x-morph="He,Ncmdc:Sp2fs"\w*
+\w כְּ⁠אֶשְׁכְּל֣וֹת|lemma="אֶשְׁכּוֹל" strong="k:H0811" x-morph="He,R:Ncmpc"\w*
+\w הַ⁠גֶּ֔פֶן|lemma="גֶּפֶן" strong="d:H1612" x-morph="He,Td:Ncbsa"\w*
+\w וְ⁠רֵ֥יחַ|lemma="רֵיחַ" strong="c:H7381" x-morph="He,C:Ncmsc"\w*
+\w אַפֵּ֖⁠ךְ|lemma="אַף" strong="H0639" x-morph="He,Ncmsc:Sp2fs"\w*
+\w כַּ⁠תַּפּוּחִֽים|lemma="תַּפּוּחַ" strong="k:H8598" x-morph="He,Rd:Ncmpa"\w*׃
+
+\v 9
+
+\w וְ⁠חִכֵּ֕⁠ךְ|lemma="חֵךְ" strong="c:H2441" x-morph="He,C:Ncmsc:Sp2fs"\w*
+\w כְּ⁠יֵ֥ין|lemma="יַיִן" strong="k:H3196" x-morph="He,R:Ncmsc"\w*
+\w הַ⁠טּ֛וֹב|lemma="טוֹב" strong="d:H2896a" x-morph="He,Td:Aamsa"\w*
+\w הוֹלֵ֥ךְ|lemma="הָלַךְ" strong="H1980" x-morph="He,Vqrmsa"\w*
+\w לְ⁠דוֹדִ֖⁠י|lemma="דּוֹד" strong="l:H1730" x-morph="He,R:Ncmsc:Sp1cs"\w*
+\w לְ⁠מֵישָׁרִ֑ים|lemma="מֵישָׁר" strong="l:H4339" x-morph="He,R:Ncmpa"\w*
+\w דּוֹבֵ֖ב|lemma="דָּבַב" strong="H1680" x-morph="He,Vqrmsa"\w*
+\w שִׂפְתֵ֥י|lemma="שָׂפָה" strong="H8193" x-morph="He,Ncfdc"\w*
+\w יְשֵׁנִֽים|lemma="יָשֵׁן" strong="H3462" x-morph="He,Aampa"\w*׃
+
+\v 10
+
+\w אֲנִ֣י|lemma="אֲנִי" strong="H0589" x-morph="He,Pp1cs"\w*
+\w לְ⁠דוֹדִ֔⁠י|lemma="דּוֹד" strong="l:H1730" x-morph="He,R:Ncmsc:Sp1cs"\w*
+\w וְ⁠עָלַ֖⁠י|lemma="עַל" strong="c:H5921a" x-morph="He,C:R:Sp1cs"\w*
+\w תְּשׁוּקָתֽ⁠וֹ|lemma="תְּשׁוּקָה" strong="H8669" x-morph="He,Ncfsc:Sp3ms"\w*׃ס
+
+\v 11
+
+\w לְכָ֤⁠ה|lemma="יָלַךְ" strong="H3212" x-morph="He,Vqv2ms:Sh"\w*
+\w דוֹדִ⁠י֙|lemma="דּוֹד" strong="H1730" x-morph="He,Ncmsc:Sp1cs"\w*
+\w נֵצֵ֣א|lemma="יָצָא" strong="H3318" x-morph="He,Vqh1cp"\w*
+\w הַ⁠שָּׂדֶ֔ה|lemma="שָׂדֶה" strong="d:H7704b" x-morph="He,Td:Ncmsa"\w*
+\w נָלִ֖ינָה|lemma="לוּן" strong="H3885a" x-morph="He,Vqh1cp"\w*
+\w בַּ⁠כְּפָרִֽים|lemma="כָּפָר" strong="b:H3723" x-morph="He,Rd:Ncmpa"\w*׃
+
+\v 12
+
+\w נַשְׁכִּ֨ימָה֙|lemma="שָׁכַם" strong="H7925" x-morph="He,Vhh1cp"\w*
+\w לַ⁠כְּרָמִ֔ים|lemma="כֶּרֶם" strong="l:H3754" x-morph="He,Rd:Ncbpa"\w*
+\w נִרְאֶ֞ה|lemma="רָאָה" strong="H7200" x-morph="He,Vqh1cp"\w*
+\w אִם|lemma="אִם" strong="H0518a" x-morph="He,C"\w*
+\w פָּֽרְחָ֤ה|lemma="פָּרַח" strong="H6524a" x-morph="He,Vqp3fs"\w*
+\w הַ⁠גֶּ֨פֶן֙|lemma="גֶּפֶן" strong="d:H1612" x-morph="He,Td:Ncbsa"\w*
+\w פִּתַּ֣ח|lemma="פָּתַח" strong="H6605a" x-morph="He,Vpp3ms"\w*
+\w הַ⁠סְּמָדַ֔ר|lemma="סְמָדַר" strong="d:H5563" x-morph="He,Td:Ncmsa"\w*
+\w הֵנֵ֖צוּ|lemma="נוּץ" strong="H5132b" x-morph="He,Vhp3cp"\w*
+\w הָ⁠רִמּוֹנִ֑ים|lemma="רִמּוֹן" strong="d:H7416" x-morph="He,Td:Ncmpa"\w*
+\w שָׁ֛ם|lemma="שָׁם" strong="H8033" x-morph="He,D"\w*
+\w אֶתֵּ֥ן|lemma="נָתַן" strong="H5414" x-morph="He,Vqi1cs"\w*
+\w אֶת|lemma="אֵת" strong="H0853" x-morph="He,To"\w*־\w דֹּדַ֖⁠י|lemma="דּוֹד" strong="H1730" x-morph="He,Ncmpc:Sp1cs"\w*
+\w לָֽ⁠ךְ|lemma="" strong="l" x-morph="He,R:Sp2fs"\w*׃
+
+\v 13
+
+\w הַֽ⁠דּוּדָאִ֣ים|lemma="דּוּדַי" strong="d:H1736" x-morph="He,Td:Ncmpa"\w*
+\w נָֽתְנוּ|lemma="נָתַן" strong="H5414" x-morph="He,Vqp3cp"\w*־\w רֵ֗יחַ|lemma="רֵיחַ" strong="H7381" x-morph="He,Ncmsa"\w*
+\w וְ⁠עַל|lemma="עַל" strong="c:H5921a" x-morph="He,C:R"\w*־\w פְּתָחֵ֨י⁠נוּ֙|lemma="פֶּתַח" strong="H6607" x-morph="He,Ncmpc:Sp1cp"\w*
+\w כָּל|lemma="כֹּל" strong="H3605" x-morph="He,Ncmsc"\w*־\w מְגָדִ֔ים|lemma="מֶגֶד" strong="H4022" x-morph="He,Ncmpa"\w*
+\w חֲדָשִׁ֖ים|lemma="חָדָשׁ" strong="H2319" x-morph="He,Aampa"\w*
+\w גַּם|lemma="גַּם" strong="H1571" x-morph="He,Ta"\w*־\w יְשָׁנִ֑ים|lemma="יָשָׁן" strong="H3465" x-morph="He,Aampa"\w*
+\w דּוֹדִ֖⁠י|lemma="דּוֹד" strong="H1730" x-morph="He,Ncmsc:Sp1cs"\w*
+\w צָפַ֥נְתִּי|lemma="צָפַן" strong="H6845" x-morph="He,Vqp1cs"\w*
+\w לָֽ⁠ךְ|lemma="" strong="l" x-morph="He,R:Sp2fs"\w*׃
+
+\c 8
+\p
+
+\v 1
+\w מִ֤י|lemma="מִי" strong="H4310" x-morph="He,Ti"\w*
+\w יִתֶּנְ⁠ךָ֙|lemma="נָתַן" strong="H5414" x-morph="He,Vqi3ms:Sp2ms"\w*
+\w כְּ⁠אָ֣ח|lemma="אָח" strong="k:H0251" x-morph="He,R:Ncmsa"\w*
+\w לִ֔⁠י|lemma="" strong="l" x-morph="He,R:Sp1cs"\w*
+\w יוֹנֵ֖ק|lemma="יָנַק" strong="H3243" x-morph="He,Vqrmsa"\w*
+\w שְׁדֵ֣י|lemma="שַׁד" strong="H7699a" x-morph="He,Ncmdc"\w*
+\w אִמִּ֑⁠י|lemma="אֵם" strong="H0517" x-morph="He,Ncfsc:Sp1cs"\w*
+\w אֶֽמְצָאֲ⁠ךָ֤|lemma="מָצָא" strong="H4672" x-morph="He,Vqi1cs:Sp2ms"\w*
+\w בַ⁠חוּץ֙|lemma="חוּץ" strong="b:H2351" x-morph="He,Rd:Ncmsa"\w*
+\w אֶשָׁ֣קְ⁠ךָ֔|lemma="נָשַׁק" strong="H5401a" x-morph="He,Vqi1cs:Sp2ms"\w*
+\w גַּ֖ם|lemma="גַּם" strong="H1571" x-morph="He,Ta"\w*
+\w לֹא|lemma="לֹא" strong="H3808" x-morph="He,Tn"\w*־\w יָב֥וּזוּ|lemma="בּוּז" strong="H0936" x-morph="He,Vqi3mp"\w*
+\w לִֽ⁠י|lemma="" strong="l" x-morph="He,R:Sp1cs"\w*׃
+
+\v 2
+\w אֶנְהָֽגֲ⁠ךָ֗|lemma="נָהַג" strong="H5090a" x-morph="He,Vqi1cs:Sp2ms"\w*
+\w אֲבִֽיאֲ⁠ךָ֛|lemma="בּוֹא" strong="H0935" x-morph="He,Vhi1cs:Sp2ms"\w*
+\w אֶל|lemma="אֵל" strong="H0413" x-morph="He,R"\w*־\w בֵּ֥ית|lemma="בַּיִת" strong="H1004b" x-morph="He,Ncmsc"\w*
+\w אִמִּ֖⁠י|lemma="אֵם" strong="H0517" x-morph="He,Ncfsc:Sp1cs"\w*
+\w תְּלַמְּדֵ֑⁠נִי|lemma="לָמַד" strong="H3925" x-morph="He,Vpi3fs:Sp1cs"\w*
+\w אַשְׁקְ⁠ךָ֙|lemma="שָׁקָה" strong="H8248" x-morph="He,Vhi1cs:Sp2ms"\w*
+\w מִ⁠יַּ֣יִן|lemma="יַיִן" strong="m:H3196" x-morph="He,R:Ncmsa"\w*
+\w הָ⁠רֶ֔קַח|lemma="רֶקַח" strong="d:H7544" x-morph="He,Td:Ncmsa"\w*
+\w מֵ⁠עֲסִ֖יס|lemma="עָסִיס" strong="m:H6071" x-morph="He,R:Ncmsc"\w*
+\w רִמֹּנִֽ⁠י|lemma="רִמּוֹן" strong="H7416" x-morph="He,Ncmsc:Sp1cs"\w*׃
+
+\v 3
+\w שְׂמֹאל⁠וֹ֙|lemma="שְׂמֹאול" strong="H8040" x-morph="He,Ncmsc:Sp3ms"\w*
+\w תַּ֣חַת|lemma="תַּחַת" strong="H8478" x-morph="He,R"\w*
+\w רֹאשִׁ֔⁠י|lemma="רֹאשׁ" strong="H7218a" x-morph="He,Ncmsc:Sp1cs"\w*
+\w וִֽ⁠ימִינ֖⁠וֹ|lemma="יָמִין" strong="c:H3225" x-morph="He,C:Ncfsc:Sp3ms"\w*
+\w תְּחַבְּקֵֽ⁠נִי|lemma="חָבַק" strong="H2263" x-morph="He,Vpi3fs:Sp1cs"\w*׃
+
+\v 4
+\w הִשְׁבַּ֥עְתִּי|lemma="שָׁבַע" strong="H7650" x-morph="He,Vhp1cs"\w*
+\w אֶתְ⁠כֶ֖ם|lemma="אֵת" strong="H0853" x-morph="He,To:Sp2mp"\w*
+\w בְּנ֣וֹת|lemma="בַּת" strong="H1323" x-morph="He,Ncfpc"\w*
+\w יְרוּשָׁלִָ֑ם|lemma="יְרוּשָׁלִַ͏ם" strong="H3389" x-morph="He,Np"\w*
+\w מַה|lemma="מָה" strong="H4100" x-morph="He,Ti"\w*־\w תָּעִ֧ירוּ|lemma="עוּר" strong="H5782" x-morph="He,Vhi2mp"\w* ׀
+\w וּֽ⁠מַה|lemma="מָה" strong="c:H4100" x-morph="He,C:Ti"\w*־\w תְּעֹֽרְר֛וּ|lemma="עוּר" strong="H5782" x-morph="He,Voi2mp"\w*
+\w אֶת|lemma="אֵת" strong="H0853" x-morph="He,To"\w*־\w הָ⁠אַהֲבָ֖ה|lemma="אַהֲבָה" strong="d:H0160" x-morph="He,Td:Ncfsa"\w*
+\w עַ֥ד|lemma="עַד" strong="H5704" x-morph="He,R"\w*
+\w שֶׁ⁠תֶּחְפָּֽץ|lemma="חָפֵץ" strong="s:H2654a" x-morph="He,Tr:Vqi3fs"\w*׃ס
+
+\v 5
+\w מִ֣י|lemma="מִי" strong="H4310" x-morph="He,Ti"\w*
+\w זֹ֗את|lemma="זֹאת" strong="H2063" x-morph="He,Pdxfs"\w*
+\w עֹלָה֙|lemma="עָלָה" strong="H5927" x-morph="He,Vqrfsa"\w*
+\w מִן|lemma="מִן" strong="H4480a" x-morph="He,R"\w*־\w הַ⁠מִּדְבָּ֔ר|lemma="מִדְבָּר" strong="d:H4057b" x-morph="He,Td:Ncmsa"\w*
+\w מִתְרַפֶּ֖קֶת|lemma="רָפַק" strong="H7514" x-morph="He,Vtrfsa"\w*
+\w עַל|lemma="עַל" strong="H5921a" x-morph="He,R"\w*־\w דּוֹדָ֑⁠הּ|lemma="דּוֹד" strong="H1730" x-morph="He,Ncmsc:Sp3fs"\w*
+\w תַּ֤חַת|lemma="תַּחַת" strong="H8478" x-morph="He,R"\w*
+\w הַ⁠תַּפּ֨וּחַ֙|lemma="תַּפּוּחַ" strong="d:H8598" x-morph="He,Td:Ncmsa"\w*
+\w עֽוֹרַרְתִּ֔י⁠ךָ|lemma="עוּר" strong="H5782" x-morph="He,Vop1cs:Sp2ms"\w*
+\w שָׁ֚מָּ⁠ה|lemma="שָׁם" strong="H8033" x-morph="He,D:Sd"\w*
+\w חִבְּלַ֣תְ⁠ךָ|lemma="חָבַל" strong="H2254c" x-morph="He,Vpp3fs:Sp2ms"\w*
+\w אִמֶּ֔⁠ךָ|lemma="אֵם" strong="H0517" x-morph="He,Ncfsc:Sp2ms"\w*
+\w שָׁ֖מָּ⁠ה|lemma="שָׁם" strong="H8033" x-morph="He,D:Sd"\w*
+\w חִבְּלָ֥ה|lemma="חָבַל" strong="H2254c" x-morph="He,Vpp3fs"\w*
+\w יְלָדַֽתְ⁠ךָ|lemma="יָלַד" strong="H3205" x-morph="He,Vqp3fs:Sp2ms"\w*׃
+
+\v 6
+\w שִׂימֵ֨⁠נִי|lemma="שׂוּם" strong="H7760a" x-morph="He,Vqv2ms:Sp1cs"\w*
+\w כַֽ⁠חוֹתָ֜ם|lemma="חוֹתָם" strong="k:H2368" x-morph="He,Rd:Ncmsa"\w*
+\w עַל|lemma="עַל" strong="H5921a" x-morph="He,R"\w*־\w לִבֶּ֗⁠ךָ|lemma="לֵב" strong="H3820a" x-morph="He,Ncmsc:Sp2ms"\w*
+\w כַּֽ⁠חוֹתָם֙|lemma="חוֹתָם" strong="k:H2368" x-morph="He,Rd:Ncmsa"\w*
+\w עַל|lemma="עַל" strong="H5921a" x-morph="He,R"\w*־\w זְרוֹעֶ֔⁠ךָ|lemma="זְרוֹעַ" strong="H2220" x-morph="He,Ncbsc:Sp2ms"\w*
+\w כִּֽי|lemma="כִּי" strong="H3588a" x-morph="He,C"\w*־\w עַזָּ֤ה|lemma="עַז" strong="H5794" x-morph="He,Aafsa"\w*
+\w כַ⁠מָּ֨וֶת֙|lemma="מָוֶת" strong="k:H4194" x-morph="He,Rd:Ncmsa"\w*
+\w אַהֲבָ֔ה|lemma="אַהֲבָה" strong="H0160" x-morph="He,Ncfsa"\w*
+\w קָשָׁ֥ה|lemma="קָשֶׁה" strong="H7186" x-morph="He,Aafsa"\w*
+\w כִ⁠שְׁא֖וֹל|lemma="שְׁאוֹל" strong="k:H7585" x-morph="He,R:Np"\w*
+\w קִנְאָ֑ה|lemma="קִנְאָה" strong="H7068" x-morph="He,Ncfsa"\w*
+\w רְשָׁפֶ֕י⁠הָ|lemma="רֶשֶׁף" strong="H7565" x-morph="He,Ncmpc:Sp3fs"\w*
+\w רִשְׁפֵּ֕י|lemma="רֶשֶׁף" strong="H7565" x-morph="He,Ncmpc"\w*
+\w אֵ֖שׁ|lemma="אֵשׁ" strong="H0784" x-morph="He,Ncbsa"\w*
+\w שַׁלְהֶ֥בֶתְ|lemma="שַׁלְהֶבֶת" strong="H7957" x-morph="He,Ncfsa"\w*
+\w יָֽה|lemma="יָהּ" strong="H3050" x-morph="He,Np"\w*׃
+
+\v 7
+\w מַ֣יִם|lemma="מַיִם" strong="H4325" x-morph="He,Ncmpa"\w*
+\w רַבִּ֗ים|lemma="רַב" strong="H7227a" x-morph="He,Aampa"\w*
+\w לֹ֤א|lemma="לֹא" strong="H3808" x-morph="He,Tn"\w*
+\w יֽוּכְלוּ֙|lemma="יָכֹל" strong="H3201" x-morph="He,Vqi3mp"\w*
+\w לְ⁠כַבּ֣וֹת|lemma="כָּבָה" strong="l:H3518" x-morph="He,R:Vpc"\w*
+\w אֶת|lemma="אֵת" strong="H0853" x-morph="He,To"\w*־\w הָֽ⁠אַהֲבָ֔ה|lemma="אַהֲבָה" strong="d:H0160" x-morph="He,Td:Ncfsa"\w*
+\w וּ⁠נְהָר֖וֹת|lemma="נָהָר" strong="c:H5104" x-morph="He,C:Ncmpa"\w*
+\w לֹ֣א|lemma="לֹא" strong="H3808" x-morph="He,Tn"\w*
+\w יִשְׁטְפ֑וּ⁠הָ|lemma="שָׁטַף" strong="H7857" x-morph="He,Vqi3mp:Sp3fs"\w*
+\w אִם|lemma="אִם" strong="H0518a" x-morph="He,C"\w*־\w יִתֵּ֨ן|lemma="נָתַן" strong="H5414" x-morph="He,Vqi3ms"\w*
+\w אִ֜ישׁ|lemma="אִישׁ" strong="H0376" x-morph="He,Ncmsa"\w*
+\w אֶת|lemma="אֵת" strong="H0853" x-morph="He,To"\w*־\w כָּל|lemma="כֹּל" strong="H3605" x-morph="He,Ncmsc"\w*־\w ה֤וֹן|lemma="הוֹן" strong="H1952" x-morph="He,Ncmsc"\w*
+\w בֵּית⁠וֹ֙|lemma="בַּיִת" strong="H1004b" x-morph="He,Ncmsc:Sp3ms"\w*
+\w בָּ⁠אַהֲבָ֔ה|lemma="אַהֲבָה" strong="b:H0160" x-morph="He,Rd:Ncfsa"\w*
+\w בּ֖וֹז|lemma="בּוּז" strong="H0936" x-morph="He,Vqa"\w*
+\w יָב֥וּזוּ|lemma="בּוּז" strong="H0936" x-morph="He,Vqi3mp"\w*
+\w לֽ⁠וֹ|lemma="" strong="l" x-morph="He,R:Sp3ms"\w*׃ס
+
+\v 8
+\w אָח֥וֹת|lemma="אָחוֹת" strong="H0269" x-morph="He,Ncfsa"\w*
+\w לָ֨⁠נוּ֙|lemma="" strong="l" x-morph="He,R:Sp1cp"\w*
+\w קְטַנָּ֔ה|lemma="קָטָן" strong="H6996a" x-morph="He,Aafsa"\w*
+\w וְ⁠שָׁדַ֖יִם|lemma="שַׁד" strong="c:H7699a" x-morph="He,C:Ncmda"\w*
+\w אֵ֣ין|lemma="אַיִן" strong="H0369" x-morph="He,Tn"\w*
+\w לָ֑⁠הּ|lemma="" strong="l" x-morph="He,R:Sp3fs"\w*
+\w מַֽה|lemma="מָה" strong="H4100" x-morph="He,Ti"\w*־\w נַּעֲשֶׂה֙|lemma="עָשָׂה" strong="H6213a" x-morph="He,Vqi1cp"\w*
+\w לַ⁠אֲחֹתֵ֔⁠נוּ|lemma="אָחוֹת" strong="l:H0269" x-morph="He,R:Ncfsc:Sp1cp"\w*
+\w בַּ⁠יּ֖וֹם|lemma="יוֹם" strong="b:H3117" x-morph="He,Rd:Ncmsa"\w*
+\w שֶׁ⁠יְּדֻבַּר|lemma="דָבַר" strong="s:H1696" x-morph="He,Tr:VPi3ms"\w*־\w בָּֽ⁠הּ|lemma="" strong="b" x-morph="He,R:Sp3fs"\w*׃
+
+\v 9
+\w אִם|lemma="אִם" strong="H0518a" x-morph="He,C"\w*־\w חוֹמָ֣ה|lemma="חוֹמָה" strong="H2346" x-morph="He,Ncfsa"\w*
+\w הִ֔יא|lemma="הוּא" strong="H1931" x-morph="He,Pp3fs"\w*
+\w נִבְנֶ֥ה|lemma="בָּנָה" strong="H1129" x-morph="He,Vqi1cp"\w*
+\w עָלֶ֖י⁠הָ|lemma="עַל" strong="H5921a" x-morph="He,R:Sp3fs"\w*
+\w טִ֣ירַת|lemma="טִירָה" strong="H2918" x-morph="He,Ncfsc"\w*
+\w כָּ֑סֶף|lemma="כֶּסֶף" strong="H3701" x-morph="He,Ncmsa"\w*
+\w וְ⁠אִם|lemma="אִם" strong="c:H0518a" x-morph="He,C:C"\w*־\w דֶּ֣לֶת|lemma="דֶּלֶת" strong="H1817c" x-morph="He,Ncfsa"\w*
+\w הִ֔יא|lemma="הוּא" strong="H1931" x-morph="He,Pp3fs"\w*
+\w נָצ֥וּר|lemma="צוּר" strong="H6696a" x-morph="He,Vqi1cp"\w*
+\w עָלֶ֖י⁠הָ|lemma="עַל" strong="H5921a" x-morph="He,R:Sp3fs"\w*
+\w ל֥וּחַ|lemma="לוּחַ" strong="H3871" x-morph="He,Ncmsc"\w*
+\w אָֽרֶז|lemma="אֶרֶז" strong="H0730" x-morph="He,Ncmsa"\w*׃
+
+\v 10
+\w אֲנִ֣י|lemma="אֲנִי" strong="H0589" x-morph="He,Pp1cs"\w*
+\w חוֹמָ֔ה|lemma="חוֹמָה" strong="H2346" x-morph="He,Ncfsa"\w*
+\w וְ⁠שָׁדַ֖⁠י|lemma="שַׁד" strong="c:H7699a" x-morph="He,C:Ncmdc:Sp1cs"\w*
+\w כַּ⁠מִּגְדָּל֑וֹת|lemma="מִגְדָּל" strong="k:H4026" x-morph="He,Rd:Ncbpa"\w*
+\w אָ֛ז|lemma="אָז" strong="H0227a" x-morph="He,D"\w*
+\w הָיִ֥יתִי|lemma="הָיָה" strong="H1961" x-morph="He,Vqp1cs"\w*
+\w בְ⁠עֵינָ֖י⁠ו|lemma="עַיִן" strong="b:H5869a" x-morph="He,R:Ncbdc:Sp3ms"\w*
+\w כְּ⁠מוֹצְאֵ֥ת|lemma="מָצָא" strong="k:H4672" x-morph="He,R:Vhrfsa"\w*
+\w שָׁלֽוֹם|lemma="שָׁלוֹם" strong="H7965" x-morph="He,Ncmsa"\w*׃פ
+
+\v 11
+\w כֶּ֣רֶם|lemma="כֶּרֶם" strong="H3754" x-morph="He,Ncbsa"\w*
+\w הָיָ֤ה|lemma="הָיָה" strong="H1961" x-morph="He,Vqp3ms"\w*
+\w לִ⁠שְׁלֹמֹה֙|lemma="שְׁלֹמֹה" strong="l:H8010" x-morph="He,R:Np"\w*
+\w בְּ⁠בַ֣עַל|lemma="בַּעַל הָמוֹן" strong="b:H1174" x-morph="He,R:Np"\w*
+\w הָמ֔וֹן|lemma="בַּעַל הָמוֹן" strong="H1174" x-morph="He,Np"\w*
+\w נָתַ֥ן|lemma="נָתַן" strong="H5414" x-morph="He,Vqp3ms"\w*
+\w אֶת|lemma="אֵת" strong="H0853" x-morph="He,To"\w*־\w הַ⁠כֶּ֖רֶם|lemma="כֶּרֶם" strong="d:H3754" x-morph="He,Td:Ncbsa"\w*
+\w לַ⁠נֹּטְרִ֑ים|lemma="נָטַר" strong="l:H5201" x-morph="He,Rd:Vqrmpa"\w*
+\w אִ֛ישׁ|lemma="אִישׁ" strong="H0376" x-morph="He,Ncmsa"\w*
+\w יָבִ֥א|lemma="בּוֹא" strong="H0935" x-morph="He,Vhi3ms"\w*
+\w בְּ⁠פִרְי֖⁠וֹ|lemma="פְּרִי" strong="b:H6529" x-morph="He,R:Ncmsc:Sp3ms"\w*
+\w אֶ֥לֶף|lemma="אֶלֶף" strong="H0505" x-morph="He,Acbsa"\w*
+\w כָּֽסֶף|lemma="כֶּסֶף" strong="H3701" x-morph="He,Ncmsa"\w*׃
+
+\v 12
+\w כָּרְמִ֥⁠י|lemma="כֶּרֶם" strong="H3754" x-morph="He,Ncbsc:Sp1cs"\w*
+\w שֶׁ⁠לִּ֖⁠י|lemma="" strong="s:l" x-morph="He,Tr:R:Sp1cs"\w*
+\w לְ⁠פָנָ֑⁠י|lemma="פָּנִים" strong="l:H6440" x-morph="He,R:Ncbpc:Sp1cs"\w*
+\w הָ⁠אֶ֤לֶף|lemma="אֶלֶף" strong="d:H0505" x-morph="He,Td:Acbsa"\w*
+\w לְ⁠ךָ֙|lemma="" strong="l" x-morph="He,R:Sp2ms"\w*
+\w שְׁלֹמֹ֔ה|lemma="שְׁלֹמֹה" strong="H8010" x-morph="He,Np"\w*
+\w וּ⁠מָאתַ֖יִם|lemma="מֵאָה" strong="c:H3967" x-morph="He,C:Acbda"\w*
+\w לְ⁠נֹטְרִ֥ים|lemma="נָטַר" strong="l:H5201" x-morph="He,R:Vqrmpa"\w*
+\w אֶת|lemma="אֵת" strong="H0853" x-morph="He,To"\w*־\w פִּרְיֽ⁠וֹ|lemma="פְּרִי" strong="H6529" x-morph="He,Ncmsc:Sp3ms"\w*׃
+
+\v 13
+\w הַ⁠יוֹשֶׁ֣בֶת|lemma="יָשַׁב" strong="d:H3427" x-morph="He,Td:Vqrfsa"\w*
+\w בַּ⁠גַּנִּ֗ים|lemma="גַּן" strong="b:H1588" x-morph="He,Rd:Ncbpa"\w*
+\w חֲבֵרִ֛ים|lemma="חָבֵר" strong="H2270" x-morph="He,Ncmpa"\w*
+\w מַקְשִׁיבִ֥ים|lemma="קָשַׁב" strong="H7181" x-morph="He,Vhrmpa"\w*
+\w לְ⁠קוֹלֵ֖⁠ךְ|lemma="קוֹל" strong="l:H6963a" x-morph="He,R:Ncmsc:Sp2fs"\w*
+\w הַשְׁמִיעִֽי⁠נִי|lemma="שָׁמַע" strong="H8085" x-morph="He,Vhv2fs:Sp1cs"\w*׃
+
+\v 14
+\w בְּרַ֣ח|lemma="בָּרַח" strong="H1272" x-morph="He,Vqv2ms"\w* ׀
+\w דּוֹדִ֗⁠י|lemma="דּוֹד" strong="H1730" x-morph="He,Ncmsc:Sp1cs"\w*
+\w וּֽ⁠דְמֵה|lemma="דָּמָה" strong="c:H1819" x-morph="He,C:Vqv2ms"\w*־\w לְ⁠ךָ֤|lemma="" strong="l" x-morph="He,R:Sp2ms"\w*
+\w לִ⁠צְבִי֙|lemma="צְבִי" strong="l:H6643b" x-morph="He,R:Ncbsa"\w*
+\w א֚וֹ|lemma="אוֹ" strong="H0176a" x-morph="He,C"\w*
+\w לְ⁠עֹ֣פֶר|lemma="עֹפֶר" strong="l:H6082" x-morph="He,R:Ncmsc"\w*
+\w הָֽ⁠אַיָּלִ֔ים|lemma="אַיָּל" strong="d:H0354" x-morph="He,Td:Ncbpa"\w*
+\w עַ֖ל|lemma="עַל" strong="H5921a" x-morph="He,R"\w*
+\w הָרֵ֥י|lemma="הַר" strong="H2022" x-morph="He,Ncmpc"\w*
+\w בְשָׂמִֽים|lemma="בֶּשֶׂם" strong="H1314" x-morph="He,Ncmpa"\w*׃
