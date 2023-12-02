@@ -352,7 +352,7 @@ export default function TranslationView() {
                 </p>
               )}
               <ol
-                className={`flex h-fit grow flex-wrap ${
+                className={`flex h-fit grow flex-wrap min-h-0 overflow-auto max-h-full ${
                   isHebrew ? 'ltr:flex-row-reverse' : 'rtl:flex-row-reverse'
                 }`}
               >

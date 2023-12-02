@@ -40,7 +40,7 @@ export const TranslationSidebar = ({
   const lexiconEntry = lexiconResource?.entry ?? '';
   const { t } = useTranslation(['common', 'translate']);
   return (
-    <div className="border-t sm:border-t-0 sm:ltr:border-l sm:rtl:border-r sm:min-w-[320px] sm:max-w-[320px] flex flex-col gap-4 pt-3 sm:pt-0 sm:ps-3">
+    <div className="border-t sm:border-t-0 sm:ltr:border-l sm:rtl:border-r max-sm:h-[320px] sm:min-w-[320px] sm:max-w-[320px] flex flex-col gap-4 pt-3 sm:pt-0 sm:ps-3">
       <div className="flex flex-row gap-4 items-center">
         <button onClick={onClose}>
           <Icon icon="chevron-right" />
