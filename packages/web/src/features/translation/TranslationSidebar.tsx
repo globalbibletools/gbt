@@ -1,11 +1,11 @@
-import { Resource, VerseWord, Verse } from '@translation/api-types';
+import { useQuery } from '@tanstack/react-query';
+import { Verse } from '@translation/api-types';
 import { useTranslation } from 'react-i18next';
 import Markdown from 'react-markdown';
-import { Icon } from '../../shared/components/Icon';
-import { parseVerseId } from './verse-utils';
 import apiClient from '../../shared/apiClient';
-import { useQuery } from '@tanstack/react-query';
+import { Icon } from '../../shared/components/Icon';
 import LoadingSpinner from '../../shared/components/LoadingSpinner';
+import { parseVerseId } from './verse-utils';
 
 type TranslationSidebarProps = {
   language: string;
