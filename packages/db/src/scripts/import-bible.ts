@@ -71,7 +71,7 @@ async function run() {
             .padStart(2, '0')}`;
           wordData.push({
             id: wordId,
-            text,
+            text: text.normalize('NFD'),
             verseId: verse.id,
             grammar,
             strongs,

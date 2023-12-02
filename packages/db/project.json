@@ -57,6 +57,12 @@
         "command": "npx ts-node --project packages/db/tsconfig.json packages/db/src/scripts/import-extended-lemmas.ts"
       }
     },
+    "import-uhb": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx ts-node --project packages/db/tsconfig.json packages/db/src/scripts/import-uhb.ts"
+      }
+    },
     "prisma": {
       "executor": "@translation/nx-plugin:prisma",
       "options": {
