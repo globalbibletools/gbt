@@ -237,18 +237,18 @@ export default function TranslationView() {
       switch (event.key) {
         case 'ArrowUp':
           navigate(
-            `/languages/${language}/verses/${decrementVerseId(verseId)}`
+            `/interlinear/${language}/verses/${decrementVerseId(verseId)}`
           );
           break;
         case 'ArrowDown':
           navigate(
-            `/languages/${language}/verses/${incrementVerseId(verseId)}`
+            `/interlinear/${language}/verses/${incrementVerseId(verseId)}`
           );
           break;
         case 'Home':
           if (event.shiftKey) {
             navigate(
-              `/languages/${language}/verses/${bookFirstVerseId(bookId)}`
+              `/interlinear/${language}/verses/${bookFirstVerseId(bookId)}`
             );
           } else {
             firstWord.current?.focus();
@@ -257,7 +257,7 @@ export default function TranslationView() {
         case 'End':
           if (event.shiftKey) {
             navigate(
-              `/languages/${language}/verses/${bookLastVerseId(bookId)}`
+              `/interlinear/${language}/verses/${bookLastVerseId(bookId)}`
             );
           } else {
             lastWord.current?.focus();
@@ -299,14 +299,14 @@ export default function TranslationView() {
         <VerseSelector
           verseId={verseId}
           onVerseChange={(verseId) =>
-            navigate(`/languages/${language}/verses/${verseId}`)
+            navigate(`/interlinear/${language}/verses/${verseId}`)
           }
         />
         <DropdownMenu text={selectedLanguage?.name ?? 'Language'}>
           {translationLanguages.map((language) => (
             <DropdownMenuLink
               key={language.code}
-              to={`/languages/${language.code}/verses/${verseId}`}
+              to={`/interlinear/${language.code}/verses/${verseId}`}
             >
               {language.name}
             </DropdownMenuLink>
@@ -417,7 +417,7 @@ export default function TranslationView() {
                       onClick={() => {
                         loadedFromNextButton.current = true;
                         navigate(
-                          `/languages/${language}/verses/${incrementVerseId(
+                          `/interlinear/${language}/verses/${incrementVerseId(
                             verseId
                           )}`
                         );

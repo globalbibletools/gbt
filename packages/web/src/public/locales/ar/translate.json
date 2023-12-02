@@ -1,9 +1,9 @@
 {
   "approved": "معتمد",
+  "interlinear": "بين السطور",
   "next_verse": "الآية التالية",
   "previous_verse": "الآية السابقة",
   "saving": "جاري الحفظ",
   "select_verse": "حدد الآية",
-  "strongs": "أقوياء",
-  "translate": "ترجمة"
+  "strongs": "أقوياء"
 }
