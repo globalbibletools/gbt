@@ -25,7 +25,8 @@ export interface TranslateWordProps {
   referenceGloss?: string;
   suggestions: string[];
   onChange(data: { gloss?: string; approved?: boolean }): void;
-  onOriginalLanguageClick?: () => void;
+  onShowInSidebar?: () => void;
+  onOpenSidebar?: () => void;
 }
 
 export interface TranslateWordRef {
@@ -45,7 +46,8 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
       referenceGloss,
       suggestions,
       onChange,
-      onOriginalLanguageClick,
+      onShowInSidebar,
+      onOpenSidebar,
     }: TranslateWordProps,
     ref
   ) => {
@@ -97,7 +99,10 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
               ? 'text-2xl text-right font-hebrew pr-3'
               : 'text-lg text-left font-greek pl-3'
           }`}
-          onClick={() => onOriginalLanguageClick?.()}
+          onClick={() => {
+            onShowInSidebar?.();
+            onOpenSidebar?.();
+          }}
         >
           <span className="inline-block" ref={ancientWord}>
             {word.text}
@@ -136,7 +141,7 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
               )}
               <AutocompleteInput
                 className={`
-                  w-full -m-px 
+                  w-full -m-px
                   ${originalLanguage === 'hebrew' ? 'text-right' : 'text-left'}
                 `}
                 inputClassName={
@@ -177,6 +182,12 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
                   }
                 }}
                 onKeyDown={(e) => {
+                  if (e.ctrlKey && e.key === 'd') {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    onOpenSidebar?.();
+                    return;
+                  }
                   if (e.metaKey || e.altKey || e.ctrlKey) return;
                   switch (e.key) {
                     case 'Enter': {
@@ -199,6 +210,7 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
                     }
                   }
                 }}
+                onFocus={() => onShowInSidebar?.()}
                 suggestions={
                   machineGloss ? [...suggestions, machineGloss] : suggestions
                 }

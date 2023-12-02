@@ -1,4 +1,4 @@
-import { Resource, VerseWord } from '@translation/api-types';
+import { Resource, VerseWord, Verse } from '@translation/api-types';
 import { useTranslation } from 'react-i18next';
 import Markdown from 'react-markdown';
 import { Icon } from '../../shared/components/Icon';
@@ -9,27 +9,28 @@ import LoadingSpinner from '../../shared/components/LoadingSpinner';
 
 type TranslationSidebarProps = {
   language: string;
-  verseId: string;
-  word: VerseWord;
+  verse: Verse;
+  wordIndex: number;
   onClose: () => void;
 };
 
 export const TranslationSidebar = ({
   language,
-  verseId,
-  word,
+  verse,
+  wordIndex,
   onClose,
 }: TranslationSidebarProps) => {
-  const { bookId } = parseVerseId(verseId);
+  const word = verse.words[wordIndex];
+  const { bookId } = parseVerseId(verse.id);
   const isHebrew = bookId < 40;
   const lemmaResourcesQuery = useQuery(
     // ['lemma-resources', word.lemmaId],
-    ['verse-lemma-resources', language, verseId],
+    ['verse-lemma-resources', language, verse.id],
     // TODO update API call to get by lemma ID
-    () => apiClient.verses.findLemmaResources(verseId)
+    () => apiClient.verses.findLemmaResources(verse.id)
   );
   const resources = lemmaResourcesQuery.isSuccess
-    ? lemmaResourcesQuery.data.data[0]
+    ? lemmaResourcesQuery.data.data[wordIndex]
     : [];
   const strongsResource = resources.find(
     ({ resource }) => resource === 'STRONGS'
@@ -39,7 +40,7 @@ export const TranslationSidebar = ({
     ['BDB', 'LSJ'].includes(resource)
   );
   const lexiconEntry = lexiconResource?.entry ?? '';
-  const { t } = useTranslation(['common']);
+  const { t } = useTranslation(['common', 'translate']);
   return (
     <div className="border-t sm:border-t-0 sm:ltr:border-l sm:rtl:border-r sm:min-w-[320px] sm:max-w-[320px] flex flex-col gap-4 pt-3 sm:pt-0 sm:ps-3">
       <div className="flex flex-row gap-4 items-center">
@@ -61,7 +62,9 @@ export const TranslationSidebar = ({
         {lemmaResourcesQuery.isSuccess && (
           <>
             <div>
-              <div className="text-sm font-bold me-2">Strongs</div>
+              <div className="text-sm font-bold me-2">
+                {t('translate:strongs')}
+              </div>
               <span>{strongsEntry} </span>
             </div>
             {lexiconEntry && (

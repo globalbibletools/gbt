@@ -227,7 +227,7 @@ export default function TranslationView() {
       preventDefault: VoidFunction;
       stopPropagation: VoidFunction;
     }) => {
-      const watchKeys = ['ArrowUp', 'ArrowDown', 'Home', 'End'];
+      const watchKeys = ['ArrowUp', 'ArrowDown', 'Home', 'End', 'd'];
       if (!event.ctrlKey || !watchKeys.includes(event.key)) {
         return;
       }
@@ -262,6 +262,10 @@ export default function TranslationView() {
           } else {
             lastWord.current?.focus();
           }
+          break;
+        case 'd':
+          console.log('close sidebar!');
+          setShowSidebar(false);
           break;
       }
     },
@@ -394,10 +398,8 @@ export default function TranslationView() {
                               : undefined,
                         });
                       }}
-                      onOriginalLanguageClick={() => {
-                        setSidebarWordIndex(i);
-                        setShowSidebar(true);
-                      }}
+                      onShowInSidebar={() => setSidebarWordIndex(i)}
+                      onOpenSidebar={() => setShowSidebar(true)}
                       ref={(() => {
                         if (i === 0) {
                           return firstWord;
@@ -436,8 +438,8 @@ export default function TranslationView() {
               {showSidebar && sidebarWordIndex < verse.words.length && (
                 <TranslationSidebar
                   language={language}
-                  verseId={verse.id}
-                  word={verse.words[sidebarWordIndex]}
+                  verse={verse}
+                  wordIndex={sidebarWordIndex}
                   onClose={() => setShowSidebar(false)}
                 />
               )}

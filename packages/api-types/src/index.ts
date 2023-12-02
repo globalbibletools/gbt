@@ -153,11 +153,13 @@ export interface VerseWord {
   grammar: string;
 }
 
+export interface Verse {
+  id: string;
+  words: VerseWord[];
+}
+
 export interface GetVerseResponseBody {
-  data: {
-    id: string;
-    words: VerseWord[];
-  };
+  data: Verse;
 }
 
 export const GlossState = makeEnum({
