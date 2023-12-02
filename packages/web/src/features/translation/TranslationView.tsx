@@ -264,8 +264,7 @@ export default function TranslationView() {
           }
           break;
         case 'd':
-          console.log('close sidebar!');
-          setShowSidebar(false);
+          setShowSidebar((showSidebar) => !showSidebar);
           break;
       }
     },
@@ -295,7 +294,7 @@ export default function TranslationView() {
   }, [loading, verseQuery.data]);
 
   return (
-    <div className="px-4 flex flex-grow flex-col gap-8">
+    <div className="px-4 flex flex-grow flex-col gap-8 min-h-0">
       <div className="flex gap-8 items-center">
         <VerseSelector
           verseId={verseId}
@@ -335,7 +334,7 @@ export default function TranslationView() {
 
           const isHebrew = bookId < 40;
           return (
-            <div className="flex flex-col sm:flex-row gap-2 flex-grow w-full">
+            <div className="flex flex-col sm:flex-row gap-2 flex-grow w-full min-h-0">
               {translationQuery.data && (
                 <p
                   className="text-base mx-2"

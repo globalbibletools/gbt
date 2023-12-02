@@ -6,9 +6,9 @@ import Footer from './Footer';
 export function Layout() {
   return (
     <Suspense fallback="loading">
-      <div className="min-h-screen flex flex-col max-w-[1800px] mx-auto">
+      <div className="h-screen flex flex-col max-w-[1800px] mx-auto">
         <Header />
-        <div className="flex-grow relative flex flex-col">
+        <div className="flex-grow relative flex flex-col min-h-0">
           <Outlet />
         </div>
         <Footer />
