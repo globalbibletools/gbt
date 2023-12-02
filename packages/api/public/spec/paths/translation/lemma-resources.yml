@@ -1,0 +1,30 @@
+get:
+  tags:
+    - Verses
+  summary: Get the resource entries available for every lemma in a verse.
+  parameters:
+    - $ref: '../../schemas/parameters.yml#verseId'
+  responses:
+    '200':
+      description: Ok
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      resource:
+                        type: string
+                        description: The resource from which this entry was taken.
+                      entry:
+                        type: string
+                        description: The content of the resource entry.
+                  example:
+                    - resource: STRONGS
+                      entry: ἀναγινώσκω anaginṓskō, an-ag-in-oce'-ko; from G303 and G1097; to know again, i.e. (by extension) to read:—read.
