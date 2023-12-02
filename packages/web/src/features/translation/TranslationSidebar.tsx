@@ -24,9 +24,7 @@ export const TranslationSidebar = ({
   const { bookId } = parseVerseId(verse.id);
   const isHebrew = bookId < 40;
   const lemmaResourcesQuery = useQuery(
-    // ['lemma-resources', word.lemmaId],
     ['verse-lemma-resources', language, verse.id],
-    // TODO update API call to get by lemma ID
     () => apiClient.verses.findLemmaResources(verse.id)
   );
   const resources = lemmaResourcesQuery.isSuccess
