@@ -54,6 +54,12 @@ async function importBook(bookId: number, file: string): Promise<UHBWord[]> {
           if (parts) {
             if (p >= parts.length) {
               dbW++;
+              if (
+                verseData[dbW]?.text === 'ס' ||
+                verseData[dbW]?.text === 'פ'
+              ) {
+                dbW++;
+              }
               p = 1;
             } else {
               p++;
@@ -69,7 +75,16 @@ async function importBook(bookId: number, file: string): Promise<UHBWord[]> {
           });
         } else if ('footnote' in element) {
           const type = element.footnote[1].ft;
+          if (type !== 'K' && type !== 'Q') {
+            continue;
+          }
+
           const footnoteWords = element.footnote.slice(2);
+          const hasOneWord =
+            footnoteWords.filter(
+              (el: any) => typeof el === 'object' && '+w' in el
+            ).length === 1;
+
           for (const ftElement of footnoteWords) {
             if (typeof ftElement === 'string') {
               const lastWord = words.at(-1);
@@ -83,18 +98,32 @@ async function importBook(bookId: number, file: string): Promise<UHBWord[]> {
               if (parts) {
                 if (p >= parts.length) {
                   dbW++;
+                  if (
+                    verseData[dbW]?.text === 'ס' ||
+                    verseData[dbW]?.text === 'פ'
+                  ) {
+                    dbW++;
+                  }
                   p = 1;
                 } else {
                   p++;
                 }
               }
+
+              let wordId: string | null = verseData[dbW]?.id;
+              if (type === 'K' && hasOneWord) {
+                const lastWord = words.at(-1)!;
+                wordId = lastWord?.wordId;
+                lastWord.wordId = verseData[dbW]?.id;
+              }
+
               words.push({
                 id: `${verseId}${(w++).toString().padStart(2, '0')}`,
                 type,
                 text: ftElement['+w'][0].normalize('NFD'),
                 strong: ftElement.attributes[1].strong,
                 morph: ftElement.attributes[2]['x-morph'],
-                wordId: verseData[dbW]?.id,
+                wordId,
               });
             }
           }
