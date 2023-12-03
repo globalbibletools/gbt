@@ -15,7 +15,7 @@ WITH "WordPair" AS (
 )
 SELECT * FROM "WordPair"
 -- Filter out new testament
-WHERE "WordPair"."id" < 2400000000 AND "WordPair"."id" >= 2300000000
+WHERE "WordPair"."id" < 2600000000 AND "WordPair"."id" >= 2500000000
 -- Filter out break symbols
 AND ("WordPair"."wordText" NOT IN ('פ', 'ס') OR "WordPair"."wordText" IS NULL)
 
@@ -27,6 +27,9 @@ AND (
 	)
 )
 
+-- AND "wordOrig" LIKE '(%' AND "uhbOrig" IS NOT NULL
+
 -- AND "id"::text LIKE '6009007%'
 
 ORDER BY "id"
+
