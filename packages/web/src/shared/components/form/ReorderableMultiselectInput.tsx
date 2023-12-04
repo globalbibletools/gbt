@@ -70,6 +70,11 @@ const BaseReorderableMultiselectInput = forwardRef<
     ref
   ) => {
     const { t } = useTranslation(['common']);
+    const moveItem = (from: number, to: number) => {
+      const newValue = [...(value ?? [])];
+      newValue.splice(to, 0, newValue.splice(from, 1)[0]);
+      onChange?.(newValue);
+    };
     return (
       <div
         className={`${className} group/multiselect relative flex flex-col gap-1`}
@@ -95,6 +100,7 @@ const BaseReorderableMultiselectInput = forwardRef<
                     }`}
                     type="button"
                     disabled={isFirst}
+                    onClick={() => moveItem(i, i - 1)}
                   >
                     <Icon icon="chevron-up" />
                     {/* TODO: use different text */}
@@ -106,6 +112,7 @@ const BaseReorderableMultiselectInput = forwardRef<
                     }`}
                     type="button"
                     disabled={isLast}
+                    onClick={() => moveItem(i, i + 1)}
                   >
                     <Icon icon="chevron-down" />
                     {/* TODO: use different text */}
