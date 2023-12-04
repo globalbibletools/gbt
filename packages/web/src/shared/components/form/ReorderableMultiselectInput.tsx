@@ -75,6 +75,11 @@ const BaseReorderableMultiselectInput = forwardRef<
       newValue.splice(to, 0, newValue.splice(from, 1)[0]);
       onChange?.(newValue);
     };
+    const removeItem = (index: number) => {
+      const newValue = [...(value ?? [])];
+      newValue.splice(index, 1);
+      onChange?.(newValue);
+    };
     return (
       <div
         className={`${className} group/multiselect relative flex flex-col gap-1`}
@@ -118,7 +123,11 @@ const BaseReorderableMultiselectInput = forwardRef<
                     {/* TODO: use different text */}
                     <span className="sr-only">{t('common:close')}</span>
                   </button>
-                  <button className="w-8 h-8" type="button">
+                  <button
+                    className="w-8 h-8"
+                    type="button"
+                    onClick={() => removeItem(i)}
+                  >
                     <Icon icon="close" />
                     <span className="sr-only">{t('common:close')}</span>
                   </button>
