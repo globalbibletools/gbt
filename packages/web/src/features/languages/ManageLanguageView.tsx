@@ -5,6 +5,9 @@ import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useLoaderData, useParams } from 'react-router-dom';
 import apiClient from '../../shared/apiClient';
+import bibleTranslationClient, {
+  BibleTranslation,
+} from '../../shared/bibleTranslationClient';
 import { Icon } from '../../shared/components/Icon';
 import {
   List,
@@ -19,23 +22,21 @@ import View from '../../shared/components/View';
 import ViewTitle from '../../shared/components/ViewTitle';
 import Button from '../../shared/components/actions/Button';
 import { Link } from '../../shared/components/actions/Link';
-import Form from '../../shared/components/form/Form';
-import FormLabel from '../../shared/components/form/FormLabel';
-import InputError from '../../shared/components/form/InputError';
-import MultiselectInput from '../../shared/components/form/MultiselectInput';
-import SubmittingIndicator from '../../shared/components/form/SubmittingIndicator';
-import TextInput from '../../shared/components/form/TextInput';
-import fontClient from '../../shared/fontClient';
-import { useFlash } from '../../shared/hooks/flash';
-import queryClient from '../../shared/queryClient';
-import bibleTranslationClient, {
-  BibleTranslation,
-} from '../../shared/bibleTranslationClient';
 import {
   ButtonSelectorInput,
   ButtonSelectorOption,
 } from '../../shared/components/form/ButtonSelectorInput';
 import ComboboxInput from '../../shared/components/form/ComboboxInput';
+import Form from '../../shared/components/form/Form';
+import FormLabel from '../../shared/components/form/FormLabel';
+import InputError from '../../shared/components/form/InputError';
+import MultiselectInput from '../../shared/components/form/MultiselectInput';
+import ReorderableMultiselectInput from '../../shared/components/form/ReorderableMultiselectInput';
+import SubmittingIndicator from '../../shared/components/form/SubmittingIndicator';
+import TextInput from '../../shared/components/form/TextInput';
+import fontClient from '../../shared/fontClient';
+import { useFlash } from '../../shared/hooks/flash';
+import queryClient from '../../shared/queryClient';
 
 const languageQueryKey = (code: string) => ({
   queryKey: ['language', code],
@@ -219,7 +220,7 @@ export default function ManageLanguageView() {
             <FormLabel htmlFor="bibleTranslationIds">
               {t('languages:bible_translations').toUpperCase()}
             </FormLabel>
-            <MultiselectInput
+            <ReorderableMultiselectInput
               name="bibleTranslationIds"
               className="w-full"
               defaultValue={language.data.bibleTranslationIds}
