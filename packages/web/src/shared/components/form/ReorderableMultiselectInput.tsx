@@ -78,11 +78,46 @@ const BaseReorderableMultiselectInput = forwardRef<
           {(value ?? [])
             .map((v) => items.find((i) => i.value === v))
             .filter((item?: ItemType): item is ItemType => !!item)
-            .map((item) => (
-              <div className="py-2 px-3 flex items-center" key={item.value}>
-                <span className="grow">{item.label}</span>
-              </div>
-            ))}
+            .map((item, i, value) => {
+              const isFirst = i === 0;
+              const isLast = i === value.length - 1;
+              return (
+                <div className="py-2 px-1 flex items-center" key={item.value}>
+                  <button className="w-8 h-8" type="button">
+                    <Icon icon="grip-vertical" />
+                    {/* TODO: use different text */}
+                    <span className="sr-only">{t('common:close')}</span>
+                  </button>
+                  <span className="grow mx-1">{item.label}</span>
+                  <button
+                    className={`w-8 h-8 pt-[2px] ${
+                      isFirst && 'disabled:opacity-25'
+                    }`}
+                    type="button"
+                    disabled={isFirst}
+                  >
+                    <Icon icon="chevron-up" />
+                    {/* TODO: use different text */}
+                    <span className="sr-only">{t('common:close')}</span>
+                  </button>
+                  <button
+                    className={`w-8 h-8 pb-[2px] ${
+                      isLast && 'disabled:opacity-25'
+                    }`}
+                    type="button"
+                    disabled={isLast}
+                  >
+                    <Icon icon="chevron-down" />
+                    {/* TODO: use different text */}
+                    <span className="sr-only">{t('common:close')}</span>
+                  </button>
+                  <button className="w-8 h-8" type="button">
+                    <Icon icon="close" />
+                    <span className="sr-only">{t('common:close')}</span>
+                  </button>
+                </div>
+              );
+            })}
         </div>
         <div className="flex gap-1">
           <Combobox
