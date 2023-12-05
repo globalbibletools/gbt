@@ -13,3 +13,7 @@ In the GitHub project, you can see the [high level state of the project](https:/
 ## Contributing
 
 This is an ambitious project, so we need help from software engineers, ux desiginers, translators, and more. If you would like to help out with the software development please take a look at our [contributing docs](./docs/contributing.md).
+
+## Data Sources
+
+- [Full LSJ definitions](https://raw.githubusercontent.com/STEPBible/STEPBible-Data/master/Lexicons/TFLSJ%20%200-5624%20-%20Translators%20Formatted%20full%20LSJ%20Bible%20lexicon%20-%20STEPBible.org%20CC%20BY.txt) are from the [STEPBible-Data](https://github.com/STEPBible/STEPBible-Data) repo.
