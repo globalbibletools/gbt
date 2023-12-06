@@ -25,8 +25,8 @@ export interface TranslateWordProps {
   referenceGloss?: string;
   suggestions: string[];
   onChange(data: { gloss?: string; approved?: boolean }): void;
-  onShowInSidebar?: () => void;
-  onOpenSidebar?: () => void;
+  onFocus?: () => void;
+  onShowDetail?: () => void;
 }
 
 export interface TranslateWordRef {
@@ -46,8 +46,8 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
       referenceGloss,
       suggestions,
       onChange,
-      onShowInSidebar,
-      onOpenSidebar,
+      onFocus,
+      onShowDetail,
     }: TranslateWordProps,
     ref
   ) => {
@@ -100,8 +100,8 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
               : 'text-lg text-left font-greek pl-3'
           }`}
           onClick={() => {
-            onShowInSidebar?.();
-            onOpenSidebar?.();
+            onFocus?.();
+            onShowDetail?.();
           }}
         >
           <span className="inline-block" ref={ancientWord}>
@@ -182,12 +182,6 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
                   }
                 }}
                 onKeyDown={(e) => {
-                  if (e.ctrlKey && e.key === 'd') {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    onOpenSidebar?.();
-                    return;
-                  }
                   if (e.metaKey || e.altKey || e.ctrlKey) return;
                   switch (e.key) {
                     case 'Enter': {
@@ -210,7 +204,7 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
                     }
                   }
                 }}
-                onFocus={() => onShowInSidebar?.()}
+                onFocus={() => onFocus?.()}
                 suggestions={
                   machineGloss ? [...suggestions, machineGloss] : suggestions
                 }

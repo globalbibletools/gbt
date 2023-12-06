@@ -397,8 +397,8 @@ export default function TranslationView() {
                               : undefined,
                         });
                       }}
-                      onShowInSidebar={() => setSidebarWordIndex(i)}
-                      onOpenSidebar={() => setShowSidebar(true)}
+                      onFocus={() => setSidebarWordIndex(i)}
+                      onShowDetail={() => setShowSidebar(true)}
                       ref={(() => {
                         if (i === 0) {
                           return firstWord;
