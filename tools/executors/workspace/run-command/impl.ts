@@ -4,7 +4,8 @@ export default async function buildExecutor(options: {
   command: string;
   cwd?: string;
 }) {
-  console.info(`Executing workspace:run-command...`);
+  console.info(`Executing workspace:run-command: ${options.command}...`);
+  console.info(`Current working directory: ${process.cwd()}`);
 
   await execa.command(options.command, {
     cwd: options.cwd,

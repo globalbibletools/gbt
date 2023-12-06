@@ -51,10 +51,12 @@
         "command": "npx ts-node --project packages/db/tsconfig.json packages/db/src/scripts/import-strongs.ts"
       }
     },
+
     "prisma": {
-      "executor": "@translation/nx-plugin:prisma",
+      "executor": "./tools/executors/workspace:run-command",
       "options": {
-        "schema": "packages/db/src/schema.prisma"
+        "command": "npx dotenv-cli -e .env.local -- prisma migrate reset --schema ./src/schema.prisma",
+        "cwd": "packages/db"
       }
     }
   },
