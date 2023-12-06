@@ -1,4 +1,4 @@
-const execa = require('execa');
+import { commandSync } from 'execa';
 
 export default async function buildExecutor(options: {
   command: string;
@@ -6,7 +6,7 @@ export default async function buildExecutor(options: {
 }) {
   console.info(`Executing workspace:run-command...`);
 
-  await execa.command(options.command, {
+  commandSync(options.command, {
     cwd: options.cwd,
     stdio: [process.stdin, process.stdout, 'pipe'],
   });
