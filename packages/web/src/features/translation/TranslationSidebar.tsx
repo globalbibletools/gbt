@@ -58,9 +58,9 @@ export const TranslationSidebar = ({
         )}
         {lemmaResourcesQuery.isSuccess && lexiconEntry && (
           <div>
-            <span className="text-lg mb-3 font-bold me-2">
+            <div className="text-lg mb-3 font-bold me-2">
               {lexiconResource?.resource}
-            </span>
+            </div>
             <Markdown>{lexiconEntry}</Markdown>
           </div>
         )}
