@@ -206,5 +206,5 @@ export interface Resource {
 }
 
 export interface GetLemmaResourcesResponseBody {
-  data: Resource[][];
+  data: Record<string, Resource[]>;
 }

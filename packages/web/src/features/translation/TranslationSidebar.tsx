@@ -28,7 +28,7 @@ export const TranslationSidebar = ({
     () => apiClient.verses.findLemmaResources(verse.id)
   );
   const resources = lemmaResourcesQuery.isSuccess
-    ? lemmaResourcesQuery.data.data[wordIndex]
+    ? lemmaResourcesQuery.data.data[word.lemmaId]
     : [];
   const lexiconResource = resources.find(({ resource }) =>
     ['BDB', 'LSJ'].includes(resource)
