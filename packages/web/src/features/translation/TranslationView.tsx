@@ -30,6 +30,7 @@ import {
   incrementVerseId,
   parseVerseId,
 } from './verse-utils';
+import View from '../../shared/components/View';
 
 export const translationLanguageKey = 'translation-language';
 export const translationVerseIdKey = 'translation-verse-id';
@@ -294,7 +295,7 @@ export default function TranslationView() {
   }, [loading, verseQuery.data]);
 
   return (
-    <div className="px-4 flex flex-grow flex-col gap-8 min-h-0">
+    <View fitToScreen className="px-4 flex flex-grow flex-col gap-8">
       <div className="flex gap-8 items-center">
         <VerseSelector
           verseId={verseId}
@@ -448,6 +449,6 @@ export default function TranslationView() {
           );
         }
       })()}
-    </div>
+    </View>
   );
 }
