@@ -80,7 +80,7 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
         Math.max(
           ancientWord.current?.clientWidth ?? 0,
           refGloss.current?.clientWidth ?? 0,
-          // The extra 24 pixels accomdates the google icon
+          // The extra 24 pixels accommodates the google icon
           glossWidth + (hasMachineSuggestion ? 24 : 0)
         )
       );
@@ -94,11 +94,12 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
       >
         <div
           id={`word-${word.id}`}
-          className={`mb-1 h-8 ${
+          className={`mb-1 h-8 cursor-pointer ${
             originalLanguage === 'hebrew'
               ? 'text-2xl text-right font-hebrew pr-3'
               : 'text-lg text-left font-greek pl-3'
           }`}
+          tabIndex={-1}
           onClick={() => {
             onFocus?.();
             onShowDetail?.();
