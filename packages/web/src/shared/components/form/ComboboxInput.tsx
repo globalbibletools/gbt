@@ -20,12 +20,13 @@ export interface ComboboxItem {
 
 export type ComboboxInputProps = BaseComboboxInputProps & {
   required?: boolean;
+  isolate?: boolean;
 };
 
 export default function ComboboxInput(props: ComboboxInputProps) {
   const context = useFormContext();
 
-  if (context) {
+  if (context && !props.isolate) {
     return (
       <Controller
         control={context.control}
@@ -74,6 +75,7 @@ const BaseComboboxInput = forwardRef<HTMLInputElement, BaseComboboxInputProps>(
       name,
       up,
       onKeyDown,
+      disabled,
       ...props
     }: BaseComboboxInputProps,
     ref
@@ -118,8 +120,17 @@ const BaseComboboxInput = forwardRef<HTMLInputElement, BaseComboboxInputProps>(
     }
 
     return (
-      <div className={`${className}  group/combobox relative`}>
-        <Combobox value={value} onChange={onComboboxChange} name={name}>
+      <div
+        className={`${className}  group/combobox relative ${
+          disabled ? 'opacity-25' : ''
+        }`}
+      >
+        <Combobox
+          value={value}
+          onChange={onComboboxChange}
+          name={name}
+          disabled={disabled}
+        >
           <div
             className={`
               border rounded shadow-inner flex group-focus-within/combobox:outline group-focus-within/combobox:outline-2
