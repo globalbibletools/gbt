@@ -6,6 +6,10 @@
   "confirm": "Confirmar",
   "confirm_prompt": "Escriba '{{value}}' para confirmar su decisión.",
   "create": "Crear",
+  "direction": {
+    "down": "abajo",
+    "up": "arriba"
+  },
   "error": "Error",
   "loading": "Cargando",
   "name": "nombre",

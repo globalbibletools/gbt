@@ -1,10 +1,9 @@
 import { forwardRef, useState } from 'react';
-import { Controller, useForm, useFormContext } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { Icon } from '../Icon';
 import Button from '../actions/Button';
 import ComboboxInput from './ComboboxInput';
-import Form from './Form';
 
 export type ReorderableMultiselectInputProps =
   BaseReorderableMultiselectInputProps & {
@@ -102,8 +101,7 @@ const BaseReorderableMultiselectInput = forwardRef<
                   onClick={() => moveItem(i, i - 1)}
                 >
                   <Icon icon="chevron-up" />
-                  {/* TODO: use different text */}
-                  <span className="sr-only">{t('common:close')}</span>
+                  <span className="sr-only">{t('common:direction.up')}</span>
                 </button>
                 <button
                   className={`w-8 h-8 pb-[2px] ${
@@ -114,8 +112,7 @@ const BaseReorderableMultiselectInput = forwardRef<
                   onClick={() => moveItem(i, i + 1)}
                 >
                   <Icon icon="chevron-down" />
-                  {/* TODO: use different text */}
-                  <span className="sr-only">{t('common:close')}</span>
+                  <span className="sr-only">{t('common:direction.down')}</span>
                 </button>
                 <button
                   className="w-8 h-8"

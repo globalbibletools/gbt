@@ -6,6 +6,10 @@
   "confirm": "يتأكد",
   "confirm_prompt": "اكتب '{{value}}' لتأكيد قرارك.",
   "create": "إنشاء",
+  "direction": {
+    "down": "تحت",
+    "up": "أعلى"
+  },
   "error": "خطأ",
   "loading": "تحميل",
   "name": "الاسم",
