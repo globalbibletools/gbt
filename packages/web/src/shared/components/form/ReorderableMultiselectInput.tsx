@@ -92,11 +92,6 @@ const BaseReorderableMultiselectInput = forwardRef<
             const isLast = i === value.length - 1;
             return (
               <div className="py-2 px-1 flex items-center" key={item.value}>
-                <button className="w-8 h-8" type="button">
-                  <Icon icon="grip-vertical" />
-                  {/* TODO: use different text */}
-                  <span className="sr-only">{t('common:close')}</span>
-                </button>
                 <span className="grow mx-1">{item.label}</span>
                 <button
                   className={`w-8 h-8 pt-[2px] ${
