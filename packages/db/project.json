@@ -53,10 +53,9 @@
     },
 
     "prisma": {
-      "executor": "./tools/executors/workspace:run-command",
+      "executor": "@translation/nx-plugin:prisma",
       "options": {
-        "command": "npx dotenv-cli -e .env.local -- prisma migrate reset --schema ./src/schema.prisma",
-        "cwd": "packages/db"
+        "schema": "packages/db/src/schema.prisma"
       }
     }
   },
