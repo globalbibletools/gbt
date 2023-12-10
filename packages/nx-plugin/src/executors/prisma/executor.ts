@@ -1,6 +1,6 @@
 import { PrismaExecutorSchema } from './schema';
 // import { execSync } from 'child_process';
-import { commandSync } from 'execa';
+import { execa } from 'execa';
 
 export default async function runExecutor({
   _,
@@ -21,11 +21,8 @@ export default async function runExecutor({
   // execSync(command, {
   //   stdio: 'inherit',
   // });
-  console.info(`Executing nx:prisma command: ${command}`);
-  console.info(`Current working directory: ${process.cwd()}`);
-
-  commandSync(command, {
-    cwd: process.cwd(),
+  await execa.command(command, {
+    //  cwd: options.cwd,
     stdio: [process.stdin, process.stdout, 'pipe'],
   });
 
