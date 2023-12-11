@@ -1,6 +1,5 @@
 import { PrismaExecutorSchema } from './schema';
-// import { execSync } from 'child_process';
-import { execa } from 'execa';
+import { execSync } from 'child_process';
 
 export default async function runExecutor({
   _,
@@ -18,12 +17,8 @@ export default async function runExecutor({
 
   // `inherit` allows the parent terminal to send and receive input and output on stdin/out/err.
   // This is necessary because prisma commands are interactive.
-  // execSync(command, {
-  //   stdio: 'inherit',
-  // });
-  await execa.command(command, {
-    //  cwd: options.cwd,
-    stdio: [process.stdin, process.stdout, 'pipe'],
+  execSync(command, {
+    stdio: 'inherit',
   });
 
   return {
