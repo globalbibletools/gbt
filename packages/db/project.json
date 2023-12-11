@@ -55,7 +55,8 @@
     "prisma": {
       "executor": "./tools/executors/workspace:run-command",
       "options": {
-        "command": "npx dotenv-cli -e packages/db/.env.local -- prisma migrate reset --schema packages/db/src/schema.prisma",
+        "command": "npx dotenv-cli -e packages/db/.env.local -- prisma migrate reset",
+        "schema": "packages/db/src/schema.prisma",
         "cwd": "."
       }
     }

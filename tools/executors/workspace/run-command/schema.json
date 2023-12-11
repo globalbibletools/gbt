@@ -7,6 +7,10 @@
       "type": "string",
       "description": "The command to run"
     },
+    "schema": {
+      "type": "string",
+      "description": "Path to prisma schema file"
+    },
     "cwd": {
       "type": "string",
       "description": "The working directory to run the command in"
