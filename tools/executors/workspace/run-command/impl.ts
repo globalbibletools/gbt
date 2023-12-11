@@ -2,6 +2,7 @@ const execa = require('execa');
 
 export default async function buildExecutor(options: {
   command: string;
+  schema: string;
   cwd?: string;
 }) {
   console.info(`Executing workspace:run-command: ${options.command}...`);
