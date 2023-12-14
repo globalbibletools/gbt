@@ -55,7 +55,7 @@ type ItemType = { label: string; value: string };
 const BaseSortableMultiselectInput = forwardRef<
   HTMLInputElement,
   BaseSortableMultiselectInputProps
->(({ className = '', value, onChange, items }, ref) => {
+>(({ className = '', value, onChange, onBlur, items }, ref) => {
   const selected: string[] = value ?? [];
   const { t } = useTranslation(['common']);
   const [newItemValue, setNewItemValue] = useState('');
@@ -101,6 +101,7 @@ const BaseSortableMultiselectInput = forwardRef<
                     type="button"
                     disabled={isFirst}
                     onClick={() => moveItem(i, i - 1)}
+                    onBlur={onBlur}
                   >
                     <Icon icon="chevron-up" />
                     <span className="sr-only">{t('common:direction.up')}</span>
@@ -112,6 +113,7 @@ const BaseSortableMultiselectInput = forwardRef<
                     type="button"
                     disabled={isLast}
                     onClick={() => moveItem(i, i + 1)}
+                    onBlur={onBlur}
                   >
                     <Icon icon="chevron-down" />
                     <span className="sr-only">
@@ -122,6 +124,7 @@ const BaseSortableMultiselectInput = forwardRef<
                     className="w-8 h-8"
                     type="button"
                     onClick={() => removeItem(i)}
+                    onBlur={onBlur}
                   >
                     <Icon icon="close" />
                     <span className="sr-only">{t('common:close')}</span>
@@ -137,12 +140,13 @@ const BaseSortableMultiselectInput = forwardRef<
           className="grow block"
           value={newItemValue}
           onChange={setNewItemValue}
+          onBlur={onBlur}
           items={availableNewItems}
           disabled={availableNewItems.length === 0}
           autoComplete="off"
           isolate
         />
-        <Button onClick={addItem}>
+        <Button onClick={addItem} onBlur={onBlur}>
           <Icon icon="add" />
           <span className="ms-1">{t('common:add')}</span>
         </Button>
