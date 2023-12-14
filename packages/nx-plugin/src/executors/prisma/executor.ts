@@ -1,5 +1,5 @@
 import { PrismaExecutorSchema } from './schema';
-import { command } from 'execa';
+import { spawn } from 'child_process';
 
 export default async function runExecutor({
   _,
@@ -9,24 +9,33 @@ export default async function runExecutor({
   // The options are for executors are parsed with yargs, so arguments without a `-` or `--` are added to the `_` property.
   // We assume these are all prisma commands like `prisma migrate reset`.
   // Then we add the schema argument and any remaining standard arguments.
-  const mycommand = `npx prisma ${_.join(
-    ' '
-  )} --schema=${schema} ${Object.entries(options)
-    .map(([key, value]) => `--${key}=${value}`)
-    .join(' ')}`;
 
   // `inherit` allows the parent terminal to send and receive input and output on stdin/out/err.
   // This is necessary because prisma commands are interactive.
-  // execSync(command, {
-  //   stdio: 'inherit',
-  // });
+  const child = spawn(
+    'npx',
+    [
+      'prisma',
+      ..._,
+      `--schema=${schema}`,
+      ...Object.entries(options).map(([key, value]) => `--${key}=${value}`),
+    ],
+    {
+      stdio: ['inherit', 'pipe', 'inherit'],
+    }
+  );
 
-  console.info(`Executing mycommand: ${mycommand}`);
-  console.info(`Current working directory: ${process.cwd()}`);
+  // But we manually console.log stdout so that it flushes when waiting for stdin.
+  child.stdout.on('data', (chunk) => console.log(chunk.toString()));
 
-  await command(mycommand, {
-    cwd: process.cwd(),
-    stdio: [process.stdin, process.stdout, 'pipe'],
+  await new Promise<void>((resolve, reject) => {
+    child.on('exit', (code) => {
+      if (code === 0) {
+        resolve();
+      } else {
+        reject();
+      }
+    });
   });
 
   return {
