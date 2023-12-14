@@ -1,5 +1,5 @@
 import { PrismaExecutorSchema } from './schema';
-import { execa } from 'execa';
+import { command } from 'execa';
 
 export default async function runExecutor({
   _,
@@ -24,7 +24,7 @@ export default async function runExecutor({
   console.info(`Executing mycommand: ${mycommand}`);
   console.info(`Current working directory: ${process.cwd()}`);
 
-  await execa.command(mycommand, {
+  await command(mycommand, {
     cwd: process.cwd(),
     stdio: [process.stdin, process.stdout, 'pipe'],
   });
