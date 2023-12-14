@@ -5,14 +5,14 @@ import { Icon } from '../Icon';
 import Button from '../actions/Button';
 import ComboboxInput from './ComboboxInput';
 
-export type ReorderableMultiselectInputProps =
-  BaseReorderableMultiselectInputProps & {
+export type SortableMultiselectInputProps =
+  BaseSortableMultiselectInputProps & {
     required?: boolean;
     isolate?: boolean;
   };
 
-export default function ReorderableMultiselectInput(
-  props: ReorderableMultiselectInputProps
+export default function SortableMultiselectInput(
+  props: SortableMultiselectInputProps
 ) {
   const context = useFormContext();
 
@@ -24,7 +24,7 @@ export default function ReorderableMultiselectInput(
         defaultValue={props.defaultValue}
         rules={{ required: props.required }}
         render={({ field, fieldState }) => (
-          <BaseReorderableMultiselectInput
+          <BaseSortableMultiselectInput
             {...field}
             items={props.items}
             hasErrors={!!fieldState.error}
@@ -34,11 +34,11 @@ export default function ReorderableMultiselectInput(
       />
     );
   } else {
-    return <BaseReorderableMultiselectInput {...props} />;
+    return <BaseSortableMultiselectInput {...props} />;
   }
 }
 
-interface BaseReorderableMultiselectInputProps {
+interface BaseSortableMultiselectInputProps {
   className?: string;
   name: string;
   items: ItemType[];
@@ -52,9 +52,9 @@ interface BaseReorderableMultiselectInputProps {
 
 type ItemType = { label: string; value: string };
 
-const BaseReorderableMultiselectInput = forwardRef<
+const BaseSortableMultiselectInput = forwardRef<
   HTMLInputElement,
-  BaseReorderableMultiselectInputProps
+  BaseSortableMultiselectInputProps
 >(({ className = '', value, onChange, items }, ref) => {
   const selected: string[] = value ?? [];
   const { t } = useTranslation(['common']);

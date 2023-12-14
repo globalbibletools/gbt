@@ -22,7 +22,6 @@ library.add(
   FaSolid.faRightFromBracket,
   FaSolid.faExclamationTriangle,
   FaSolid.faFileImport,
-  FaSolid.faGripVertical,
   FaSolid.faChevronUp,
   FaSolid.faChevronDown
 );

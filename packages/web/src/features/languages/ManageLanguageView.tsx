@@ -31,7 +31,7 @@ import Form from '../../shared/components/form/Form';
 import FormLabel from '../../shared/components/form/FormLabel';
 import InputError from '../../shared/components/form/InputError';
 import MultiselectInput from '../../shared/components/form/MultiselectInput';
-import ReorderableMultiselectInput from '../../shared/components/form/ReorderableMultiselectInput';
+import SortableMultiselectInput from '../../shared/components/form/SortableMultiselectInput';
 import SubmittingIndicator from '../../shared/components/form/SubmittingIndicator';
 import TextInput from '../../shared/components/form/TextInput';
 import fontClient from '../../shared/fontClient';
@@ -220,7 +220,7 @@ export default function ManageLanguageView() {
             <FormLabel htmlFor="bibleTranslationIds">
               {t('languages:bible_translations').toUpperCase()}
             </FormLabel>
-            <ReorderableMultiselectInput
+            <SortableMultiselectInput
               name="bibleTranslationIds"
               className="w-full"
               defaultValue={language.data.bibleTranslationIds}
