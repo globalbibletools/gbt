@@ -2,6 +2,7 @@ import * as https from 'https';
 import * as path from 'path';
 import * as fs from 'fs';
 import { BDBEntry, PrismaClient } from '@prisma/client';
+
 const BASE_URL = 'https://www.sefaria.org/api/texts';
 const START_REF_HEB = 'BDB%2C_%D7%90.1';
 const BREAK_START = 'BDB, עפר';
@@ -11,6 +12,8 @@ const STRONGS_MAPPING_FILE = path.join(
   __dirname,
   '../../../../data/bdbToStrongsMapping.csv'
 );
+
+const client = new PrismaClient();
 
 function get(url: string) {
   return new Promise((resolve, reject) => {
@@ -79,29 +82,22 @@ async function* downloadBDBAramaic(): AsyncGenerator<BDBData, void, unknown> {
   }
 }
 
-function importStrongsMapping() {
+async function importStrongsMapping() {
   const data = fs.readFileSync(STRONGS_MAPPING_FILE).toString();
   const rows = data.split('\n').slice(1);
-  return rows.map((row) => {
+  for (const row of rows) {
     const cells = row.split(',');
-    return {
-      bdbId: cells[0],
-      strongs: cells[1],
-      word: cells[2],
-    };
-  });
-}
-
-async function run() {
-  const client = new PrismaClient();
-
-  const mappings = importStrongsMapping();
-  for (const m of mappings) {
     await client.bDBStrongsMapping.create({
-      data: m,
+      data: {
+        bdbId: cells[0],
+        strongs: cells[1],
+        word: cells[2],
+      },
     });
   }
+}
 
+async function importBdb() {
   let id = 1;
   let entries: BDBEntry[] = [];
   for await (const entry of downloadBDB()) {
@@ -113,6 +109,7 @@ async function run() {
       id: id++,
       word: entry.word,
       content: entry.content[0],
+      strongs: null,
     });
 
     if (id % 100 === 0) {
@@ -133,6 +130,7 @@ async function run() {
       id: id++,
       word: entry.word,
       content: entry.content[0],
+      strongs: null,
     });
 
     if (id % 100 === 0) {
@@ -148,6 +146,45 @@ async function run() {
     data: entries,
     skipDuplicates: true,
   });
+}
+
+async function resolveMatchingEntries() {
+  await client.$executeRaw`
+    WITH bdb_mapping AS (
+    	SELECT
+    		"BDBStrongsMapping"."bdbId",
+    		"BDBStrongsMapping".strongs,
+    		regexp_replace(
+    			translate(translate("BDBStrongsMapping".word, U&'\05ba', U&'\05b9'),U&'\0098', ''),
+    			'^[\u0020\u0590-\u05CF]+',
+    			''
+    		) AS word,
+    		"BDBStrongsMapping".id,
+    		CAST(substring("BDBStrongsMapping"."bdbId" from 4) AS INT) >= 9264 AS is_aramaic
+    	FROM "BDBStrongsMapping"
+    ),
+    final_mapping AS (
+    	SELECT bdb_mapping.strongs, "BDBEntry".id  FROM bdb_mapping
+    	LEFT JOIN "BDBEntry" ON
+    		normalize(bdb_mapping.word, NFC) = normalize("BDBEntry".word, NFC)
+    		AND (
+    			(bdb_mapping.is_aramaic AND "BDBEntry".id >=11012)
+    			OR (NOT bdb_mapping.is_aramaic AND "BDBEntry".id < 11012)
+    		)
+    	WHERE "BDBEntry".id IS NOT NULL
+    	ORDER BY COALESCE(bdb_mapping.word, "BDBEntry".word) asc
+    )
+    UPDATE "BDBEntry"
+    SET strongs = final_mapping.strongs
+    FROM final_mapping
+    WHERE "BDBEntry".id = final_mapping.id
+  `;
+}
+
+async function run() {
+  await importStrongsMapping();
+  await importBdb();
+  await resolveMatchingEntries();
 }
 
 run().catch(console.error);
