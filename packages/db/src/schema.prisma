@@ -314,3 +314,16 @@ model UHBWord {
   type   String?
   wordId String?
 }
+
+model BDBEntry {
+  id      Int    @id
+  word    String
+  content String
+}
+
+model BDBStrongsMapping {
+  id      Int    @id @default(autoincrement())
+  bdbId   String
+  strongs String
+  word    String
+}
