@@ -84,17 +84,21 @@ async function* downloadBDBAramaic(): AsyncGenerator<BDBData, void, unknown> {
 
 async function importStrongsMapping() {
   const data = fs.readFileSync(STRONGS_MAPPING_FILE).toString();
-  const rows = data.split('\n').slice(1);
-  for (const row of rows) {
-    const cells = row.split(',');
-    await client.bDBStrongsMapping.create({
-      data: {
+  const rows = data
+    .split('\n')
+    .slice(1)
+    .map((row, i) => {
+      const cells = row.split(',');
+      return {
+        id: i + 1,
         bdbId: cells[0],
         strongs: cells[1],
-        word: cells[2],
-      },
+        word: cells[2] ?? '',
+      };
     });
-  }
+  await client.bDBStrongsMapping.createMany({
+    data: rows,
+  });
 }
 
 async function importBdb() {
@@ -109,7 +113,6 @@ async function importBdb() {
       id: id++,
       word: entry.word,
       content: entry.content[0],
-      strongs: null,
     });
 
     if (id % 100 === 0) {
@@ -130,7 +133,6 @@ async function importBdb() {
       id: id++,
       word: entry.word,
       content: entry.content[0],
-      strongs: null,
     });
 
     if (id % 100 === 0) {
@@ -150,21 +152,23 @@ async function importBdb() {
 
 async function resolveMatchingEntries() {
   await client.$executeRaw`
-    WITH bdb_mapping AS (
-    	SELECT
-    		"BDBStrongsMapping"."bdbId",
-    		"BDBStrongsMapping".strongs,
-    		regexp_replace(
-    			translate(translate("BDBStrongsMapping".word, U&'\05ba', U&'\05b9'),U&'\0098', ''),
-    			'^[\u0020\u0590-\u05CF]+',
-    			''
-    		) AS word,
-    		"BDBStrongsMapping".id,
-    		CAST(substring("BDBStrongsMapping"."bdbId" from 4) AS INT) >= 9264 AS is_aramaic
-    	FROM "BDBStrongsMapping"
-    ),
-    final_mapping AS (
-    	SELECT bdb_mapping.strongs, "BDBEntry".id  FROM bdb_mapping
+    UPDATE "BDBEntry"
+    SET strongs = final_mapping.strongs
+    FROM (
+    	SELECT bdb_mapping.strongs, "BDBEntry".id
+    	FROM (
+    		SELECT
+    			"BDBStrongsMapping"."bdbId",
+    			"BDBStrongsMapping".strongs,
+    			regexp_replace(
+    				translate(translate("BDBStrongsMapping".word, U&'\05ba', U&'\05b9'),U&'\0098', ''),
+    				'^[\u0020\u0590-\u05CF]+',
+    				''
+    			) AS word,
+    			"BDBStrongsMapping".id,
+    			CAST(substring("BDBStrongsMapping"."bdbId" from 4) AS INT) >= 9264 AS is_aramaic
+    		FROM "BDBStrongsMapping"
+    	) AS bdb_mapping
     	LEFT JOIN "BDBEntry" ON
     		normalize(bdb_mapping.word, NFC) = normalize("BDBEntry".word, NFC)
     		AND (
@@ -173,18 +177,15 @@ async function resolveMatchingEntries() {
     		)
     	WHERE "BDBEntry".id IS NOT NULL
     	ORDER BY COALESCE(bdb_mapping.word, "BDBEntry".word) asc
-    )
-    UPDATE "BDBEntry"
-    SET strongs = final_mapping.strongs
-    FROM final_mapping
+    ) AS final_mapping
     WHERE "BDBEntry".id = final_mapping.id
   `;
 }
 
 async function run() {
   await importStrongsMapping();
-  await importBdb();
-  await resolveMatchingEntries();
+  // await importBdb();
+  // await resolveMatchingEntries();
 }
 
 run().catch(console.error);

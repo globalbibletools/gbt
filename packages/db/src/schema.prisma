@@ -316,10 +316,9 @@ model UHBWord {
 }
 
 model BDBEntry {
-  id      Int     @id
+  id      Int    @id
   word    String
   content String
-  strongs String?
 }
 
 model BDBStrongsMapping {
@@ -327,4 +326,5 @@ model BDBStrongsMapping {
   bdbId   String
   strongs String
   word    String
+  entry   Int?
 }
