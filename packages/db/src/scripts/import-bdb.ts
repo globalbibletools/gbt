@@ -6,8 +6,8 @@ import { BDBEntry, PrismaClient } from '@prisma/client';
 const BASE_URL = 'https://www.sefaria.org/api/texts';
 const START_REF_HEB = 'BDB%2C_%D7%90.1';
 const BREAK_START = 'BDB, עפר';
-const BREAK_END = 'BDB, עֹפֶרֶת';
-const START_REF_AR = 'BDB_Aramaic%2C_אֵב.1';
+const BREAK_END = 'BDB, עֶפְרַ֫יִן';
+const START_REF_AR = 'BDB_Aramaic, אֵב';
 const STRONGS_MAPPING_FILE = path.join(
   __dirname,
   '../../../../data/bdbToStrongsMapping.csv'
@@ -57,6 +57,13 @@ async function* downloadBDB(): AsyncGenerator<BDBData, void, unknown> {
         word: entry.titleVariants?.[0] ?? 'unknown',
         content: entry.text,
       };
+    }
+
+    if (ref === BREAK_START) {
+      const temp = { word: 'missing', content: ['missing'] };
+      yield temp;
+      yield temp;
+      yield temp;
     }
 
     ref = ref === BREAK_START ? BREAK_END : entry?.next;
@@ -183,8 +190,8 @@ async function resolveMatchingEntries() {
 }
 
 async function run() {
-  await importStrongsMapping();
-  // await importBdb();
+  // await importStrongsMapping();
+  await importBdb();
   // await resolveMatchingEntries();
 }
 
