@@ -6,9 +6,10 @@ WITH strongs_mapping AS (
 		word,
 		entry
 	FROM "BDBStrongsMapping"
-)
-SELECT * FROM strongs_mapping
-LEFT JOIN "BDBEntry" AS entry
+),
+final_mapping AS (
+	SELECT strongs_mapping.id AS mapping_id, entry.id AS entry_id FROM strongs_mapping
+	LEFT JOIN "BDBEntry" AS entry
 	ON entry.id = CASE
 		WHEN 10012 <= bdb_id THEN bdb_id + 1855
 		WHEN 10008 <= bdb_id THEN bdb_id + 1854
@@ -1017,5 +1018,9 @@ LEFT JOIN "BDBEntry" AS entry
 		WHEN 1 = bdb_id THEN bdb_id
 		ELSE 0
 	END
-WHERE bdb_id >= 10000
 ORDER BY strongs_mapping.bdb_id
+)
+UPDATE "BDBStrongsMapping" as orig
+SET entry = final_mapping.entry_id
+FROM final_mapping
+WHERE final_mapping.mapping_id = orig.id
