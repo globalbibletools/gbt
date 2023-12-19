@@ -322,9 +322,9 @@ model BDBEntry {
 }
 
 model BDBStrongsMapping {
-  id      Int    @id @default(autoincrement())
-  bdbId   String
-  strongs String
+  id      Int     @id @default(autoincrement())
+  bdbId   String?
+  strongs String?
   word    String
   entry   Int?
 }
