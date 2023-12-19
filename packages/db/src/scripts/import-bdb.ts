@@ -306,6 +306,12 @@ function importMapping(): BDBMapping[] {
   });
 }
 
+function processEntry(entry: string): string {
+  return entry
+    .replaceAll(/<(\/?)big>(?:<\/?big>)?/g, '<$1strong>')
+    .replaceAll(/<\/?a[^>]*>/g, '');
+}
+
 async function run() {
   const mapping = importMapping();
   const bdb = await importBdb();
@@ -334,7 +340,7 @@ async function run() {
   await client.lemmaResource.createMany({
     data: data.map((d) => ({
       lemmaId: d!.strongs,
-      content: d!.entry!.content,
+      content: processEntry(d!.entry!.content),
       resourceCode: ResourceCode.BDB,
     })),
     skipDuplicates: true,
