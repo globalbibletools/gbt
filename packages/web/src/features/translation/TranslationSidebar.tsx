@@ -6,6 +6,7 @@ import apiClient from '../../shared/apiClient';
 import { Icon } from '../../shared/components/Icon';
 import LoadingSpinner from '../../shared/components/LoadingSpinner';
 import { parseVerseId } from './verse-utils';
+import rehypeRaw from 'rehype-raw';
 
 type TranslationSidebarProps = {
   language: string;
@@ -61,7 +62,7 @@ export const TranslationSidebar = ({
             <div className="text-lg mb-3 font-bold me-2">
               {lexiconResource?.resource}
             </div>
-            <Markdown>{lexiconEntry}</Markdown>
+            <Markdown rehypePlugins={[rehypeRaw]}>{lexiconEntry}</Markdown>
           </div>
         )}
       </div>
