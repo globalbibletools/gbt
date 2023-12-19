@@ -1,22 +1,22 @@
 import { Lemma, LemmaResource, PrismaClient } from '@prisma/client';
-import { parseLexicon } from './parse-lexicon';
+import { parseBdb, parseLsj } from './parse-lexicon';
 
 const client = new PrismaClient();
 
 export const importLexicon = async (
   resourceCode: 'BDB' | 'LSJ',
-  filename: string,
-  definitionField: string
+  filename: string
 ) => {
   console.log(`Importing ${resourceCode} definitions...`);
-  const parsed = await parseLexicon(filename, [definitionField]);
+  const parsed =
+    resourceCode == 'BDB' ? await parseBdb(filename) : await parseLsj(filename);
   console.log(`Parsed ${Object.keys(parsed).length} words`);
   await client.lemmaResource.deleteMany({ where: { resourceCode } });
   const lemmaData: Lemma[] = [];
   const resourceData: LemmaResource[] = [];
   Object.keys(parsed)
     .filter((lemmaId) => {
-      if (typeof parsed[lemmaId][definitionField] === 'undefined') {
+      if (typeof parsed[lemmaId] === 'undefined') {
         console.error('Missing definition for', lemmaId);
         return false;
       }
@@ -24,7 +24,7 @@ export const importLexicon = async (
     })
     .forEach((lemmaId) => {
       lemmaData.push({ id: lemmaId });
-      const content = parsed[lemmaId][definitionField];
+      const content = parsed[lemmaId];
       resourceData.push({ lemmaId, resourceCode, content });
     });
   // We have to create non-existent lemmas, so that the foreign key on lemma

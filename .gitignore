@@ -43,5 +43,3 @@ Thumbs.db
 
 .env.local
 
-# Vagrant environment
-.vagrant

@@ -24,6 +24,8 @@ paths:
     $ref: ./paths/users/verify-email.yml
   /verses/{verseId}:
     $ref: ./paths/translation/verse.yml
+  /verses/{verseId}/lemma-resources:
+    $ref: ./paths/translation/lemma-resources.yml
   /import/languages:
     $ref: ./paths/languages/import-languages.yml
   /languages:
@@ -42,5 +44,3 @@ paths:
     $ref: ./paths/languages/language-members.yml
   /languages/{code}/members/{userId}:
     $ref: ./paths/languages/language-member.yml
-  /lemmas/{lemmaId}/resources:
-    $ref: ./paths/resources/lemma-resources.yml

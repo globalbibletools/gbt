@@ -1,0 +1,34 @@
+get:
+  tags:
+    - Verses
+  summary: Get the resource entries available for every lemma in a verse.
+  parameters:
+    - $ref: '../../schemas/parameters.yml#verseId'
+  responses:
+    '200':
+      description: Ok
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                additionalProperties:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      resource:
+                        type: string
+                        description: The resource from which this entry was taken.
+                      entry:
+                        type: string
+                        description: The content of the resource entry.
+                example:
+                  G1478:
+                    - resource: LSJ
+                      entry: "**Ἑζεκίας** (Rec. Ἐζ-), -ου, ὁ (Heb. חִזְקִיָּה, *strength of Jehovah*), \n\n **Hezekiah**, King of Judah: Mat.1:9, 10.†\n\n  (From Abbott-Smith. LSJ has no entry)"
+                  G1161:
+                    - resource: LSJ
+                      entry: "**δέ**, \n\n **but**: adversative and copulative Particle, \n\n\n## **__I**\n answering to μέν (which see), τὴν νῦν μὲν Βοιωτίαν, πρότερον δὲ Καδμηίδα γῆν καλουμένην Refs 5th c.BC+\n\n\n## **__II**\n without preceding μέν, \n\n\n### **__II.1**\n adversative, expressing distinct opposition, αἰεί τοι τὰ κάκ᾽ ἐστὶ φίλα.. μαντεύεσθαι, ἐσθλὸν δ᾽ οὔτε τί πω εἶπαςRefs 5th c.BC+; so in Prose, οὐκ ἐπὶ κακῷ, ἐλευθερώσει δέ.. Refs 5th c.BC+\n\n\n### **__II.2**\n copulative, \n\n\n#### **__II.2.a**\n in explanatory clauses, ξυνέβησαν.. τὰ μακρὰ τείχη ἑλεῖν (ἦν δὲ σταδίων μάλιστα ὀκτώ) Refs 8th c.BC+: when a *substantive* is followed by words in apposition, Ἀρισταγόρῃ τῷ Μιλησίῳ, δούλῳ δὲ ἡμετέρῳ Refs 5th c.BC+; so in answers, διπλᾶ λέγειν. —Answ. διπλᾶδ᾽ ὁρᾶν Refs\n\n\n#### **__II.2.b**\n in enumerations or transitions, Refs 8th c.BC+; with repetition of a word in different relations, ὣς Ἀχιλεὺς θάμβησεν.., θάμβησαν δὲ καὶ ἄλλοι Refs 8th c.BC+; in rhetorical outbursts, οὐκ ἂν εὐθέως εἴποιεν· τὸν δὲ βάσκανον, τὸν δὲ ὄλεθρον, τοῦτον δὲ ὑβρίζειν,—ἀναπνεῖν δέ. Refs 4th c.BC+; in a climax, πᾶν γύναιον καὶ παιδίον καὶ θηρίον δέ **nay** even beast, Refs 5th c.BC+; in the combination καὶ δέ Refs 8th c.BC+\n\n\n#### **__II.2.c**\n answering to τε (which see), ἃ τῶν τε ἀποβαινόντων ἕνεκα ἄξια κεκτῆσθαι, πολὺ δὲ μᾶλλον αὐτὰ αὑτῶν Refs 5th c.BC+\n\n\n### **__II.3**\n implying causal connexion, less direct than γάρ, Refs 8th c.BC+\n\n\n### **__II.4**\n in questions, with implied opposition, ἑόρακας δ᾽, ἔφη, τὴν γυναῖκ; Refs 5th c.BC+\n\n\n#### **__II.4.b**\n τί δ; what **then**? to mark a transition in dialogue; see at {τίς}. \n\n\n## **__II**\n in apodosi: \n\n\n### **__II.1**\n after hypothetical clauses, εἰ δέ κε μὴ δώωσιν, ἐγὼ δέ κεν αὐτὸς ἕλωμαι if they will not give it, **then** I.., Refs 8th c.BC+\n\n\n#### **__II.1.b**\n after temporal or relative clauses, with ἐπεί, ἕως, etc., Refs 8th c.BC+; with *demonstrative* Pronouns or *adverbs* answering to a preceding relative, οἵηπερ φύλλων γενεή, τοίη δὲ καὶ ἀνδρῶν Refs 8th c.BC+: sometimes after a participle, οἰόμενοι.. τιμῆς τεύξεσθαι, ἀντὶ δὲ τούτων οὐδ᾽ ὅμοιοι.. ἐσόμεθα Refs 5th c.BC+\n\n\n### **__II.2**\n to resume after an interruption or parenthesis, χρόνου δὲ ἐπιγινομένου καὶ κατεστραμμένων σχεδὸν πάντων..,—κατεστραμμένων δὲ τούτων.. Refs 5th c.BC+; with an anacoluthon, ἡ δὲ ψυχὴ ἄρα,—οἷ ἂν θεὸς θέλῃ.. τῇ ἐμῇ ψυχῇ ἰτέον, αὕτη δὲ δή.. Refs 5th c.BC+\n\n\n### **__II.3**\n to begin a story, ἦμος δ᾽ ἠέλιος.. **well,** when the sun.., Refs 8th c.BC+\n\n\n### **__II.4**\n to introduce a proof, τεκμήριον δέ, σημεῖον δέ, (see entry). \n\n\n# **__B**\n POSITION of δέ. It usually stands second: hence frequently between *Article* and *substantive* or *preposition* and case; but also after *substantive*, or words forming a connected notion, hence it may stand third, γυναῖκα πιστὴν δ᾽ ἐν δόμοις εὕροι Refs 5th c.BC+; so in Prose after a *negative*, οὐχ ὑπ᾽ ἐραστοῦ δέ, to avoid confusion between οὐ δέ and οὐδέ, Refs 5th c.BC+"

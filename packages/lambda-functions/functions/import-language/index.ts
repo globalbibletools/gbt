@@ -1,4 +1,4 @@
-import { PrismaClient } from '@translation/db';
+import { GlossState, PrismaClient } from '@translation/db';
 import { SQSEvent } from 'aws-lambda';
 import { bookKeys } from '../../../../data/book-keys';
 
@@ -65,20 +65,15 @@ export const lambdaHandler = async (event: SQSEvent) => {
                 wordIndex < verseData.length;
                 wordIndex++
               ) {
-                const useWord =
-                  referenceData[chapterNumber - 1][verseNumber - 1][wordIndex]
-                    .length == 6;
-                if (useWord) {
-                  wordNumber += 1;
-                  const wordId = [
-                    bookId.toString().padStart(2, '0'),
-                    chapterNumber.toString().padStart(3, '0'),
-                    verseNumber.toString().padStart(3, '0'),
-                    wordNumber.toString().padStart(2, '0'),
-                  ].join('');
-                  const gloss = verseData[wordIndex][0];
-                  glossData.push({ wordId, gloss });
-                }
+                wordNumber += 1;
+                const wordId = [
+                  bookId.toString().padStart(2, '0'),
+                  chapterNumber.toString().padStart(3, '0'),
+                  verseNumber.toString().padStart(3, '0'),
+                  wordNumber.toString().padStart(2, '0'),
+                ].join('');
+                const gloss = verseData[wordIndex][0];
+                glossData.push({ wordId, gloss });
               }
             }
           }
@@ -89,6 +84,7 @@ export const lambdaHandler = async (event: SQSEvent) => {
               wordId,
               languageId: language.id,
               gloss,
+              state: GlossState.APPROVED,
             })),
           });
         } catch (error) {
