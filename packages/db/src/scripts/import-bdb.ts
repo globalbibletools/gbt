@@ -2,7 +2,12 @@ import * as https from 'https';
 import * as path from 'path';
 import * as fs from 'fs';
 import { XMLParser } from 'fast-xml-parser';
-import { BDBEntry, BDBStrongsMapping, PrismaClient } from '@prisma/client';
+import {
+  BDBEntry,
+  BDBStrongsMapping,
+  PrismaClient,
+  ResourceCode,
+} from '@prisma/client';
 
 const BASE_URL = 'https://www.sefaria.org/api/texts';
 const START_REF_HEB = 'BDB%2C_%D7%90.1';
@@ -15,6 +20,115 @@ const STRONGS_MAPPING_FILE = path.join(
   '../../../../data/LexicalIndex.xml'
 );
 const BDB_FILE = path.join(__dirname, '../../../../data/BrownDriverBriggs.xml');
+
+const STRONGS_MAP: { [id: number]: number | null } = {
+  11830: 32,
+  11776: 31,
+  11775: null,
+  11739: 32,
+  11738: null,
+  11677: 33,
+  11652: 32,
+  11611: 31,
+  11477: 30,
+  11474: 29,
+  11431: 28,
+  11429: 29,
+  11406: 26,
+  11237: 25,
+  11162: 24,
+  11161: null,
+  11158: 25,
+  11145: 24,
+  11050: 23,
+  10896: 21,
+  10831: 22,
+  10830: null,
+  10752: 23,
+  10604: 22,
+  10602: 21,
+  10407: 20,
+  10126: 19,
+  10125: null,
+  9905: 20,
+  9478: 19,
+  9477: null,
+  9458: 20,
+  9457: null,
+  9455: 21,
+  9454: null,
+  9394: 22,
+  9393: null,
+  9360: 23,
+  9073: 22,
+  8040: 21,
+  7600: 20,
+  7528: 21,
+  7071: 20,
+  6872: 19,
+  6687: 18,
+  6685: 17,
+  6684: null,
+  6281: 19,
+  6134: 18,
+  6133: null,
+  5909: 19,
+  5852: 18,
+  5851: null,
+  5771: 19,
+  5734: 18,
+  5720: 17,
+  5675: 16,
+  5627: 15,
+  5606: 14,
+  5218: 13,
+  5212: 12,
+  5195: 11,
+  5113: 10,
+  4669: 9,
+  4555: 8,
+  4554: null,
+  4524: 9,
+  4523: null,
+  4273: 10,
+  4272: null,
+  4152: 11,
+  4050: 10,
+  4016: 9,
+  4015: null,
+  3990: 10,
+  3989: null,
+  3950: 11,
+  3949: null,
+  3882: 12,
+  3875: 10,
+  3874: null,
+  3450: 11,
+  3409: 10,
+  3408: null,
+  3395: 11,
+  3394: null,
+  3301: 12,
+  3162: 11,
+  3160: null,
+  3146: 13,
+  2771: 12,
+  2770: null,
+  2716: 13,
+  2715: null,
+  2560: 14,
+  2500: 13,
+  2469: 12,
+  1974: 11,
+  968: 7,
+  964: 6,
+  717: 5,
+  569: 4,
+  566: 3,
+  565: 2,
+  532: 1,
+  0: 0,
+};
 
 const client = new PrismaClient();
 
@@ -105,14 +219,6 @@ async function importBdb() {
       word: entry.word,
       content: entry.content[0],
     });
-
-    // if (id % 100 === 0) {
-    //   await client.bDBEntry.createMany({
-    //     data: entries,
-    //     skipDuplicates: true,
-    //   });
-    //   entries = [];
-    // }
   }
 
   for await (const entry of downloadBDBAramaic()) {
@@ -125,25 +231,19 @@ async function importBdb() {
       word: entry.word,
       content: entry.content[0],
     });
-
-    // if (id % 100 === 0) {
-    //   await client.bDBEntry.createMany({
-    //     data: entries,
-    //     skipDuplicates: true,
-    //   });
-    //   entries = [];
-    // }
   }
-
-  // await client.bDBEntry.createMany({
-  //   data: entries,
-  //   skipDuplicates: true,
-  // });
 
   return entries;
 }
 
-async function importMapping() {
+interface BDBMapping {
+  word: string;
+  bdbId?: string;
+  strongs?: string;
+  entry?: number;
+}
+
+function importMapping(): BDBMapping[] {
   const parser = new XMLParser({ ignoreAttributes: false });
 
   const bdbFileString = fs.readFileSync(BDB_FILE).toString();
@@ -180,33 +280,65 @@ async function importMapping() {
     })),
   ];
 
-  const dbData = bdbEntries.map((e, i) => {
+  const map_keys = Object.keys(STRONGS_MAP).reverse();
+
+  return bdbEntries.map((e, i) => {
     const entries = mappingRecords.filter((r) => r.bdbId === e.id && r.strongs);
+    const add =
+      STRONGS_MAP[parseInt(map_keys.find((key) => parseInt(key) <= i + 1)!)];
+    const entry = add === null ? undefined : i + 1 + add;
     if (entries.length > 0) {
       return {
         id: i + 1,
         bdbId: e.id,
         word: entries.map((e) => e.word).join(','),
         strongs: entries.map((e) => e.strongs).join(','),
+        entry,
       };
     } else {
       return {
         id: i + 1,
         bdbId: e.id,
         word: e.word,
+        entry,
       };
     }
-  });
-
-  await client.bDBStrongsMapping.createMany({
-    data: dbData,
   });
 }
 
 async function run() {
-  await importMapping();
-  // const bdb = await importBdb();
-  // await resolveMatchingEntries();
+  const mapping = importMapping();
+  const bdb = await importBdb();
+
+  const data = mapping
+    .flatMap((m) => {
+      if (m.strongs) {
+        return m.strongs.split(',').map((strongs) => ({
+          ...m,
+          strongs,
+          entry: m.entry ? bdb[m.entry - 1] : undefined,
+        }));
+      } else {
+        return;
+      }
+    })
+    .filter((entry) => !!entry && !!entry.entry && !!entry.strongs);
+
+  await client.lemma.createMany({
+    data: Array.from(new Set(data.map((entry) => entry!.strongs))).map((l) => ({
+      id: l,
+    })),
+    skipDuplicates: true,
+  });
+
+  await client.lemmaResource.createMany({
+    data: data.map((d) => ({
+      lemmaId: d!.strongs,
+      content: d!.entry!.content,
+      resourceCode: ResourceCode.BDB,
+    })),
+    skipDuplicates: true,
+  });
 }
 
 run().catch(console.error);
