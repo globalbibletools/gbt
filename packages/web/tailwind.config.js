@@ -12,6 +12,7 @@ module.exports = {
     ),
     ...createGlobPatternsForDependencies(__dirname),
   ],
+  safelist: ['lexicon-greek'],
   theme: {
     extend: {
       fontFamily: {

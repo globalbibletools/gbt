@@ -30,24 +30,31 @@ async function lineByLine(filename: string, callback: (line: string) => void) {
 }
 
 function toMarkDown(raw: string): string {
-  return raw
-    .replaceAll('<Level1>', '')
-    .replaceAll('<Level2>', '')
-    .replaceAll('<Level3>', '')
-    .replaceAll('<Level4>', '')
-    .replaceAll('</Level1>', '')
-    .replaceAll('</Level2>', '')
-    .replaceAll('</Level3>', '')
-    .replaceAll('</Level4>', '')
-    .replaceAll('<lb />', '')
-    .replaceAll(/<ref=".*">/g, '')
-    .replaceAll(/<ref='.*'>/g, '')
-    .replaceAll('</ref>', '')
-    .replaceAll(/\[?<a[^>]*>/g, '')
-    .replaceAll('</a>]', '')
-    .replaceAll('</a>', '')
-    .replaceAll('<date>', '')
-    .replaceAll('</date>', '');
+  return (
+    raw
+      .replaceAll('<Level1>', '')
+      .replaceAll('<Level2>', '')
+      .replaceAll('<Level3>', '')
+      .replaceAll('<Level4>', '')
+      .replaceAll('</Level1>', '')
+      .replaceAll('</Level2>', '')
+      .replaceAll('</Level3>', '')
+      .replaceAll('</Level4>', '')
+      .replaceAll('<lb />', '')
+      .replaceAll(/<ref=".*">/g, '')
+      .replaceAll(/<ref='.*'>/g, '')
+      .replaceAll('</ref>', '')
+      .replaceAll(/\[?<a[^>]*>/g, '')
+      .replaceAll('</a>]', '')
+      .replaceAll('</a>', '')
+      .replaceAll('<date>', '')
+      .replaceAll('</date>', '')
+      // We wrap all greek text in a span so we can control its style separately.
+      .replaceAll(
+        /(?:[\u0386-\u03ce\u1f00-\u1ffe]+[^A-Za-z()<>{}]*)+[\u0386-\u03ce\u1f00-\u1ffe]+/g,
+        '<span class="lexicon-greek">$&</span>'
+      )
+  );
 }
 
 async function importLSJ() {
