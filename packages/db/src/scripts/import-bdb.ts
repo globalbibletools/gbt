@@ -16,6 +16,8 @@ const STRONGS_MAPPING_FILE = path.join(
 );
 const BDB_FILE = path.join(__dirname, '../../../../data/BrownDriverBriggs.xml');
 
+// This map defines the offset from the strongs to BDB map to the BDB data from sefaria.
+// This accounts for gaps in the two data sources to keep things aligned.
 const STRONGS_MAP: { [id: number]: number | null } = {
   11830: 32,
   11776: 31,
@@ -171,6 +173,7 @@ async function* downloadBDB(): AsyncGenerator<BDBData, void, unknown> {
       };
     }
 
+    // The Sefaria API breaks here, and there are three missing entries.
     if (ref === BREAK_START) {
       const temp = { word: 'missing', content: ['missing'] };
       yield temp;
@@ -178,6 +181,7 @@ async function* downloadBDB(): AsyncGenerator<BDBData, void, unknown> {
       yield temp;
     }
 
+    // We have to manually restart the pagination after the entires where the Sefaria API breaks.
     ref = ref === BREAK_START ? BREAK_END : entry?.next;
   }
 }
@@ -279,6 +283,7 @@ function importMapping(): BDBMapping[] {
 
   return bdbEntries.map((e, i) => {
     const entries = mappingRecords.filter((r) => r.bdbId === e.id && r.strongs);
+    // Here we have to account for gaps in either data source to keep things aligned.
     const add =
       STRONGS_MAP[parseInt(map_keys.find((key) => parseInt(key) <= i + 1)!)];
     const entry = add === null ? undefined : i + 1 + add;
