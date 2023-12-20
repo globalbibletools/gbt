@@ -54,6 +54,10 @@ function toMarkDown(raw: string): string {
         /(?:[\u0386-\u03ce\u1f00-\u1ffe]+[^A-Za-z()<>{}]*)+[\u0386-\u03ce\u1f00-\u1ffe]+/g,
         '<span class="lexicon-greek">$&</span>'
       )
+      .replaceAll(
+        /(?:[\u0591-\u05F4]+[^A-Za-z()<>{}]*)+[\u0591-\u05F4]+/g,
+        '<span class="lexicon-hebrew" dir="rtl">$&</span>'
+      )
   );
 }
 

@@ -302,9 +302,20 @@ function importMapping(): BDBMapping[] {
 }
 
 function processEntry(entry: string): string {
-  return entry
-    .replaceAll(/<(\/?)big>(?:<\/?big>)?/g, '<$1strong>')
-    .replaceAll(/<\/?a[^>]*>/g, '');
+  return (
+    entry
+      .replaceAll(/<(\/?)big>(?:<\/?big>)?/g, '<$1strong>')
+      .replaceAll(/<\/?a[^>]*>/g, '')
+      // We wrap all greek and hebrew text in a span so we can control its style separately.
+      .replaceAll(
+        /(?:[\u0591-\u05F4]+[^A-Za-z()<>{}]*)+[\u0591-\u05F4]+/g,
+        '<span class="lexicon-hebrew" dir="rtl">$&</span>'
+      )
+      .replaceAll(
+        /(?:[\u0386-\u03ce\u1f00-\u1ffe]+[^A-Za-z()<>{}]*)+[\u0386-\u03ce\u1f00-\u1ffe]+/g,
+        '<span class="lexicon-greek">$&</span>'
+      )
+  );
 }
 
 async function run() {
