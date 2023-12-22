@@ -1,10 +1,15 @@
 {
+  "add": "Agregar",
   "app_name": "Herramientas Bíblicas Globales",
   "cancel": "Cancelar",
   "close": "cerrar",
   "confirm": "Confirmar",
   "confirm_prompt": "Escriba '{{value}}' para confirmar su decisión.",
   "create": "Crear",
+  "direction": {
+    "down": "abajo",
+    "up": "arriba"
+  },
   "error": "Error",
   "loading": "Cargando",
   "name": "nombre",

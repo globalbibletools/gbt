@@ -5,12 +5,13 @@ import { Icon } from '../Icon';
 
 export type MultiselectInputProps = BaseMultiselectInputProps & {
   required?: boolean;
+  isolate?: boolean;
 };
 
 export default function MultiselectInput(props: MultiselectInputProps) {
   const context = useFormContext();
 
-  if (context) {
+  if (context && !props.isolate) {
     return (
       <Controller
         control={context.control}
