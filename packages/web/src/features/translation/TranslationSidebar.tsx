@@ -38,7 +38,7 @@ export const TranslationSidebar = ({
   return (
     <div
       className="
-        border-t h-[320px] flex flex-col gap-4 pt-3
+        border-t h-[320px] flex flex-col gap-4 pt-3 flex-shrink-0
         md:border-t-0 md:ltr:border-l md:rtl:border-r md:h-auto md:w-1/3 md:min-w-[320px] md:max-w-[480px] md:pt-0 md:ps-3
       "
     >
