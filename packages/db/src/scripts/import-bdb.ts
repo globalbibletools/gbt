@@ -2,7 +2,7 @@ import * as https from 'https';
 import * as path from 'path';
 import * as fs from 'fs';
 import { XMLParser } from 'fast-xml-parser';
-import { BDBEntry, PrismaClient, ResourceCode } from '@prisma/client';
+import { PrismaClient, ResourceCode } from '@prisma/client';
 
 const BASE_URL = 'https://www.sefaria.org/api/texts';
 const START_REF_HEB = 'BDB%2C_%D7%90.1';
@@ -203,6 +203,12 @@ async function* downloadBDBAramaic(): AsyncGenerator<BDBData, void, unknown> {
 
     ref = entry?.next;
   }
+}
+
+interface BDBEntry {
+  id: number;
+  word: string;
+  content: string;
 }
 
 async function importBdb() {
