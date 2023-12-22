@@ -315,7 +315,8 @@ function importMapping(): BDBMapping[] {
 function processEntry(entry: string): string {
   return (
     entry
-      .replaceAll(/<(\/?)big>(?:<\/?big>)?/g, '<$1strong>')
+      // For some reason sefaria has empty tags in several entries.
+      .replaceAll(/<(\/?)big>?/g, '<$1strong>')
       .replaceAll(/<\/?a[^>]*>/g, '')
       // We wrap all greek and hebrew text in a span so we can control its style separately.
       .replaceAll(
@@ -330,7 +331,10 @@ function processEntry(entry: string): string {
 }
 
 async function run() {
+  console.log(`Importing BDB strongs mapping...`);
   const mapping = importMapping();
+
+  console.log(`Importing BDB entries...`);
   const bdb = await importBdb();
 
   const data = mapping
@@ -347,6 +351,7 @@ async function run() {
     })
     .filter((entry) => !!entry && !!entry.entry && !!entry.strongs);
 
+  console.log(`Creating missing lemmas...`);
   await client.lemma.createMany({
     data: Array.from(new Set(data.map((entry) => entry!.strongs))).map((l) => ({
       id: l,
@@ -354,6 +359,7 @@ async function run() {
     skipDuplicates: true,
   });
 
+  console.log(`Creating BDB entries...`);
   await client.lemmaResource.createMany({
     data: data.map((d) => ({
       lemmaId: d!.strongs,
@@ -362,6 +368,8 @@ async function run() {
     })),
     skipDuplicates: true,
   });
+
+  console.log(`BDB imported successfully`);
 }
 
 run().catch(console.error);
