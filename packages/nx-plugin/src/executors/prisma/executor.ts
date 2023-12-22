@@ -22,6 +22,7 @@ export default async function runExecutor({
     ],
     {
       stdio: ['inherit', 'pipe', 'inherit'],
+      shell: true,
     }
   );
 
