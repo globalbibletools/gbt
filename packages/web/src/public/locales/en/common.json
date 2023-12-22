@@ -1,10 +1,15 @@
 {
+  "add": "Add",
   "app_name": "Global Bible Tools",
   "cancel": "Cancel",
   "close": "close",
   "confirm": "Confirm",
   "confirm_prompt": "Type '{{value}}' to confirm your decision.",
   "create": "Create",
+  "direction": {
+    "down": "down",
+    "up": "up"
+  },
   "error": "Error",
   "loading": "Loading",
   "name": "name",
