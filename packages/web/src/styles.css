@@ -26,6 +26,6 @@
     @apply font-greek text-lg;
   }
   .lexicon-hebrew {
-    @apply font-hebrew text-2xl;
+    @apply font-hebrew text-xl;
   }
 }

@@ -67,6 +67,7 @@ export const TranslationSidebar = ({
               {lexiconResource?.resource}
             </div>
             <div
+              className="leading-7"
               dangerouslySetInnerHTML={{
                 __html: DOMPurify.sanitize(lexiconEntry),
               }}
