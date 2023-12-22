@@ -43,7 +43,34 @@ export default function ComboboxInput(props: ComboboxInputProps) {
       />
     );
   } else {
-    return <BaseComboboxInput {...props} />;
+    const {
+      className,
+      name,
+      items,
+      value,
+      defaultValue,
+      hasErrors,
+      up,
+      onBlur,
+      onChange,
+      onCreate,
+      onKeyDown,
+    } = props;
+    return (
+      <BaseComboboxInput
+        className={className}
+        name={name}
+        items={items}
+        value={value}
+        defaultValue={defaultValue}
+        hasErrors={hasErrors}
+        up={up}
+        onBlur={onBlur}
+        onChange={onChange}
+        onCreate={onCreate}
+        onKeyDown={onKeyDown}
+      />
+    );
   }
 }
 
