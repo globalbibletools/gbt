@@ -7,8 +7,8 @@ export const Icon = FontAwesomeIcon;
 
 library.add(
   FaBrands.faGoogle,
-  FaSolid.faCaretDown,
   FaSolid.faCaretUp,
+  FaSolid.faCaretDown,
   FaSolid.faEarth,
   FaSolid.faUser,
   FaSolid.faClose,
@@ -23,5 +23,6 @@ library.add(
   FaSolid.faExclamationTriangle,
   FaSolid.faFileImport,
   FaSolid.faChevronUp,
-  FaSolid.faChevronDown
+  FaSolid.faChevronDown,
+  FaSolid.faChevronRight
 );
