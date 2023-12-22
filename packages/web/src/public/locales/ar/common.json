@@ -1,10 +1,15 @@
 {
+  "add": "يضيف",
   "app_name": "أدوات الكتاب المقدس العالمية",
   "cancel": "يلغي",
   "close": "إغلاق",
   "confirm": "يتأكد",
   "confirm_prompt": "اكتب '{{value}}' لتأكيد قرارك.",
   "create": "إنشاء",
+  "direction": {
+    "down": "تحت",
+    "up": "أعلى"
+  },
   "error": "خطأ",
   "loading": "تحميل",
   "name": "الاسم",
