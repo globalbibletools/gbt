@@ -331,6 +331,12 @@ function processEntry(entry: string): string {
 }
 
 async function run() {
+  await client.lemmaResource.deleteMany({
+    where: {
+      resourceCode: ResourceCode.BDB,
+    },
+  });
+
   console.log(`Importing BDB strongs mapping...`);
   const mapping = importMapping();
 
