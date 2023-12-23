@@ -20,3 +20,12 @@
     inset-inline-end: unset;
   }
 }
+
+@layer components {
+  .lexicon-greek {
+    @apply font-greek text-lg;
+  }
+  .lexicon-hebrew {
+    @apply font-hebrew text-xl;
+  }
+}
