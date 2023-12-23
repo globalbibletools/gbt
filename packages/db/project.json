@@ -45,12 +45,6 @@
         "command": "npx ts-node --project packages/db/tsconfig.json packages/db/src/scripts/import-lsj.ts"
       }
     },
-    "import-strongs": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "npx ts-node --project packages/db/tsconfig.json packages/db/src/scripts/import-strongs.ts"
-      }
-    },
     "prisma": {
       "executor": "@translation/nx-plugin:prisma",
       "options": {
