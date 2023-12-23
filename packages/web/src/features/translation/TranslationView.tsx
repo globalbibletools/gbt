@@ -335,7 +335,7 @@ export default function TranslationView() {
 
           const isHebrew = bookId < 40;
           return (
-            <div className="flex flex-col sm:flex-row gap-2 flex-grow w-full min-h-0">
+            <div className="flex flex-col md:flex-row gap-2 flex-grow w-full min-h-0">
               <div className="min-h-0 overflow-auto max-h-full grow flex flex-col gap-8">
                 {translationQuery.data && (
                   <p
