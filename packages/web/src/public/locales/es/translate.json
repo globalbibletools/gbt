@@ -1,9 +1,11 @@
 {
+  "approve_tooltip": "Aprobar (Ingresar)",
   "approved": "Aprobado",
   "interlinear": "Interlineal",
   "next_verse": "Siguiente verso",
   "previous_verse": "Verso anterior",
   "saving": "guardando",
   "select_verse": "Seleccionar verso",
-  "strongs": "Fuerte"
+  "strongs": "Fuerte",
+  "unapprove_tooltip": "No aprobado (Esc)"
 }
