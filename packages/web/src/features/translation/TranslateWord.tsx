@@ -82,7 +82,8 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
           ancientWord.current?.clientWidth ?? 0,
           refGloss.current?.clientWidth ?? 0,
           // The extra 24 pixels accommodates the google icon
-          glossWidth + (hasMachineSuggestion ? 24 : 0)
+          // The extra 48 pixels accommodates the approval button
+          glossWidth + (hasMachineSuggestion ? 24 : 0) + 48
         )
       );
     }, [glossWidth, hasMachineSuggestion]);
