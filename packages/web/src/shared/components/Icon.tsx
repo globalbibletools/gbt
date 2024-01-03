@@ -24,5 +24,6 @@ library.add(
   FaSolid.faFileImport,
   FaSolid.faChevronUp,
   FaSolid.faChevronDown,
-  FaSolid.faChevronRight
+  FaSolid.faChevronRight,
+  FaSolid.faArrowRotateLeft
 );

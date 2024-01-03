@@ -13,6 +13,7 @@ import { useTextWidth } from '../../shared/hooks/useTextWidth';
 import { capitalize } from '../../shared/utils';
 import AutocompleteInput from '../../shared/components/form/AutocompleteInput';
 import { TextDirection } from '@translation/api-types';
+import Button from '../../shared/components/actions/Button';
 
 export interface TranslateWordProps {
   editable?: boolean;
@@ -122,7 +123,9 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
         {editable && (
           <>
             <div
-              className="relative min-w-[80px]"
+              className={`relative min-w-[128px] group/input-row flex gap-2 items-center ${
+                originalLanguage === 'hebrew' ? 'flex-row' : 'flex-row-reverse'
+              }`}
               // The extra 26 pixels give room for the padding and border.
               style={{
                 width: width + 26,
@@ -132,6 +135,28 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
               }}
               dir={targetLanguage?.textDirection ?? TextDirection.LTR}
             >
+              <div className="group-focus-within/input-row:block hidden">
+                {status === 'saved' && (
+                  <Button
+                    className="!bg-green-600"
+                    tabIndex={-1}
+                    title="Approve (Enter)"
+                    onClick={() => onChange({ approved: true })}
+                  >
+                    <Icon icon="check" />
+                  </Button>
+                )}
+                {status === 'approved' && (
+                  <Button
+                    className="!bg-red-600"
+                    tabIndex={-1}
+                    title="Unapprove (Esc)"
+                    onClick={() => onChange({ approved: false })}
+                  >
+                    <Icon icon="arrow-rotate-left" />
+                  </Button>
+                )}
+              </div>
               {hasMachineSuggestion && (
                 <Icon
                   className={`absolute top-3 ${
