@@ -124,7 +124,7 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
         {editable && (
           <>
             <div
-              className={`relative min-w-[128px] group/input-row flex gap-2 items-center ${
+              className={`min-w-[128px] group/input-row flex gap-2 items-center ${
                 originalLanguage === 'hebrew' ? 'flex-row' : 'flex-row-reverse'
               }`}
               // The extra 26 pixels give room for the padding and border.
@@ -158,85 +158,90 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
                   </Button>
                 )}
               </div>
-              {hasMachineSuggestion && (
-                <Icon
-                  className={`absolute top-3 ${
-                    originalLanguage === 'hebrew' ? 'left-3' : 'right-3'
-                  }`}
-                  icon={['fab', 'google']}
-                />
-              )}
-              <AutocompleteInput
-                className={`
+              <div className="relative grow">
+                {hasMachineSuggestion && (
+                  <Icon
+                    className={`absolute top-1/2 -translate-y-1/2 ${
+                      originalLanguage === 'hebrew' ? 'left-3' : 'right-3'
+                    }`}
+                    icon={['fab', 'google']}
+                  />
+                )}
+                <AutocompleteInput
+                  className={`
                   w-full -m-px
                   ${originalLanguage === 'hebrew' ? 'text-right' : 'text-left'}
                 `}
-                inputClassName={
-                  originalLanguage === 'hebrew' ? 'text-right' : 'text-left'
-                }
-                renderOption={(item, i) => (
-                  <div
-                    className={
-                      machineGloss
-                        ? `relative ${
-                            originalLanguage === 'hebrew' ? 'pl-5' : 'pr-5'
-                          }`
-                        : ''
-                    }
-                  >
-                    {item}
-                    {i === suggestions.length ? (
-                      <Icon
-                        className={`absolute top-1 ${
-                          originalLanguage === 'hebrew' ? 'left-0' : 'right-0'
-                        }`}
-                        icon={['fab', 'google']}
-                      />
-                    ) : undefined}
-                  </div>
-                )}
-                name="gloss"
-                value={glossValue}
-                state={status === 'approved' ? 'success' : undefined}
-                aria-describedby={`word-help-${word.id}`}
-                aria-labelledby={`word-${word.id}`}
-                onChange={(value, implicit) => {
-                  if (value !== gloss || (!implicit && status !== 'approved')) {
-                    onChange({
-                      gloss: value,
-                      approved: !implicit && !!value,
-                    });
+                  inputClassName={
+                    originalLanguage === 'hebrew' ? 'text-right' : 'text-left'
                   }
-                }}
-                onKeyDown={(e) => {
-                  if (e.metaKey || e.altKey || e.ctrlKey) return;
-                  switch (e.key) {
-                    case 'Enter': {
-                      e.preventDefault();
-                      if (e.shiftKey) {
-                        const prev = root.current?.previousElementSibling;
-                        prev?.querySelector('input')?.focus();
-                      } else {
-                        const nextRoot = root.current?.nextElementSibling;
-                        const next =
-                          nextRoot?.querySelector('input') ??
-                          nextRoot?.querySelector('button');
-                        next?.focus();
+                  renderOption={(item, i) => (
+                    <div
+                      className={
+                        machineGloss
+                          ? `relative ${
+                              originalLanguage === 'hebrew' ? 'pl-5' : 'pr-5'
+                            }`
+                          : ''
                       }
-                      break;
+                    >
+                      {item}
+                      {i === suggestions.length ? (
+                        <Icon
+                          className={`absolute top-1 ${
+                            originalLanguage === 'hebrew' ? 'left-0' : 'right-0'
+                          }`}
+                          icon={['fab', 'google']}
+                        />
+                      ) : undefined}
+                    </div>
+                  )}
+                  name="gloss"
+                  value={glossValue}
+                  state={status === 'approved' ? 'success' : undefined}
+                  aria-describedby={`word-help-${word.id}`}
+                  aria-labelledby={`word-${word.id}`}
+                  onChange={(value, implicit) => {
+                    if (
+                      value !== gloss ||
+                      (!implicit && status !== 'approved')
+                    ) {
+                      onChange({
+                        gloss: value,
+                        approved: !implicit && !!value,
+                      });
                     }
-                    case 'Escape': {
-                      onChange({ approved: false });
-                      break;
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.metaKey || e.altKey || e.ctrlKey) return;
+                    switch (e.key) {
+                      case 'Enter': {
+                        e.preventDefault();
+                        if (e.shiftKey) {
+                          const prev = root.current?.previousElementSibling;
+                          prev?.querySelector('input')?.focus();
+                        } else {
+                          const nextRoot = root.current?.nextElementSibling;
+                          const next =
+                            nextRoot?.querySelector('input') ??
+                            nextRoot?.querySelector('button');
+                          next?.focus();
+                        }
+                        break;
+                      }
+                      case 'Escape': {
+                        onChange({ approved: false });
+                        break;
+                      }
                     }
+                  }}
+                  onFocus={() => onFocus?.()}
+                  suggestions={
+                    machineGloss ? [...suggestions, machineGloss] : suggestions
                   }
-                }}
-                onFocus={() => onFocus?.()}
-                suggestions={
-                  machineGloss ? [...suggestions, machineGloss] : suggestions
-                }
-                ref={input}
-              />
+                  ref={input}
+                />
+              </div>
             </div>
             <InputHelpText
               id={`word-help-${word.id}`}
