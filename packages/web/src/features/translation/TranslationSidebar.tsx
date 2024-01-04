@@ -48,11 +48,7 @@ export const TranslationSidebar = ({
           <Icon icon="chevron-right" className="hidden sm:block" />
           <span className="sr-only">{t('common:close')}</span>
         </button>
-        <span
-          className={isHebrew ? 'font-hebrew text-2xl' : 'font-greek text-xl'}
-        >
-          {word.text}
-        </span>
+        <span className="font-mixed text-xl">{word.text}</span>
         <span>{word.lemmaId}</span>
       </div>
       <div className="overflow-y-auto grow">
@@ -67,7 +63,7 @@ export const TranslationSidebar = ({
               {lexiconResource?.resource}
             </div>
             <div
-              className="leading-7"
+              className="leading-7 font-mixed"
               dangerouslySetInnerHTML={{
                 __html: DOMPurify.sanitize(lexiconEntry),
               }}
