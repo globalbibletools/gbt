@@ -24,5 +24,12 @@ library.add(
   FaSolid.faFileImport,
   FaSolid.faChevronUp,
   FaSolid.faChevronDown,
-  FaSolid.faChevronRight
+  FaSolid.faChevronRight,
+  FaSolid.faBold,
+  FaSolid.faItalic,
+  FaSolid.faStrikethrough,
+  FaSolid.faListUl,
+  FaSolid.faListOl,
+  FaSolid.faIndent,
+  FaSolid.faOutdent
 );
