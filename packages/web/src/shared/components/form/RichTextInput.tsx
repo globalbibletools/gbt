@@ -15,20 +15,22 @@ export interface RichTextInputRef {
   focus(): void;
 }
 
+export const extensions = [
+  StarterKit.configure({
+    code: false,
+    codeBlock: false,
+    blockquote: false,
+    heading: false,
+    horizontalRule: false,
+  }),
+];
+
 const RichTextInput = forwardRef<RichTextInputRef, RichTextInputProps>(
   ({ name, onChange, onBlur, ...props }, ref) => {
     const hiddenInput = useRef<HTMLInputElement>(null);
 
     const editor = useEditor({
-      extensions: [
-        StarterKit.configure({
-          code: false,
-          codeBlock: false,
-          blockquote: false,
-          heading: false,
-          horizontalRule: false,
-        }),
-      ],
+      extensions,
       editorProps: {
         attributes: {
           class: 'focus:outline-none min-h-[24px]',
@@ -63,7 +65,9 @@ const RichTextInput = forwardRef<RichTextInputRef, RichTextInputProps>(
         return editor?.getHTML();
       },
       set value(value: string | undefined) {
-        editor?.commands.setContent(value ?? '');
+        if (editor?.getHTML() === value) return;
+
+        editor?.commands.setContent(value ?? '', false);
         const input = hiddenInput.current;
         if (input) {
           input.value = value ?? '';
