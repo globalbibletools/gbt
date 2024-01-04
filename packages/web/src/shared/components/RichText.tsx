@@ -10,6 +10,11 @@ export interface RichTextProps {
 export default function RichText({ content, className = '' }: RichTextProps) {
   const editor = useEditor({
     extensions,
+    editorProps: {
+      attributes: {
+        class: 'rich-text',
+      },
+    },
     editable: false,
   });
 

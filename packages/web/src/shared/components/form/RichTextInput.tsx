@@ -33,7 +33,7 @@ const RichTextInput = forwardRef<RichTextInputRef, RichTextInputProps>(
       extensions,
       editorProps: {
         attributes: {
-          class: 'focus:outline-none min-h-[24px]',
+          class: 'focus:outline-none min-h-[24px] rich-text',
           ...props,
         },
       },

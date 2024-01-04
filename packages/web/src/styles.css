@@ -28,4 +28,11 @@
   .lexicon-hebrew {
     @apply font-hebrew text-xl;
   }
+
+  .rich-text ol {
+    @apply pl-7 list-decimal;
+  }
+  .rich-text ul {
+    @apply pl-7 list-disc;
+  }
 }
