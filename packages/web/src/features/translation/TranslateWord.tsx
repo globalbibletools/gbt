@@ -142,7 +142,10 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
                     className="!bg-green-600"
                     tabIndex={-1}
                     title={t('translate:approve_tooltip') ?? ''}
-                    onClick={() => onChange({ approved: true })}
+                    onClick={() => {
+                      onChange({ approved: true });
+                      root.current?.querySelector('input')?.focus();
+                    }}
                   >
                     <Icon icon="check" />
                   </Button>
@@ -152,7 +155,10 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
                     className="!bg-red-600"
                     tabIndex={-1}
                     title={t('translate:revoke_tooltip') ?? ''}
-                    onClick={() => onChange({ approved: false })}
+                    onClick={() => {
+                      onChange({ approved: false });
+                      root.current?.querySelector('input')?.focus();
+                    }}
                   >
                     <Icon icon="arrow-rotate-left" />
                   </Button>
