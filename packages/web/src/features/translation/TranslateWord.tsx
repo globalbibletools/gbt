@@ -137,13 +137,17 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
               dir={targetLanguage?.textDirection ?? TextDirection.LTR}
             >
               <div className="group-focus-within/input-row:block hidden">
-                {status === 'saved' && (
+                {glossValue && status !== 'approved' && (
                   <Button
                     className="!bg-green-600"
                     tabIndex={-1}
                     title={t('translate:approve_tooltip') ?? ''}
                     onClick={() => {
-                      onChange({ approved: true });
+                      if (status === 'saved') {
+                        onChange({ approved: true });
+                      } else {
+                        onChange({ approved: true, gloss: glossValue });
+                      }
                       root.current?.querySelector('input')?.focus();
                     }}
                   >
