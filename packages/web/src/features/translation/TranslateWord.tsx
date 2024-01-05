@@ -169,7 +169,7 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
                 )}
                 <AutocompleteInput
                   className={`
-                  w-full -m-px
+                  w-full h-10
                   ${originalLanguage === 'hebrew' ? 'text-right' : 'text-left'}
                 `}
                   inputClassName={
