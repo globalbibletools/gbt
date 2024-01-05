@@ -4,8 +4,8 @@
   "interlinear": "Interlinear",
   "next_verse": "Next Verse",
   "previous_verse": "Previous Verse",
+  "revoke_tooltip": "Revoke Approval (Esc)",
   "saving": "saving",
   "select_verse": "Select verse",
-  "strongs": "Strongs",
-  "unapprove_tooltip": "Unapprove (Esc)"
+  "strongs": "Strongs"
 }

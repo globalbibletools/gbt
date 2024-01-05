@@ -151,7 +151,7 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
                   <Button
                     className="!bg-red-600"
                     tabIndex={-1}
-                    title={t('translate:unapprove_tooltip') ?? ''}
+                    title={t('translate:revoke_tooltip') ?? ''}
                     onClick={() => onChange({ approved: false })}
                   >
                     <Icon icon="arrow-rotate-left" />
