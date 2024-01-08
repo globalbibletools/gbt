@@ -66,7 +66,9 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
     );
 
     const glossValue = gloss || suggestions[0] || machineGloss;
-    const [currentInput, setCurrentInput] = useState(glossValue ?? '');
+    const [currentInputValue, setCurrentInputValue] = useState(
+      glossValue ?? ''
+    );
     const hasMachineSuggestion = !gloss && !suggestions[0] && !!machineGloss;
 
     const glossWidth = useTextWidth({
@@ -138,7 +140,7 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
               dir={targetLanguage?.textDirection ?? TextDirection.LTR}
             >
               <div className="group-focus-within/input-row:block hidden">
-                {currentInput && status !== 'approved' && (
+                {currentInputValue && status !== 'approved' && (
                   <Button
                     className="!bg-green-600"
                     tabIndex={-1}
@@ -224,7 +226,9 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
                     }
                   }}
                   onInput={(event) => {
-                    setCurrentInput((event.target as HTMLInputElement).value);
+                    setCurrentInputValue(
+                      (event.target as HTMLInputElement).value
+                    );
                   }}
                   onKeyDown={(e) => {
                     if (e.metaKey || e.altKey || e.ctrlKey) return;
