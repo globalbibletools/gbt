@@ -1,8 +1,10 @@
 {
+  "approve_tooltip": "الموافقة (أدخل)",
   "approved": "معتمد",
   "interlinear": "بين السطور",
   "next_verse": "الآية التالية",
   "previous_verse": "الآية السابقة",
+  "revoke_tooltip": "إبطال الموافقة (الهروب)",
   "saving": "جاري الحفظ",
   "select_verse": "حدد الآية",
   "strongs": "أقوياء"

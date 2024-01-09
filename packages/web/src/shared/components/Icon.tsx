@@ -31,5 +31,6 @@ library.add(
   FaSolid.faListUl,
   FaSolid.faListOl,
   FaSolid.faIndent,
-  FaSolid.faOutdent
+  FaSolid.faOutdent,
+  FaSolid.faArrowRotateLeft
 );
