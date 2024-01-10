@@ -1,11 +1,13 @@
+import { Tab } from '@headlessui/react';
 import { useQuery } from '@tanstack/react-query';
 import { Verse } from '@translation/api-types';
+import DOMPurify from 'dompurify';
+import { Fragment } from 'react';
 import { useTranslation } from 'react-i18next';
 import apiClient from '../../shared/apiClient';
 import { Icon } from '../../shared/components/Icon';
 import LoadingSpinner from '../../shared/components/LoadingSpinner';
 import { parseVerseId } from './verse-utils';
-import DOMPurify from 'dompurify';
 
 type TranslationSidebarProps = {
   language: string;
@@ -35,6 +37,8 @@ export const TranslationSidebar = ({
   );
   const lexiconEntry = lexiconResource?.entry ?? '';
   const { t } = useTranslation(['common', 'translate']);
+
+  const tabTitles = [lexiconResource?.resource, 'Usage', 'Comments'];
   return (
     <div
       className="
@@ -55,26 +59,42 @@ export const TranslationSidebar = ({
         </span>
         <span>{word.lemmaId}</span>
       </div>
-      <div className="overflow-y-auto grow">
-        {lemmaResourcesQuery.isLoading && (
-          <div className="h-full w-full flex items-center justify-center">
-            <LoadingSpinner />
-          </div>
-        )}
-        {lemmaResourcesQuery.isSuccess && lexiconEntry && (
-          <div>
-            <div className="text-lg mb-3 font-bold me-2">
-              {lexiconResource?.resource}
-            </div>
-            <div
-              className="leading-7"
-              dangerouslySetInnerHTML={{
-                __html: DOMPurify.sanitize(lexiconEntry),
-              }}
-            />
-          </div>
-        )}
-      </div>
+      <Tab.Group>
+        <Tab.List className="flex flex-row gap-1 border-b-2 border-slate-800 -ms-3 -me-4 px-3">
+          {tabTitles.map((title) => (
+            <Tab key={title} as={Fragment}>
+              {({ selected }) => (
+                <button
+                  className={`flex-1 p-2 rounded-t-lg border-2 border-b-0 border-slate-800 ${
+                    selected ? 'bg-slate-800 text-white' : ''
+                  }`}
+                >
+                  {title}
+                </button>
+              )}
+            </Tab>
+          ))}
+        </Tab.List>
+        <Tab.Panels>
+          <Tab.Panel className="overflow-y-auto grow">
+            {lemmaResourcesQuery.isLoading && (
+              <div className="h-full w-full flex items-center justify-center">
+                <LoadingSpinner />
+              </div>
+            )}
+            {lemmaResourcesQuery.isSuccess && lexiconEntry && (
+              <div
+                className="leading-7"
+                dangerouslySetInnerHTML={{
+                  __html: DOMPurify.sanitize(lexiconEntry),
+                }}
+              />
+            )}
+          </Tab.Panel>
+          <Tab.Panel>Coming Soon</Tab.Panel>
+          <Tab.Panel>Coming Soon</Tab.Panel>
+        </Tab.Panels>
+      </Tab.Group>
     </div>
   );
 };
