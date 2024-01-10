@@ -25,5 +25,12 @@ library.add(
   FaSolid.faChevronUp,
   FaSolid.faChevronDown,
   FaSolid.faChevronRight,
+  FaSolid.faBold,
+  FaSolid.faItalic,
+  FaSolid.faStrikethrough,
+  FaSolid.faListUl,
+  FaSolid.faListOl,
+  FaSolid.faIndent,
+  FaSolid.faOutdent,
   FaSolid.faArrowRotateLeft
 );
