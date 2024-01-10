@@ -1,7 +1,10 @@
 {
   "approved": "Approved",
+  "comments": "Comments",
   "interlinear": "Interlinear",
+  "lexicon": "Lexicon",
   "next_verse": "Next Verse",
+  "notes": "Notes",
   "previous_verse": "Previous Verse",
   "saving": "saving",
   "select_verse": "Select verse",

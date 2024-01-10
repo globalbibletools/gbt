@@ -38,7 +38,11 @@ export const TranslationSidebar = ({
   const lexiconEntry = lexiconResource?.entry ?? '';
   const { t } = useTranslation(['common', 'translate']);
 
-  const tabTitles = ['Lexicon', 'Notes', 'Comments'];
+  const tabTitles = [
+    'translate:lexicon',
+    'translate:notes',
+    'translate:comments',
+  ];
   return (
     <div
       className="
@@ -49,7 +53,10 @@ export const TranslationSidebar = ({
       <div className="flex flex-row gap-4 items-center">
         <button onClick={onClose} type="button">
           <Icon icon="chevron-down" className="block sm:hidden" />
-          <Icon icon="chevron-right" className="hidden sm:block" />
+          <Icon
+            icon="chevron-right"
+            className="hidden sm:block rtl:rotate-180"
+          />
           <span className="sr-only">{t('common:close')}</span>
         </button>
         <span
@@ -70,7 +77,7 @@ export const TranslationSidebar = ({
                       selected ? 'bg-slate-800 text-white' : ''
                     }`}
                   >
-                    {title}
+                    {t(title)}
                   </button>
                 )}
               </Tab>
@@ -97,8 +104,8 @@ export const TranslationSidebar = ({
                 </div>
               )}
             </Tab.Panel>
-            <Tab.Panel>Coming Soon</Tab.Panel>
-            <Tab.Panel>Coming Soon</Tab.Panel>
+            <Tab.Panel>{t('common:coming_soon')}</Tab.Panel>
+            <Tab.Panel>{t('common:coming_soon')}</Tab.Panel>
           </Tab.Panels>
         </Tab.Group>
       </div>
