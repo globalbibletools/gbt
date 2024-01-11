@@ -70,7 +70,7 @@ export const TranslationSidebar = ({
               <>
                 <Tab
                   key={title}
-                  className="px-4 py-1 rounded-t-lg outline-none border border-slate-400 ui-selected:border-b-transparent focus:border-blue-600 focus:border-2"
+                  className="px-4 py-1 rounded-t-lg outline-none border border-slate-400 ui-selected:border-b-transparent focus:outline-blue-600 outline-offset-0 focus:outline focus:outline-2"
                 >
                   {t(title)}
                 </Tab>
