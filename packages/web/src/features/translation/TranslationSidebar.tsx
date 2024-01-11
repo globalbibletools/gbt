@@ -38,11 +38,7 @@ export const TranslationSidebar = ({
   const lexiconEntry = lexiconResource?.entry ?? '';
   const { t } = useTranslation(['common', 'translate']);
 
-  const tabTitles = [
-    'translate:lexicon',
-    'translate:notes',
-    'translate:comments',
-  ];
+  const tabTitles = ['translate:lexicon', 'translate:notes'];
   return (
     <div
       className="
@@ -70,16 +66,11 @@ export const TranslationSidebar = ({
         <Tab.Group>
           <Tab.List className="flex flex-row gap-1 border-b-2 border-slate-800 md:-ms-3 -mx-4 px-3">
             {tabTitles.map((title) => (
-              <Tab key={title} as={Fragment}>
-                {({ selected }) => (
-                  <button
-                    className={`flex-1 p-2 rounded-t-lg outline-none border-2 border-b-0 border-slate-800 ${
-                      selected ? 'bg-slate-800 text-white' : ''
-                    }`}
-                  >
-                    {t(title)}
-                  </button>
-                )}
+              <Tab
+                key={title}
+                className="flex-1 p-2 rounded-t-lg outline-none border-2 border-b-0 border-slate-800"
+              >
+                {t(title)}
               </Tab>
             ))}
           </Tab.List>
@@ -104,7 +95,6 @@ export const TranslationSidebar = ({
                 </div>
               )}
             </Tab.Panel>
-            <Tab.Panel>{t('common:coming_soon')}</Tab.Panel>
             <Tab.Panel>{t('common:coming_soon')}</Tab.Panel>
           </Tab.Panels>
         </Tab.Group>
