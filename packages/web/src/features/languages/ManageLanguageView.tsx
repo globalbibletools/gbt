@@ -138,7 +138,11 @@ export default function ManageLanguageView() {
   const removeMemberMutation = useRemoveLanguageMemberMutation();
   const updateMemberMutation = useUpdateLanguageMemberMutation();
 
-  const formContext = useForm<FormData>();
+  const formContext = useForm<FormData>({
+    defaultValues: {
+      name: language.data.name,
+    },
+  });
   async function onSubmit(data: FormData) {
     try {
       await apiClient.languages.update(language.data.code, {
@@ -169,12 +173,12 @@ export default function ManageLanguageView() {
               {t('common:name').toUpperCase()}
             </FormLabel>
             <TextInput
+              {...formContext.register('name', {
+                required: true,
+              })}
               id="name"
-              name="name"
               className="w-full"
               autoComplete="off"
-              defaultValue={language.data.name}
-              required
               aria-describedby="name-error"
             />
             <InputError

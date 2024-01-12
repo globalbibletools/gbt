@@ -52,11 +52,12 @@ export default function InviteUserView() {
               {t('users:email').toUpperCase()}
             </FormLabel>
             <TextInput
+              {...formContext.register('email', {
+                required: true,
+              })}
               id="email"
-              name="email"
               className="w-full"
               autoComplete="username"
-              required
               aria-describedby="email-error"
             />
             <InputError
@@ -72,12 +73,13 @@ export default function InviteUserView() {
               {t('users:password').toUpperCase()}
             </FormLabel>
             <TextInput
+              {...formContext.register('password', {
+                required: true,
+              })}
               id="password"
               type="password"
-              name="password"
               className="w-full"
               autoComplete="current-password"
-              required
               aria-describedby="password-error"
             />
             <InputError

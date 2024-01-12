@@ -63,12 +63,13 @@ export default function InviteLanguageMemberView() {
               {t('users:email').toUpperCase()}
             </FormLabel>
             <TextInput
+              {...formContext.register('email', {
+                required: true,
+              })}
               id="email"
               type="email"
-              name="email"
               className="w-full"
               autoComplete="off"
-              required
               aria-describedby="email-error"
             />
             <InputError

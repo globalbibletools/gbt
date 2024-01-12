@@ -73,12 +73,13 @@ export default function UpdateProfileView() {
               {t('users:email').toUpperCase()}
             </FormLabel>
             <TextInput
+              {...formContext.register('email', {
+                required: true,
+              })}
               id="email"
-              name="email"
               type="email"
               className="w-full"
               autoComplete="email"
-              required
               aria-describedby="email-error"
             />
             <InputError
@@ -92,11 +93,12 @@ export default function UpdateProfileView() {
               {t('common:name').toUpperCase()}
             </FormLabel>
             <TextInput
+              {...formContext.register('name', {
+                required: true,
+              })}
               id="name"
-              name="name"
               className="w-full"
               autoComplete="name"
-              required
               aria-describedby="name-error"
             />
             <InputError
@@ -110,12 +112,13 @@ export default function UpdateProfileView() {
               {t('users:password').toUpperCase()}
             </FormLabel>
             <TextInput
+              {...formContext.register('password', {
+                minLength: 8,
+              })}
               type="password"
               id="password"
-              name="password"
               className="w-full"
               autoComplete="new-password"
-              minLength={8}
               aria-describedby="password-error"
             />
             <InputError
@@ -132,12 +135,16 @@ export default function UpdateProfileView() {
               {t('users:confirm_password').toUpperCase()}
             </FormLabel>
             <TextInput
+              {...formContext.register('confirmPassword', {
+                validate: {
+                  confirms: (value: unknown) =>
+                    value === formContext.getValues().password,
+                },
+              })}
               type="password"
               id="confirm-password"
-              name="confirmPassword"
               className="w-full"
               autoComplete="new-password"
-              confirms="password"
               aria-describedby="confirm-password-error"
             />
             <InputError

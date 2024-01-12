@@ -52,11 +52,12 @@ export default function InviteUserView() {
               {t('users:email').toUpperCase()}
             </FormLabel>
             <TextInput
+              {...formContext.register('email', {
+                required: true,
+              })}
               id="email"
-              name="email"
               className="w-full"
               autoComplete="off"
-              required
               aria-describedby="email-error"
             />
             <InputError
