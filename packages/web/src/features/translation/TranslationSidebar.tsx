@@ -2,7 +2,6 @@ import { Tab } from '@headlessui/react';
 import { useQuery } from '@tanstack/react-query';
 import { Verse } from '@translation/api-types';
 import DOMPurify from 'dompurify';
-import { Fragment } from 'react';
 import { useTranslation } from 'react-i18next';
 import apiClient from '../../shared/apiClient';
 import { Icon } from '../../shared/components/Icon';
@@ -13,6 +12,7 @@ type TranslationSidebarProps = {
   language: string;
   verse: Verse;
   wordIndex: number;
+  showComments: boolean;
   onClose: () => void;
 };
 
@@ -20,6 +20,7 @@ export const TranslationSidebar = ({
   language,
   verse,
   wordIndex,
+  showComments,
   onClose,
 }: TranslationSidebarProps) => {
   const word = verse.words[wordIndex];
@@ -39,6 +40,10 @@ export const TranslationSidebar = ({
   const { t } = useTranslation(['common', 'translate']);
 
   const tabTitles = ['translate:lexicon', 'translate:notes'];
+  if (showComments) {
+    tabTitles.push('translate:comments');
+  }
+
   return (
     <div
       className="
@@ -97,6 +102,7 @@ export const TranslationSidebar = ({
               )}
             </Tab.Panel>
             <Tab.Panel>{t('common:coming_soon')}</Tab.Panel>
+            {showComments && <Tab.Panel>{t('common:coming_soon')}</Tab.Panel>}
           </Tab.Panels>
         </Tab.Group>
       </div>
