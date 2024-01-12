@@ -2,12 +2,13 @@ import { Tab } from '@headlessui/react';
 import { useQuery } from '@tanstack/react-query';
 import { Verse } from '@translation/api-types';
 import DOMPurify from 'dompurify';
-import { Fragment } from 'react';
+import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import apiClient from '../../shared/apiClient';
 import { Icon } from '../../shared/components/Icon';
 import LoadingSpinner from '../../shared/components/LoadingSpinner';
-import { parseVerseId } from './verse-utils';
+import FormLabel from '../../shared/components/form/FormLabel';
+import RichTextInput from '../../shared/components/form/RichTextInput';
 
 type TranslationSidebarProps = {
   language: string;
@@ -16,6 +17,10 @@ type TranslationSidebarProps = {
   onClose: () => void;
 };
 
+interface FormData {
+  notes: string;
+}
+
 export const TranslationSidebar = ({
   language,
   verse,
@@ -23,8 +28,6 @@ export const TranslationSidebar = ({
   onClose,
 }: TranslationSidebarProps) => {
   const word = verse.words[wordIndex];
-  const { bookId } = parseVerseId(verse.id);
-  const isHebrew = bookId < 40;
   const lemmaResourcesQuery = useQuery(
     ['verse-lemma-resources', language, verse.id],
     () => apiClient.verses.findLemmaResources(verse.id)
@@ -39,6 +42,8 @@ export const TranslationSidebar = ({
   const { t } = useTranslation(['common', 'translate']);
 
   const tabTitles = ['translate:lexicon', 'translate:notes'];
+
+  const formContext = useForm<FormData>();
   return (
     <div
       className="
@@ -96,7 +101,14 @@ export const TranslationSidebar = ({
                 </div>
               )}
             </Tab.Panel>
-            <Tab.Panel>{t('common:coming_soon')}</Tab.Panel>
+            <Tab.Panel>
+              <RichTextInput
+                aria-labelledby="notes"
+                {...formContext.register('notes', {
+                  value: '<p>These are the translator notes.</p>',
+                })}
+              />
+            </Tab.Panel>
           </Tab.Panels>
         </Tab.Group>
       </div>
