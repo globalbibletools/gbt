@@ -102,12 +102,15 @@ export const TranslationSidebar = ({
               )}
             </Tab.Panel>
             <Tab.Panel>
-              <RichTextInput
-                aria-labelledby="notes"
-                {...formContext.register('notes', {
-                  value: '<p>These are the translator notes.</p>',
-                })}
-              />
+              <div className="pb-2">
+                {/* TODO: add author and timestamp */}
+                <RichTextInput
+                  aria-labelledby="notes"
+                  {...formContext.register('notes', {
+                    value: '<p>These are the translator notes.</p>',
+                  })}
+                />
+              </div>
             </Tab.Panel>
           </Tab.Panels>
         </Tab.Group>
