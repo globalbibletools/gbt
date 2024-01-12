@@ -64,13 +64,13 @@ export const TranslationSidebar = ({
       </div>
       <div className="grow flex flex-col min-h-0">
         <Tab.Group>
-          <Tab.List className="flex flex-row md:-ms-3 -mx-4 px-3">
+          <Tab.List className="flex flex-row md:-ms-3 -mx-4">
             <div className="border-b border-slate-400 h-full w-4"></div>
             {tabTitles.map((title) => (
               <>
                 <Tab
                   key={title}
-                  className="px-4 py-1 rounded-t-lg outline-none border border-slate-400 ui-selected:border-b-transparent focus:outline-blue-600 outline-offset-0 focus:outline focus:outline-2"
+                  className="px-4 py-1 rounded-t-lg border border-slate-400 ui-selected:border-b-transparent focus:outline-blue-600 focus:outline focus:outline-2"
                 >
                   {t(title)}
                 </Tab>
