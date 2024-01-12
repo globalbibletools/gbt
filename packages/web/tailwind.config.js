@@ -17,8 +17,14 @@ module.exports = {
     extend: {
       fontFamily: {
         sans: ['"Noto Sans"', ...defaultTheme.fontFamily.sans],
-        hebrew: ['"SBL-Hebrew"', '"Times New Roman"', 'serif'],
-        greek: ['"SBL-Greek"', '"Times New Roman"', 'serif'],
+        hebrew: ['"SBL-Hebrew"', ...defaultTheme.fontFamily.sans],
+        greek: ['"SBL-Greek"', ...defaultTheme.fontFamily.sans],
+        mixed: [
+          '"SBL-Greek"',
+          '"SBL-Hebrew"',
+          '"Noto Sans"',
+          ...defaultTheme.fontFamily.sans,
+        ],
       },
     },
   },
