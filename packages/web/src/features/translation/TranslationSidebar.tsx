@@ -7,12 +7,12 @@ import apiClient from '../../shared/apiClient';
 import { Icon } from '../../shared/components/Icon';
 import LoadingSpinner from '../../shared/components/LoadingSpinner';
 import { parseVerseId } from './verse-utils';
-import { isFlagEnabled } from '../../shared/featureFlags';
 
 type TranslationSidebarProps = {
   language: string;
   verse: Verse;
   wordIndex: number;
+  showComments: boolean;
   onClose: () => void;
 };
 
@@ -20,6 +20,7 @@ export const TranslationSidebar = ({
   language,
   verse,
   wordIndex,
+  showComments,
   onClose,
 }: TranslationSidebarProps) => {
   const word = verse.words[wordIndex];
@@ -38,10 +39,8 @@ export const TranslationSidebar = ({
   const lexiconEntry = lexiconResource?.entry ?? '';
   const { t } = useTranslation(['common', 'translate']);
 
-  const commentsEnabled = isFlagEnabled('comments');
-
   const tabTitles = ['translate:lexicon', 'translate:notes'];
-  if (commentsEnabled) {
+  if (showComments) {
     tabTitles.push('translate:comments');
   }
 
@@ -107,9 +106,7 @@ export const TranslationSidebar = ({
               )}
             </Tab.Panel>
             <Tab.Panel>{t('common:coming_soon')}</Tab.Panel>
-            {commentsEnabled && (
-              <Tab.Panel>{t('common:coming_soon')}</Tab.Panel>
-            )}
+            {showComments && <Tab.Panel>{t('common:coming_soon')}</Tab.Panel>}
           </Tab.Panels>
         </Tab.Group>
       </div>
