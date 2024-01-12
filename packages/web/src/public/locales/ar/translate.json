@@ -1,8 +1,11 @@
 {
   "approve_tooltip": "الموافقة (أدخل)",
   "approved": "معتمد",
+  "comments": "تعليقات",
   "interlinear": "بين السطور",
+  "lexicon": "معجم",
   "next_verse": "الآية التالية",
+  "notes": "ملحوظات",
   "previous_verse": "الآية السابقة",
   "revoke_tooltip": "إبطال الموافقة (الهروب)",
   "saving": "جاري الحفظ",
