@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { LoaderFunctionArgs, useLoaderData } from 'react-router-dom';
 import apiClient from '../../shared/apiClient';
@@ -185,17 +185,22 @@ export default function ImportLanguageGlossesView() {
                         <FormLabel htmlFor="import">
                           {t('languages:import_language').toUpperCase()}
                         </FormLabel>
-                        <ComboboxInput
-                          id="import"
+                        <Controller
                           name="import"
-                          className="w-full"
-                          autoComplete="off"
-                          required
-                          aria-describedby="import-error"
-                          items={importLanguages.data.map((language) => ({
-                            label: language,
-                            value: language,
-                          }))}
+                          rules={{ required: true }}
+                          render={({ field }) => (
+                            <ComboboxInput
+                              {...field}
+                              id="import"
+                              className="w-full"
+                              autoComplete="off"
+                              aria-describedby="import-error"
+                              items={importLanguages.data.map((language) => ({
+                                label: language,
+                                value: language,
+                              }))}
+                            />
+                          )}
                         />
                       </div>
                       <div>

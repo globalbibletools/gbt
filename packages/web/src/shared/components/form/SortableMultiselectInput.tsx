@@ -144,7 +144,6 @@ const BaseSortableMultiselectInput = forwardRef<
           items={availableNewItems}
           disabled={availableNewItems.length === 0}
           autoComplete="off"
-          isolate
         />
         <Button onClick={addItem} onBlur={onBlur}>
           <Icon icon="add" />

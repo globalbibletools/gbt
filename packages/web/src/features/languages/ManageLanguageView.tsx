@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { LanguageRole, TextDirection } from '@translation/api-types';
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useLoaderData, useParams } from 'react-router-dom';
 import apiClient from '../../shared/apiClient';
@@ -141,6 +141,7 @@ export default function ManageLanguageView() {
   const formContext = useForm<FormData>({
     defaultValues: {
       name: language.data.name,
+      font: language.data.font,
     },
   });
   async function onSubmit(data: FormData) {
@@ -156,8 +157,6 @@ export default function ManageLanguageView() {
       flash.error(`${error}`);
     }
   }
-
-  const [previewFont, setPreviewFont] = useState(language.data.font);
 
   return (
     <View fitToScreen className="flex justify-center items-start">
@@ -191,14 +190,17 @@ export default function ManageLanguageView() {
             <FormLabel htmlFor="font">
               {t('languages:font').toUpperCase()}
             </FormLabel>
-            <ComboboxInput
-              id="font"
+            <Controller
               name="font"
-              className="w-full h-10"
-              required
-              defaultValue={previewFont}
-              items={fonts.map((font) => ({ label: font, value: font }))}
-              onChange={(font) => setPreviewFont(font)}
+              rules={{ required: true }}
+              render={({ field }) => (
+                <ComboboxInput
+                  {...field}
+                  id="font"
+                  className="w-full h-10"
+                  items={fonts.map((font) => ({ label: font, value: font }))}
+                />
+              )}
             />
           </div>
           <div className="mb-2">
