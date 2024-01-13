@@ -7,7 +7,7 @@ import TextInput from '../../shared/components/form/TextInput';
 import View from '../../shared/components/View';
 import ViewTitle from '../../shared/components/ViewTitle';
 import apiClient from '../../shared/apiClient';
-import Form, { SubmitHandler } from '../../shared/components/form/Form';
+import Form from '../../shared/components/form/Form';
 import InputError from '../../shared/components/form/InputError';
 import Button from '../../shared/components/actions/Button';
 import SubmittingIndicator from '../../shared/components/form/SubmittingIndicator';
@@ -22,12 +22,12 @@ export default function InviteUserView() {
   const flash = useFlash();
 
   const formContext = useForm<FormData>();
-  const onSubmit: SubmitHandler<FormData> = async ({ email }, { reset }) => {
+  async function onSubmit({ email }: FormData) {
     try {
       await apiClient.users.invite({ email });
 
       flash.success(t('users:user_invited'));
-      reset();
+      formContext.reset();
     } catch (error) {
       if (error instanceof ApiClientError && error.status === 409) {
         const alreadyExistsError = error.body.errors.find(
@@ -40,7 +40,7 @@ export default function InviteUserView() {
       }
       flash.error(`${error}`);
     }
-  };
+  }
 
   return (
     <View fitToScreen className="flex justify-center items-start">

@@ -1,12 +1,12 @@
 import { useTranslation } from 'react-i18next';
-import { useForm } from 'react-hook-form';
+import { useForm, SubmitHandler } from 'react-hook-form';
 import Card from '../../shared/components/Card';
 import FormLabel from '../../shared/components/form/FormLabel';
 import TextInput from '../../shared/components/form/TextInput';
 import View from '../../shared/components/View';
 import ViewTitle from '../../shared/components/ViewTitle';
 import apiClient from '../../shared/apiClient';
-import Form, { SubmitHandler } from '../../shared/components/form/Form';
+import Form from '../../shared/components/form/Form';
 import InputError from '../../shared/components/form/InputError';
 import Button from '../../shared/components/actions/Button';
 import SubmittingIndicator from '../../shared/components/form/SubmittingIndicator';
@@ -35,11 +35,7 @@ export default function UpdateProfileView() {
     }
   }, [setValue, user]);
 
-  const onSubmit: SubmitHandler<FormData> = async ({
-    email,
-    name,
-    password,
-  }) => {
+  async function onSubmit({ email, name, password }: FormData) {
     try {
       if (user) {
         await apiClient.users.update({
@@ -59,7 +55,7 @@ export default function UpdateProfileView() {
     } catch (error) {
       flash.error(`${error}`);
     }
-  };
+  }
 
   if (!user) return null;
 

@@ -6,7 +6,7 @@ import TextInput from '../../shared/components/form/TextInput';
 import View from '../../shared/components/View';
 import ViewTitle from '../../shared/components/ViewTitle';
 import apiClient from '../../shared/apiClient';
-import Form, { SubmitHandler } from '../../shared/components/form/Form';
+import Form from '../../shared/components/form/Form';
 import InputError from '../../shared/components/form/InputError';
 import Button from '../../shared/components/actions/Button';
 import SubmittingIndicator from '../../shared/components/form/SubmittingIndicator';
@@ -64,11 +64,7 @@ export default function AcceptInviteView() {
   const flash = useFlash();
 
   const formContext = useForm<FormData>();
-  const onSubmit: SubmitHandler<FormData> = async ({
-    firstName,
-    lastName,
-    password,
-  }) => {
+  async function onSubmit({ firstName, lastName, password }: FormData) {
     try {
       await apiClient.auth.acceptInvite({
         name: `${firstName} ${lastName}`,
@@ -84,7 +80,7 @@ export default function AcceptInviteView() {
     } catch (error) {
       flash.error(`${error}`);
     }
-  };
+  }
 
   return (
     <View fitToScreen className="flex justify-center items-start">

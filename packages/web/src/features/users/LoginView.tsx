@@ -6,7 +6,7 @@ import TextInput from '../../shared/components/form/TextInput';
 import View from '../../shared/components/View';
 import ViewTitle from '../../shared/components/ViewTitle';
 import apiClient from '../../shared/apiClient';
-import Form, { SubmitHandler } from '../../shared/components/form/Form';
+import Form from '../../shared/components/form/Form';
 import InputError from '../../shared/components/form/InputError';
 import Button from '../../shared/components/actions/Button';
 import SubmittingIndicator from '../../shared/components/form/SubmittingIndicator';
@@ -28,7 +28,7 @@ export default function InviteUserView() {
   const flash = useFlash();
 
   const formContext = useForm<FormData>();
-  const onSubmit: SubmitHandler<FormData> = async ({ email, password }) => {
+  async function onSubmit({ email, password }: FormData) {
     try {
       await apiClient.auth.login({ email, password });
       refreshAuth();
@@ -40,7 +40,7 @@ export default function InviteUserView() {
         flash.error(`${error}`);
       }
     }
-  };
+  }
 
   return (
     <View fitToScreen className="flex justify-center items-start">
