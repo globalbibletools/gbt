@@ -142,6 +142,8 @@ export default function ManageLanguageView() {
     defaultValues: {
       name: language.data.name,
       font: language.data.font,
+      textDirection: language.data.textDirection,
+      bibleTranslationIds: language.data.bibleTranslationIds,
     },
   });
   async function onSubmit(data: FormData) {
@@ -208,30 +210,39 @@ export default function ManageLanguageView() {
               {t('languages:text_direction').toUpperCase()}
             </FormLabel>
             <div>
-              <ButtonSelectorInput
+              <Controller
                 name="textDirection"
-                aria-labelledby="text-direction-label"
-                defaultValue={language.data.textDirection}
-              >
-                <ButtonSelectorOption value={TextDirection.LTR}>
-                  {t('languages:ltr')}
-                </ButtonSelectorOption>
-                <ButtonSelectorOption value={TextDirection.RTL}>
-                  {t('languages:rtl')}
-                </ButtonSelectorOption>
-              </ButtonSelectorInput>
+                rules={{ required: true }}
+                render={({ field }) => (
+                  <ButtonSelectorInput
+                    {...field}
+                    aria-labelledby="text-direction-label"
+                  >
+                    <ButtonSelectorOption value={TextDirection.LTR}>
+                      {t('languages:ltr')}
+                    </ButtonSelectorOption>
+                    <ButtonSelectorOption value={TextDirection.RTL}>
+                      {t('languages:rtl')}
+                    </ButtonSelectorOption>
+                  </ButtonSelectorInput>
+                )}
+              />
             </div>
           </div>
           <div className="mb-2">
             <FormLabel htmlFor="bibleTranslationIds">
               {t('languages:bible_translations').toUpperCase()}
             </FormLabel>
-            <SortableMultiselectInput
+            <Controller
               name="bibleTranslationIds"
-              className="w-full"
-              defaultValue={language.data.bibleTranslationIds}
-              items={translationOptions}
-              placeholder={t('languages:select_translations').toString()}
+              render={({ field }) => (
+                <SortableMultiselectInput
+                  {...field}
+                  className="w-full"
+                  items={translationOptions}
+                  placeholder={t('languages:select_translations').toString()}
+                />
+              )}
             />
           </div>
           <div>
