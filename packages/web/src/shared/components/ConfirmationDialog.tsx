@@ -102,11 +102,11 @@ const ConfirmationDialog = forwardRef<
                 </p>
                 <Form context={formContext} onSubmit={() => handleResult(true)}>
                   <TextInput
+                    {...formContext.register('confirm', { required: true })}
                     id="confirm"
                     name="confirm"
                     className="w-full"
                     autoComplete="off"
-                    required
                     onChange={(event) =>
                       setEnableConfirmationButton(
                         event.target.value === confirmationValue
