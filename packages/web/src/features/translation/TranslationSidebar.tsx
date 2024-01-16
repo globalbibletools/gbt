@@ -2,12 +2,14 @@ import { Tab } from '@headlessui/react';
 import { useQuery } from '@tanstack/react-query';
 import { Verse } from '@translation/api-types';
 import DOMPurify from 'dompurify';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import apiClient from '../../shared/apiClient';
 import { Icon } from '../../shared/components/Icon';
 import LoadingSpinner from '../../shared/components/LoadingSpinner';
-import FormLabel from '../../shared/components/form/FormLabel';
+import RichText from '../../shared/components/RichText';
+import Button from '../../shared/components/actions/Button';
 import RichTextInput from '../../shared/components/form/RichTextInput';
 
 type TranslationSidebarProps = {
@@ -48,6 +50,8 @@ export const TranslationSidebar = ({
     tabTitles.push('translate:comments');
   }
 
+  const [isEditingNotes, setIsEditingNotes] = useState(false);
+  const [notesContent, setNotesContent] = useState('');
   const formContext = useForm<FormData>();
 
   return (
@@ -108,14 +112,46 @@ export const TranslationSidebar = ({
               )}
             </Tab.Panel>
             <Tab.Panel>
-              <div className="pb-2">
-                {/* TODO: add author and timestamp */}
-                <RichTextInput
-                  aria-labelledby="notes"
-                  {...formContext.register('notes', {
-                    value: '<p>These are the translator notes.</p>',
-                  })}
-                />
+              {/* TODO: add author and timestamp */}
+              <div className="flex flex-col gap-2 pb-2">
+                <div className="flex flex-row justify-between">
+                  <span className="font-bold">{t('translate:author')}</span>
+                  <span>Joe Translator</span>
+                </div>
+                <div className="flex flex-row justify-between">
+                  <span className="font-bold">
+                    {t('translate:last_updated')}
+                  </span>
+                  <span>{new Date().toISOString()}</span>
+                </div>
+                <div className="flex flex-row justify-end gap-1">
+                  {isEditingNotes ? (
+                    <>
+                      <Button
+                        variant="secondary"
+                        onClick={() => setIsEditingNotes(false)}
+                      >
+                        {t('common:cancel')}
+                      </Button>
+                      <Button onClick={() => setIsEditingNotes(false)}>
+                        {t('common:confirm')}
+                      </Button>
+                    </>
+                  ) : (
+                    <Button onClick={() => setIsEditingNotes(true)}>
+                      {t('common:edit')}
+                    </Button>
+                  )}
+                </div>
+                {isEditingNotes ? (
+                  <RichTextInput
+                    {...formContext.register('notes', {
+                      value: notesContent,
+                    })}
+                  />
+                ) : (
+                  <RichText content={notesContent} />
+                )}
               </div>
             </Tab.Panel>
             {showComments && <Tab.Panel>{t('common:coming_soon')}</Tab.Panel>}
