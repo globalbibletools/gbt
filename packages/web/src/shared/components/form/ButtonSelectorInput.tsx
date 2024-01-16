@@ -33,11 +33,7 @@ export function ButtonSelectorInput({
   ...props
 }: ButtonSelectorInputProps) {
   const formContext = useFormContext();
-  const hasErrors = !!(
-    formContext &&
-    name &&
-    formContext.getFieldState(name).error
-  );
+  const hasErrors = !!(name && formContext?.getFieldState(name).error);
 
   return (
     <ButtonSelectorContext.Provider

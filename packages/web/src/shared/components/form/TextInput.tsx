@@ -6,7 +6,7 @@ export type TextInputProps = ComponentProps<'input'>;
 const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
   ({ className = '', ...props }, ref) => {
     const context = useFormContext();
-    const hasErrors = props.name && !!context?.formState.errors[props.name];
+    const hasErrors = !!(props.name && context?.formState.errors[props.name]);
 
     return (
       <input

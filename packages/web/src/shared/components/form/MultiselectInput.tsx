@@ -29,11 +29,7 @@ const MultiselectInput = forwardRef<HTMLInputElement, MultiselectInputProps>(
     ref
   ) => {
     const formContext = useFormContext();
-    const hasErrors = !!(
-      formContext &&
-      name &&
-      formContext.getFieldState(name).error
-    );
+    const hasErrors = !!(name && formContext?.getFieldState(name).error);
 
     return (
       <div className={`${className} group/multiselect relative`}>

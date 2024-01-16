@@ -51,11 +51,7 @@ const ComboboxInput = forwardRef<HTMLInputElement, BaseComboboxInputProps>(
     const [filteredItems, setFilteredItems] = useState<ComboboxItem[]>(items);
 
     const formContext = useFormContext();
-    const hasErrors = !!(
-      formContext &&
-      name &&
-      formContext.getFieldState(name).error
-    );
+    const hasErrors = !!(name && formContext?.getFieldState(name).error);
 
     // If none of the items matches the input value exactly,
     // then we want to give the option of creating a new item.
