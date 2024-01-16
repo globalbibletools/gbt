@@ -1,13 +1,16 @@
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import { Icon } from '../Icon';
-import { ComponentProps, forwardRef, useImperativeHandle, useRef } from 'react';
+import { ComponentProps, forwardRef, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
+import { ChangeHandler } from 'react-hook-form';
 
 export interface RichTextInputProps {
   name: string;
-  onChange?(e: { target: HTMLInputElement }): void;
-  onBlur?(e: { target: HTMLInputElement }): void;
+  value?: string;
+  defaultValue?: string;
+  onChange?: ChangeHandler;
+  onBlur?: ChangeHandler;
   'aria-labelledby'?: string;
   'aria-label'?: string;
 }
@@ -27,7 +30,7 @@ export const extensions = [
 ];
 
 const RichTextInput = forwardRef<RichTextInputRef, RichTextInputProps>(
-  ({ name, onChange, onBlur, ...props }, ref) => {
+  ({ name, onChange, onBlur, value, defaultValue, ...props }, ref) => {
     const { t } = useTranslation(['common']);
     const hiddenInput = useRef<HTMLInputElement>(null);
 
@@ -39,6 +42,7 @@ const RichTextInput = forwardRef<RichTextInputRef, RichTextInputProps>(
           ...props,
         },
       },
+      content: value ?? defaultValue,
       onCreate({ editor }) {
         const input = hiddenInput.current;
         if (input) {
@@ -48,7 +52,8 @@ const RichTextInput = forwardRef<RichTextInputRef, RichTextInputProps>(
       onUpdate({ editor }) {
         const input = hiddenInput.current;
         if (input) {
-          input.value = editor.getHTML();
+          const value = editor.getHTML();
+          input.value = value;
           onChange?.({ target: input });
         }
       },
@@ -60,25 +65,9 @@ const RichTextInput = forwardRef<RichTextInputRef, RichTextInputProps>(
       },
     });
 
-    // We expose a ref that can be consumed by react hook form without a Controller.
-    // This requires the ability to set the value, and focus.
-    useImperativeHandle(ref, () => ({
-      get value() {
-        return editor?.getHTML();
-      },
-      set value(value: string | undefined) {
-        if (editor?.getHTML() === value) return;
-
-        editor?.commands.setContent(value ?? '', false);
-        const input = hiddenInput.current;
-        if (input) {
-          input.value = value ?? '';
-        }
-      },
-      focus() {
-        editor?.commands.focus();
-      },
-    }));
+    useEffect(() => {
+      editor?.commands.setContent(value ?? '', false);
+    }, [value, editor]);
 
     return (
       <div className="border rounded border-slate-400 focus-within:outline focus-within:outline-2 focus-within:outline-blue-600">

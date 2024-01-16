@@ -16,7 +16,6 @@ const LanguageDialog = forwardRef<DialogRef>((_, ref) => {
       </h1>
 
       <ComboboxInput
-        name="languages:language"
         className="block min-w-[150px]"
         value={i18n.resolvedLanguage}
         onChange={(language) => i18n.changeLanguage(language)}
