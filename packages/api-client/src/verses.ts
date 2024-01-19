@@ -2,6 +2,7 @@ import type {
   GetVerseGlossesResponseBody,
   GetVerseResponseBody,
   GetLemmaResourcesResponseBody,
+  GetVerseTranslatorNotesResponseBody,
 } from '@translation/api-types';
 import ApiClient from './client';
 
@@ -27,5 +28,14 @@ export default class Verses {
 
   findLemmaResources(verseId: string): Promise<GetLemmaResourcesResponseBody> {
     return this.client.get({ path: `/api/verses/${verseId}/lemma-resources` });
+  }
+
+  findTranslatorNotes(
+    verseId: string,
+    language: string
+  ): Promise<GetVerseTranslatorNotesResponseBody> {
+    return this.client.get({
+      path: `/api/languages/${language}/verses/${verseId}/notes`,
+    });
   }
 }

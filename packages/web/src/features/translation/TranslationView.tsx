@@ -53,6 +53,10 @@ function useTranslationQueries(language: string, verseId: string) {
     ['verse-glosses', language, verseId],
     () => apiClient.verses.findVerseGlosses(verseId, language)
   );
+  const translatorNotesQuery = useQuery(
+    ['verse-translator-notes', language, verseId],
+    () => apiClient.verses.findTranslatorNotes(verseId, language)
+  );
 
   const translationLanguages = languagesQuery.data?.data ?? [];
   const selectedLanguage = translationLanguages.find(
@@ -117,6 +121,7 @@ function useTranslationQueries(language: string, verseId: string) {
     verseQuery,
     referenceGlossesQuery,
     targetGlossesQuery,
+    translatorNotesQuery,
     translationQuery,
   };
 }
@@ -147,6 +152,7 @@ export default function TranslationView() {
     verseQuery,
     referenceGlossesQuery,
     targetGlossesQuery,
+    translatorNotesQuery,
     translationQuery,
   } = useTranslationQueries(language, verseId);
 
@@ -285,7 +291,8 @@ export default function TranslationView() {
   const loading =
     !verseQuery.isSuccess ||
     !referenceGlossesQuery.isSuccess ||
-    !targetGlossesQuery.isSuccess;
+    !targetGlossesQuery.isSuccess ||
+    !translatorNotesQuery.isSuccess;
 
   const loadedFromNextButton = useRef(false);
   useEffect(() => {
@@ -330,6 +337,8 @@ export default function TranslationView() {
           const verse = verseQuery.data.data;
           const referenceGlosses = referenceGlossesQuery.data.data;
           const targetGlosses = targetGlossesQuery.data.data;
+          const translatorNotes = translatorNotesQuery.data.data;
+          console.log('translatorNotes', translatorNotes);
 
           const { bookId } = parseVerseId(verse.id);
 
