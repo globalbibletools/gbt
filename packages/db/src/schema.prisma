@@ -329,7 +329,7 @@ model TranslatorNote {
   /// The timestamp of the last update.
   timestamp  DateTime
   /// The content of the note.
-  note       String
+  content    String
 
   @@id([wordId, languageId])
 }
