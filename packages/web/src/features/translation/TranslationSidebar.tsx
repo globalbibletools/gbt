@@ -24,8 +24,6 @@ export const TranslationSidebar = ({
   onClose,
 }: TranslationSidebarProps) => {
   const word = verse.words[wordIndex];
-  const { bookId } = parseVerseId(verse.id);
-  const isHebrew = bookId < 40;
   const lemmaResourcesQuery = useQuery(
     ['verse-lemma-resources', language, verse.id],
     () => apiClient.verses.findLemmaResources(verse.id)
@@ -47,21 +45,26 @@ export const TranslationSidebar = ({
   return (
     <div
       className="
-        border-t h-[320px] flex flex-col gap-4 pt-3 flex-shrink-0
+        border-t h-[320px] flex flex-col gap-4 pt-3 flex-shrink-0 border-slate-400
         md:border-t-0 md:ltr:border-l md:rtl:border-r md:h-auto md:w-1/3 md:min-w-[320px] md:max-w-[480px] md:pt-0 md:ps-3
       "
     >
-      <div className="flex flex-row gap-4 items-center">
-        <button onClick={onClose} type="button">
-          <Icon icon="chevron-down" className="block sm:hidden" />
+      <div className="flex items-start">
+        <button onClick={onClose} type="button" className="w-6 h-7">
+          <Icon icon="chevron-down" className="block md:hidden" />
           <Icon
             icon="chevron-right"
-            className="hidden sm:block rtl:rotate-180"
+            className="hidden md:block rtl:rotate-180"
           />
           <span className="sr-only">{t('common:close')}</span>
         </button>
-        <span className="font-mixed text-xl">{word.text}</span>
-        <span>{word.lemmaId}</span>
+        <div>
+          <div className="flex gap-4 items-baseline">
+            <span className="font-mixed text-xl">{word.text}</span>
+            <span>{word.lemmaId}</span>
+          </div>
+          <div>{word.grammar}</div>
+        </div>
       </div>
       <div className="grow flex flex-col min-h-0">
         <Tab.Group>
