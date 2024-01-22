@@ -6,7 +6,7 @@ import TextInput from '../../shared/components/form/TextInput';
 import View from '../../shared/components/View';
 import ViewTitle from '../../shared/components/ViewTitle';
 import apiClient from '../../shared/apiClient';
-import Form, { SubmitHandler } from '../../shared/components/form/Form';
+import Form from '../../shared/components/form/Form';
 import InputError from '../../shared/components/form/InputError';
 import Button from '../../shared/components/actions/Button';
 import SubmittingIndicator from '../../shared/components/form/SubmittingIndicator';
@@ -64,11 +64,7 @@ export default function AcceptInviteView() {
   const flash = useFlash();
 
   const formContext = useForm<FormData>();
-  const onSubmit: SubmitHandler<FormData> = async ({
-    firstName,
-    lastName,
-    password,
-  }) => {
+  async function onSubmit({ firstName, lastName, password }: FormData) {
     try {
       await apiClient.auth.acceptInvite({
         name: `${firstName} ${lastName}`,
@@ -84,7 +80,7 @@ export default function AcceptInviteView() {
     } catch (error) {
       flash.error(`${error}`);
     }
-  };
+  }
 
   return (
     <View fitToScreen className="flex justify-center items-start">
@@ -108,11 +104,12 @@ export default function AcceptInviteView() {
                 {t('users:first_name').toUpperCase()}
               </FormLabel>
               <TextInput
+                {...formContext.register('firstName', {
+                  required: true,
+                })}
                 id="first-name"
-                name="firstName"
                 className="w-full"
                 autoComplete="given-name"
-                required
                 aria-describedby="first-name-error"
               />
               <InputError
@@ -126,11 +123,12 @@ export default function AcceptInviteView() {
                 {t('users:last_name').toUpperCase()}
               </FormLabel>
               <TextInput
+                {...formContext.register('lastName', {
+                  required: true,
+                })}
                 id="last-name"
-                name="lastName"
                 className="w-full"
                 autoComplete="family-name"
-                required
                 aria-describedby="last-name-error"
               />
               <InputError
@@ -145,13 +143,14 @@ export default function AcceptInviteView() {
               {t('users:password').toUpperCase()}
             </FormLabel>
             <TextInput
+              {...formContext.register('password', {
+                required: true,
+                minLength: 8,
+              })}
               type="password"
               id="password"
-              name="password"
               className="w-full"
               autoComplete="new-password"
-              required
-              minLength={8}
               aria-describedby="password-error"
             />
             <InputError
@@ -168,12 +167,17 @@ export default function AcceptInviteView() {
               {t('users:confirm_password').toUpperCase()}
             </FormLabel>
             <TextInput
+              {...formContext.register('confirmPassword', {
+                required: true,
+                validate: {
+                  confirms: (value: unknown) =>
+                    value === formContext.getValues().password,
+                },
+              })}
               type="password"
               id="confirm-password"
-              name="confirmPassword"
               className="w-full"
               autoComplete="new-password"
-              confirms="password"
               aria-describedby="confirm-password-error"
             />
             <InputError

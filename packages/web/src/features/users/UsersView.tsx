@@ -111,7 +111,6 @@ export default function UsersView() {
                   <ComboboxInput
                     className="w-42"
                     autoComplete="off"
-                    name="userRole"
                     value={user.systemRoles?.[0] ?? ''}
                     aria-label={t('users:role') ?? ''}
                     onChange={(role) =>

@@ -1,8 +1,13 @@
 {
+  "approve_tooltip": "Aprobar (Ingresar)",
   "approved": "Aprobado",
+  "comments": "Comentario",
   "interlinear": "Interlineal",
+  "lexicon": "Léxico",
   "next_verse": "Siguiente verso",
+  "notes": "Notas",
   "previous_verse": "Verso anterior",
+  "revoke_tooltip": "Revocar la aprobación (Esc)",
   "saving": "guardando",
   "select_verse": "Seleccionar verso",
   "strongs": "Fuerte"

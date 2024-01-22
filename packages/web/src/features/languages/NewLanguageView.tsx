@@ -60,14 +60,15 @@ export default function NewLanguageView() {
               {t('languages:code').toUpperCase()}
             </FormLabel>
             <TextInput
+              {...formContext.register('code', {
+                required: true,
+                validate: {
+                  valid: (code: string) => languageCodes.includes(code),
+                },
+              })}
               id="code"
-              name="code"
               className="w-full"
               autoComplete="off"
-              required
-              validate={{
-                valid: (code: string) => languageCodes.includes(code),
-              }}
               aria-describedby="code-error"
             />
             <InputError
@@ -84,11 +85,12 @@ export default function NewLanguageView() {
               {t('common:name').toUpperCase()}
             </FormLabel>
             <TextInput
+              {...formContext.register('name', {
+                required: true,
+              })}
               id="name"
-              name="name"
               className="w-full"
               autoComplete="off"
-              required
               aria-describedby="name-error"
             />
             <InputError

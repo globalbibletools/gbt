@@ -1,58 +1,23 @@
 import { forwardRef } from 'react';
 import { Combobox } from '@headlessui/react';
-import { Controller, useFormContext } from 'react-hook-form';
+import { useFormContext } from 'react-hook-form';
 import { Icon } from '../Icon';
 
-export type MultiselectInputProps = BaseMultiselectInputProps & {
-  required?: boolean;
-  isolate?: boolean;
-};
-
-export default function MultiselectInput(props: MultiselectInputProps) {
-  const context = useFormContext();
-
-  if (context && !props.isolate) {
-    return (
-      <Controller
-        control={context.control}
-        name={props.name}
-        defaultValue={props.defaultValue}
-        rules={{ required: props.required }}
-        render={({ field, fieldState }) => (
-          <BaseMultiselectInput
-            {...field}
-            items={props.items}
-            hasErrors={!!fieldState.error}
-            placeholder={props.placeholder}
-          />
-        )}
-      />
-    );
-  } else {
-    return <BaseMultiselectInput {...props} />;
-  }
-}
-
-interface BaseMultiselectInputProps {
+export interface MultiselectInputProps {
   className?: string;
   name: string;
   items: { label: string; value: string }[];
   value?: string[];
   defaultValue?: string[];
-  hasErrors?: boolean;
   placeholder?: string;
   onChange?(value: string[]): void;
   onBlur?(): void;
 }
 
-const BaseMultiselectInput = forwardRef<
-  HTMLInputElement,
-  BaseMultiselectInputProps
->(
+const MultiselectInput = forwardRef<HTMLInputElement, MultiselectInputProps>(
   (
     {
       className = '',
-      hasErrors,
       value,
       onChange,
       onBlur,
@@ -63,6 +28,9 @@ const BaseMultiselectInput = forwardRef<
     },
     ref
   ) => {
+    const formContext = useFormContext();
+    const hasErrors = !!(name && formContext?.getFieldState(name).error);
+
     return (
       <div className={`${className} group/multiselect relative`}>
         <Combobox
@@ -122,3 +90,5 @@ const BaseMultiselectInput = forwardRef<
     );
   }
 );
+
+export default MultiselectInput;

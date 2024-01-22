@@ -3,6 +3,7 @@
   "app_name": "Global Bible Tools",
   "cancel": "Cancel",
   "close": "close",
+  "coming_soon": "Coming Soon",
   "confirm": "Confirm",
   "confirm_prompt": "Type '{{value}}' to confirm your decision.",
   "create": "Create",
@@ -16,6 +17,15 @@
   "next": "Next",
   "not_found": "Not Found",
   "not_found_message": "We couldn't find what you are looking for.",
+  "rich_text": {
+    "bold_tooltip": "Bold (Ctrl+B)",
+    "italic_tooltip": "Italic (Ctrl+I)",
+    "strike_tooltip": "Strikethrough (Ctrl+I)",
+    "bullet_list_tooltip": "Bullet List",
+    "ordered_list_tooltip": "Ordered List",
+    "indent_tooltip": "Indent (Tab)",
+    "outdent_tooltip": "Outdent (Shift+Tab)"
+  },
   "submitting": "submitting",
   "success": "Success",
   "too_many_options": "Too many options to display. Please filter further.",

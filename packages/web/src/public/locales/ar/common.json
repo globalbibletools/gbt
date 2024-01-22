@@ -3,6 +3,7 @@
   "app_name": "أدوات الكتاب المقدس العالمية",
   "cancel": "يلغي",
   "close": "إغلاق",
+  "coming_soon": "قريباً",
   "confirm": "يتأكد",
   "confirm_prompt": "اكتب '{{value}}' لتأكيد قرارك.",
   "create": "إنشاء",
@@ -16,6 +17,15 @@
   "next": "التالي",
   "not_found": "غير موجود",
   "not_found_message": "لم نتمكن من العثور على ما تبحث عنه.",
+  "rich_text": {
+    "bold_tooltip": "عريض (Ctrl+B)",
+    "italic_tooltip": "مائل (Ctrl+I)",
+    "strike_tooltip": "مشطوب (Ctrl+I)",
+    "bullet_list_tooltip": "قائمة نقاط",
+    "ordered_list_tooltip": "قائمة مرقمة",
+    "indent_tooltip": "المسافة البادئة (Tab)",
+    "outdent_tooltip": "إلغاء المسافة البادئة (Shift+Tab)"
+  },
   "submitting": "جاري الإرسال",
   "success": "نجاح",
   "too_many_options": "الكثير من الخيارات التي يجب عرضها.يرجى تصفية مزيد من.",

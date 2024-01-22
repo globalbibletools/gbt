@@ -31,6 +31,7 @@ import {
   parseVerseId,
 } from './verse-utils';
 import View from '../../shared/components/View';
+import { isFlagEnabled } from '../../shared/featureFlags';
 
 export const translationLanguageKey = 'translation-language';
 export const translationVerseIdKey = 'translation-verse-id';
@@ -294,6 +295,10 @@ export default function TranslationView() {
     }
   }, [loading, verseQuery.data]);
 
+  const commentsEnabled =
+    isFlagEnabled('comments') &&
+    !!userCan('read', { type: 'Language', id: language });
+
   return (
     <View fitToScreen className="px-4 flex flex-grow flex-col gap-8">
       <div className="flex gap-8 items-center">
@@ -442,6 +447,7 @@ export default function TranslationView() {
                   language={language}
                   verse={verse}
                   wordIndex={sidebarWordIndex}
+                  showComments={commentsEnabled}
                   onClose={() => setShowSidebar(false)}
                 />
               )}

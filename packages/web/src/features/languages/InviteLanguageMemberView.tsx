@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { ApiClientError } from '@translation/api-client';
 import Form from '../../shared/components/form/Form';
 import InputError from '../../shared/components/form/InputError';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import SubmittingIndicator from '../../shared/components/form/SubmittingIndicator';
 import Button from '../../shared/components/actions/Button';
 import { useFlash } from '../../shared/hooks/flash';
@@ -28,7 +28,11 @@ export default function InviteLanguageMemberView() {
   const flash = useFlash();
   const { t } = useTranslation(['users']);
 
-  const formContext = useForm<FormData>();
+  const formContext = useForm<FormData>({
+    defaultValues: {
+      roles: [LanguageRole.Translator],
+    },
+  });
   async function onSubmit(data: FormData) {
     try {
       await apiClient.languages.inviteMember(code, {
@@ -63,12 +67,13 @@ export default function InviteLanguageMemberView() {
               {t('users:email').toUpperCase()}
             </FormLabel>
             <TextInput
+              {...formContext.register('email', {
+                required: true,
+              })}
               id="email"
               type="email"
-              name="email"
               className="w-full"
               autoComplete="off"
-              required
               aria-describedby="email-error"
             />
             <InputError
@@ -81,17 +86,21 @@ export default function InviteLanguageMemberView() {
             <FormLabel htmlFor="roles">
               {t('users:role', { count: 100 }).toUpperCase()}
             </FormLabel>
-            <MultiselectInput
-              className="w-full"
+            <Controller
               name="roles"
-              defaultValue={[LanguageRole.Translator]}
-              items={[
-                { label: t('users:role_admin'), value: LanguageRole.Admin },
-                {
-                  label: t('users:role_translator'),
-                  value: LanguageRole.Translator,
-                },
-              ]}
+              render={({ field }) => (
+                <MultiselectInput
+                  {...field}
+                  className="w-full"
+                  items={[
+                    { label: t('users:role_admin'), value: LanguageRole.Admin },
+                    {
+                      label: t('users:role_translator'),
+                      value: LanguageRole.Translator,
+                    },
+                  ]}
+                />
+              )}
             />
           </div>
           <div>
