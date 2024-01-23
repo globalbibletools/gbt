@@ -180,6 +180,11 @@ export interface GetVerseGlossesResponseBody {
   data: Gloss[];
 }
 
+export interface PatchWordGlossRequestBody {
+  gloss?: string;
+  state?: GlossState;
+}
+
 export interface TranslatorNote {
   wordId: string;
   authorName: string;
@@ -191,9 +196,8 @@ export interface GetVerseTranslatorNotesResponseBody {
   data: Record<string, TranslatorNote>;
 }
 
-export interface PatchWordGlossRequestBody {
-  gloss?: string;
-  state?: GlossState;
+export interface PatchWordTranslatorNoteRequestBody {
+  note: string;
 }
 
 export interface SNSConfirmSubscriptionMessage {
