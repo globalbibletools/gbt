@@ -20,10 +20,6 @@ type TranslationSidebarProps = {
   onClose: () => void;
 };
 
-interface FormData {
-  notes: string;
-}
-
 export const TranslationSidebar = ({
   language,
   verse,
@@ -50,9 +46,18 @@ export const TranslationSidebar = ({
     tabTitles.push('translate:comments');
   }
 
-  const [isEditingNotes, setIsEditingNotes] = useState(false);
-  const [notesContent, setNotesContent] = useState('');
-  const formContext = useForm<FormData>();
+  const [isEditingNote, setIsEditingNote] = useState(false);
+  const [noteContent, setNoteContent] = useState('');
+
+  const saveNote = () => {
+    setIsEditingNote(false);
+    console.log(noteContent);
+    apiClient.words.updateTranslatorNote({
+      wordId: word.id,
+      language,
+      note: noteContent,
+    });
+  };
 
   return (
     <div
@@ -125,32 +130,32 @@ export const TranslationSidebar = ({
                   <span>{new Date().toISOString()}</span>
                 </div>
                 <div className="flex flex-row justify-end gap-1">
-                  {isEditingNotes ? (
+                  {isEditingNote ? (
                     <>
                       <Button
                         variant="secondary"
-                        onClick={() => setIsEditingNotes(false)}
+                        onClick={() => setIsEditingNote(false)}
                       >
                         {t('common:cancel')}
                       </Button>
-                      <Button onClick={() => setIsEditingNotes(false)}>
-                        {t('common:confirm')}
-                      </Button>
+                      <Button onClick={saveNote}>{t('common:confirm')}</Button>
                     </>
                   ) : (
-                    <Button onClick={() => setIsEditingNotes(true)}>
+                    <Button onClick={() => setIsEditingNote(true)}>
                       {t('common:edit')}
                     </Button>
                   )}
                 </div>
-                {isEditingNotes ? (
+                {isEditingNote ? (
                   <RichTextInput
-                    {...formContext.register('notes', {
-                      value: notesContent,
-                    })}
+                    name="noteContent"
+                    value={noteContent}
+                    onChange={async (e) => {
+                      setNoteContent(e.target.value);
+                    }}
                   />
                 ) : (
-                  <RichText content={notesContent} />
+                  <RichText content={noteContent} />
                 )}
               </div>
             </Tab.Panel>
