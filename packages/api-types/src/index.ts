@@ -188,7 +188,7 @@ export interface PatchWordGlossRequestBody {
 export interface TranslatorNote {
   wordId: string;
   authorName: string;
-  timestamp: Date;
+  timestamp: number;
   content: string;
 }
 

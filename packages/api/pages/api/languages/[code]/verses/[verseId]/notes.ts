@@ -45,7 +45,7 @@ export default createRoute<{ code: string; verseId: string }>()
               wordId: word.id,
               authorName: note.author.name ?? '',
               content: note.content,
-              timestamp: note.timestamp,
+              timestamp: +note.timestamp,
             };
           }
         }

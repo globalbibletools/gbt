@@ -2,8 +2,7 @@ import { Tab } from '@headlessui/react';
 import { useQuery } from '@tanstack/react-query';
 import { Verse } from '@translation/api-types';
 import DOMPurify from 'dompurify';
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import apiClient from '../../shared/apiClient';
 import { Icon } from '../../shared/components/Icon';
@@ -27,7 +26,10 @@ export const TranslationSidebar = ({
   showComments,
   onClose,
 }: TranslationSidebarProps) => {
+  const { t } = useTranslation(['common', 'translate']);
+
   const word = verse.words[wordIndex];
+
   const lemmaResourcesQuery = useQuery(
     ['verse-lemma-resources', language, verse.id],
     () => apiClient.verses.findLemmaResources(verse.id)
@@ -39,7 +41,14 @@ export const TranslationSidebar = ({
     ['BDB', 'LSJ'].includes(resource)
   );
   const lexiconEntry = lexiconResource?.entry ?? '';
-  const { t } = useTranslation(['common', 'translate']);
+
+  const translatorNotesQuery = useQuery(
+    ['verse-translator-notes', language, verse.id],
+    () => apiClient.verses.findTranslatorNotes(verse.id, language)
+  );
+  const translatorNote = translatorNotesQuery.isSuccess
+    ? translatorNotesQuery.data.data[word.id]
+    : null;
 
   const tabTitles = ['translate:lexicon', 'translate:notes'];
   if (showComments) {
@@ -47,16 +56,28 @@ export const TranslationSidebar = ({
   }
 
   const [isEditingNote, setIsEditingNote] = useState(false);
+  const [noteAuthorName, setNoteAuthorName] = useState('');
+  const [noteTimestampString, setNoteTimestampString] = useState('');
   const [noteContent, setNoteContent] = useState('');
 
-  const saveNote = () => {
+  useEffect(() => {
+    setNoteAuthorName(translatorNote?.authorName ?? '');
+    setNoteTimestampString(
+      translatorNote?.timestamp
+        ? new Date(translatorNote.timestamp).toLocaleString()
+        : ''
+    );
+    setNoteContent(translatorNote?.content ?? '');
+  }, [translatorNote]);
+
+  const saveNote = async () => {
     setIsEditingNote(false);
-    console.log(noteContent);
-    apiClient.words.updateTranslatorNote({
+    await apiClient.words.updateTranslatorNote({
       wordId: word.id,
       language,
       note: noteContent,
     });
+    translatorNotesQuery.refetch();
   };
 
   return (
@@ -121,20 +142,23 @@ export const TranslationSidebar = ({
               <div className="flex flex-col gap-2 pb-2">
                 <div className="flex flex-row justify-between">
                   <span className="font-bold">{t('translate:author')}</span>
-                  <span>Joe Translator</span>
+                  <span>{noteAuthorName}</span>
                 </div>
                 <div className="flex flex-row justify-between">
                   <span className="font-bold">
                     {t('translate:last_updated')}
                   </span>
-                  <span>{new Date().toISOString()}</span>
+                  <span>{noteTimestampString}</span>
                 </div>
                 <div className="flex flex-row justify-end gap-1">
                   {isEditingNote ? (
                     <>
                       <Button
                         variant="secondary"
-                        onClick={() => setIsEditingNote(false)}
+                        onClick={() => {
+                          setIsEditingNote(false);
+                          setNoteContent(translatorNote?.content ?? '');
+                        }}
                       >
                         {t('common:cancel')}
                       </Button>
@@ -150,9 +174,7 @@ export const TranslationSidebar = ({
                   <RichTextInput
                     name="noteContent"
                     value={noteContent}
-                    onChange={async (e) => {
-                      setNoteContent(e.target.value);
-                    }}
+                    onBlur={async (e) => setNoteContent(e.target.value)}
                   />
                 ) : (
                   <RichText content={noteContent} />
