@@ -44,8 +44,8 @@ export default createRoute<{ code: string; verseId: string }>()
             response.data[word.id] = {
               wordId: word.id,
               authorName: note.author.name ?? '',
-              content: note.content,
               timestamp: +note.timestamp,
+              content: note.content,
             };
           }
         }
