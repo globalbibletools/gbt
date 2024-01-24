@@ -63,6 +63,12 @@
         "command": "npx ts-node --project packages/db/tsconfig.json packages/db/src/scripts/import-uhb.ts"
       }
     },
+    "import-open-scriptures": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx ts-node --project packages/db/tsconfig.json packages/db/src/scripts/import-open-scriptures.ts"
+      }
+    },
     "prisma": {
       "executor": "@translation/nx-plugin:prisma",
       "options": {

@@ -306,6 +306,15 @@ enum ResourceCode {
   STRONGS
 }
 
+model OSWord {
+  id     String  @id
+  text   String
+  strong String
+  morph  String
+  type   String?
+  wordId String?
+}
+
 model UHBWord {
   id     String  @id
   text   String
