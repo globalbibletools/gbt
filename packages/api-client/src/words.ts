@@ -18,7 +18,7 @@ export default class Words {
     language: string;
   }): Promise<void> {
     await this.client.patch({
-      path: `/api/languages/${language}/words/${wordId}`,
+      path: `/api/languages/${language}/words/${wordId}/gloss`,
       body,
     });
   }

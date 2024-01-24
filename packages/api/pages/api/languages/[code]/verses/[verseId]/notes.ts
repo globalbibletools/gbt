@@ -49,7 +49,7 @@ export default createRoute<{ code: string; verseId: string }>()
             };
           }
         }
-        res.ok(response);
+        return res.ok(response);
       }
       res.notFound();
     },
