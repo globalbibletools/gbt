@@ -4,7 +4,7 @@ CREATE TABLE "TranslatorNote" (
     "languageId" UUID NOT NULL,
     "authorId" UUID NOT NULL,
     "timestamp" TIMESTAMP(3) NOT NULL,
-    "note" TEXT NOT NULL,
+    "content" TEXT NOT NULL,
 
     CONSTRAINT "TranslatorNote_pkey" PRIMARY KEY ("wordId","languageId")
 );
