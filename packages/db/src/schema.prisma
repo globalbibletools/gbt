@@ -320,7 +320,7 @@ model TranslatorNote {
   wordId     String
   /// The language that the note applies to.
   language   Language @relation(fields: [languageId], references: [id])
-  /// The ID of the language of that the note applies to.
+  /// The ID of the language that the note applies to.
   languageId String   @db.Uuid
   /// The author of the most recent update to the note.
   author     AuthUser @relation(fields: [authorId], references: [id])
