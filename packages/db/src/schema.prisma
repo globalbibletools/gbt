@@ -42,6 +42,8 @@ model AuthUser {
   emailVerifications UserEmailVerification[]
   /// The list of translator notes authored by this user.
   translatorNotes    TranslatorNote[]
+  /// The list of comments authored by this user.
+  comments           Comment[]
 
   @@map("User")
 }
@@ -160,6 +162,8 @@ model Word {
   machineGlosses  MachineGloss[]
   // The list of translator notes in different languages for this word.
   translatorNotes TranslatorNote[]
+  // The list of comments for this word.
+  comments        Comment[]
 }
 
 /// A form of a lemma. This are differentiated by grammatical forms, as well as suffixes and prefixes.
@@ -211,6 +215,8 @@ model Language {
   machineGlosses      MachineGloss[]
   // The list of translator notes of different words for this language.
   translatorNotes     TranslatorNote[]
+  // The list of comments of different words for this language.
+  comments            Comment[]
   /// The list of roles for members of this language.
   roles               LanguageMemberRole[]
   /// The pending import job if any.
@@ -329,6 +335,28 @@ model TranslatorNote {
   /// The timestamp of the last update.
   timestamp  DateTime
   /// The content of the note.
+  content    String
+
+  @@id([wordId, languageId])
+}
+
+/// A comment for a word in a particular language.
+model Comment {
+  /// The word being commented on.
+  word       Word     @relation(fields: [wordId], references: [id])
+  /// The ID of the word being commented on.
+  wordId     String
+  /// The language that the comment applies to.
+  language   Language @relation(fields: [languageId], references: [id])
+  /// The ID of the language that the comment applies to.
+  languageId String   @db.Uuid
+  /// The author of the comment.
+  author     AuthUser @relation(fields: [authorId], references: [id])
+  /// The ID of the author of the comment.
+  authorId   String   @db.Uuid
+  /// The timestamp of the creation of this comment.
+  timestamp  DateTime
+  /// The content of the comment.
   content    String
 
   @@id([wordId, languageId])
