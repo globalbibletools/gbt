@@ -44,6 +44,8 @@ paths:
     $ref: ./paths/languages/word-gloss.yml
   /languages/{code}/words/{wordId}/note:
     $ref: ./paths/languages/word-note.yml
+  /languages/{code}/words/{wordId}/comments:
+    $ref: ./paths/languages/word-comments.yml
   /languages/{code}/members:
     $ref: ./paths/languages/language-members.yml
   /languages/{code}/members/{userId}:

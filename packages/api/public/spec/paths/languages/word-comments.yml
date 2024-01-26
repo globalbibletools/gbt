@@ -1,0 +1,62 @@
+post:
+  tags:
+    - Languages
+  summary: Add a comment for a word for a language.
+  parameters:
+    - $ref: '../../schemas/parameters.yml#languageCode'
+    - $ref: '../../schemas/parameters.yml#wordId'
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            comment:
+              type: string
+              example: <p>This is my comment.</p>
+              description: The HTML content of the comment.
+  responses:
+    '204':
+      description: No Content
+get:
+  tags:
+    - Languages
+  summary: Get the comments for a word for a language.
+  parameters:
+    - $ref: '../../schemas/parameters.yml#languageCode'
+    - $ref: '../../schemas/parameters.yml#wordIdId'
+  responses:
+    '200':
+      description: Ok
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    commentId:
+                      type: string
+                      description: The unique ID for the comment.
+                    authorName:
+                      type: string
+                      description: The name of the author of the comment.
+                    timestamp:
+                      type: number
+                      description: The UTC timestamp of the comment's creation.
+                    content:
+                      type: string
+                      description: The HTML content of the comment.
+                example:
+                  - commentId: 23692
+                    authorName: 'John Doe'
+                    timestamp: 1706092452256
+                    content: '<p>This is my comment.</p>'
+                  - commentId: 23693
+                    authorName: 'Jane Smith'
+                    timestamp: 1704390452256
+                    content: '<p>This is another comment.</p>'
