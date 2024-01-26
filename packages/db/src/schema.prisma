@@ -342,6 +342,8 @@ model TranslatorNote {
 
 /// A comment for a word in a particular language.
 model Comment {
+  /// The unique identifier for this comment.
+  id         String   @id @default(dbgenerated("generate_ulid()")) @db.Uuid
   /// The word being commented on.
   word       Word     @relation(fields: [wordId], references: [id])
   /// The ID of the word being commented on.
@@ -358,6 +360,4 @@ model Comment {
   timestamp  DateTime
   /// The content of the comment.
   content    String
-
-  @@id([wordId, languageId])
 }

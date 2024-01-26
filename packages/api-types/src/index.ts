@@ -200,6 +200,21 @@ export interface PatchWordTranslatorNoteRequestBody {
   note: string;
 }
 
+export interface Comment {
+  commentId: string;
+  authorName: string;
+  timestamp: number;
+  content: string;
+}
+
+export interface GetWordCommentsResponseBody {
+  data: Comment[];
+}
+
+export interface PostWordCommentRequestBody {
+  comment: string;
+}
+
 export interface SNSConfirmSubscriptionMessage {
   Type: 'SubscriptionConfirmation';
   SubscribeURL: string;

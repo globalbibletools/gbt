@@ -1,12 +1,13 @@
 -- CreateTable
 CREATE TABLE "Comment" (
+    "id" UUID NOT NULL DEFAULT generate_ulid(),
     "wordId" TEXT NOT NULL,
     "languageId" UUID NOT NULL,
     "authorId" UUID NOT NULL,
     "timestamp" TIMESTAMP(3) NOT NULL,
     "content" TEXT NOT NULL,
 
-    CONSTRAINT "Comment_pkey" PRIMARY KEY ("wordId","languageId")
+    CONSTRAINT "Comment_pkey" PRIMARY KEY ("id")
 );
 
 -- AddForeignKey
