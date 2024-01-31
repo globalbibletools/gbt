@@ -2,7 +2,7 @@ import { Tab } from '@headlessui/react';
 import { useQuery } from '@tanstack/react-query';
 import { Verse } from '@translation/api-types';
 import DOMPurify from 'dompurify';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import apiClient from '../../shared/apiClient';
 import { Icon } from '../../shared/components/Icon';
@@ -10,6 +10,7 @@ import LoadingSpinner from '../../shared/components/LoadingSpinner';
 import RichText from '../../shared/components/RichText';
 import Button from '../../shared/components/actions/Button';
 import RichTextInput from '../../shared/components/form/RichTextInput';
+import { useAccessControl } from '../../shared/accessControl';
 
 type TranslationSidebarProps = {
   language: string;
@@ -48,13 +49,19 @@ export const TranslationSidebar = ({
   const translatorNote = translatorNotesQuery.isSuccess
     ? translatorNotesQuery.data.data[word.id]
     : null;
+  const originalNoteContent = translatorNote?.content ?? '';
 
   const tabTitles = ['translate:lexicon', 'translate:notes'];
   if (showComments) {
     tabTitles.push('translate:comments');
   }
 
-  const [isEditingNote, setIsEditingNote] = useState(false);
+  const userCan = useAccessControl();
+
+  const canEditNote = userCan('translate', {
+    type: 'Language',
+    id: language,
+  });
   const [noteAuthorName, setNoteAuthorName] = useState('');
   const [noteTimestampString, setNoteTimestampString] = useState('');
   const [noteContent, setNoteContent] = useState('');
@@ -63,21 +70,34 @@ export const TranslationSidebar = ({
     setNoteAuthorName(translatorNote?.authorName ?? '');
     setNoteTimestampString(
       translatorNote?.timestamp
-        ? new Date(translatorNote.timestamp).toLocaleString()
+        ? new Date(translatorNote?.timestamp).toLocaleString()
         : ''
     );
-    setNoteContent(translatorNote?.content ?? '');
-  }, [translatorNote]);
+    setNoteContent(originalNoteContent);
+  }, [translatorNote, originalNoteContent]);
 
-  const saveNote = async () => {
-    setIsEditingNote(false);
-    await apiClient.words.updateTranslatorNote({
-      wordId: word.id,
-      language,
-      note: noteContent,
-    });
-    translatorNotesQuery.refetch();
-  };
+  const saveNote = useCallback(
+    async (noteContent: string) => {
+      console.log('SAVE:', noteContent);
+      await apiClient.words.updateTranslatorNote({
+        wordId: word.id,
+        language,
+        note: noteContent,
+      });
+      translatorNotesQuery.refetch();
+    },
+    [language, translatorNotesQuery, word.id]
+  );
+
+  // Save the note content after a 500 ms debounce.
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      if (noteContent !== originalNoteContent) {
+        saveNote(noteContent);
+      }
+    }, 500);
+    return () => clearTimeout(timeoutId);
+  }, [noteContent, originalNoteContent, saveNote]);
 
   return (
     <div
@@ -144,41 +164,20 @@ export const TranslationSidebar = ({
             <Tab.Panel>
               {/* TODO: add author and timestamp */}
               <div className="flex flex-col gap-2 pb-2">
-                <div className="flex flex-row justify-between">
-                  <span className="font-bold">{t('translate:author')}</span>
-                  <span>{noteAuthorName}</span>
-                </div>
-                <div className="flex flex-row justify-between">
-                  <span className="font-bold">
-                    {t('translate:last_updated')}
+                {noteTimestampString && noteAuthorName && (
+                  <span className="italic">
+                    {t('translate:note_description', {
+                      timestamp: noteTimestampString,
+                      authorName: noteAuthorName,
+                    })}
                   </span>
-                  <span>{noteTimestampString}</span>
-                </div>
-                <div className="flex flex-row justify-end gap-1">
-                  {isEditingNote ? (
-                    <>
-                      <Button
-                        variant="secondary"
-                        onClick={() => {
-                          setIsEditingNote(false);
-                          setNoteContent(translatorNote?.content ?? '');
-                        }}
-                      >
-                        {t('common:cancel')}
-                      </Button>
-                      <Button onClick={saveNote}>{t('common:confirm')}</Button>
-                    </>
-                  ) : (
-                    <Button onClick={() => setIsEditingNote(true)}>
-                      {t('common:edit')}
-                    </Button>
-                  )}
-                </div>
-                {isEditingNote ? (
+                )}
+                {canEditNote ? (
                   <RichTextInput
                     name="noteContent"
-                    value={noteContent}
-                    onBlur={async (e) => setNoteContent(e.target.value)}
+                    value={originalNoteContent}
+                    onBlur={async (e) => saveNote(e.target.value)}
+                    onChange={async (e) => setNoteContent(e.target.value)}
                   />
                 ) : (
                   <RichText content={noteContent} />
