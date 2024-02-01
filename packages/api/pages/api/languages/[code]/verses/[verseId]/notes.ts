@@ -20,14 +20,14 @@ export default createRoute<{ code: string; verseId: string }>()
       const notes = await client.$queryRaw<TranslatorNote[]>`
         --- First we create a query with the words in a verse.
         WITH "VerseWord" AS (
-          SELECT "Word"."id", "Word"."formId" FROM "Verse"
+          SELECT "Word"."id" FROM "Verse"
           JOIN "Word" ON "Verse"."id" = "Word"."verseId"
           WHERE "verseId" = ${req.query.verseId}
         ),
         --- Then we gather the note for each word in the verse.
         "WordNote" as (
           SELECT "VerseWord"."id", "TranslatorNote".* FROM "VerseWord"
-          JOIN "Word" ON "Word"."formId" = "VerseWord"."formId"
+          JOIN "Word" ON "Word"."id" = "VerseWord"."id"
           JOIN "TranslatorNote" ON "Word"."id" = "TranslatorNote"."wordId"
             AND "TranslatorNote"."languageId" = ${language.id}::uuid
         )
