@@ -1,16 +1,15 @@
 import { Tab } from '@headlessui/react';
 import { useQuery } from '@tanstack/react-query';
-import { TranslatorNote, Verse } from '@translation/api-types';
+import { Verse } from '@translation/api-types';
 import DOMPurify from 'dompurify';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useAccessControl } from '../../shared/accessControl';
 import apiClient from '../../shared/apiClient';
 import { Icon } from '../../shared/components/Icon';
 import LoadingSpinner from '../../shared/components/LoadingSpinner';
 import RichText from '../../shared/components/RichText';
-import Button from '../../shared/components/actions/Button';
 import RichTextInput from '../../shared/components/form/RichTextInput';
-import { useAccessControl } from '../../shared/accessControl';
 
 type TranslationSidebarProps = {
   language: string;
@@ -65,11 +64,9 @@ export const TranslationSidebar = ({
   // Only update the content shown in the text editor when the word ID changes.
   const [originalNoteContent, setOriginalNoteContent] = useState('');
   const [noteContent, setNoteContent] = useState('');
-  console.log(`"${originalNoteContent}" -> "${noteContent}"`);
   const wordId = useRef('');
   useEffect(() => {
     if (word.id !== wordId.current) {
-      console.log('WORD CHANGE!', translatorNote);
       wordId.current = word.id;
       setOriginalNoteContent(translatorNote?.content ?? '');
       setNoteContent(translatorNote?.content ?? '');
@@ -78,7 +75,6 @@ export const TranslationSidebar = ({
 
   const saveNote = useCallback(
     async (noteContent: string) => {
-      console.log('SAVE:', noteContent);
       await apiClient.words.updateTranslatorNote({
         wordId: word.id,
         language,
