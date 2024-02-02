@@ -2,7 +2,7 @@ import { Tab } from '@headlessui/react';
 import { useQuery } from '@tanstack/react-query';
 import { TranslatorNote, Verse } from '@translation/api-types';
 import DOMPurify from 'dompurify';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import apiClient from '../../shared/apiClient';
 import { Icon } from '../../shared/components/Icon';
@@ -49,7 +49,6 @@ export const TranslationSidebar = ({
   const translatorNote = translatorNotesQuery.isSuccess
     ? translatorNotesQuery.data.data[word.id]
     : null;
-  const originalNoteContent = translatorNote?.content ?? '';
 
   const tabTitles = ['translate:lexicon', 'translate:notes'];
   if (showComments) {
@@ -62,11 +61,20 @@ export const TranslationSidebar = ({
     type: 'Language',
     id: language,
   });
-  const [noteContent, setNoteContent] = useState('');
 
+  // Only update the content shown in the text editor when the word ID changes.
+  const [originalNoteContent, setOriginalNoteContent] = useState('');
+  const [noteContent, setNoteContent] = useState('');
+  console.log(`"${originalNoteContent}" -> "${noteContent}"`);
+  const wordId = useRef('');
   useEffect(() => {
-    setNoteContent(originalNoteContent);
-  }, [translatorNote, originalNoteContent]);
+    if (word.id !== wordId.current) {
+      console.log('WORD CHANGE!', translatorNote);
+      wordId.current = word.id;
+      setOriginalNoteContent(translatorNote?.content ?? '');
+      setNoteContent(translatorNote?.content ?? '');
+    }
+  }, [word.id, translatorNote]);
 
   const saveNote = useCallback(
     async (noteContent: string) => {
@@ -77,19 +85,21 @@ export const TranslationSidebar = ({
         note: noteContent,
       });
       translatorNotesQuery.refetch();
+      setNeedsSaved(false);
     },
     [language, translatorNotesQuery, word.id]
   );
 
+  const [needsSaved, setNeedsSaved] = useState(false);
   // Save the note content after a 500 ms debounce.
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      if (noteContent !== originalNoteContent) {
+      if (needsSaved) {
         saveNote(noteContent);
       }
     }, 500);
     return () => clearTimeout(timeoutId);
-  }, [noteContent, originalNoteContent, saveNote]);
+  }, [needsSaved, noteContent, saveNote]);
 
   return (
     <div
@@ -170,7 +180,10 @@ export const TranslationSidebar = ({
                     name="noteContent"
                     value={originalNoteContent}
                     onBlur={async (e) => saveNote(e.target.value)}
-                    onChange={async (e) => setNoteContent(e.target.value)}
+                    onChange={async (e) => {
+                      setNoteContent(e.target.value);
+                      setNeedsSaved(true);
+                    }}
                   />
                 ) : (
                   <RichText content={noteContent} />
