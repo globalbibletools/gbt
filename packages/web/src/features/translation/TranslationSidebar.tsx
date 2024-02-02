@@ -1,6 +1,6 @@
 import { Tab } from '@headlessui/react';
 import { useQuery } from '@tanstack/react-query';
-import { Verse } from '@translation/api-types';
+import { TranslatorNote, Verse } from '@translation/api-types';
 import DOMPurify from 'dompurify';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -62,17 +62,9 @@ export const TranslationSidebar = ({
     type: 'Language',
     id: language,
   });
-  const [noteAuthorName, setNoteAuthorName] = useState('');
-  const [noteTimestampString, setNoteTimestampString] = useState('');
   const [noteContent, setNoteContent] = useState('');
 
   useEffect(() => {
-    setNoteAuthorName(translatorNote?.authorName ?? '');
-    setNoteTimestampString(
-      translatorNote?.timestamp
-        ? new Date(translatorNote?.timestamp).toLocaleString()
-        : ''
-    );
     setNoteContent(originalNoteContent);
   }, [translatorNote, originalNoteContent]);
 
@@ -162,13 +154,14 @@ export const TranslationSidebar = ({
               )}
             </Tab.Panel>
             <Tab.Panel>
-              {/* TODO: add author and timestamp */}
               <div className="flex flex-col gap-2 pb-2">
-                {noteTimestampString && noteAuthorName && (
+                {translatorNote?.authorName && (
                   <span className="italic">
                     {t('translate:note_description', {
-                      timestamp: noteTimestampString,
-                      authorName: noteAuthorName,
+                      timestamp: translatorNote?.timestamp
+                        ? new Date(translatorNote?.timestamp).toLocaleString()
+                        : '',
+                      authorName: translatorNote?.authorName ?? '',
                     })}
                   </span>
                 )}
