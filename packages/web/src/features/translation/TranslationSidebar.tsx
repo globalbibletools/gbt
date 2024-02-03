@@ -2,6 +2,7 @@ import { Tab } from '@headlessui/react';
 import { useQuery } from '@tanstack/react-query';
 import { Verse } from '@translation/api-types';
 import DOMPurify from 'dompurify';
+import { throttle } from 'lodash';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAccessControl } from '../../shared/accessControl';
@@ -73,30 +74,20 @@ export const TranslationSidebar = ({
     }
   }, [word.id, translatorNote]);
 
-  const saveNote = useCallback(
-    async (noteContent: string) => {
-      await apiClient.words.updateTranslatorNote({
-        wordId: word.id,
-        language,
-        note: noteContent,
-      });
-      translatorNotesQuery.refetch();
-      setNeedsSaved(false);
-    },
-    [language, translatorNotesQuery, word.id]
+  const saveNote = useCallback(async () => {
+    await apiClient.words.updateTranslatorNote({
+      wordId: word.id,
+      language,
+      note: noteContent,
+    });
+    translatorNotesQuery.refetch();
+  }, [language, translatorNotesQuery, word.id, noteContent]);
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const debouncedSaveNote = useCallback(
+    throttle(saveNote, 15000, { leading: false, trailing: true }),
+    [language, translatorNotesQuery, word.id, noteContent]
   );
-
-  const [needsSaved, setNeedsSaved] = useState(false);
-  // Save the note content after a 500 ms debounce.
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      if (needsSaved) {
-        saveNote(noteContent);
-      }
-    }, 500);
-    return () => clearTimeout(timeoutId);
-  }, [needsSaved, noteContent, saveNote]);
-
   return (
     <div
       className="
@@ -176,10 +167,13 @@ export const TranslationSidebar = ({
                     key={word.id}
                     name="noteContent"
                     value={originalNoteContent}
-                    onBlur={async (e) => saveNote(e.target.value)}
+                    onBlur={async (e) => {
+                      setNoteContent(e.target.value);
+                      saveNote();
+                    }}
                     onChange={async (e) => {
                       setNoteContent(e.target.value);
-                      setNeedsSaved(true);
+                      debouncedSaveNote();
                     }}
                   />
                 ) : (
