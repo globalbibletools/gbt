@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Verse } from '@translation/api-types';
 import DOMPurify from 'dompurify';
 import { throttle } from 'lodash';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAccessControl } from '../../shared/accessControl';
 import apiClient from '../../shared/apiClient';
@@ -62,32 +62,32 @@ export const TranslationSidebar = ({
     id: language,
   });
 
-  // Only update the content shown in the text editor when the word ID changes.
-  const [originalNoteContent, setOriginalNoteContent] = useState('');
   const [noteContent, setNoteContent] = useState('');
   const wordId = useRef('');
   useEffect(() => {
-    if (word.id !== wordId.current) {
+    if (translatorNotesQuery.isSuccess && word.id !== wordId.current) {
       wordId.current = word.id;
-      setOriginalNoteContent(translatorNote?.content ?? '');
-      setNoteContent(translatorNote?.content ?? '');
+      setNoteContent(translatorNotesQuery.data.data[word.id]?.content ?? '');
     }
-  }, [word.id, translatorNote]);
+  }, [word.id, translatorNotesQuery]);
 
-  const saveNote = useCallback(async () => {
-    await apiClient.words.updateTranslatorNote({
-      wordId: word.id,
-      language,
-      note: noteContent,
-    });
-    translatorNotesQuery.refetch();
-  }, [language, translatorNotesQuery, word.id, noteContent]);
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const debouncedSaveNote = useCallback(
-    throttle(saveNote, 15000, { leading: false, trailing: true }),
-    [language, translatorNotesQuery, word.id, noteContent]
+  const saveNote = useMemo(
+    () =>
+      throttle(
+        async (noteContent: string) => {
+          await apiClient.words.updateTranslatorNote({
+            wordId: word.id,
+            language,
+            note: noteContent,
+          });
+          translatorNotesQuery.refetch();
+        },
+        15000,
+        { leading: false, trailing: true }
+      ),
+    [language, translatorNotesQuery, word.id]
   );
+
   return (
     <div
       className="
@@ -166,14 +166,13 @@ export const TranslationSidebar = ({
                   <RichTextInput
                     key={word.id}
                     name="noteContent"
-                    value={originalNoteContent}
+                    value={noteContent}
                     onBlur={async (e) => {
-                      setNoteContent(e.target.value);
-                      saveNote();
+                      saveNote(e.target.value);
+                      saveNote.flush();
                     }}
                     onChange={async (e) => {
-                      setNoteContent(e.target.value);
-                      debouncedSaveNote();
+                      saveNote(e.target.value);
                     }}
                   />
                 ) : (
