@@ -156,6 +156,8 @@ model Word {
   glosses        Gloss[]
   /// The list of machine glosses in different langugages for this word.
   machineGlosses MachineGloss[]
+
+  @@index([formId])
 }
 
 /// A form of a lemma. This are differentiated by grammatical forms, as well as suffixes and prefixes.
@@ -170,6 +172,8 @@ model LemmaForm {
   lemmaId String
   /// The list of words in verses that share this form of the lemma.
   word    Word[]
+
+  @@index([lemmaId])
 }
 
 /// A lemma as defined by strongs numbers.
@@ -298,6 +302,7 @@ model LemmaResource {
   content      String
 
   @@id([lemmaId, resourceCode])
+  @@index([lemmaId])
 }
 
 enum ResourceCode {
