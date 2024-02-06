@@ -19,7 +19,9 @@ export default function RichText({ content, className = '' }: RichTextProps) {
   });
 
   useEffect(() => {
-    editor?.commands.setContent(content);
+    editor?.commands.setContent(content, false, {
+      preserveWhitespace: 'full',
+    });
   }, [editor?.commands, content]);
 
   return <EditorContent editor={editor} className={className} />;
