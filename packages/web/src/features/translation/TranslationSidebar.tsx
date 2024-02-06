@@ -152,6 +152,7 @@ export const TranslationSidebar = ({
             </Tab.Panel>
             <Tab.Panel>
               <div className="flex flex-col gap-2 pb-2">
+                <h2 className="font-bold">{t('translate:translator_notes')}</h2>
                 {translatorNote?.authorName && (
                   <span className="italic">
                     {t('translate:note_description', {
