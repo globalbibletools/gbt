@@ -18,29 +18,18 @@ export default createRoute<{ code: string; verseId: string }>()
       }
 
       const notes = await client.$queryRaw<TranslatorNote[]>`
-        --- First we create a query with the words in a verse.
-        WITH "VerseWord" AS (
-          SELECT "Word"."id" FROM "Verse"
-          JOIN "Word" ON "Verse"."id" = "Word"."verseId"
-          WHERE "verseId" = ${req.query.verseId}
-        ),
-        --- Then we gather the note for each word in the verse.
-        "WordNote" as (
-          SELECT "VerseWord"."id", "TranslatorNote".* FROM "VerseWord"
-          JOIN "Word" ON "Word"."id" = "VerseWord"."id"
-          JOIN "TranslatorNote" ON "Word"."id" = "TranslatorNote"."wordId"
-            AND "TranslatorNote"."languageId" = ${language.id}::uuid
-        )
-        --- Now we add in the author's name and combine it all together.
         SELECT
-          "VerseWord"."id" as "wordId",
+          "Word"."id" as "wordId",
           COALESCE("User"."name", '') AS "authorName",
-          "WordNote"."timestamp",
-          COALESCE("WordNote"."content", '') AS "content"
-        FROM "VerseWord"
-        LEFT OUTER JOIN "WordNote" ON "VerseWord"."id" = "WordNote"."id"
-        LEFT OUTER JOIN "User" ON "WordNote"."authorId" = "User"."id"
-        ORDER BY "VerseWord"."id" ASC
+          "TranslatorNote"."timestamp",
+          COALESCE("TranslatorNote"."content", '') AS "content"
+        FROM "Verse"
+        JOIN "Word" ON "Verse"."id" = "Word"."verseId"
+        LEFT OUTER JOIN "TranslatorNote" ON "Word"."id" = "TranslatorNote"."wordId"
+            AND "TranslatorNote"."languageId" = ${language.id}::uuid
+        LEFT OUTER JOIN "User" ON "TranslatorNote"."authorId" = "User"."id"
+        WHERE "Verse"."id" = ${req.query.verseId}
+        ORDER BY "wordId" ASC
       `;
 
       if (notes.length > 0) {
