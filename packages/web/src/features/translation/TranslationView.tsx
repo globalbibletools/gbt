@@ -32,6 +32,7 @@ import {
 } from './verse-utils';
 import View from '../../shared/components/View';
 import { isFlagEnabled } from '../../shared/featureFlags';
+import useTitle from '../../shared/hooks/useTitle';
 
 export const translationLanguageKey = 'translation-language';
 export const translationVerseIdKey = 'translation-verse-id';
@@ -127,6 +128,8 @@ export default function TranslationView() {
     language: string;
     verseId: string;
   };
+  useTitle('Interlinear');
+
   const [sidebarWordIndex, setSidebarWordIndex] = useState(0);
   const [showSidebar, setShowSidebar] = useState(true);
 
@@ -300,8 +303,8 @@ export default function TranslationView() {
     !!userCan('read', { type: 'Language', id: language });
 
   return (
-    <View fitToScreen className="px-4 flex flex-grow flex-col gap-8">
-      <div className="flex gap-8 items-center">
+    <View fitToScreen className="flex flex-col flex-grow gap-8 px-4">
+      <div className="flex items-center gap-8">
         <VerseSelector
           verseId={verseId}
           onVerseChange={(verseId) =>
@@ -322,7 +325,7 @@ export default function TranslationView() {
       {(() => {
         if (loading) {
           return (
-            <div className="flex-grow flex items-center justify-center">
+            <div className="flex items-center justify-center flex-grow">
               <LoadingSpinner />
             </div>
           );
@@ -340,11 +343,11 @@ export default function TranslationView() {
 
           const isHebrew = bookId < 40;
           return (
-            <div className="flex flex-col md:flex-row gap-2 flex-grow w-full min-h-0">
-              <div className="min-h-0 overflow-auto max-h-full grow flex flex-col gap-8">
+            <div className="flex flex-col flex-grow w-full min-h-0 gap-2 md:flex-row">
+              <div className="flex flex-col max-h-full min-h-0 gap-8 overflow-auto grow">
                 {translationQuery.data && (
                   <p
-                    className="text-base mx-2"
+                    className="mx-2 text-base"
                     dir={selectedLanguage?.textDirection ?? TextDirection.LTR}
                     style={{
                       fontFamily: expandFontFamily(

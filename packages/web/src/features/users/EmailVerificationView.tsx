@@ -7,8 +7,10 @@ import LoadingSpinner from '../../shared/components/LoadingSpinner';
 import { useEffect } from 'react';
 import apiClient from '../../shared/apiClient';
 import useAuth from '../../shared/hooks/useAuth';
+import useTitle from '../../shared/hooks/useTitle';
 
 export default function EmailVerificationView() {
+  useTitle('Verify Email');
   const { t } = useTranslation(['users']);
   const [params] = useSearchParams();
   const { refreshAuth } = useAuth();
@@ -29,8 +31,8 @@ export default function EmailVerificationView() {
   }, [mutate, params]);
 
   return (
-    <View fitToScreen className="flex justify-center items-start">
-      <Card className="mx-4 mt-4 w-96 flex-shrink p-6">
+    <View fitToScreen className="flex items-start justify-center">
+      <Card className="flex-shrink p-6 mx-4 mt-4 w-96">
         {status === 'loading' || status === 'idle' ? (
           <LoadingSpinner />
         ) : status === 'success' ? (

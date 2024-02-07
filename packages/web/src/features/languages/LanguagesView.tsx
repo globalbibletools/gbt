@@ -17,6 +17,7 @@ import { useLoaderData } from 'react-router-dom';
 import { GetLanguagesResponseBody } from '@translation/api-types';
 import { capitalize } from '../../shared/utils';
 import { useAccessControl } from '../../shared/accessControl';
+import useTitle from '../../shared/hooks/useTitle';
 
 export function languagesViewLoader() {
   return apiClient.languages.findAll();
@@ -24,6 +25,7 @@ export function languagesViewLoader() {
 
 export default function LanguagesView() {
   const languages = useLoaderData() as GetLanguagesResponseBody;
+  useTitle('Languages');
 
   const { t } = useTranslation(['languages']);
   const accessControl = useAccessControl();

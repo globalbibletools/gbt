@@ -1,6 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { LanguageRole, TextDirection } from '@translation/api-types';
-import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useLoaderData, useParams } from 'react-router-dom';
@@ -37,6 +36,7 @@ import TextInput from '../../shared/components/form/TextInput';
 import fontClient from '../../shared/fontClient';
 import { useFlash } from '../../shared/hooks/flash';
 import queryClient from '../../shared/queryClient';
+import useTitle from '../../shared/hooks/useTitle';
 
 const languageQueryKey = (code: string) => ({
   queryKey: ['language', code],
@@ -123,6 +123,8 @@ export default function ManageLanguageView() {
   const flash = useFlash();
 
   const { data: language } = useLanguageQuery(params.code);
+  useTitle(`Manage ${language.data.name}`);
+
   const { data: members } = useLanguageMembersQuery(params.code);
   const { fonts, translations } = useLoaderData() as {
     fonts: string[];
@@ -161,8 +163,8 @@ export default function ManageLanguageView() {
   }
 
   return (
-    <View fitToScreen className="flex justify-center items-start">
-      <div className="mx-4 flex-shrink">
+    <View fitToScreen className="flex items-start justify-center">
+      <div className="flex-shrink mx-4">
         <ViewTitle className="flex">
           <span>{language.data.name}</span>
           <span className="mx-2">-</span>

@@ -15,6 +15,7 @@ import { useFlash } from '../../shared/hooks/flash';
 import Card from '../../shared/components/Card';
 import { LanguageRole } from '@translation/api-types';
 import MultiselectInput from '../../shared/components/form/MultiselectInput';
+import useTitle from '../../shared/hooks/useTitle';
 
 interface FormData {
   email: string;
@@ -22,6 +23,8 @@ interface FormData {
 }
 
 export default function InviteLanguageMemberView() {
+  useTitle(`Invite Language Member`);
+
   const { code = '' } = useParams<'code'>();
   const navigate = useNavigate();
 
@@ -58,8 +61,8 @@ export default function InviteLanguageMemberView() {
   }
 
   return (
-    <View fitToScreen className="flex justify-center items-start">
-      <Card className="mx-4 mt-4 w-96 flex-shrink p-6">
+    <View fitToScreen className="flex items-start justify-center">
+      <Card className="flex-shrink p-6 mx-4 mt-4 w-96">
         <ViewTitle>{t('users:invite_user')}</ViewTitle>
         <Form context={formContext} onSubmit={onSubmit}>
           <div className="mb-2">

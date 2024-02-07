@@ -20,6 +20,7 @@ import {
 } from 'react-router-dom';
 import { QueryClient } from '@tanstack/query-core';
 import { useQuery } from '@tanstack/react-query';
+import useTitle from '../../shared/hooks/useTitle';
 
 const createInviteQuery = (token?: string) => ({
   queryKey: ['invite', token],
@@ -52,6 +53,7 @@ interface FormData {
 }
 
 export default function AcceptInviteView() {
+  useTitle('Accept Invite');
   const { refreshAuth } = useAuth();
 
   const [search] = useSearchParams();
@@ -83,8 +85,8 @@ export default function AcceptInviteView() {
   }
 
   return (
-    <View fitToScreen className="flex justify-center items-start">
-      <Card className="mx-4 mt-4 w-96 flex-shrink p-6">
+    <View fitToScreen className="flex items-start justify-center">
+      <Card className="flex-shrink p-6 mx-4 mt-4 w-96">
         <ViewTitle>{t('users:create_account')}</ViewTitle>
         <Form context={formContext} onSubmit={onSubmit}>
           <div className="mb-4">
@@ -98,8 +100,8 @@ export default function AcceptInviteView() {
               defaultValue={invite.email}
             />
           </div>
-          <div className="mb-2 flex gap-4">
-            <div className="w-full flex-1">
+          <div className="flex gap-4 mb-2">
+            <div className="flex-1 w-full">
               <FormLabel htmlFor="first-name">
                 {t('users:first_name').toUpperCase()}
               </FormLabel>
@@ -118,7 +120,7 @@ export default function AcceptInviteView() {
                 messages={{ required: t('users:errors.name_required') }}
               />
             </div>
-            <div className="w-full flex-1">
+            <div className="flex-1 w-full">
               <FormLabel htmlFor="last-name">
                 {t('users:last_name').toUpperCase()}
               </FormLabel>

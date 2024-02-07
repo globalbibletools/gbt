@@ -17,6 +17,7 @@ import { useFlash } from '../../shared/hooks/flash';
 import { ApiClientError } from '@translation/api-client';
 import LoadingSpinner from '../../shared/components/LoadingSpinner';
 import ComboboxInput from '../../shared/components/form/ComboboxInput';
+import useTitle from '../../shared/hooks/useTitle';
 
 export async function importLanguageGlossesLoader({
   params,
@@ -46,6 +47,8 @@ export default function ImportLanguageGlossesView() {
   const { language, importLanguages, currentJob } = useLoaderData() as Awaited<
     ReturnType<typeof importLanguageGlossesLoader>
   >;
+  useTitle(`Import ${language.data.name} Glosses`);
+
   const flash = useFlash();
   const { t } = useTranslation(['common', 'languages']);
   const confirmationDialog = useRef<ConfirmationDialogRef>(null);
@@ -119,8 +122,8 @@ export default function ImportLanguageGlossesView() {
 
   return (
     <>
-      <View fitToScreen className="flex justify-center items-start">
-        <div className="mx-4 flex-shrink">
+      <View fitToScreen className="flex items-start justify-center">
+        <div className="flex-shrink mx-4">
           <ViewTitle className="flex">
             {t('languages:import_glosses', {
               context: 'title',
@@ -173,7 +176,7 @@ export default function ImportLanguageGlossesView() {
                         Select a language to import glosses from
                         <a
                           href="https://hebrewgreekbible.online"
-                          className="text-blue-600  focus:underline hover:underline"
+                          className="text-blue-600 focus:underline hover:underline"
                         >
                           hebrewgreekbible.online
                         </a>
