@@ -128,7 +128,15 @@ export default function TranslationView() {
     language: string;
     verseId: string;
   };
-  useTitle('Interlinear');
+  const languageQuery = useQuery({
+    queryKey: ['language', language],
+    queryFn: () => apiClient.languages.findByCode(language),
+  });
+  useTitle(
+    languageQuery.isSuccess
+      ? `${languageQuery.data.data.name} Interlinear`
+      : 'Interlinear'
+  );
 
   const [sidebarWordIndex, setSidebarWordIndex] = useState(0);
   const [showSidebar, setShowSidebar] = useState(true);
