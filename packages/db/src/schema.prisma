@@ -156,7 +156,7 @@ model Word {
   formId          String
   /// The list of glosses in different languages for this word.
   glosses        Gloss[]
-  /// The list of machine glosses in different langugages for this word.
+  /// The list of machine glosses in different languages for this word.
   machineGlosses MachineGloss[]
   // The list of translator notes in different languages for this word.
   translatorNotes TranslatorNote[]
