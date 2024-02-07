@@ -155,9 +155,9 @@ model Word {
   /// The ID of the specific form of the lemma for the word.
   formId          String
   /// The list of glosses in different languages for this word.
-  glosses        Gloss[]
+  glosses         Gloss[]
   /// The list of machine glosses in different languages for this word.
-  machineGlosses MachineGloss[]
+  machineGlosses  MachineGloss[]
   // The list of translator notes in different languages for this word.
   translatorNotes TranslatorNote[]
 
