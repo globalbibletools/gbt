@@ -23,12 +23,11 @@ export default createRoute<{ code: string; verseId: string }>()
           COALESCE("User"."name", '') AS "authorName",
           "TranslatorNote"."timestamp",
           COALESCE("TranslatorNote"."content", '') AS "content"
-        FROM "Verse"
-        JOIN "Word" ON "Verse"."id" = "Word"."verseId"
+        FROM "Word"
         LEFT OUTER JOIN "TranslatorNote" ON "Word"."id" = "TranslatorNote"."wordId"
             AND "TranslatorNote"."languageId" = ${language.id}::uuid
         LEFT OUTER JOIN "User" ON "TranslatorNote"."authorId" = "User"."id"
-        WHERE "Verse"."id" = ${req.query.verseId}
+        WHERE "Word"."verseId" = ${req.query.verseId}
         ORDER BY "wordId" ASC
       `;
 

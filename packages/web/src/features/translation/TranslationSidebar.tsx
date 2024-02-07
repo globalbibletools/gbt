@@ -56,11 +56,8 @@ export const TranslationSidebar = ({
   }
 
   const userCan = useAccessControl();
-
-  const canEditNote = userCan('translate', {
-    type: 'Language',
-    id: language,
-  });
+  const canViewNote = userCan('read', { type: 'Language', id: language });
+  const canEditNote = userCan('translate', { type: 'Language', id: language });
 
   const [noteContent, setNoteContent] = useState('');
   const wordId = useRef('');
@@ -152,32 +149,40 @@ export const TranslationSidebar = ({
             </Tab.Panel>
             <Tab.Panel>
               <div className="flex flex-col gap-2 pb-2">
-                <h2 className="font-bold">{t('translate:translator_notes')}</h2>
-                {translatorNote?.authorName && (
-                  <span className="italic">
-                    {t('translate:note_description', {
-                      timestamp: translatorNote?.timestamp
-                        ? new Date(translatorNote?.timestamp).toLocaleString()
-                        : '',
-                      authorName: translatorNote?.authorName ?? '',
-                    })}
-                  </span>
-                )}
-                {canEditNote ? (
-                  <RichTextInput
-                    key={word.id}
-                    name="noteContent"
-                    value={noteContent}
-                    onBlur={async (e) => {
-                      saveNote(e.target.value);
-                      saveNote.flush();
-                    }}
-                    onChange={async (e) => {
-                      saveNote(e.target.value);
-                    }}
-                  />
-                ) : (
-                  <RichText content={noteContent} />
+                {canViewNote && (
+                  <>
+                    <h2 className="font-bold">
+                      {t('translate:translator_notes')}
+                    </h2>
+                    {translatorNote?.authorName && (
+                      <span className="italic">
+                        {t('translate:note_description', {
+                          timestamp: translatorNote?.timestamp
+                            ? new Date(
+                                translatorNote?.timestamp
+                              ).toLocaleString()
+                            : '',
+                          authorName: translatorNote?.authorName ?? '',
+                        })}
+                      </span>
+                    )}
+                    {canEditNote ? (
+                      <RichTextInput
+                        key={word.id}
+                        name="noteContent"
+                        value={noteContent}
+                        onBlur={async (e) => {
+                          saveNote(e.target.value);
+                          saveNote.flush();
+                        }}
+                        onChange={async (e) => {
+                          saveNote(e.target.value);
+                        }}
+                      />
+                    ) : (
+                      <RichText content={noteContent} />
+                    )}
+                  </>
                 )}
               </div>
             </Tab.Panel>
