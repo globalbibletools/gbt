@@ -6,9 +6,11 @@
   "lexicon": "Léxico",
   "next_verse": "Siguiente verso",
   "notes": "Notas",
+  "note_description": "Actualizado en {{timestamp}} por {{authorName}}.",
   "previous_verse": "Verso anterior",
   "revoke_tooltip": "Revocar la aprobación (Esc)",
   "saving": "guardando",
   "select_verse": "Seleccionar verso",
-  "strongs": "Fuerte"
+  "strongs": "Fuerte",
+  "translator_notes": "Notas del traductor"
 }

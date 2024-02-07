@@ -18,7 +18,7 @@ get:
                 items:
                   type: object
                   properties:
-                    id:
+                    wordId:
                       type: string
                       description: The unique ID for the word in the verse.
                     gloss:
@@ -29,35 +29,35 @@ get:
                       description: The list of glosses for this word ranked by usage.
                       items:
                         type: string
-                    machineSuggestion:
-                      type: string
-                      description: The machine generated gloss.
                     state:
                       type: string
                       description: The approval state of the gloss
+                    machineGloss:
+                      type: string
+                      description: The machine generated gloss.
                 example:
-                  - id: 02zpg
+                  - wordId: 02zpg
                     gloss: 'habló'
                     suggestions: ['habló', 'hablaba']
-                    machineSuggestion: 'habló'
                     state: APPROVED
-                  - id: 02HB7
+                    machineGloss: 'habló'
+                  - wordId: 02HB7
                     gloss: 'Jehová'
                     suggestions: ['Jehová', Diós]
-                    machineSuggestion: 'Jehová'
                     state: UNAPPROVED
-                  - id: 02BkQ
+                    machineGloss: 'Jehová'
+                  - wordId: 02BkQ
                     gloss: 'a'
                     suggestions: ['a']
-                    machineSuggestion: 'a'
                     state: UNAPPROVED
-                  - id: 02PD3
+                    machineGloss: 'a'
+                  - wordId: 02PD3
                     gloss: 'Moisés'
                     suggestions: ['Moisés']
-                    machineSuggestion: 'Moisés'
                     state: UNAPPROVED
-                  - id: 02FWp
+                    machineGloss: 'Moisés'
+                  - wordId: 02FWp
                     gloss: 'diciendo'
                     suggestions: ['diciendo']
-                    machineSuggestion: 'diciendo'
                     state: UNAPPROVED
+                    machineGloss: 'diciendo'

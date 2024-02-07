@@ -38,8 +38,12 @@ paths:
     $ref: ./paths/translation/translations.yml
   /languages/{code}/verses/{verseId}/glosses:
     $ref: ./paths/translation/verse-glosses.yml
-  /languages/{code}/words/{wordId}:
-    $ref: ./paths/languages/language-words.yml
+  /languages/{code}/verses/{verseId}/notes:
+    $ref: ./paths/translation/verse-notes.yml
+  /languages/{code}/words/{wordId}/gloss:
+    $ref: ./paths/languages/word-gloss.yml
+  /languages/{code}/words/{wordId}/note:
+    $ref: ./paths/languages/word-note.yml
   /languages/{code}/members:
     $ref: ./paths/languages/language-members.yml
   /languages/{code}/members/{userId}:
