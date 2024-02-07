@@ -185,6 +185,21 @@ export interface PatchWordGlossRequestBody {
   state?: GlossState;
 }
 
+export interface TranslatorNote {
+  wordId: string;
+  authorName: string;
+  timestamp: number;
+  content: string;
+}
+
+export interface GetVerseTranslatorNotesResponseBody {
+  data: Record<string, TranslatorNote>;
+}
+
+export interface PatchWordTranslatorNoteRequestBody {
+  note: string;
+}
+
 export interface SNSConfirmSubscriptionMessage {
   Type: 'SubscriptionConfirmation';
   SubscribeURL: string;
