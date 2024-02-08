@@ -3,13 +3,14 @@ import StarterKit from '@tiptap/starter-kit';
 import { Icon } from '../Icon';
 import { ComponentProps, forwardRef, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
+import { ChangeHandler } from 'react-hook-form';
 
 export interface RichTextInputProps {
   name: string;
   value?: string;
   defaultValue?: string;
-  onChange?(value: string): void;
-  onBlur?(): void;
+  onChange?: ChangeHandler;
+  onBlur?: ChangeHandler;
   'aria-labelledby'?: string;
   'aria-label'?: string;
 }
@@ -53,19 +54,21 @@ const RichTextInput = forwardRef<RichTextInputRef, RichTextInputProps>(
         if (input) {
           const value = editor.getHTML();
           input.value = value;
-          onChange?.(value);
+          onChange?.({ target: input });
         }
       },
       onBlur() {
         const input = hiddenInput.current;
         if (input) {
-          onBlur?.();
+          onBlur?.({ target: input });
         }
       },
     });
 
     useEffect(() => {
-      editor?.commands.setContent(value ?? '', false);
+      editor?.commands.setContent(value ?? '', false, {
+        preserveWhitespace: 'full',
+      });
     }, [value, editor]);
 
     return (

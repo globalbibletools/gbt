@@ -2,11 +2,15 @@ import { Tab } from '@headlessui/react';
 import { useQuery } from '@tanstack/react-query';
 import { Verse } from '@translation/api-types';
 import DOMPurify from 'dompurify';
+import { throttle } from 'lodash';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useAccessControl } from '../../shared/accessControl';
 import apiClient from '../../shared/apiClient';
 import { Icon } from '../../shared/components/Icon';
 import LoadingSpinner from '../../shared/components/LoadingSpinner';
-import { parseVerseId } from './verse-utils';
+import RichText from '../../shared/components/RichText';
+import RichTextInput from '../../shared/components/form/RichTextInput';
 
 type TranslationSidebarProps = {
   language: string;
@@ -23,6 +27,8 @@ export const TranslationSidebar = ({
   showComments,
   onClose,
 }: TranslationSidebarProps) => {
+  const { t } = useTranslation(['common', 'translate']);
+
   const word = verse.words[wordIndex];
   const lemmaResourcesQuery = useQuery(
     ['verse-lemma-resources', language, verse.id],
@@ -35,12 +41,49 @@ export const TranslationSidebar = ({
     ['BDB', 'LSJ'].includes(resource)
   );
   const lexiconEntry = lexiconResource?.entry ?? '';
-  const { t } = useTranslation(['common', 'translate']);
+
+  const translatorNotesQuery = useQuery(
+    ['verse-translator-notes', language, verse.id],
+    () => apiClient.verses.findTranslatorNotes(verse.id, language)
+  );
+  const translatorNote = translatorNotesQuery.isSuccess
+    ? translatorNotesQuery.data.data[word.id]
+    : null;
 
   const tabTitles = ['translate:lexicon', 'translate:notes'];
   if (showComments) {
     tabTitles.push('translate:comments');
   }
+
+  const userCan = useAccessControl();
+  const canViewNote = userCan('read', { type: 'Language', id: language });
+  const canEditNote = userCan('translate', { type: 'Language', id: language });
+
+  const [noteContent, setNoteContent] = useState('');
+  const wordId = useRef('');
+  useEffect(() => {
+    if (translatorNotesQuery.isSuccess && word.id !== wordId.current) {
+      wordId.current = word.id;
+      setNoteContent(translatorNotesQuery.data.data[word.id]?.content ?? '');
+    }
+  }, [word.id, translatorNotesQuery]);
+
+  const saveNote = useMemo(
+    () =>
+      throttle(
+        async (noteContent: string) => {
+          await apiClient.words.updateTranslatorNote({
+            wordId: word.id,
+            language,
+            note: noteContent,
+          });
+          translatorNotesQuery.refetch();
+        },
+        15000,
+        { leading: false, trailing: true }
+      ),
+    [language, translatorNotesQuery, word.id]
+  );
 
   return (
     <div
@@ -104,7 +147,45 @@ export const TranslationSidebar = ({
                 </div>
               )}
             </Tab.Panel>
-            <Tab.Panel>{t('common:coming_soon')}</Tab.Panel>
+            <Tab.Panel>
+              <div className="flex flex-col gap-2 pb-2">
+                {canViewNote && (
+                  <>
+                    <h2 className="font-bold">
+                      {t('translate:translator_notes')}
+                    </h2>
+                    {translatorNote?.authorName && (
+                      <span className="italic">
+                        {t('translate:note_description', {
+                          timestamp: translatorNote?.timestamp
+                            ? new Date(
+                                translatorNote?.timestamp
+                              ).toLocaleString()
+                            : '',
+                          authorName: translatorNote?.authorName ?? '',
+                        })}
+                      </span>
+                    )}
+                    {canEditNote ? (
+                      <RichTextInput
+                        key={word.id}
+                        name="noteContent"
+                        value={noteContent}
+                        onBlur={async (e) => {
+                          saveNote(e.target.value);
+                          saveNote.flush();
+                        }}
+                        onChange={async (e) => {
+                          saveNote(e.target.value);
+                        }}
+                      />
+                    ) : (
+                      <RichText content={noteContent} />
+                    )}
+                  </>
+                )}
+              </div>
+            </Tab.Panel>
             {showComments && <Tab.Panel>{t('common:coming_soon')}</Tab.Panel>}
           </Tab.Panels>
         </Tab.Group>

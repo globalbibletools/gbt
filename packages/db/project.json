@@ -45,6 +45,12 @@
         "command": "npx ts-node --project packages/db/tsconfig.json packages/db/src/scripts/import-lsj.ts"
       }
     },
+    "migrate-lemmas": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx ts-node --project packages/db/tsconfig.json packages/db/src/scripts/migrate-lemmas.ts"
+      }
+    },
     "prisma": {
       "executor": "@translation/nx-plugin:prisma",
       "options": {
