@@ -22,11 +22,11 @@ interface FormData {
 }
 
 export default function NewLanguageView() {
-  useTitle('Create Language');
-  const navigate = useNavigate();
-
-  const flash = useFlash();
   const { t } = useTranslation(['common', 'languages']);
+  useTitle(t('common:tab_titles.new_language'));
+
+  const navigate = useNavigate();
+  const flash = useFlash();
 
   const formContext = useForm<FormData>();
   async function onSubmit(data: FormData) {

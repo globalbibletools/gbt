@@ -22,11 +22,11 @@ interface FormData {
 }
 
 export default function InviteUserView() {
-  useTitle('Login');
   const { refreshAuth } = useAuth();
   const navigate = useNavigate();
-
   const { t } = useTranslation(['users']);
+  useTitle(t('common:tab_titles.login'));
+
   const flash = useFlash();
 
   const formContext = useForm<FormData>();

@@ -25,9 +25,9 @@ export function languagesViewLoader() {
 
 export default function LanguagesView() {
   const languages = useLoaderData() as GetLanguagesResponseBody;
-  useTitle('Languages');
-
   const { t } = useTranslation(['languages']);
+  useTitle(t('common:tab_titles.languages'));
+
   const accessControl = useAccessControl();
 
   return (

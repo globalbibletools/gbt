@@ -22,8 +22,8 @@ import ComboboxInput from '../../shared/components/form/ComboboxInput';
 import useTitle from '../../shared/hooks/useTitle';
 
 export default function UsersView() {
-  useTitle('Users');
   const { t } = useTranslation(['users']);
+  useTitle(t('common:tab_titles.users'));
   const flash = useFlash();
 
   const userCan = useAccessControl();

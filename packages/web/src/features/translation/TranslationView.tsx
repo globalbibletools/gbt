@@ -122,6 +122,10 @@ function useTranslationQueries(language: string, verseId: string) {
   };
 }
 
+export async function translationViewLoader(code: string) {
+  return;
+}
+
 export default function TranslationView() {
   const { t, i18n } = useTranslation(['common']);
   const { language, verseId } = useParams() as {
@@ -132,10 +136,11 @@ export default function TranslationView() {
     queryKey: ['language', language],
     queryFn: () => apiClient.languages.findByCode(language),
   });
+
   useTitle(
-    languageQuery.isSuccess
-      ? `${languageQuery.data.data.name} Interlinear`
-      : 'Interlinear'
+    t('common:tab_titles.interlinear', {
+      languageName: languageQuery.data?.data.name ?? '',
+    })
   );
 
   const [sidebarWordIndex, setSidebarWordIndex] = useState(0);

@@ -10,8 +10,8 @@ import useAuth from '../../shared/hooks/useAuth';
 import useTitle from '../../shared/hooks/useTitle';
 
 export default function EmailVerificationView() {
-  useTitle('Verify Email');
   const { t } = useTranslation(['users']);
+  useTitle('common:tab_titles.verify_email');
   const [params] = useSearchParams();
   const { refreshAuth } = useAuth();
 

@@ -23,10 +23,10 @@ interface FormData {
 }
 
 export default function UpdateProfileView() {
-  useTitle('Profile');
   const { user, refreshAuth } = useAuth();
   const { t } = useTranslation(['common', 'users']);
   const flash = useFlash();
+  useTitle(t('common:tab_titles.update_profile'));
 
   const formContext = useForm<FormData>();
   const { setValue } = formContext;

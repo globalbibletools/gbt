@@ -47,10 +47,12 @@ export default function ImportLanguageGlossesView() {
   const { language, importLanguages, currentJob } = useLoaderData() as Awaited<
     ReturnType<typeof importLanguageGlossesLoader>
   >;
-  useTitle(`Import ${language.data.name} Glosses`);
+  const { t } = useTranslation(['common', 'languages']);
+  useTitle(
+    t('common:tab_titles.import_glosses', { languageName: language.data.name })
+  );
 
   const flash = useFlash();
-  const { t } = useTranslation(['common', 'languages']);
   const confirmationDialog = useRef<ConfirmationDialogRef>(null);
 
   const formContext = useForm<FormData>();

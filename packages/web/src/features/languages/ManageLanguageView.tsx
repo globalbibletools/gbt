@@ -121,9 +121,11 @@ interface FormData {
 export default function ManageLanguageView() {
   const params = useParams() as { code: string };
   const flash = useFlash();
-
   const { data: language } = useLanguageQuery(params.code);
-  useTitle(`Manage ${language.data.name}`);
+  const { t } = useTranslation(['common', 'languages', 'users']);
+  useTitle(
+    t('common:tab_titles.manage_language', { languageName: language.data.name })
+  );
 
   const { data: members } = useLanguageMembersQuery(params.code);
   const { fonts, translations } = useLoaderData() as {
@@ -134,8 +136,6 @@ export default function ManageLanguageView() {
     label: name,
     value: id,
   }));
-
-  const { t } = useTranslation(['common', 'languages', 'users']);
 
   const removeMemberMutation = useRemoveLanguageMemberMutation();
   const updateMemberMutation = useUpdateLanguageMemberMutation();

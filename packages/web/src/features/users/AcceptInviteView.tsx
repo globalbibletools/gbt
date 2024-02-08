@@ -53,7 +53,9 @@ interface FormData {
 }
 
 export default function AcceptInviteView() {
-  useTitle('Accept Invite');
+  const { t } = useTranslation(['users', 'common']);
+  useTitle('common:tab_titles.accept_invite');
+
   const { refreshAuth } = useAuth();
 
   const [search] = useSearchParams();
@@ -62,7 +64,6 @@ export default function AcceptInviteView() {
   const { data: invite } = useInviteQuery(token);
 
   const navigate = useNavigate();
-  const { t } = useTranslation(['users', 'common']);
   const flash = useFlash();
 
   const formContext = useForm<FormData>();

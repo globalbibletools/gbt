@@ -19,8 +19,8 @@ interface FormData {
 }
 
 export default function InviteUserView() {
-  useTitle('Invite User');
   const { t } = useTranslation(['users']);
+  useTitle(t('common:tab_titles.invite_user'));
   const flash = useFlash();
 
   const formContext = useForm<FormData>();

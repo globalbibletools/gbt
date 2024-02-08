@@ -23,13 +23,13 @@ interface FormData {
 }
 
 export default function InviteLanguageMemberView() {
-  useTitle(`Invite Language Member`);
+  const { t } = useTranslation(['common', 'users']);
+  useTitle(t('common:tab_titles.invite_language_member'));
 
   const { code = '' } = useParams<'code'>();
   const navigate = useNavigate();
 
   const flash = useFlash();
-  const { t } = useTranslation(['users']);
 
   const formContext = useForm<FormData>({
     defaultValues: {
