@@ -14,6 +14,7 @@ import SubmittingIndicator from '../../shared/components/form/SubmittingIndicato
 import TextInput from '../../shared/components/form/TextInput';
 import { useFlash } from '../../shared/hooks/flash';
 import { languageCodes } from './../../shared/languageCodes';
+import useTitle from '../../shared/hooks/useTitle';
 
 interface FormData {
   code: string;
@@ -21,10 +22,11 @@ interface FormData {
 }
 
 export default function NewLanguageView() {
-  const navigate = useNavigate();
-
-  const flash = useFlash();
   const { t } = useTranslation(['common', 'languages']);
+  useTitle(t('common:tab_titles.new_language'));
+
+  const navigate = useNavigate();
+  const flash = useFlash();
 
   const formContext = useForm<FormData>();
   async function onSubmit(data: FormData) {
@@ -51,8 +53,8 @@ export default function NewLanguageView() {
     }
   }
   return (
-    <View fitToScreen className="flex justify-center items-start">
-      <Card className="mx-4 mt-4 w-96 flex-shrink p-6">
+    <View fitToScreen className="flex items-start justify-center">
+      <Card className="flex-shrink p-6 mx-4 mt-4 w-96">
         <ViewTitle>{t('languages:new_language')}</ViewTitle>
         <Form context={formContext} onSubmit={onSubmit}>
           <div className="mb-2">

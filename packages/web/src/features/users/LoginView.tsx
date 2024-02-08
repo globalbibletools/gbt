@@ -14,6 +14,7 @@ import { useFlash } from '../../shared/hooks/flash';
 import useAuth from '../../shared/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { ApiClientError } from '@translation/api-client';
+import useTitle from '../../shared/hooks/useTitle';
 
 interface FormData {
   email: string;
@@ -23,8 +24,9 @@ interface FormData {
 export default function InviteUserView() {
   const { refreshAuth } = useAuth();
   const navigate = useNavigate();
-
   const { t } = useTranslation(['users']);
+  useTitle(t('common:tab_titles.login'));
+
   const flash = useFlash();
 
   const formContext = useForm<FormData>();
@@ -43,8 +45,8 @@ export default function InviteUserView() {
   }
 
   return (
-    <View fitToScreen className="flex justify-center items-start">
-      <Card className="mx-4 mt-4 w-96 flex-shrink p-6">
+    <View fitToScreen className="flex items-start justify-center">
+      <Card className="flex-shrink p-6 mx-4 mt-4 w-96">
         <ViewTitle>{t('users:log_in')}</ViewTitle>
         <Form context={formContext} onSubmit={onSubmit}>
           <div className="mb-4">

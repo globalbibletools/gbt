@@ -4,7 +4,7 @@ import ImportLanguageGlossesView, {
   importLanguageGlossesLoader,
 } from './ImportLanguageGlossesView';
 import InviteLanguageMemberView from './InviteLanguageMemberView';
-import LanguageView, { languagesViewLoader } from './LanguagesView';
+import LanguagesView, { languagesViewLoader } from './LanguagesView';
 import ManageLanguageView, {
   manageLanguageViewLoader,
 } from './ManageLanguageView';
@@ -14,7 +14,7 @@ const routes: RouteObject[] = [
   {
     path: 'languages',
     loader: () => authorize('administer', 'Language', languagesViewLoader),
-    element: <LanguageView />,
+    element: <LanguagesView />,
   },
   {
     path: 'languages/new',
