@@ -122,10 +122,9 @@ function useTranslationQueries(language: string, verseId: string) {
   };
 }
 
+/// This function loads the current language for use in the interlinear tab title.
 export async function translationViewLoader(code: string) {
   const languages = await apiClient.languages.findAll();
-  console.log(languages);
-  console.log('CODE:', code);
   return {
     languageName: languages.data.find((l) => l.code === code)?.name ?? '',
   };
