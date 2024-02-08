@@ -2,6 +2,7 @@ import { RouteObject, redirect } from 'react-router-dom';
 import TranslationView, {
   translationLanguageKey,
   translationVerseIdKey,
+  translationViewLoader,
 } from './TranslationView';
 
 const routes: RouteObject[] = [
@@ -15,6 +16,7 @@ const routes: RouteObject[] = [
   },
   {
     path: 'interlinear/:language/verses/:verseId?',
+    loader: ({ params }) => translationViewLoader(params.language ?? ''),
     element: <TranslationView />,
   },
 ];

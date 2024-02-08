@@ -19,9 +19,11 @@ import { useFlash } from '../../shared/hooks/flash';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useAccessControl } from '../../shared/accessControl';
 import ComboboxInput from '../../shared/components/form/ComboboxInput';
+import useTitle from '../../shared/hooks/useTitle';
 
 export default function UsersView() {
   const { t } = useTranslation(['users']);
+  useTitle(t('common:tab_titles.users'));
   const flash = useFlash();
 
   const userCan = useAccessControl();
