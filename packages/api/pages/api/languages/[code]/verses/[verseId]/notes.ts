@@ -1,6 +1,9 @@
-import { GetVerseTranslatorNotesResponseBody } from '@translation/api-types';
+import {
+  GetVerseTranslatorNotesResponseBody,
+  TranslatorNote,
+} from '@translation/api-types';
 import createRoute from '../../../../../../shared/Route';
-import { Prisma, client } from '../../../../../../shared/db';
+import { client } from '../../../../../../shared/db';
 
 export default createRoute<{ code: string; verseId: string }>()
   .get<void, GetVerseTranslatorNotesResponseBody>({
@@ -13,43 +16,30 @@ export default createRoute<{ code: string; verseId: string }>()
       if (!language) {
         return res.notFound();
       }
-      const verse = await client.verse.findUnique({
-        where: {
-          id: req.query.verseId,
-        },
-        include: {
-          words: {
-            orderBy: {
-              id: Prisma.SortOrder.asc,
-            },
-          },
-        },
-      });
 
-      if (verse) {
-        const response: GetVerseTranslatorNotesResponseBody = { data: {} };
-        for (const word of verse.words) {
-          const note = await client.translatorNote.findUnique({
-            where: {
-              wordId_languageId: {
-                wordId: word.id,
-                languageId: language.id,
-              },
-            },
-            include: {
-              author: true,
-            },
-          });
-          if (note) {
-            response.data[word.id] = {
-              wordId: word.id,
-              authorName: note.author.name ?? '',
-              timestamp: +note.timestamp,
-              content: note.content,
-            };
-          }
-        }
-        return res.ok(response);
+      const notes = await client.$queryRaw<TranslatorNote[]>`
+        SELECT
+          "Word"."id" as "wordId",
+          COALESCE("User"."name", '') AS "authorName",
+          "TranslatorNote"."timestamp",
+          COALESCE("TranslatorNote"."content", '') AS "content"
+        FROM "Word"
+        LEFT OUTER JOIN "TranslatorNote" ON "Word"."id" = "TranslatorNote"."wordId"
+            AND "TranslatorNote"."languageId" = ${language.id}::uuid
+        LEFT OUTER JOIN "User" ON "TranslatorNote"."authorId" = "User"."id"
+        WHERE "Word"."verseId" = ${req.query.verseId}
+        ORDER BY "wordId" ASC
+      `;
+
+      if (notes.length > 0) {
+        return res.ok({
+          data: Object.fromEntries(
+            notes.map(({ wordId, authorName, timestamp, content }) => [
+              wordId,
+              { wordId, authorName, timestamp: +timestamp, content },
+            ])
+          ),
+        });
       }
       res.notFound();
     },

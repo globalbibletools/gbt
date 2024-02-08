@@ -8,9 +8,11 @@
   "lexicon": "Lexicon",
   "next_verse": "Next Verse",
   "notes": "Notes",
+  "note_description": "Updated at {{timestamp}} by {{authorName}}.",
   "previous_verse": "Previous Verse",
   "revoke_tooltip": "Revoke Approval (Esc)",
   "saving": "saving",
   "select_verse": "Select verse",
-  "strongs": "Strongs"
+  "strongs": "Strongs",
+  "translator_notes": "Translator's Notes"
 }

@@ -2,13 +2,14 @@ import { Tab } from '@headlessui/react';
 import { useQuery } from '@tanstack/react-query';
 import { Verse } from '@translation/api-types';
 import DOMPurify from 'dompurify';
-import { useEffect, useState } from 'react';
+import { throttle } from 'lodash';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useAccessControl } from '../../shared/accessControl';
 import apiClient from '../../shared/apiClient';
 import { Icon } from '../../shared/components/Icon';
 import LoadingSpinner from '../../shared/components/LoadingSpinner';
 import RichText from '../../shared/components/RichText';
-import Button from '../../shared/components/actions/Button';
 import RichTextInput from '../../shared/components/form/RichTextInput';
 
 type TranslationSidebarProps = {
@@ -54,30 +55,35 @@ export const TranslationSidebar = ({
     tabTitles.push('translate:comments');
   }
 
-  const [isEditingNote, setIsEditingNote] = useState(false);
-  const [noteAuthorName, setNoteAuthorName] = useState('');
-  const [noteTimestampString, setNoteTimestampString] = useState('');
+  const userCan = useAccessControl();
+  const canViewNote = userCan('read', { type: 'Language', id: language });
+  const canEditNote = userCan('translate', { type: 'Language', id: language });
+
   const [noteContent, setNoteContent] = useState('');
-
+  const wordId = useRef('');
   useEffect(() => {
-    setNoteAuthorName(translatorNote?.authorName ?? '');
-    setNoteTimestampString(
-      translatorNote?.timestamp
-        ? new Date(translatorNote.timestamp).toLocaleString()
-        : ''
-    );
-    setNoteContent(translatorNote?.content ?? '');
-  }, [translatorNote]);
+    if (translatorNotesQuery.isSuccess && word.id !== wordId.current) {
+      wordId.current = word.id;
+      setNoteContent(translatorNotesQuery.data.data[word.id]?.content ?? '');
+    }
+  }, [word.id, translatorNotesQuery]);
 
-  const saveNote = async () => {
-    setIsEditingNote(false);
-    await apiClient.words.updateTranslatorNote({
-      wordId: word.id,
-      language,
-      note: noteContent,
-    });
-    translatorNotesQuery.refetch();
-  };
+  const saveNote = useMemo(
+    () =>
+      throttle(
+        async (noteContent: string) => {
+          await apiClient.words.updateTranslatorNote({
+            wordId: word.id,
+            language,
+            note: noteContent,
+          });
+          translatorNotesQuery.refetch();
+        },
+        15000,
+        { leading: false, trailing: true }
+      ),
+    [language, translatorNotesQuery, word.id]
+  );
 
   return (
     <div
@@ -142,46 +148,41 @@ export const TranslationSidebar = ({
               )}
             </Tab.Panel>
             <Tab.Panel>
-              {/* TODO: add author and timestamp */}
               <div className="flex flex-col gap-2 pb-2">
-                <div className="flex flex-row justify-between">
-                  <span className="font-bold">{t('translate:author')}</span>
-                  <span>{noteAuthorName}</span>
-                </div>
-                <div className="flex flex-row justify-between">
-                  <span className="font-bold">
-                    {t('translate:last_updated')}
-                  </span>
-                  <span>{noteTimestampString}</span>
-                </div>
-                <div className="flex flex-row justify-end gap-1">
-                  {isEditingNote ? (
-                    <>
-                      <Button
-                        variant="secondary"
-                        onClick={() => {
-                          setIsEditingNote(false);
-                          setNoteContent(translatorNote?.content ?? '');
+                {canViewNote && (
+                  <>
+                    <h2 className="font-bold">
+                      {t('translate:translator_notes')}
+                    </h2>
+                    {translatorNote?.authorName && (
+                      <span className="italic">
+                        {t('translate:note_description', {
+                          timestamp: translatorNote?.timestamp
+                            ? new Date(
+                                translatorNote?.timestamp
+                              ).toLocaleString()
+                            : '',
+                          authorName: translatorNote?.authorName ?? '',
+                        })}
+                      </span>
+                    )}
+                    {canEditNote ? (
+                      <RichTextInput
+                        key={word.id}
+                        name="noteContent"
+                        value={noteContent}
+                        onBlur={async (e) => {
+                          saveNote(e.target.value);
+                          saveNote.flush();
                         }}
-                      >
-                        {t('common:cancel')}
-                      </Button>
-                      <Button onClick={saveNote}>{t('common:confirm')}</Button>
-                    </>
-                  ) : (
-                    <Button onClick={() => setIsEditingNote(true)}>
-                      {t('common:edit')}
-                    </Button>
-                  )}
-                </div>
-                {isEditingNote ? (
-                  <RichTextInput
-                    name="noteContent"
-                    value={noteContent}
-                    onBlur={async (e) => setNoteContent(e.target.value)}
-                  />
-                ) : (
-                  <RichText content={noteContent} />
+                        onChange={async (e) => {
+                          saveNote(e.target.value);
+                        }}
+                      />
+                    ) : (
+                      <RichText content={noteContent} />
+                    )}
+                  </>
                 )}
               </div>
             </Tab.Panel>

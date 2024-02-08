@@ -21,9 +21,11 @@ export default createRoute<{ code: string; wordId: string }>()
         },
       });
 
-      if (!language || !req.session || !req.session.user) {
+      if (!language) {
         res.notFound();
         return;
+      } else if (!req.session || !req.session.user) {
+        throw Error('No session user.');
       }
 
       const fields = {

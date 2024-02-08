@@ -8,9 +8,11 @@
   "lexicon": "معجم",
   "next_verse": "الآية التالية",
   "notes": "ملحوظات",
+  "note_description": "تم تحديثه في {{timestamp}} بواسطة {{authorName}}",
   "previous_verse": "الآية السابقة",
   "revoke_tooltip": "إبطال الموافقة (الهروب)",
   "saving": "جاري الحفظ",
   "select_verse": "حدد الآية",
-  "strongs": "أقوياء"
+  "strongs": "أقوياء",
+  "translator_notes": "ملاحظات المترجم"
 }
