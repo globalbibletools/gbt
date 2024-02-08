@@ -11,6 +11,7 @@ import { Icon } from '../../shared/components/Icon';
 import LoadingSpinner from '../../shared/components/LoadingSpinner';
 import RichText from '../../shared/components/RichText';
 import RichTextInput from '../../shared/components/form/RichTextInput';
+import Button from '../../shared/components/actions/Button';
 
 type TranslationSidebarProps = {
   language: string;
@@ -84,6 +85,17 @@ export const TranslationSidebar = ({
       ),
     [language, translatorNotesQuery, word.id]
   );
+
+  const [isWritingComment, setIsWritingComment] = useState(false);
+  const [newComment, setNewComment] = useState('');
+
+  const postComment = () => {
+    console.log('NEW COMMENT:', newComment);
+    // TODO: send comment to backend
+    // TODO: refetch current comments
+    setIsWritingComment(false);
+    setNewComment('');
+  };
 
   return (
     <div
@@ -186,7 +198,42 @@ export const TranslationSidebar = ({
                 )}
               </div>
             </Tab.Panel>
-            {showComments && <Tab.Panel>{t('common:coming_soon')}</Tab.Panel>}
+            {showComments && (
+              <Tab.Panel>
+                <div className="flex flex-col gap-2 pb-2">
+                  <div className="flex flex-row gap-1">
+                    {isWritingComment ? (
+                      <>
+                        <Button
+                          variant="secondary"
+                          onClick={() => setIsWritingComment(false)}
+                        >
+                          {t('common:cancel')}
+                        </Button>
+                        <Button onClick={() => postComment()}>
+                          {t('translate:comment')}
+                        </Button>
+                      </>
+                    ) : (
+                      <Button onClick={() => setIsWritingComment(true)}>
+                        <Icon icon="plus" className="me-2"></Icon>
+                        {t('translate:comment')}
+                      </Button>
+                    )}
+                  </div>
+                  {isWritingComment && (
+                    <RichTextInput
+                      name="newComment"
+                      value={newComment}
+                      onChange={async (event) =>
+                        setNewComment(event?.target.value)
+                      }
+                    />
+                  )}
+                  {/* TODO: display posted comments */}
+                </div>
+              </Tab.Panel>
+            )}
           </Tab.Panels>
         </Tab.Group>
       </div>
