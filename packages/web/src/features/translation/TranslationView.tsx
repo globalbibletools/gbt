@@ -6,7 +6,7 @@ import {
 } from '@translation/api-types';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLoaderData, useNavigate, useParams } from 'react-router-dom';
 import { useAccessControl } from '../../shared/accessControl';
 import apiClient from '../../shared/apiClient';
 import bibleTranslationClient from '../../shared/bibleTranslationClient';
@@ -122,23 +122,26 @@ function useTranslationQueries(language: string, verseId: string) {
   };
 }
 
+export async function translationViewLoader(code: string) {
+  const languages = await apiClient.languages.findAll();
+  console.log(languages);
+  console.log('CODE:', code);
+  return {
+    languageName: languages.data.find((l) => l.code === code)?.name ?? '',
+  };
+}
+
 export default function TranslationView() {
   const { t, i18n } = useTranslation(['common']);
   const { language, verseId } = useParams() as {
     language: string;
     verseId: string;
   };
-  const languagesQuery = useQuery({
-    queryKey: ['languages'],
-    queryFn: () => apiClient.languages.findAll(),
-  });
-  const interlinearLanguage = languagesQuery.data?.data.find(
-    (l) => l.code === language
-  )?.name;
+  const loaderData = useLoaderData() as { languageName: string };
 
   useTitle(
     t('common:tab_titles.interlinear', {
-      languageName: interlinearLanguage ?? '',
+      languageName: loaderData.languageName,
     })
   );
 
