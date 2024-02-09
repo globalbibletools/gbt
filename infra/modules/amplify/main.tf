@@ -2,7 +2,7 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 4.16"
+      version = "~> 5.1"
     }
   }
 
@@ -206,10 +206,5 @@ resource "aws_amplify_domain_association" "interlinear" {
   sub_domain {
     branch_name = aws_amplify_branch.interlinear_main.branch_name
     prefix      = "interlinear"
-  }
-
-  sub_domain {
-    branch_name = aws_amplify_branch.interlinear_main.branch_name
-    prefix      = ""
   }
 }
