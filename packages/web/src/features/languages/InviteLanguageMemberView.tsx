@@ -13,7 +13,7 @@ import SubmittingIndicator from '../../shared/components/form/SubmittingIndicato
 import Button from '../../shared/components/actions/Button';
 import { useFlash } from '../../shared/hooks/flash';
 import Card from '../../shared/components/Card';
-import { LanguageRole } from '@translation/api-types';
+import { GetSessionResponse, LanguageRole } from '@translation/api-types';
 import MultiselectInput from '../../shared/components/form/MultiselectInput';
 import useTitle from '../../shared/hooks/useTitle';
 import { useQueryClient } from '@tanstack/react-query';
@@ -44,7 +44,11 @@ export default function InviteLanguageMemberView() {
         email: data.email,
         roles: data.roles,
       });
-      queryClient.invalidateQueries(['session']);
+      const session: GetSessionResponse | undefined = queryClient.getQueryData([
+        'session',
+      ]);
+      if (!session || session.user?.email === data.email)
+        queryClient.invalidateQueries(['session']);
 
       flash.success(t('users:user_invited'));
 
