@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Global Bible Tools</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?display=swap&amp;family=Noto+Sans:wght@400;700"
+    />
+  </head>
+
+  <body
+    class="flex flex-col h-screen text-gray-800"
+    x-data="{ section: location.hash.slice(1) }"
+    x-init="window.addEventListener('popstate', () => section = location.hash.slice(1))"
+  >
+    <nav
+      class="bg-white flex items-center h-20 border-b border-gray-200 relative flex-shrink-0"
+    >
+      <a href="#hero" class="ml-8 flex items-center mr-12">
+        <img src="./assets/logo.png" />
+        <h1 class="font-bold ml-2 text-2xl">Global Bible Tools</h1>
+      </a>
+      <a
+        class="h-full w-24 text-center block pt-[28px] font-bold mx-2"
+        :class="section === 'solutions' && 'border-b-4 border-blue-800'"
+        href="#solutions"
+      >
+        Solutions
+      </a>
+      <a
+        class="h-full w-24 text-center block pt-[28px] font-bold mx-2"
+        :class="section === 'volunteer' && 'border-b-4 border-blue-800'"
+        href="#volunteer"
+      >
+        Volunteer
+      </a>
+      <div class="flex-grow"></div>
+      <a
+        href="https://interlinear.globalbibletools.com"
+        class="block rounded-lg bg-blue-800 text-white font-bold shadow-md px-4 flex items-center justify-center h-8 mr-8"
+      >
+        Interlinear
+      </a>
+    </nav>
+    <main class="flex-grow overflow-auto">
+      <section id="hero" class="relative">
+        <img src="./assets/hero.png" class="w-full" />
+        <div
+          class="absolute top-0 bottom-0 w-full flex flex-col items-center justify-center"
+        >
+          <p
+            class="text-white text-center font-bold text-2xl max-w-[600px] mb-16"
+          >
+            The Global Church needs freely available biblical language learning
+            and study tools translated into local languages
+          </p>
+          <button
+            class="block rounded-lg bg-blue-800 text-white font-bold shadow-xl px-8 flex items-center justify-center h-14 text-xl"
+          >
+            Learn More
+          </button>
+        </div>
+      </section>
+      <section
+        id="solutions"
+        class="relative bg-brown-100 pt-24 pb-12 after:absolute after:content-['_'] after:block after:left-0 after:bottom-[-80px] after:w-full after:border-r-[100vw] after:border-b-[80px] after:border-transparent after:border-r-brown-100"
+      >
+        <h2 class="text-5xl font-bold w-full mb-8 w-[1000px] mx-auto">
+          Solutions
+        </h2>
+        <div class="flex gap-16 w-[1000px] mx-auto">
+          <div class="flex-grow w-full">
+            <h3
+              class="text-center text-xl font-bold border-b-4 border-black pb-2 mb-8 mx-4"
+            >
+              Langage Learning
+            </h3>
+            <ul class="flex flex-col gap-8">
+              <li class="rounded-[16px] bg-white p-6 shadow h-40">
+                <h4 class="text-blue-800 text-lg font-bold mb-3">
+                  Language Lessons
+                </h4>
+                <p>
+                  YouTube courses <a>Aleph with Beth</a> and
+                  <a class="font-bold text-blue-800 underline"
+                    >Alpha with Angela</a
+                  >
+                  teach Greek and Hebrew to anyone for free.
+                </p>
+              </li>
+              <li class="rounded-[16px] bg-white p-6 shadow h-40">
+                <h4 class="text-blue-800 text-lg font-bold mb-3">
+                  Reader's Bible
+                </h4>
+                <p>
+                  A digital reader’s Bible helps language learners accelerate
+                  their comprehension by reading the biblical text with
+                  assistance
+                </p>
+              </li>
+            </ul>
+          </div>
+          <div class="flex-grow w-full">
+            <h3
+              class="text-center text-xl font-bold border-b-4 border-black pb-2 mb-8 mx-4"
+            >
+              Langage Study
+            </h3>
+            <ul class="flex flex-col gap-8">
+              <li class="rounded-[16px] bg-white p-6 shadow h-40">
+                <h4 class="text-blue-800 text-lg font-bold mb-3">Lexicons</h4>
+                <p>
+                  Lexicons are needed in biblical study to explore the range of
+                  meaning for Greek and Hebrew words.
+                </p>
+              </li>
+              <li class="rounded-[16px] bg-white p-6 shadow h-40">
+                <h4 class="text-blue-800 text-lg font-bold mb-3">Grammars</h4>
+                <p>
+                  Grammars are used in biblical study to learn the structure of
+                  the biblical languages.
+                </p>
+              </li>
+              <li class="rounded-[16px] bg-white p-6 shadow h-40">
+                <h4 class="text-blue-800 text-lg font-bold mb-3">
+                  Text Critical Notes
+                </h4>
+                <p>
+                  Text critical notes contribute to biblical study by explaining
+                  the differences in the manuscript witness to the biblical
+                  text.
+                </p>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+      <section id="volunteer" class="bg-blue-800 pt-32 pb-32">
+        <h2
+          class="text-5xl font-bold w-full mb-8 w-[1000px] mx-auto text-white"
+        >
+          Volunteer
+        </h2>
+        <ul class="flex justify-between w-[1000px] mx-auto">
+          <li class="rounded-[16px] bg-white p-6 shadow w-80 text-center">
+            <h4 class="text-blue-800 text-lg font-bold mb-3">
+              Software Development
+            </h4>
+            <p>
+              If you can help with software development or UI design, check out
+              our GitHub repository.
+            </p>
+          </li>
+          <li class="rounded-[16px] bg-white p-6 shadow w-80 text-center">
+            <h4 class="text-blue-800 text-lg font-bold mb-3">Translation</h4>
+            <p>
+              If you can help translate lexicons, grammars, and other resources
+              into other languages, contact Andrew Case.
+            </p>
+          </li>
+          <li class="rounded-[16px] bg-white p-6 shadow w-80 text-center">
+            <h4 class="text-blue-800 text-lg font-bold mb-3">Resource</h4>
+            <p>
+              If you have original language study resources you would like to
+              contribute or help digitize, contact Andrew Case.
+            </p>
+          </li>
+        </ul>
+      </section>
+    </main>
+    <script src="https://unpkg.com/alpinejs"></script>
+  </body>
+</html>
