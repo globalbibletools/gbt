@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Global Bible Tools</title>
+    <link rel="shortcut icon" type="image/png" href="./assets/logo.png" />
     <link rel="stylesheet" href="./styles.css" />
     <link
       rel="stylesheet"
@@ -34,7 +35,7 @@
       <div class="flex-grow"></div>
       <a
         href="https://interlinear.globalbibletools.com"
-        class="block rounded-lg bg-blue-800 text-white font-bold shadow-md px-4 flex items-center justify-center h-8 mr-8 mt-[2px]"
+        class="rounded-lg bg-blue-800 text-white font-bold shadow-md px-4 flex items-center justify-center h-8 mr-8 mt-[2px]"
       >
         Interlinear
       </a>
@@ -51,11 +52,12 @@
             The Global Church needs freely available biblical language learning
             and study tools translated into local languages
           </p>
-          <button
-            class="block rounded-lg bg-blue-800 text-white font-bold shadow-xl px-8 flex items-center justify-center h-14 text-xl"
+          <a
+            class="rounded-lg bg-blue-800 text-white font-bold shadow-xl px-8 flex items-center justify-center h-14 text-xl"
+            href="#resources"
           >
             Learn More
-          </button>
+          </a>
         </div>
       </section>
       <section
@@ -80,11 +82,15 @@
                 <h4 class="text-lg font-bold mb-3">Language Lessons</h4>
                 <p>
                   YouTube courses
-                  <a class="font-bold text-blue-800 underline"
+                  <a
+                    class="font-bold text-blue-800 underline"
+                    href="https://www.youtube.com/@AlephwithBeth"
                     >Aleph with Beth</a
                   >
                   and
-                  <a class="font-bold text-blue-800 underline"
+                  <a
+                    class="font-bold text-blue-800 underline"
+                    href="https://www.youtube.com/@AlphawithAngela"
                     >Alpha with Angela</a
                   >
                   teach Greek and Hebrew to anyone for free.
@@ -177,5 +183,24 @@
         </ul>
       </section>
     </main>
+    <script>
+      window.addEventListener('click', (e) => {
+        let anchor;
+        if (e.target.matches("a[href^='#']")) {
+          anchor = e.target;
+        } else if (e.target.matches("a[href^='#'] *")) {
+          anchor = e.target.closest('a');
+        }
+
+        if (anchor) {
+          e.preventDefault();
+          const id = anchor.href.split('#')[1];
+          const section = document.getElementById(id);
+          section?.scrollIntoView({
+            behavior: 'smooth',
+          });
+        }
+      });
+    </script>
   </body>
 </html>
