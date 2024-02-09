@@ -27,6 +27,7 @@ export default function InviteUserView() {
   async function onSubmit({ email }: FormData) {
     try {
       await apiClient.users.invite({ email });
+
       flash.success(t('users:user_invited'));
       formContext.reset();
     } catch (error) {

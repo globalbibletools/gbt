@@ -127,6 +127,7 @@ export interface UserCanOptions {
  */
 export function useAccessControl() {
   const { status, user } = useAuth();
+
   const policy = useMemo(() => {
     if (status !== 'loading') {
       return createPolicyFor(user);

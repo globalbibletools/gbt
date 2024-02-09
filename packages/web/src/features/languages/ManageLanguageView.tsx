@@ -70,11 +70,11 @@ function useUpdateLanguageMemberMutation() {
         variables.userId,
         variables.roles
       ),
-    onSettled: (_, __, { code }, context) => {
+    onSettled: async (_, __, { code }, context) => {
       queryClient.invalidateQueries({
         queryKey: languageMembersQueryKey(code).queryKey,
       });
-      queryClient.invalidateQueries({ queryKey: ['session'] });
+      queryClient.invalidateQueries(['session']);
     },
   });
 }
@@ -88,7 +88,7 @@ function useRemoveLanguageMemberMutation() {
       queryClient.invalidateQueries({
         queryKey: languageMembersQueryKey(code).queryKey,
       });
-      queryClient.invalidateQueries({ queryKey: ['session'] });
+      queryClient.invalidateQueries(['session']);
     },
   });
 }
