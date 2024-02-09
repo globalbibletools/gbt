@@ -74,6 +74,7 @@ function useUpdateLanguageMemberMutation() {
       queryClient.invalidateQueries({
         queryKey: languageMembersQueryKey(code).queryKey,
       });
+      queryClient.invalidateQueries({ queryKey: ['session'] });
     },
   });
 }
@@ -87,6 +88,7 @@ function useRemoveLanguageMemberMutation() {
       queryClient.invalidateQueries({
         queryKey: languageMembersQueryKey(code).queryKey,
       });
+      queryClient.invalidateQueries({ queryKey: ['session'] });
     },
   });
 }

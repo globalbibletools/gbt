@@ -16,6 +16,7 @@ import Card from '../../shared/components/Card';
 import { LanguageRole } from '@translation/api-types';
 import MultiselectInput from '../../shared/components/form/MultiselectInput';
 import useTitle from '../../shared/hooks/useTitle';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface FormData {
   email: string;
@@ -30,6 +31,7 @@ export default function InviteLanguageMemberView() {
   const navigate = useNavigate();
 
   const flash = useFlash();
+  const queryClient = useQueryClient();
 
   const formContext = useForm<FormData>({
     defaultValues: {
@@ -42,6 +44,7 @@ export default function InviteLanguageMemberView() {
         email: data.email,
         roles: data.roles,
       });
+      queryClient.invalidateQueries(['session']);
 
       flash.success(t('users:user_invited'));
 

@@ -13,6 +13,7 @@ import Button from '../../shared/components/actions/Button';
 import SubmittingIndicator from '../../shared/components/form/SubmittingIndicator';
 import { useFlash } from '../../shared/hooks/flash';
 import useTitle from '../../shared/hooks/useTitle';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface FormData {
   email: string;
@@ -23,10 +24,13 @@ export default function InviteUserView() {
   useTitle(t('common:tab_titles.invite_user'));
   const flash = useFlash();
 
+  const queryClient = useQueryClient();
+
   const formContext = useForm<FormData>();
   async function onSubmit({ email }: FormData) {
     try {
       await apiClient.users.invite({ email });
+      queryClient.invalidateQueries(['session']);
 
       flash.success(t('users:user_invited'));
       formContext.reset();
