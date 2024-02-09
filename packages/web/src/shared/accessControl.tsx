@@ -127,15 +127,11 @@ export interface UserCanOptions {
  */
 export function useAccessControl() {
   const { status, user } = useAuth();
-  // From https://stackoverflow.com/questions/59467758/passing-array-to-useeffect-dependency-list/59468261#59468261
-  // The following variable is used to update the policy when a user's languages change.
-  const languagesStringified = JSON.stringify(user?.languages);
   const policy = useMemo(() => {
     if (status !== 'loading') {
       return createPolicyFor(user);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [status, user, languagesStringified]);
+  }, [status, user]);
 
   return useCallback(
     /**
