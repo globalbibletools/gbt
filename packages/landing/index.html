@@ -11,11 +11,7 @@
     />
   </head>
 
-  <body
-    class="flex flex-col h-screen text-gray-800"
-    x-data="{ section: location.hash.slice(1) }"
-    x-init="window.addEventListener('popstate', () => section = location.hash.slice(1))"
-  >
+  <body class="flex flex-col h-screen text-gray-800">
     <nav
       class="bg-white flex items-center h-20 border-b border-gray-200 relative flex-shrink-0"
     >
@@ -24,15 +20,13 @@
         <h1 class="font-bold ml-2 text-2xl">Global Bible Tools</h1>
       </a>
       <a
-        class="h-full w-24 text-center block pt-[28px] font-bold mx-2"
-        :class="section === 'solutions' && 'border-b-4 border-blue-800'"
-        href="#solutions"
+        class="h-full w-24 text-center block pt-[30px] font-bold mx-2"
+        href="#resources"
       >
-        Solutions
+        Resources
       </a>
       <a
-        class="h-full w-24 text-center block pt-[28px] font-bold mx-2"
-        :class="section === 'volunteer' && 'border-b-4 border-blue-800'"
+        class="h-full w-24 text-center block pt-[30px] font-bold mx-2"
         href="#volunteer"
       >
         Volunteer
@@ -40,7 +34,7 @@
       <div class="flex-grow"></div>
       <a
         href="https://interlinear.globalbibletools.com"
-        class="block rounded-lg bg-blue-800 text-white font-bold shadow-md px-4 flex items-center justify-center h-8 mr-8"
+        class="block rounded-lg bg-blue-800 text-white font-bold shadow-md px-4 flex items-center justify-center h-8 mr-8 mt-[2px]"
       >
         Interlinear
       </a>
@@ -49,7 +43,7 @@
       <section id="hero" class="relative">
         <img src="./assets/hero.png" class="w-full" />
         <div
-          class="absolute top-0 bottom-0 w-full flex flex-col items-center justify-center"
+          class="absolute top-0 bottom-0 w-full flex flex-col items-center justify-center mb-20"
         >
           <p
             class="text-white text-center font-bold text-2xl max-w-[600px] mb-16"
@@ -65,12 +59,15 @@
         </div>
       </section>
       <section
-        id="solutions"
+        id="resources"
         class="relative bg-brown-100 pt-24 pb-12 after:absolute after:content-['_'] after:block after:left-0 after:bottom-[-80px] after:w-full after:border-r-[100vw] after:border-b-[80px] after:border-transparent after:border-r-brown-100"
       >
-        <h2 class="text-5xl font-bold w-full mb-8 w-[1000px] mx-auto">
-          Solutions
-        </h2>
+        <h2 class="text-5xl font-bold mb-8 w-[1000px] mx-auto">Resources</h2>
+        <p class="w-[1000px] mb-8 mx-auto">
+          The following resources are essential for language learning and
+          biblical study. Currently these resources are only available in a
+          handful of even the largest languages.
+        </p>
         <div class="flex gap-16 w-[1000px] mx-auto">
           <div class="flex-grow w-full">
             <h3
@@ -80,11 +77,13 @@
             </h3>
             <ul class="flex flex-col gap-8">
               <li class="rounded-[16px] bg-white p-6 shadow h-40">
-                <h4 class="text-blue-800 text-lg font-bold mb-3">
-                  Language Lessons
-                </h4>
+                <h4 class="text-lg font-bold mb-3">Language Lessons</h4>
                 <p>
-                  YouTube courses <a>Aleph with Beth</a> and
+                  YouTube courses
+                  <a class="font-bold text-blue-800 underline"
+                    >Aleph with Beth</a
+                  >
+                  and
                   <a class="font-bold text-blue-800 underline"
                     >Alpha with Angela</a
                   >
@@ -92,9 +91,7 @@
                 </p>
               </li>
               <li class="rounded-[16px] bg-white p-6 shadow h-40">
-                <h4 class="text-blue-800 text-lg font-bold mb-3">
-                  Reader's Bible
-                </h4>
+                <h4 class="text-lg font-bold mb-3">Reader's Bible</h4>
                 <p>
                   A digital reader’s Bible helps language learners accelerate
                   their comprehension by reading the biblical text with
@@ -107,27 +104,25 @@
             <h3
               class="text-center text-xl font-bold border-b-4 border-black pb-2 mb-8 mx-4"
             >
-              Langage Study
+              Biblical Study
             </h3>
             <ul class="flex flex-col gap-8">
               <li class="rounded-[16px] bg-white p-6 shadow h-40">
-                <h4 class="text-blue-800 text-lg font-bold mb-3">Lexicons</h4>
+                <h4 class="text-lg font-bold mb-3">Lexicons</h4>
                 <p>
                   Lexicons are needed in biblical study to explore the range of
                   meaning for Greek and Hebrew words.
                 </p>
               </li>
               <li class="rounded-[16px] bg-white p-6 shadow h-40">
-                <h4 class="text-blue-800 text-lg font-bold mb-3">Grammars</h4>
+                <h4 class="text-lg font-bold mb-3">Grammars</h4>
                 <p>
                   Grammars are used in biblical study to learn the structure of
                   the biblical languages.
                 </p>
               </li>
               <li class="rounded-[16px] bg-white p-6 shadow h-40">
-                <h4 class="text-blue-800 text-lg font-bold mb-3">
-                  Text Critical Notes
-                </h4>
+                <h4 class="text-lg font-bold mb-3">Text Critical Notes</h4>
                 <p>
                   Text critical notes contribute to biblical study by explaining
                   the differences in the manuscript witness to the biblical
@@ -139,38 +134,48 @@
         </div>
       </section>
       <section id="volunteer" class="bg-blue-800 pt-32 pb-32">
-        <h2
-          class="text-5xl font-bold w-full mb-8 w-[1000px] mx-auto text-white"
-        >
+        <h2 class="text-5xl font-bold mb-8 w-[1000px] mx-auto text-white">
           Volunteer
         </h2>
         <ul class="flex justify-between w-[1000px] mx-auto">
           <li class="rounded-[16px] bg-white p-6 shadow w-80 text-center">
-            <h4 class="text-blue-800 text-lg font-bold mb-3">
-              Software Development
-            </h4>
+            <h4 class="text-lg font-bold mb-3">Software Development</h4>
             <p>
               If you can help with software development or UI design, check out
-              our GitHub repository.
+              our
+              <a
+                class="font-bold text-blue-800 underline"
+                href="https://github.com/arrocke/gloss-translation"
+                >GitHub repository</a
+              >.
             </p>
           </li>
           <li class="rounded-[16px] bg-white p-6 shadow w-80 text-center">
-            <h4 class="text-blue-800 text-lg font-bold mb-3">Translation</h4>
+            <h4 class="text-lg font-bold mb-3">Translation</h4>
             <p>
               If you can help translate lexicons, grammars, and other resources
-              into other languages, contact Andrew Case.
+              into other languages, contact
+              <a
+                class="font-bold text-blue-800 underline"
+                href="mailto:andrewdcase@gmail.com"
+                >Andrew Case</a
+              >.
             </p>
           </li>
           <li class="rounded-[16px] bg-white p-6 shadow w-80 text-center">
-            <h4 class="text-blue-800 text-lg font-bold mb-3">Resource</h4>
+            <h4 class="text-lg font-bold mb-3">Resources</h4>
             <p>
               If you have original language study resources you would like to
-              contribute or help digitize, contact Andrew Case.
+              contribute or help digitize, contact
+              <a
+                class="font-bold text-blue-800 underline"
+                href="mailto:andrewdcase@gmail.com"
+                >Andrew Case</a
+              >.
             </p>
           </li>
         </ul>
       </section>
     </main>
-    <script src="https://unpkg.com/alpinejs"></script>
   </body>
 </html>

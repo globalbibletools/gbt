@@ -8,7 +8,8 @@
       "executor": "nx:run-commands",
       "outputs": [],
       "options": {
-        "command": "npx tailwindcss -i packages/landing/tailwind.css -o packages/landing/styles.css"
+        "cwd": "packages/landing",
+        "command": "npx tailwindcss -i tailwind.css -o styles.css"
       }
     },
     "serve": {
