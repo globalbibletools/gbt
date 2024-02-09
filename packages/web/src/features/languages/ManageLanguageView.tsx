@@ -70,7 +70,7 @@ function useUpdateLanguageMemberMutation() {
         variables.userId,
         variables.roles
       ),
-    onSettled: async (_, __, { code }, context) => {
+    onSettled: (_, __, { code }, context) => {
       queryClient.invalidateQueries({
         queryKey: languageMembersQueryKey(code).queryKey,
       });
