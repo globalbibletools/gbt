@@ -77,16 +77,16 @@ export const TranslationSidebar = ({
   const [footnoteContent, setFootnoteContent] = useState('');
   const wordId = useRef('');
   useEffect(() => {
-    if (word.id !== wordId.current) {
+    if (
+      translatorNotesQuery.isSuccess &&
+      footnotesQuery.isSuccess &&
+      word.id !== wordId.current
+    ) {
       wordId.current = word.id;
-      if (translatorNotesQuery.isSuccess) {
-        setTranslatorNoteContent(
-          translatorNotesQuery.data.data[word.id]?.content ?? ''
-        );
-      }
-      if (footnotesQuery.isSuccess) {
-        setFootnoteContent(footnotesQuery.data.data[word.id]?.content ?? '');
-      }
+      setTranslatorNoteContent(
+        translatorNotesQuery.data.data[word.id]?.content ?? ''
+      );
+      setFootnoteContent(footnotesQuery.data.data[word.id]?.content ?? '');
     }
   }, [word.id, translatorNotesQuery, footnotesQuery]);
 
