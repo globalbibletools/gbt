@@ -50,9 +50,15 @@ export const TranslationSidebar = ({
     ? translatorNotesQuery.data.data[word.id]
     : null;
 
-  const footnotesQuery = useQuery(['verse-footnotes', language, verse.id], () =>
-    // TODO:
-    apiClient.verses.findTranslatorNotes(verse.id, language)
+  const footnotesQuery = useQuery(
+    ['verse-footnotes', language, verse.id],
+    async () => {
+      const footnotes = await apiClient.verses.findFootnotes(
+        verse.id,
+        language
+      );
+      return footnotes;
+    }
   );
   const footnote = footnotesQuery.isSuccess
     ? footnotesQuery.data.data[word.id]
@@ -67,15 +73,22 @@ export const TranslationSidebar = ({
   const canViewNote = userCan('read', { type: 'Language', id: language });
   const canEditNote = userCan('translate', { type: 'Language', id: language });
 
-  const [translatorNoteContent, setNoteContent] = useState('');
+  const [translatorNoteContent, setTranslatorNoteContent] = useState('');
   const [footnoteContent, setFootnoteContent] = useState('');
   const wordId = useRef('');
   useEffect(() => {
-    if (translatorNotesQuery.isSuccess && word.id !== wordId.current) {
+    if (word.id !== wordId.current) {
       wordId.current = word.id;
-      setNoteContent(translatorNotesQuery.data.data[word.id]?.content ?? '');
+      if (translatorNotesQuery.isSuccess) {
+        setTranslatorNoteContent(
+          translatorNotesQuery.data.data[word.id]?.content ?? ''
+        );
+      }
+      if (footnotesQuery.isSuccess) {
+        setFootnoteContent(footnotesQuery.data.data[word.id]?.content ?? '');
+      }
     }
-  }, [word.id, translatorNotesQuery]);
+  }, [word.id, translatorNotesQuery, footnotesQuery]);
 
   const saveTranslatorNote = useMemo(
     () =>
@@ -93,13 +106,6 @@ export const TranslationSidebar = ({
       ),
     [language, translatorNotesQuery, word.id]
   );
-
-  useEffect(() => {
-    if (footnotesQuery.isSuccess && word.id !== wordId.current) {
-      wordId.current = word.id;
-      setFootnoteContent(footnotesQuery.data.data[word.id]?.content ?? '');
-    }
-  }, [word.id, footnotesQuery]);
 
   const saveFootnote = useMemo(
     () =>
