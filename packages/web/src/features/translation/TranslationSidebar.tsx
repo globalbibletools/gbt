@@ -50,6 +50,14 @@ export const TranslationSidebar = ({
     ? translatorNotesQuery.data.data[word.id]
     : null;
 
+  const footnotesQuery = useQuery(['verse-footnotes', language, verse.id], () =>
+    // TODO:
+    apiClient.verses.findTranslatorNotes(verse.id, language)
+  );
+  const footnote = footnotesQuery.isSuccess
+    ? footnotesQuery.data.data[word.id]
+    : null;
+
   const tabTitles = ['translate:lexicon', 'translate:notes'];
   if (showComments) {
     tabTitles.push('translate:comments');
@@ -59,7 +67,8 @@ export const TranslationSidebar = ({
   const canViewNote = userCan('read', { type: 'Language', id: language });
   const canEditNote = userCan('translate', { type: 'Language', id: language });
 
-  const [noteContent, setNoteContent] = useState('');
+  const [translatorNoteContent, setNoteContent] = useState('');
+  const [footnoteContent, setFootnoteContent] = useState('');
   const wordId = useRef('');
   useEffect(() => {
     if (translatorNotesQuery.isSuccess && word.id !== wordId.current) {
@@ -68,7 +77,7 @@ export const TranslationSidebar = ({
     }
   }, [word.id, translatorNotesQuery]);
 
-  const saveNote = useMemo(
+  const saveTranslatorNote = useMemo(
     () =>
       throttle(
         async (noteContent: string) => {
@@ -83,6 +92,25 @@ export const TranslationSidebar = ({
         { leading: false, trailing: true }
       ),
     [language, translatorNotesQuery, word.id]
+  );
+
+  useEffect(() => {
+    if (footnotesQuery.isSuccess && word.id !== wordId.current) {
+      wordId.current = word.id;
+      setFootnoteContent(footnotesQuery.data.data[word.id]?.content ?? '');
+    }
+  }, [word.id, footnotesQuery]);
+
+  const saveFootnote = useMemo(
+    () =>
+      throttle(
+        async (noteContent: string) => {
+          console.log('Saving Footnote!');
+        },
+        15000,
+        { leading: false, trailing: true }
+      ),
+    [language, footnotesQuery, word.id]
   );
 
   return (
@@ -168,19 +196,46 @@ export const TranslationSidebar = ({
                     )}
                     {canEditNote ? (
                       <RichTextInput
-                        key={word.id}
-                        name="noteContent"
-                        value={noteContent}
+                        key={`translatorNote--${word.id}`}
+                        name="translator"
+                        value={translatorNoteContent}
                         onBlur={async (e) => {
-                          saveNote(e.target.value);
-                          saveNote.flush();
+                          saveTranslatorNote(e.target.value);
+                          saveTranslatorNote.flush();
                         }}
                         onChange={async (e) => {
-                          saveNote(e.target.value);
+                          saveTranslatorNote(e.target.value);
                         }}
                       />
                     ) : (
-                      <RichText content={noteContent} />
+                      <RichText content={translatorNoteContent} />
+                    )}
+                    <h2 className="font-bold">{t('translate:footnotes')}</h2>
+                    {footnote?.authorName && (
+                      <span className="italic">
+                        {t('translate:note_description', {
+                          timestamp: footnote?.timestamp
+                            ? new Date(footnote?.timestamp).toLocaleString()
+                            : '',
+                          authorName: footnote?.authorName ?? '',
+                        })}
+                      </span>
+                    )}
+                    {canEditNote ? (
+                      <RichTextInput
+                        key={`footnote--${word.id}`}
+                        name="footnoteContent"
+                        value={footnoteContent}
+                        onBlur={async (e) => {
+                          saveFootnote(e.target.value);
+                          saveFootnote.flush();
+                        }}
+                        onChange={async (e) => {
+                          saveFootnote(e.target.value);
+                        }}
+                      />
+                    ) : (
+                      <RichText content={footnoteContent} />
                     )}
                   </>
                 )}
