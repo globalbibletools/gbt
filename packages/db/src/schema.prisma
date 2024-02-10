@@ -42,7 +42,8 @@ model AuthUser {
   emailVerifications UserEmailVerification[]
   /// The list of translator notes authored by this user.
   translatorNotes    TranslatorNote[]
-  Footnote           Footnote[]
+  /// The list of footnotes authored by this user.
+  footnotes          Footnote[]
 
   @@map("User")
 }
@@ -126,17 +127,17 @@ model Book {
 /// A verse within a Book of the Bible.
 model Verse {
   /// The ID of the verse in the format `BBCCCVVV`.
-  id      String @id
+  id           String             @id
   /// The verse number as it appears in most Bibles.
-  number  Int
+  number       Int
   /// The chapter number as it appears in most Bibles.
-  chapter Int
+  chapter      Int
   /// The book the verse belongs in.
-  book    Book   @relation(fields: [bookId], references: [id])
+  book         Book               @relation(fields: [bookId], references: [id])
   /// The ID of the book the verse belongs in.
-  bookId  Int
+  bookId       Int
   /// The list of words in the verse.
-  words   Word[]
+  words        Word[]
 
   @@unique([bookId, chapter, number])
 }
