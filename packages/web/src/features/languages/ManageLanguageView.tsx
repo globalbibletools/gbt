@@ -1,5 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { LanguageRole, TextDirection } from '@translation/api-types';
+import {
+  GetSessionResponse,
+  LanguageRole,
+  TextDirection,
+} from '@translation/api-types';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useLoaderData, useParams } from 'react-router-dom';
@@ -70,10 +74,15 @@ function useUpdateLanguageMemberMutation() {
         variables.userId,
         variables.roles
       ),
-    onSettled: (_, __, { code }, context) => {
+    onSettled: (_, __, { code, userId }, context) => {
       queryClient.invalidateQueries({
         queryKey: languageMembersQueryKey(code).queryKey,
       });
+      const session: GetSessionResponse | undefined = queryClient.getQueryData([
+        'session',
+      ]);
+      if (!session || session.user?.id === userId)
+        queryClient.invalidateQueries(['session']);
     },
   });
 }
@@ -83,10 +92,15 @@ function useRemoveLanguageMemberMutation() {
   return useMutation({
     mutationFn: (variables: { userId: string; code: string }) =>
       apiClient.languages.removeMember(variables.code, variables.userId),
-    onSettled: (_, __, { code }, context) => {
+    onSettled: (_, __, { code, userId }, context) => {
       queryClient.invalidateQueries({
         queryKey: languageMembersQueryKey(code).queryKey,
       });
+      const session: GetSessionResponse | undefined = queryClient.getQueryData([
+        'session',
+      ]);
+      if (!session || session.user?.id === userId)
+        queryClient.invalidateQueries(['session']);
     },
   });
 }
