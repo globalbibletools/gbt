@@ -209,7 +209,7 @@ export const TranslationSidebar = ({
                       {canEditNote ? (
                         <RichTextInput
                           key={`translatorNote--${word.id}`}
-                          name="translator"
+                          name="translatorNoteContent"
                           value={translatorNoteContent}
                           onBlur={async (e) => {
                             saveTranslatorNote(e.target.value);
