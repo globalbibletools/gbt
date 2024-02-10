@@ -187,67 +187,71 @@ export const TranslationSidebar = ({
               )}
             </Tab.Panel>
             <Tab.Panel>
-              <div className="flex flex-col gap-2 pb-2">
+              <div className="flex flex-col gap-6 pb-2">
                 {canViewNote && (
                   <>
-                    <h2 className="font-bold">
-                      {t('translate:translator_notes')}
-                    </h2>
-                    {translatorNote?.authorName && (
-                      <span className="italic">
-                        {t('translate:note_description', {
-                          timestamp: translatorNote?.timestamp
-                            ? new Date(
-                                translatorNote?.timestamp
-                              ).toLocaleString()
-                            : '',
-                          authorName: translatorNote?.authorName ?? '',
-                        })}
-                      </span>
-                    )}
-                    {canEditNote ? (
-                      <RichTextInput
-                        key={`translatorNote--${word.id}`}
-                        name="translator"
-                        value={translatorNoteContent}
-                        onBlur={async (e) => {
-                          saveTranslatorNote(e.target.value);
-                          saveTranslatorNote.flush();
-                        }}
-                        onChange={async (e) => {
-                          saveTranslatorNote(e.target.value);
-                        }}
-                      />
-                    ) : (
-                      <RichText content={translatorNoteContent} />
-                    )}
-                    <h2 className="font-bold">{t('translate:footnotes')}</h2>
-                    {footnote?.authorName && (
-                      <span className="italic">
-                        {t('translate:note_description', {
-                          timestamp: footnote?.timestamp
-                            ? new Date(footnote?.timestamp).toLocaleString()
-                            : '',
-                          authorName: footnote?.authorName ?? '',
-                        })}
-                      </span>
-                    )}
-                    {canEditNote ? (
-                      <RichTextInput
-                        key={`footnote--${word.id}`}
-                        name="footnoteContent"
-                        value={footnoteContent}
-                        onBlur={async (e) => {
-                          saveFootnote(e.target.value);
-                          saveFootnote.flush();
-                        }}
-                        onChange={async (e) => {
-                          saveFootnote(e.target.value);
-                        }}
-                      />
-                    ) : (
-                      <RichText content={footnoteContent} />
-                    )}
+                    <div className="flex flex-col gap-2">
+                      <h2 className="font-bold">
+                        {t('translate:translator_notes')}
+                      </h2>
+                      {translatorNote?.authorName && (
+                        <span className="italic">
+                          {t('translate:note_description', {
+                            timestamp: translatorNote?.timestamp
+                              ? new Date(
+                                  translatorNote?.timestamp
+                                ).toLocaleString()
+                              : '',
+                            authorName: translatorNote?.authorName ?? '',
+                          })}
+                        </span>
+                      )}
+                      {canEditNote ? (
+                        <RichTextInput
+                          key={`translatorNote--${word.id}`}
+                          name="translator"
+                          value={translatorNoteContent}
+                          onBlur={async (e) => {
+                            saveTranslatorNote(e.target.value);
+                            saveTranslatorNote.flush();
+                          }}
+                          onChange={async (e) => {
+                            saveTranslatorNote(e.target.value);
+                          }}
+                        />
+                      ) : (
+                        <RichText content={translatorNoteContent} />
+                      )}
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <h2 className="font-bold">{t('translate:footnotes')}</h2>
+                      {footnote?.authorName && (
+                        <span className="italic">
+                          {t('translate:note_description', {
+                            timestamp: footnote?.timestamp
+                              ? new Date(footnote?.timestamp).toLocaleString()
+                              : '',
+                            authorName: footnote?.authorName ?? '',
+                          })}
+                        </span>
+                      )}
+                      {canEditNote ? (
+                        <RichTextInput
+                          key={`footnote--${word.id}`}
+                          name="footnoteContent"
+                          value={footnoteContent}
+                          onBlur={async (e) => {
+                            saveFootnote(e.target.value);
+                            saveFootnote.flush();
+                          }}
+                          onChange={async (e) => {
+                            saveFootnote(e.target.value);
+                          }}
+                        />
+                      ) : (
+                        <RichText content={footnoteContent} />
+                      )}
+                    </div>
                   </>
                 )}
               </div>
