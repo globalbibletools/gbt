@@ -105,7 +105,12 @@ export const TranslationSidebar = ({
     () =>
       throttle(
         async (noteContent: string) => {
-          console.log('Saving Footnote!');
+          await apiClient.words.updateFootnote({
+            wordId: word.id,
+            language,
+            note: noteContent,
+          });
+          footnotesQuery.refetch();
         },
         15000,
         { leading: false, trailing: true }
