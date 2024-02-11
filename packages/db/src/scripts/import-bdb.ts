@@ -317,7 +317,7 @@ function processEntry(entry: string): string {
     entry
       // For some reason sefaria has empty tags in several entries.
       .replaceAll(/<(\/?)big>?/g, '<$1strong>')
-      .replaceAll(/<\/?a[^>]*>/g, '')
+      .replaceAll(/<a data-ref="([^"])"[^>]>/g, '<a data-ref="$1">')
       // We wrap all greek and hebrew text in a span so we can control its style separately.
       .replaceAll(
         /(?:[\u0591-\u05F4]+[^A-Za-z()<>{}]*)+[\u0591-\u05F4]+/g,

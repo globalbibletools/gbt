@@ -11,6 +11,8 @@ import { Icon } from '../../shared/components/Icon';
 import LoadingSpinner from '../../shared/components/LoadingSpinner';
 import RichText from '../../shared/components/RichText';
 import RichTextInput from '../../shared/components/form/RichTextInput';
+import { bookKeys } from 'data/book-keys';
+import { bookName } from './verse-utils';
 
 type TranslationSidebarProps = {
   language: string;
@@ -139,7 +141,8 @@ export const TranslationSidebar = ({
                     {lexiconResource?.resource}
                   </div>
                   <div
-                    className="leading-7 font-mixed"
+                    // data-ref="Genesis 1:1"
+                    className={`leading-7 font-mixed [&_a[data-ref="Genesis_1:1"]]:bg-yellow-300`}
                     dangerouslySetInnerHTML={{
                       __html: DOMPurify.sanitize(lexiconEntry),
                     }}
