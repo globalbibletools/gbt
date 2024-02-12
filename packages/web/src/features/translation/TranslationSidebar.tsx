@@ -93,17 +93,14 @@ export const TranslationSidebar = ({
   console.log(dataRef);
   const hebrewDataRef = isHebrew && dataRef;
 
-  useEffect(() => {
-    if (hebrewDataRef) {
-      document.styleSheets[0].insertRule(
-        `a[data-ref="${hebrewDataRef}"]{ background-color: yellow;}`,
-        0
-      );
-      return () => {
-        document.styleSheets[0].deleteRule(0);
-      };
-    }
-  }, [hebrewDataRef]);
+  const lexiconEntryHTML = useMemo(() => {
+    const domFrag = document.createElement('div');
+    domFrag.innerHTML = DOMPurify.sanitize(lexiconEntry);
+    domFrag
+      .querySelectorAll(`a[data-ref="${hebrewDataRef}"]`)
+      .forEach((element) => element.classList.add('bg-yellow-300'));
+    return domFrag.innerHTML ?? '';
+  }, [hebrewDataRef, lexiconEntry]);
 
   return (
     <div
@@ -160,9 +157,7 @@ export const TranslationSidebar = ({
                   </div>
                   <div
                     className="leading-7 font-mixed"
-                    dangerouslySetInnerHTML={{
-                      __html: DOMPurify.sanitize(lexiconEntry),
-                    }}
+                    dangerouslySetInnerHTML={{ __html: lexiconEntryHTML }}
                   />
                 </div>
               )}
