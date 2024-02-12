@@ -88,19 +88,22 @@ export const TranslationSidebar = ({
   );
   const { bookId, chapterNumber, verseNumber } = parseVerseId(verse.id);
   const isHebrew = bookId < 40;
-  console.log(lexiconEntry);
   const dataRef = `${bookRefNames[bookId - 1]} ${chapterNumber}:${verseNumber}`;
-  console.log(dataRef);
-  const hebrewDataRef = isHebrew && dataRef;
 
   const lexiconEntryHTML = useMemo(() => {
-    const domFrag = document.createElement('div');
-    domFrag.innerHTML = DOMPurify.sanitize(lexiconEntry);
-    domFrag
-      .querySelectorAll(`a[data-ref="${hebrewDataRef}"]`)
-      .forEach((element) => element.classList.add('bg-yellow-300'));
-    return domFrag.innerHTML ?? '';
-  }, [hebrewDataRef, lexiconEntry]);
+    if (isHebrew) {
+      const domFrag = document.createElement('div');
+      domFrag.innerHTML = DOMPurify.sanitize(lexiconEntry);
+      domFrag
+        .querySelectorAll(`a[data-ref="${dataRef}"]`)
+        .forEach((element) => {
+          element.classList.add('bg-yellow-300');
+          element.removeAttribute('href');
+        });
+      return domFrag.innerHTML ?? '';
+    }
+    return DOMPurify.sanitize(lexiconEntry);
+  }, [isHebrew, dataRef, lexiconEntry]);
 
   return (
     <div
