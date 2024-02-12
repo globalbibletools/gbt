@@ -11,8 +11,8 @@ import { Icon } from '../../shared/components/Icon';
 import LoadingSpinner from '../../shared/components/LoadingSpinner';
 import RichText from '../../shared/components/RichText';
 import RichTextInput from '../../shared/components/form/RichTextInput';
-import { bookKeys } from 'data/book-keys';
-import { bookName } from './verse-utils';
+import { bookRefNames } from 'data/book-ref-names';
+import { parseVerseId } from './verse-utils';
 
 type TranslationSidebarProps = {
   language: string;
@@ -86,6 +86,24 @@ export const TranslationSidebar = ({
       ),
     [language, translatorNotesQuery, word.id]
   );
+  const { bookId, chapterNumber, verseNumber } = parseVerseId(verse.id);
+  const isHebrew = bookId < 40;
+  console.log(lexiconEntry);
+  const dataRef = `${bookRefNames[bookId - 1]} ${chapterNumber}:${verseNumber}`;
+  console.log(dataRef);
+  const hebrewDataRef = isHebrew && dataRef;
+
+  useEffect(() => {
+    if (hebrewDataRef) {
+      document.styleSheets[0].insertRule(
+        `a[data-ref="${hebrewDataRef}"]{ background-color: yellow;}`,
+        0
+      );
+      return () => {
+        document.styleSheets[0].deleteRule(0);
+      };
+    }
+  }, [hebrewDataRef]);
 
   return (
     <div
@@ -141,8 +159,7 @@ export const TranslationSidebar = ({
                     {lexiconResource?.resource}
                   </div>
                   <div
-                    // data-ref="Genesis 1:1"
-                    className={`leading-7 font-mixed [&_a[data-ref="Genesis_1:1"]]:bg-yellow-300`}
+                    className="leading-7 font-mixed"
                     dangerouslySetInnerHTML={{
                       __html: DOMPurify.sanitize(lexiconEntry),
                     }}
