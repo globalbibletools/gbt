@@ -11,7 +11,7 @@ import { Icon } from '../../shared/components/Icon';
 import LoadingSpinner from '../../shared/components/LoadingSpinner';
 import RichText from '../../shared/components/RichText';
 import RichTextInput from '../../shared/components/form/RichTextInput';
-import { bookRefNames } from 'data/book-ref-names';
+import { bdbBookRefNames } from 'data/book-ref-names';
 import { parseVerseId } from './verse-utils';
 
 type TranslationSidebarProps = {
@@ -88,22 +88,27 @@ export const TranslationSidebar = ({
   );
   const { bookId, chapterNumber, verseNumber } = parseVerseId(verse.id);
   const isHebrew = bookId < 40;
-  const dataRef = `${bookRefNames[bookId - 1]} ${chapterNumber}:${verseNumber}`;
+  const bdbCurrentVerseRef = `${
+    bdbBookRefNames[bookId - 1]
+  } ${chapterNumber}:${verseNumber}`;
 
   const lexiconEntryHTML = useMemo(() => {
     if (isHebrew) {
-      const domFrag = document.createElement('div');
-      domFrag.innerHTML = DOMPurify.sanitize(lexiconEntry);
-      domFrag
-        .querySelectorAll(`a[data-ref="${dataRef}"]`)
+      const modifiedLexiconEntryElement = document.createElement('div');
+      modifiedLexiconEntryElement.innerHTML = DOMPurify.sanitize(lexiconEntry);
+      // Remove the href on verse references (since these hrefs don't point to anywhere in our app)
+      modifiedLexiconEntryElement
+        .querySelectorAll('a')
+        .forEach((element) => element.removeAttribute('href'));
+      // Highlight references to the currently selected verse
+      modifiedLexiconEntryElement
+        .querySelectorAll(`a[data-ref="${bdbCurrentVerseRef}"]`)
         .forEach((element) => {
           element.classList.add('bg-yellow-300');
-          element.removeAttribute('href');
         });
-      return domFrag.innerHTML ?? '';
-    }
-    return DOMPurify.sanitize(lexiconEntry);
-  }, [isHebrew, dataRef, lexiconEntry]);
+      return modifiedLexiconEntryElement.innerHTML ?? '';
+    } else return DOMPurify.sanitize(lexiconEntry);
+  }, [isHebrew, bdbCurrentVerseRef, lexiconEntry]);
 
   return (
     <div

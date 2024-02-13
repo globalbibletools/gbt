@@ -1,7 +1,5 @@
-// TODO: update comment
-// The keys used in translation files to refer to each book.
-// The keys are all length 3 and match the file names in data/morphology
-export const bookRefNames = [
+// The book names here are used by verse refs in BDB lexicon entries.
+export const bdbBookRefNames = [
   'Genesis',
   'Exodus',
   'Leviticus',
