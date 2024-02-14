@@ -42,26 +42,16 @@ export const TranslationSidebar = ({
   );
   const lexiconEntry = lexiconResource?.entry ?? '';
 
-  const translatorNotesQuery = useQuery(
+  const notesQuery = useQuery(
     ['verse-translator-notes', language, verse.id],
-    () => apiClient.verses.findTranslatorNotes(verse.id, language)
+    () => apiClient.verses.findNotes(verse.id, language)
   );
-  const translatorNote = translatorNotesQuery.isSuccess
-    ? translatorNotesQuery.data.data[word.id]
+  const translatorNote = notesQuery.isSuccess
+    ? notesQuery.data.data.translatorNotes[word.id]
     : null;
 
-  const footnotesQuery = useQuery(
-    ['verse-footnotes', language, verse.id],
-    async () => {
-      const footnotes = await apiClient.verses.findFootnotes(
-        verse.id,
-        language
-      );
-      return footnotes;
-    }
-  );
-  const footnote = footnotesQuery.isSuccess
-    ? footnotesQuery.data.data[word.id]
+  const footnote = notesQuery.isSuccess
+    ? notesQuery.data.data.footnotes[word.id]
     : null;
 
   const tabTitles = ['translate:lexicon', 'translate:notes'];
@@ -80,18 +70,16 @@ export const TranslationSidebar = ({
   const [footnoteContent, setFootnoteContent] = useState('');
   const wordId = useRef('');
   useEffect(() => {
-    if (
-      translatorNotesQuery.isSuccess &&
-      footnotesQuery.isSuccess &&
-      word.id !== wordId.current
-    ) {
+    if (notesQuery.isSuccess && word.id !== wordId.current) {
       wordId.current = word.id;
       setTranslatorNoteContent(
-        translatorNotesQuery.data.data[word.id]?.content ?? ''
+        notesQuery.data.data.translatorNotes[word.id]?.content ?? ''
       );
-      setFootnoteContent(footnotesQuery.data.data[word.id]?.content ?? '');
+      setFootnoteContent(
+        notesQuery.data.data.footnotes[word.id]?.content ?? ''
+      );
     }
-  }, [word.id, translatorNotesQuery, footnotesQuery]);
+  }, [word.id, notesQuery]);
 
   const saveTranslatorNote = useMemo(
     () =>
@@ -102,12 +90,12 @@ export const TranslationSidebar = ({
             language,
             note: noteContent,
           });
-          translatorNotesQuery.refetch();
+          notesQuery.refetch();
         },
         15000,
         { leading: false, trailing: true }
       ),
-    [language, translatorNotesQuery, word.id]
+    [language, notesQuery, word.id]
   );
 
   const saveFootnote = useMemo(
@@ -119,12 +107,12 @@ export const TranslationSidebar = ({
             language,
             note: noteContent,
           });
-          footnotesQuery.refetch();
+          notesQuery.refetch();
         },
         15000,
         { leading: false, trailing: true }
       ),
-    [language, footnotesQuery, word.id]
+    [language, notesQuery, word.id]
   );
 
   return (

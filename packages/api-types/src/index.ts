@@ -192,10 +192,6 @@ export interface TranslatorNote {
   content: string;
 }
 
-export interface GetVerseTranslatorNotesResponseBody {
-  data: Record<string, TranslatorNote>;
-}
-
 export interface PatchWordTranslatorNoteRequestBody {
   note: string;
 }
@@ -207,12 +203,15 @@ export interface Footnote {
   content: string;
 }
 
-export interface GetVerseFootnotesResponseBody {
-  data: Record<string, Footnote>;
-}
-
 export interface PatchWordFootnoteRequestBody {
   note: string;
+}
+
+export interface GetVerseNotesResponseBody {
+  data: {
+    footnotes: Record<string, Footnote>;
+    translatorNotes: Record<string, TranslatorNote>;
+  };
 }
 
 export interface SNSConfirmSubscriptionMessage {

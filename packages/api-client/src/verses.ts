@@ -2,8 +2,7 @@ import type {
   GetVerseGlossesResponseBody,
   GetVerseResponseBody,
   GetLemmaResourcesResponseBody,
-  GetVerseTranslatorNotesResponseBody,
-  GetVerseFootnotesResponseBody,
+  GetVerseNotesResponseBody,
 } from '@translation/api-types';
 import ApiClient from './client';
 
@@ -31,21 +30,12 @@ export default class Verses {
     return this.client.get({ path: `/api/verses/${verseId}/lemma-resources` });
   }
 
-  findTranslatorNotes(
+  findNotes(
     verseId: string,
     language: string
-  ): Promise<GetVerseTranslatorNotesResponseBody> {
+  ): Promise<GetVerseNotesResponseBody> {
     return this.client.get({
-      path: `/api/languages/${language}/verses/${verseId}/translator-notes`,
-    });
-  }
-
-  findFootnotes(
-    verseId: string,
-    language: string
-  ): Promise<GetVerseFootnotesResponseBody> {
-    return this.client.get({
-      path: `/api/languages/${language}/verses/${verseId}/footnotes`,
+      path: `/api/languages/${language}/verses/${verseId}/notes`,
     });
   }
 }
