@@ -103,9 +103,7 @@ export const TranslationSidebar = ({
       // Highlight references to the currently selected verse
       modifiedLexiconEntryElement
         .querySelectorAll(`a[data-ref="${bdbCurrentVerseRef}"]`)
-        .forEach((element) => {
-          element.classList.add('bg-yellow-300');
-        });
+        .forEach((element) => element.classList.add('bg-yellow-300'));
       return modifiedLexiconEntryElement.innerHTML ?? '';
     } else return DOMPurify.sanitize(lexiconEntry);
   }, [isHebrew, bdbCurrentVerseRef, lexiconEntry]);
