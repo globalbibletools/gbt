@@ -1,4 +1,5 @@
 import type {
+  PatchWordFootnoteRequestBody,
   PatchWordGlossRequestBody,
   PatchWordTranslatorNoteRequestBody,
 } from '@translation/api-types';
@@ -32,7 +33,21 @@ export default class Words {
     language: string;
   }): Promise<void> {
     await this.client.patch({
-      path: `/api/languages/${language}/words/${wordId}/note`,
+      path: `/api/languages/${language}/words/${wordId}/translator-note`,
+      body,
+    });
+  }
+
+  async updateFootnote({
+    wordId,
+    language,
+    ...body
+  }: PatchWordFootnoteRequestBody & {
+    wordId: string;
+    language: string;
+  }): Promise<void> {
+    await this.client.patch({
+      path: `/api/languages/${language}/words/${wordId}/footnote`,
       body,
     });
   }

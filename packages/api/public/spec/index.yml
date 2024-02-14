@@ -42,8 +42,10 @@ paths:
     $ref: ./paths/translation/verse-notes.yml
   /languages/{code}/words/{wordId}/gloss:
     $ref: ./paths/languages/word-gloss.yml
-  /languages/{code}/words/{wordId}/note:
-    $ref: ./paths/languages/word-note.yml
+  /languages/{code}/words/{wordId}/translator-note:
+    $ref: ./paths/languages/word-translator-note.yml
+  /languages/{code}/words/{wordId}/footnote:
+    $ref: ./paths/languages/word-footnote.yml
   /languages/{code}/members:
     $ref: ./paths/languages/language-members.yml
   /languages/{code}/members/{userId}:

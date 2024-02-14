@@ -42,6 +42,8 @@ model AuthUser {
   emailVerifications UserEmailVerification[]
   /// The list of translator notes authored by this user.
   translatorNotes    TranslatorNote[]
+  /// The list of footnotes authored by this user.
+  footnotes          Footnote[]
 
   @@map("User")
 }
@@ -160,6 +162,8 @@ model Word {
   machineGlosses  MachineGloss[]
   // The list of translator notes in different languages for this word.
   translatorNotes TranslatorNote[]
+  // The list of footnotes in different languages for this word.
+  footnotes       Footnote[]
 
   @@index([formId])
 }
@@ -215,6 +219,8 @@ model Language {
   machineGlosses      MachineGloss[]
   // The list of translator notes of different words for this language.
   translatorNotes     TranslatorNote[]
+  // The list of footnotes of different words for this language.
+  footnotes           Footnote[]
   /// The list of roles for members of this language.
   roles               LanguageMemberRole[]
   /// The pending import job if any.
@@ -319,6 +325,28 @@ enum ResourceCode {
 
 /// The translator note for a word in a particular language.
 model TranslatorNote {
+  /// The word being noted.
+  word       Word     @relation(fields: [wordId], references: [id])
+  /// The ID of the word being noted.
+  wordId     String
+  /// The language that the note applies to.
+  language   Language @relation(fields: [languageId], references: [id])
+  /// The ID of the language that the note applies to.
+  languageId String   @db.Uuid
+  /// The author of the most recent update to the note.
+  author     AuthUser @relation(fields: [authorId], references: [id])
+  /// The ID of the author of the most recent update to the note.
+  authorId   String   @db.Uuid
+  /// The timestamp of the last update.
+  timestamp  DateTime
+  /// The content of the note.
+  content    String
+
+  @@id([wordId, languageId])
+}
+
+/// The footnote for a word in a particular language.
+model Footnote {
   /// The word being noted.
   word       Word     @relation(fields: [wordId], references: [id])
   /// The ID of the word being noted.
