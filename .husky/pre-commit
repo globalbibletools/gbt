@@ -2,7 +2,3 @@
 . "$(dirname -- "$0")/_/husky.sh"
 
 npx lint-staged --relative
-
-nx prisma db format
-# Add the changes made by prisma format to the commit
-git add ./packages/db/src/schema.prisma
