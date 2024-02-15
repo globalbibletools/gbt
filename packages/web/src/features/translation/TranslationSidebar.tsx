@@ -11,7 +11,7 @@ import { Icon } from '../../shared/components/Icon';
 import LoadingSpinner from '../../shared/components/LoadingSpinner';
 import RichText from '../../shared/components/RichText';
 import RichTextInput from '../../shared/components/form/RichTextInput';
-import { bdbBookRefNames } from 'data/book-ref-names';
+import { bdbBookRefNames } from 'data/bdb-book-ref-namess';
 import { parseVerseId } from './verse-utils';
 
 type TranslationSidebarProps = {
