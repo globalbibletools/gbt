@@ -1,7 +1,7 @@
 get:
   tags:
     - Languages
-  summary: Get the translator notes for all the words of a verse for a language.
+  summary: Get the notes for all the words of a verse for a language.
   parameters:
     - $ref: '../../schemas/parameters.yml#languageCode'
     - $ref: '../../schemas/parameters.yml#verseId'
@@ -14,28 +14,57 @@ get:
             type: object
             properties:
               data:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    wordId:
-                      type: string
-                      description: The unique ID for the word in the verse.
-                    authorName:
-                      type: string
-                      description: The name of the author of the note.
-                    timestamp:
-                      type: number
-                      description: The UTC timestamp of the note's last update.
-                    content:
-                      type: string
-                      description: The HTML content of the note.
-                example:
-                  - wordId: 4000100104
-                    authorName: 'John Doe'
-                    timestamp: 1706090452256
-                    content: '<p>This is the note.</p>'
-                  - wordId: 4000100105
-                    authorName: 'Jane Smith'
-                    timestamp: 1704090452256
-                    content: '<p>This is another note.</p>'
+                type: object
+                properties:
+                  translatorNotes:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        wordId:
+                          type: string
+                          description: The unique ID for the word in the verse.
+                        authorName:
+                          type: string
+                          description: The name of the author of the note.
+                        timestamp:
+                          type: number
+                          description: The UTC timestamp of the note's last update.
+                        content:
+                          type: string
+                          description: The HTML content of the note.
+                    example:
+                      - wordId: 4000100104
+                        authorName: 'John Doe'
+                        timestamp: 1706090452256
+                        content: '<p>This is the translator note.</p>'
+                      - wordId: 4000100105
+                        authorName: 'Jane Smith'
+                        timestamp: 1704090452256
+                        content: '<p>This is another translator note.</p>'
+                  footnotes:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        wordId:
+                          type: string
+                          description: The unique ID for the word in the verse.
+                        authorName:
+                          type: string
+                          description: The name of the author of the note.
+                        timestamp:
+                          type: number
+                          description: The UTC timestamp of the note's last update.
+                        content:
+                          type: string
+                          description: The HTML content of the note.
+                    example:
+                      - wordId: 4000100104
+                        authorName: 'John Doe'
+                        timestamp: 1706090452256
+                        content: '<p>This is the footnote.</p>'
+                      - wordId: 4000100105
+                        authorName: 'Jane Smith'
+                        timestamp: 1704090452256
+                        content: '<p>This is another footnote.</p>'
