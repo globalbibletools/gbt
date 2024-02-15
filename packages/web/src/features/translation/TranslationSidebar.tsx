@@ -126,10 +126,6 @@ export const TranslationSidebar = ({
     if (isHebrew) {
       const modifiedLexiconEntryElement = document.createElement('div');
       modifiedLexiconEntryElement.innerHTML = DOMPurify.sanitize(lexiconEntry);
-      // Remove the href on verse references (since these hrefs don't point to anywhere in our app)
-      modifiedLexiconEntryElement
-        .querySelectorAll('a')
-        .forEach((element) => element.removeAttribute('href'));
       // Highlight references to the currently selected verse
       modifiedLexiconEntryElement
         .querySelectorAll(`a[data-ref="${bdbCurrentVerseRef}"]`)
