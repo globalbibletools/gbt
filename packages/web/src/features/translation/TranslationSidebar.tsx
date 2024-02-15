@@ -122,16 +122,16 @@ export const TranslationSidebar = ({
     bdbBookRefNames[bookId - 1]
   } ${chapterNumber}:${verseNumber}`;
 
-  const lexiconEntryHTML = useMemo(() => {
+  const lexiconEntryRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
     if (isHebrew) {
-      const modifiedLexiconEntryElement = document.createElement('div');
-      modifiedLexiconEntryElement.innerHTML = DOMPurify.sanitize(lexiconEntry);
+      const { current } = lexiconEntryRef;
       // Highlight references to the currently selected verse
-      modifiedLexiconEntryElement
-        .querySelectorAll(`a[data-ref="${bdbCurrentVerseRef}"]`)
+      current
+        ?.querySelectorAll(`a[data-ref="${bdbCurrentVerseRef}"]`)
         .forEach((element) => element.classList.add('bg-yellow-300'));
-      return modifiedLexiconEntryElement.innerHTML ?? '';
-    } else return DOMPurify.sanitize(lexiconEntry);
+    }
   }, [isHebrew, bdbCurrentVerseRef, lexiconEntry]);
 
   return (
@@ -189,7 +189,10 @@ export const TranslationSidebar = ({
                   </div>
                   <div
                     className="leading-7 font-mixed"
-                    dangerouslySetInnerHTML={{ __html: lexiconEntryHTML }}
+                    ref={lexiconEntryRef}
+                    dangerouslySetInnerHTML={{
+                      __html: DOMPurify.sanitize(lexiconEntry),
+                    }}
                   />
                 </div>
               )}
