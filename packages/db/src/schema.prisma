@@ -44,6 +44,8 @@ model AuthUser {
   translatorNotes    TranslatorNote[]
   /// The list of footnotes authored by this user.
   footnotes          Footnote[]
+  /// The list of gloss updates this user has performed.
+  glossHistory       GlossHistory[]
 
   @@map("User")
 }
@@ -164,6 +166,8 @@ model Word {
   translatorNotes TranslatorNote[]
   // The list of footnotes in different languages for this word.
   footnotes       Footnote[]
+  /// The gloss updates applied to this word.
+  glossHistory    GlossHistory[]
 
   @@index([formId])
 }
@@ -225,6 +229,8 @@ model Language {
   roles               LanguageMemberRole[]
   /// The pending import job if any.
   importJob           LanguageImportJob?
+  // The gloss history for this language.
+  glossHistory        GlossHistory[]
 }
 
 /// Keeps track of a language import job.
@@ -365,4 +371,28 @@ model Footnote {
   content    String
 
   @@id([wordId, languageId])
+}
+
+/// Represents a gloss update to a word for a particular language.
+model GlossHistory {
+  /// The word whose gloss is being updated.
+  word       Word        @relation(fields: [wordId], references: [id])
+  /// The ID of the word whose gloss is being updated.
+  wordId     String
+  /// The language of the updated gloss.
+  language   Language    @relation(fields: [languageId], references: [id])
+  /// The ID of the language of the updated gloss.
+  languageId String      @db.Uuid
+  /// The timestamp that the gloss was updated.
+  timestamp  DateTime
+  /// The user who updated the gloss.
+  user       AuthUser?   @relation(fields: [userId], references: [id])
+  /// The ID of the user who updated the gloss
+  userId     String?     @db.Uuid
+  /// The updated text of the gloss. Null indicates no change.
+  gloss      String?
+  /// The updated approval state of the gloss. Null indicate no change.
+  state      GlossState?
+
+  @@id([wordId, languageId, timestamp])
 }
