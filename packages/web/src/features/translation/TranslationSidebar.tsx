@@ -117,7 +117,6 @@ export const TranslationSidebar = ({
     [language, notesQuery, word.id]
   );
   const { bookId, chapterNumber, verseNumber } = parseVerseId(verse.id);
-  const isHebrew = bookId < 40;
   const bdbCurrentVerseRef = `${
     bdbBookRefNames[bookId - 1]
   } ${chapterNumber}:${verseNumber}`;
@@ -125,14 +124,12 @@ export const TranslationSidebar = ({
   const lexiconEntryRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (isHebrew) {
-      const { current } = lexiconEntryRef;
-      // Highlight references to the currently selected verse
-      current
-        ?.querySelectorAll(`a[data-ref="${bdbCurrentVerseRef}"]`)
-        .forEach((element) => element.classList.add('bg-yellow-300'));
-    }
-  }, [isHebrew, bdbCurrentVerseRef, lexiconEntry]);
+    const { current } = lexiconEntryRef;
+    // Highlight references to the currently selected verse
+    current
+      ?.querySelectorAll(`a[data-ref="${bdbCurrentVerseRef}"]`)
+      .forEach((element) => element.classList.add('bg-yellow-300'));
+  }, [bdbCurrentVerseRef, lexiconEntry]);
 
   return (
     <div
