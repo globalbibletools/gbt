@@ -11,6 +11,8 @@ import { Icon } from '../../shared/components/Icon';
 import LoadingSpinner from '../../shared/components/LoadingSpinner';
 import RichText from '../../shared/components/RichText';
 import RichTextInput from '../../shared/components/form/RichTextInput';
+import { bdbBookRefNames } from 'data/bdb-book-ref-names';
+import { parseVerseId } from './verse-utils';
 
 type TranslationSidebarProps = {
   language: string;
@@ -114,6 +116,20 @@ export const TranslationSidebar = ({
       ),
     [language, notesQuery, word.id]
   );
+  const { bookId, chapterNumber, verseNumber } = parseVerseId(verse.id);
+  const bdbCurrentVerseRef = `${
+    bdbBookRefNames[bookId - 1]
+  } ${chapterNumber}:${verseNumber}`;
+
+  const lexiconEntryRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const { current } = lexiconEntryRef;
+    // Highlight references to the currently selected verse
+    current
+      ?.querySelectorAll(`a[data-ref="${bdbCurrentVerseRef}"]`)
+      .forEach((element) => element.classList.add('bg-yellow-300'));
+  }, [bdbCurrentVerseRef, lexiconEntry]);
 
   return (
     <div
@@ -170,6 +186,7 @@ export const TranslationSidebar = ({
                   </div>
                   <div
                     className="leading-7 font-mixed"
+                    ref={lexiconEntryRef}
                     dangerouslySetInnerHTML={{
                       __html: DOMPurify.sanitize(lexiconEntry),
                     }}
