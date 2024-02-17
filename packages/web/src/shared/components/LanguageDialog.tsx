@@ -1,9 +1,9 @@
 import { forwardRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import Dialog, { DialogRef } from '../shared/components/Dialog';
-import { Icon } from '../shared/components/Icon';
-import languages from './languages.json';
-import ComboboxInput from '../shared/components/form/ComboboxInput';
+import Dialog, { DialogRef } from './Dialog';
+import { Icon } from './Icon';
+import languages from '../languages.json';
+import ComboboxInput from './form/ComboboxInput';
 
 const LanguageDialog = forwardRef<DialogRef>((_, ref) => {
   const { i18n } = useTranslation(['languages']);

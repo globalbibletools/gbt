@@ -8,7 +8,7 @@ import { authorize } from '../../shared/accessControl';
 import UpdateProfileView from './UpdateProfileView';
 import EmailVerificationView from './EmailVerificationView';
 
-const routes: RouteObject[] = [
+export const userPageRoutes: RouteObject[] = [
   {
     path: 'users',
     loader: () => authorize('administer', 'User'),
@@ -20,12 +20,15 @@ const routes: RouteObject[] = [
     element: <InviteUserView />,
   },
   {
-    path: 'login',
-    element: <LoginView />,
-  },
-  {
     path: 'profile',
     element: <UpdateProfileView />,
+  },
+];
+
+export const userModalRoutes: RouteObject[] = [
+  {
+    path: 'login',
+    element: <LoginView />,
   },
   {
     path: 'invite',
@@ -37,5 +40,3 @@ const routes: RouteObject[] = [
     element: <EmailVerificationView />,
   },
 ];
-
-export default routes;

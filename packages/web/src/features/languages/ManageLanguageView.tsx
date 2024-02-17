@@ -24,7 +24,7 @@ import {
 import View from '../../shared/components/View';
 import ViewTitle from '../../shared/components/ViewTitle';
 import Button from '../../shared/components/actions/Button';
-import { Link } from '../../shared/components/actions/Link';
+import Link from '../../shared/components/actions/Link';
 import {
   ButtonSelectorInput,
   ButtonSelectorOption,

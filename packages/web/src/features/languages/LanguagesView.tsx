@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { Link } from '../../shared/components/actions/Link';
+import Link from '../../shared/components/actions/Link';
 import apiClient from '../../shared/apiClient';
 import { Icon } from '../../shared/components/Icon';
 import {

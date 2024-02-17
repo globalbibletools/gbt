@@ -1,8 +1,9 @@
 import { createBrowserRouter, redirect } from 'react-router-dom';
 import translationRoutes from '../features/translation/router';
 import languagesRoutes from '../features/languages/router';
-import userRoutes from '../features/users/router';
+import { userPageRoutes, userModalRoutes } from '../features/users/router';
 import Layout from './Layout';
+import ModalLayout from './ModalLayout';
 import ErrorView from './ErrorView';
 
 const router = createBrowserRouter([
@@ -17,10 +18,15 @@ const router = createBrowserRouter([
           return redirect('/interlinear');
         },
       },
-      ...userRoutes,
+      ...userPageRoutes,
       ...translationRoutes,
       ...languagesRoutes,
     ],
+  },
+  {
+    element: <ModalLayout />,
+    errorElement: <ErrorView />,
+    children: [...userModalRoutes],
   },
 ]);
 

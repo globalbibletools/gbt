@@ -2,9 +2,9 @@ import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { DialogRef } from '../shared/components/Dialog';
 import { Icon } from '../shared/components/Icon';
-import LanguageDialog from './LanguageDialog';
+import LanguageDialog from '../shared/components/LanguageDialog';
 import { initialLanguageChosen } from './i18n';
-import interfaceLanguages from './languages.json';
+import interfaceLanguages from '../shared/languages.json';
 
 export default function Footer() {
   const languageDialog = useRef<DialogRef>(null);

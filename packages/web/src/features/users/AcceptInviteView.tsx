@@ -3,12 +3,12 @@ import { useForm } from 'react-hook-form';
 import Card from '../../shared/components/Card';
 import FormLabel from '../../shared/components/form/FormLabel';
 import TextInput from '../../shared/components/form/TextInput';
-import View from '../../shared/components/View';
-import ViewTitle from '../../shared/components/ViewTitle';
+import ModalView, { ModalViewTitle } from '../../shared/components/ModalView';
 import apiClient from '../../shared/apiClient';
 import Form from '../../shared/components/form/Form';
 import InputError from '../../shared/components/form/InputError';
 import Button from '../../shared/components/actions/Button';
+import Link from '../../shared/components/actions/Link';
 import SubmittingIndicator from '../../shared/components/form/SubmittingIndicator';
 import { useFlash } from '../../shared/hooks/flash';
 import useAuth from '../../shared/hooks/useAuth';
@@ -86,115 +86,126 @@ export default function AcceptInviteView() {
   }
 
   return (
-    <View fitToScreen className="flex items-start justify-center">
-      <Card className="flex-shrink p-6 mx-4 mt-4 w-96">
-        <ViewTitle>{t('users:create_account')}</ViewTitle>
-        <Form context={formContext} onSubmit={onSubmit}>
-          <div className="mb-4">
-            <FormLabel htmlFor="email">
-              {t('users:email').toUpperCase()}
-            </FormLabel>
-            <input
-              id="email"
-              className="block w-full"
-              readOnly
-              defaultValue={invite.email}
-            />
-          </div>
-          <div className="flex gap-4 mb-2">
-            <div className="flex-1 w-full">
-              <FormLabel htmlFor="first-name">
-                {t('users:first_name').toUpperCase()}
-              </FormLabel>
-              <TextInput
-                {...formContext.register('firstName', {
-                  required: true,
-                })}
-                id="first-name"
-                className="w-full"
-                autoComplete="given-name"
-                aria-describedby="first-name-error"
-              />
-              <InputError
-                id="first-name-error"
-                name="firstName"
-                messages={{ required: t('users:errors.name_required') }}
-              />
-            </div>
-            <div className="flex-1 w-full">
-              <FormLabel htmlFor="last-name">
-                {t('users:last_name').toUpperCase()}
-              </FormLabel>
-              <TextInput
-                {...formContext.register('lastName', {
-                  required: true,
-                })}
-                id="last-name"
-                className="w-full"
-                autoComplete="family-name"
-                aria-describedby="last-name-error"
-              />
-              <InputError
-                id="last-name-error"
-                name="lastName"
-                messages={{ required: t('users:errors.name_required') }}
-              />
-            </div>
-          </div>
-          <div className="mb-2">
-            <FormLabel htmlFor="password">
-              {t('users:password').toUpperCase()}
+    <ModalView
+      className="max-w-[480px] w-full"
+      header={
+        <Button to="/login" variant="tertiary">
+          Log In
+        </Button>
+      }
+    >
+      <ModalViewTitle>{t('users:create_account')}</ModalViewTitle>
+      <Form
+        context={formContext}
+        onSubmit={onSubmit}
+        className="max-w-[320px] w-full mx-auto"
+      >
+        <div className="mb-4">
+          <FormLabel htmlFor="email">
+            {t('users:email').toUpperCase()}
+          </FormLabel>
+          <TextInput
+            id="email"
+            className="w-full bg-gray-200"
+            readOnly
+            defaultValue={invite.email}
+          />
+        </div>
+        <div className="flex gap-4 mb-4">
+          <div className="flex-1 w-full">
+            <FormLabel htmlFor="first-name">
+              {t('users:first_name').toUpperCase()}
             </FormLabel>
             <TextInput
-              {...formContext.register('password', {
+              {...formContext.register('firstName', {
                 required: true,
-                minLength: 8,
               })}
-              type="password"
-              id="password"
+              id="first-name"
               className="w-full"
-              autoComplete="new-password"
-              aria-describedby="password-error"
+              autoComplete="given-name"
+              aria-describedby="first-name-error"
             />
             <InputError
-              id="password-error"
-              name="password"
-              messages={{
-                required: t('users:errors.password_required'),
-                minLength: t('users:errors.password_format'),
-              }}
+              id="first-name-error"
+              name="firstName"
+              messages={{ required: t('users:errors.name_required') }}
             />
           </div>
-          <div className="mb-2">
-            <FormLabel htmlFor="confirm-password">
-              {t('users:confirm_password').toUpperCase()}
+          <div className="flex-1 w-full">
+            <FormLabel htmlFor="last-name">
+              {t('users:last_name').toUpperCase()}
             </FormLabel>
             <TextInput
-              {...formContext.register('confirmPassword', {
+              {...formContext.register('lastName', {
                 required: true,
-                validate: {
-                  confirms: (value: unknown) =>
-                    value === formContext.getValues().password,
-                },
               })}
-              type="password"
-              id="confirm-password"
+              id="last-name"
               className="w-full"
-              autoComplete="new-password"
-              aria-describedby="confirm-password-error"
+              autoComplete="family-name"
+              aria-describedby="last-name-error"
             />
             <InputError
-              id="confirm-password-error"
-              name="confirmPassword"
-              messages={{ confirms: t('users:errors.password_confirmation') }}
+              id="last-name-error"
+              name="lastName"
+              messages={{ required: t('users:errors.name_required') }}
             />
           </div>
-          <div>
-            <Button type="submit">{t('common:create')}</Button>
-            <SubmittingIndicator className="ms-3" />
-          </div>
-        </Form>
-      </Card>
-    </View>
+        </div>
+        <div className="mb-4">
+          <FormLabel htmlFor="password">
+            {t('users:password').toUpperCase()}
+          </FormLabel>
+          <TextInput
+            {...formContext.register('password', {
+              required: true,
+              minLength: 8,
+            })}
+            type="password"
+            id="password"
+            className="w-full"
+            autoComplete="new-password"
+            aria-describedby="password-error"
+          />
+          <InputError
+            id="password-error"
+            name="password"
+            messages={{
+              required: t('users:errors.password_required'),
+              minLength: t('users:errors.password_format'),
+            }}
+          />
+        </div>
+        <div className="mb-6">
+          <FormLabel htmlFor="confirm-password">
+            {t('users:confirm_password').toUpperCase()}
+          </FormLabel>
+          <TextInput
+            {...formContext.register('confirmPassword', {
+              required: true,
+              validate: {
+                confirms: (value: unknown) =>
+                  value === formContext.getValues().password,
+              },
+            })}
+            type="password"
+            id="confirm-password"
+            className="w-full"
+            autoComplete="new-password"
+            aria-describedby="confirm-password-error"
+          />
+          <InputError
+            id="confirm-password-error"
+            name="confirmPassword"
+            messages={{ confirms: t('users:errors.password_confirmation') }}
+          />
+        </div>
+        <Button className="w-full" type="submit">
+          {t('common:create')}
+        </Button>
+        <div>
+          <SubmittingIndicator className="ms-3" />
+        </div>
+      </Form>
+    </ModalView>
   );
 }
