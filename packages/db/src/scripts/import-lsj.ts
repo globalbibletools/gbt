@@ -13,7 +13,9 @@ async function parseLsj(filename: string) {
     const split = line.split('\t');
     const id = split[0];
     const definition = toMarkDown(split[7]);
-    parsed[id] = definition;
+    if (!parsed[id]) {
+      parsed[id] = definition;
+    }
   });
   return parsed;
 }
