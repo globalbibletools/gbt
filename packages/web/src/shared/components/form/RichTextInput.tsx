@@ -72,9 +72,9 @@ const RichTextInput = forwardRef<RichTextInputRef, RichTextInputProps>(
     }, [value, editor]);
 
     return (
-      <div className="border rounded border-slate-400 focus-within:outline focus-within:outline-2 focus-within:outline-blue-600">
+      <div className="border rounded border-gray-400 has-[:focus-visible]:outline outline-2 outline-green-300 outline-offset-2 bg-white">
         <input type="hidden" ref={hiddenInput} name={name} />
-        <div className="border-slate-400 border-b p-1 flex gap-3">
+        <div className="border-gray-400 border-b p-1 flex gap-3">
           <div className="flex gap-1">
             <RichTextInputButton
               active={editor?.isActive('bold')}
@@ -131,7 +131,7 @@ const RichTextInput = forwardRef<RichTextInputRef, RichTextInputProps>(
             />
           </div>
         </div>
-        <EditorContent editor={editor} className="py-2 px-3" />
+        <EditorContent editor={editor} className="py-2 px-3 shadow-inner" />
       </div>
     );
   }
@@ -159,8 +159,8 @@ function RichTextInputButton({
       type="button"
       tabIndex={-1}
       className={`
-        w-7 h-7 disabled:text-slate-400
-        ${active ? 'rounded bg-slate-200' : ''}
+        w-7 h-7 disabled:text-gray-400
+        ${active ? 'rounded bg-green-100' : ''}
       `}
       onClick={onClick}
       disabled={disabled}

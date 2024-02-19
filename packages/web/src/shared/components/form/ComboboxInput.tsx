@@ -69,11 +69,7 @@ const ComboboxInput = forwardRef<HTMLInputElement, BaseComboboxInputProps>(
     }, [items, normalizedInputValue]);
 
     return (
-      <div
-        className={`${className}  group/combobox relative ${
-          disabled ? 'opacity-25' : ''
-        }`}
-      >
+      <div className={`${className} relative ${disabled ? 'opacity-25' : ''}`}>
         <Combobox
           value={value}
           onChange={onChange}
@@ -82,11 +78,11 @@ const ComboboxInput = forwardRef<HTMLInputElement, BaseComboboxInputProps>(
         >
           <div
             className={`
-              border rounded shadow-inner flex group-focus-within/combobox:outline group-focus-within/combobox:outline-2
+              border rounded shadow-inner flex outline-2 outline-offset-2 has-[:focus-visible]:outline
               ${
                 hasErrors
-                  ? 'border-red-700 shadow-red-100 group-focus-within/combobox:outline-red-700'
-                  : 'border-slate-400 group-focus-within/combobox:outline-blue-600'
+                  ? 'border-red-700 shadow-red-100 outline-red-700'
+                  : 'border-gray-400 outline-blue-600'
               }
           `}
           >
@@ -96,7 +92,7 @@ const ComboboxInput = forwardRef<HTMLInputElement, BaseComboboxInputProps>(
                 setNormalizedInputValue(event.target.value.normalize('NFD'))
               }
               onBlur={onBlur}
-              className="w-full py-2 px-3 h-10 rounded-b flex-grow focus:outline-none bg-transparent rounded"
+              className="w-full px-3 h-9 rounded-b flex-grow focus:outline-none bg-transparent rounded"
               displayValue={(value) =>
                 items.find((i) => i.value === value)?.label ?? ''
               }
@@ -113,7 +109,7 @@ const ComboboxInput = forwardRef<HTMLInputElement, BaseComboboxInputProps>(
           </div>
           <Combobox.Options
             className={`
-              z-10 absolute min-w-[160px] w-full max-h-80 bg-white overflow-auto mt-1 rounded border border-slate-400 shadow
+              z-10 absolute w-full max-h-80 bg-white overflow-auto mt-1 rounded border border-gray-400 shadow
               ${up ? '-mt-1 top-0 transform -translate-y-full' : 'mt-1'}
             `}
           >
@@ -122,7 +118,7 @@ const ComboboxInput = forwardRef<HTMLInputElement, BaseComboboxInputProps>(
             ) : (
               filteredItems.map((item) => (
                 <Combobox.Option
-                  className="px-3 py-2 ui-active:bg-blue-400 h-10"
+                  className="px-3 py-2 ui-active:bg-blue-800 ui-active:text-white h-10"
                   key={item.value}
                   value={item.value}
                 >

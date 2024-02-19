@@ -86,20 +86,16 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
           refGloss.current?.clientWidth ?? 0,
           // The extra 24 pixels accommodates the google icon
           // The extra 48 pixels accommodates the approval button
-          glossWidth + (hasMachineSuggestion ? 24 : 0) + 48
+          glossWidth + (hasMachineSuggestion ? 24 : 0) + 44
         )
       );
     }, [glossWidth, hasMachineSuggestion]);
 
     return (
-      <li
-        className="mx-2 mb-4"
-        ref={root}
-        dir={originalLanguage === 'hebrew' ? 'rtl' : 'ltr'}
-      >
+      <li ref={root} dir={originalLanguage === 'hebrew' ? 'rtl' : 'ltr'}>
         <div
           id={`word-${word.id}`}
-          className={`mb-1 h-8 cursor-pointer font-mixed ${
+          className={`h-8 cursor-pointer font-mixed ${
             originalLanguage === 'hebrew' ? 'text-right pr-3' : 'text-left pl-3'
           }`}
           tabIndex={-1}
@@ -113,7 +109,7 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
           </span>
         </div>
         <div
-          className={`mb-1 h-8 ${
+          className={`h-8 ${
             originalLanguage === 'hebrew' ? 'text-right pr-3' : 'text-left pl-3'
           }`}
           dir="ltr"
@@ -140,7 +136,7 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
               <div className="group-focus-within/input-row:block hidden">
                 {currentInputValue && status !== 'approved' && (
                   <Button
-                    className="!bg-green-600"
+                    className="!bg-green-600 w-9"
                     tabIndex={-1}
                     title={t('translate:approve_tooltip') ?? ''}
                     onClick={() => {
@@ -157,7 +153,7 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
                 )}
                 {status === 'approved' && (
                   <Button
-                    className="!bg-red-600"
+                    className="!bg-red-600 w-9"
                     tabIndex={-1}
                     title={t('translate:revoke_tooltip') ?? ''}
                     onClick={() => {
@@ -179,13 +175,13 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
                   />
                 )}
                 <AutocompleteInput
-                  className={`
-                  w-full h-10
-                  ${originalLanguage === 'hebrew' ? 'text-right' : 'text-left'}
-                `}
+                  className={`w-full ${
+                    originalLanguage === 'hebrew' ? 'text-right' : 'text-left'
+                  }`}
                   inputClassName={
                     originalLanguage === 'hebrew' ? 'text-right' : 'text-left'
                   }
+                  right={originalLanguage === 'hebrew'}
                   renderOption={(item, i) => (
                     <div
                       className={
@@ -279,7 +275,10 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
                   return (
                     <>
                       <Icon icon="check" className="me-1 text-green-600" />
-                      <span dir={i18n.dir(i18n.language)}>
+                      <span
+                        dir={i18n.dir(i18n.language)}
+                        className="text-green-600"
+                      >
                         {capitalize(t('translate:approved'))}
                       </span>
                     </>

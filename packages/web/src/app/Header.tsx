@@ -26,7 +26,7 @@ export default function Header() {
   return (
     <nav className="bg-white flex items-center h-20 border-b border-gray-200 relative flex-shrink-0 px-6 md:px-8">
       <NavLink to="/" className="flex items-center mr-8 lg:mr-12">
-        <img src={logo} className="w-14 h-14" />
+        <img src={logo} className="w-14 h-14" alt="" aria-hidden="true" />
         <h1 className="font-bold ml-2 hidden sm:text-lg md:text-2xl sm:block">
           {t('common:app_name')}
         </h1>

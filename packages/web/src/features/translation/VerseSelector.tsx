@@ -9,13 +9,25 @@ import {
   parseReference,
   parseVerseId,
 } from './verse-utils';
+import Button from '../../shared/components/actions/Button';
+import FormLabel from '../../shared/components/form/FormLabel';
+import ComboboxInput from '../../shared/components/form/ComboboxInput';
 
 export interface VerseSelectorProps {
   verseId: string;
+  languageCode: string;
+  languages: { name: string; code: string }[];
   onVerseChange: (verseId: string) => void;
+  onLanguageChange: (languageCode: string) => void;
 }
 
-export function VerseSelector({ verseId, onVerseChange }: VerseSelectorProps) {
+export function VerseSelector({
+  verseId,
+  languages,
+  languageCode,
+  onLanguageChange,
+  onVerseChange,
+}: VerseSelectorProps) {
   const { t } = useTranslation(['translate', 'bible']);
   const verseInfo = parseVerseId(verseId);
 
@@ -34,22 +46,46 @@ export function VerseSelector({ verseId, onVerseChange }: VerseSelectorProps) {
   };
 
   return (
-    <div className="flex gap-4 items-center flex-row">
-      <TextInput
-        name="verseReference"
-        autoComplete="off"
-        placeholder={generateReference(verseInfo, t)}
-        onKeyDown={onKeyDown}
-        arial-label={t('translate:select_verse')}
-      />
-      <button onClick={() => onVerseChange(decrementVerseId(verseId))}>
-        <Icon icon="arrow-up" />
-        <span className="sr-only">{t('translate:previous_verse')}</span>
-      </button>
-      <button onClick={() => onVerseChange(incrementVerseId(verseId))}>
-        <Icon icon="arrow-down" />
-        <span className="sr-only">{t('translate:next_verse')}</span>
-      </button>
+    <div className="flex items-center shadow-md px-6 md:px-8 py-4 gap-16 mb-8">
+      <div>
+        <FormLabel htmlFor="verse-reference">VERSE</FormLabel>
+        <div className="relative">
+          <TextInput
+            id="verse-reference"
+            className="pr-16 placeholder-current w-56"
+            autoComplete="off"
+            placeholder={generateReference(verseInfo, t)}
+            onKeyDown={onKeyDown}
+          />
+          <Button
+            className="absolute end-8 top-1 w-7 !h-7"
+            variant="tertiary"
+            onClick={() => onVerseChange(decrementVerseId(verseId))}
+          >
+            <Icon icon="arrow-up" />
+            <span className="sr-only">{t('translate:previous_verse')}</span>
+          </Button>
+          <Button
+            className="absolute end-1 top-1 w-7 !h-7"
+            variant="tertiary"
+            onClick={() => onVerseChange(incrementVerseId(verseId))}
+          >
+            <Icon icon="arrow-down" />
+            <span className="sr-only">{t('translate:next_verse')}</span>
+          </Button>
+        </div>
+      </div>
+      <div>
+        <FormLabel htmlFor="target-language">LANGUAGE</FormLabel>
+        <ComboboxInput
+          id="target-language"
+          items={languages.map((l) => ({ label: l.name, value: l.code }))}
+          value={languageCode}
+          onChange={onLanguageChange}
+          className="w-40"
+          autoComplete="off"
+        />
+      </div>
     </div>
   );
 }
