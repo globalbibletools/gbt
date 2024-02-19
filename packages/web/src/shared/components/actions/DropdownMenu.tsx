@@ -5,12 +5,14 @@ import { Icon } from '../Icon';
 
 export interface DropdownProps {
   className?: string;
+  buttonClassName?: string;
   text: string;
   children: ReactNode;
 }
 
 export default function DropdownMenu({
   className = '',
+  buttonClassName = '',
   children,
   text,
 }: DropdownProps) {
@@ -35,7 +37,7 @@ export default function DropdownMenu({
       onBlur={onBlur}
     >
       <button
-        className="focus:outline-none hover:underline focus:underline"
+        className={`focus:outline-none hover:underline focus:underline ${buttonClassName}`}
         type="button"
         onClick={() => setIsOpen((menu) => !menu)}
         aria-expanded={isOpen}
