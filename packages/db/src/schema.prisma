@@ -373,7 +373,7 @@ model Footnote {
   @@id([wordId, languageId])
 }
 
-/// Represents a gloss update to a word for a particular language.
+/// Represents a gloss update for a particular language.
 model GlossHistory {
   /// The word whose gloss is being updated.
   word       Word        @relation(fields: [wordId], references: [id])
