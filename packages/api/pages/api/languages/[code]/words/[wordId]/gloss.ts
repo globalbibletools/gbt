@@ -72,9 +72,9 @@ export default createRoute<{ code: string; wordId: string }>()
           languageId: language.id,
           userId: req.session?.user?.id,
           gloss:
-            originalGloss?.gloss !== fields.gloss ? fields.gloss : undefined,
+            fields.gloss !== originalGloss?.gloss ? fields.gloss : undefined,
           state:
-            originalGloss?.state !== fields.state ? fields.state : undefined,
+            fields.state !== originalGloss?.state ? fields.state : undefined,
         },
       });
 
