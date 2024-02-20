@@ -2,7 +2,7 @@
 CREATE TABLE "GlossHistory" (
     "wordId" TEXT NOT NULL,
     "languageId" UUID NOT NULL,
-    "timestamp" TIMESTAMP(3) NOT NULL,
+    "timestamp" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "userId" UUID,
     "gloss" TEXT,
     "state" "GlossState",

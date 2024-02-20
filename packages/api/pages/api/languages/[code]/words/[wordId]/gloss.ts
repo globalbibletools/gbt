@@ -43,6 +43,14 @@ export default createRoute<{ code: string; wordId: string }>()
         }
       }
 
+      const originalGloss = await client.gloss.findUnique({
+        where: {
+          wordId_languageId: {
+            wordId: req.query.wordId,
+            languageId: language.id,
+          },
+        },
+      });
       await client.gloss.upsert({
         where: {
           wordId_languageId: {
@@ -55,6 +63,18 @@ export default createRoute<{ code: string; wordId: string }>()
           ...fields,
           wordId: req.query.wordId,
           languageId: language.id,
+        },
+      });
+
+      await client.glossHistory.create({
+        data: {
+          wordId: req.query.wordId,
+          languageId: language.id,
+          userId: req.session?.user?.id,
+          gloss:
+            originalGloss?.gloss !== fields.gloss ? fields.gloss : undefined,
+          state:
+            originalGloss?.state !== fields.state ? fields.state : undefined,
         },
       });
 

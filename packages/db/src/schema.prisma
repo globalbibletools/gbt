@@ -384,7 +384,7 @@ model GlossHistory {
   /// The ID of the language of the updated gloss.
   languageId String      @db.Uuid
   /// The timestamp that the gloss was updated.
-  timestamp  DateTime
+  timestamp  DateTime    @default(now())
   /// The user who updated the gloss.
   user       AuthUser?   @relation(fields: [userId], references: [id])
   /// The ID of the user who updated the gloss
