@@ -1,0 +1,21 @@
+patch:
+  tags:
+    - Languages
+  summary: Update the translator note for a word for a language.
+  parameters:
+    - $ref: '../../schemas/parameters.yml#languageCode'
+    - $ref: '../../schemas/parameters.yml#wordId'
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            note:
+              type: string
+              example: <p>This is the translator note.</p>
+              description: The HTML content of the translator note.
+  responses:
+    '204':
+      description: No Content

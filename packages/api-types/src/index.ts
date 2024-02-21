@@ -192,12 +192,26 @@ export interface TranslatorNote {
   content: string;
 }
 
-export interface GetVerseTranslatorNotesResponseBody {
-  data: Record<string, TranslatorNote>;
-}
-
 export interface PatchWordTranslatorNoteRequestBody {
   note: string;
+}
+
+export interface Footnote {
+  wordId: string;
+  authorName: string;
+  timestamp: number;
+  content: string;
+}
+
+export interface PatchWordFootnoteRequestBody {
+  note: string;
+}
+
+export interface GetVerseNotesResponseBody {
+  data: {
+    footnotes: Record<string, Footnote>;
+    translatorNotes: Record<string, TranslatorNote>;
+  };
 }
 
 export interface Comment {

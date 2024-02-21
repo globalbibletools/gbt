@@ -42,6 +42,8 @@ model AuthUser {
   emailVerifications UserEmailVerification[]
   /// The list of translator notes authored by this user.
   translatorNotes    TranslatorNote[]
+  /// The list of footnotes authored by this user.
+  footnotes          Footnote[]
   /// The list of comments authored by this user.
   comments           Comment[]
 
@@ -127,17 +129,17 @@ model Book {
 /// A verse within a Book of the Bible.
 model Verse {
   /// The ID of the verse in the format `BBCCCVVV`.
-  id           String             @id
+  id      String @id
   /// The verse number as it appears in most Bibles.
-  number       Int
+  number  Int
   /// The chapter number as it appears in most Bibles.
-  chapter      Int
+  chapter Int
   /// The book the verse belongs in.
-  book         Book               @relation(fields: [bookId], references: [id])
+  book    Book   @relation(fields: [bookId], references: [id])
   /// The ID of the book the verse belongs in.
-  bookId       Int
+  bookId  Int
   /// The list of words in the verse.
-  words        Word[]
+  words   Word[]
 
   @@unique([bookId, chapter, number])
 }
@@ -145,22 +147,16 @@ model Verse {
 /// A single word within a verse.
 model Word {
   /// The ID of the verse in the format `BBCCCVVVWW`. The last two digits are in order as the words appear in the verse.
-  id              String         @id
-  id              String         @id
+  id              String           @id
   /// The text in Greek, Hebrew, or Aramaic as it appears in the critical text.
   text            String
-  text            String
   /// The verse the word appears in.
-  verse           Verse          @relation(fields: [verseId], references: [id])
-  verse           Verse          @relation(fields: [verseId], references: [id])
+  verse           Verse            @relation(fields: [verseId], references: [id])
   /// The ID of the verse the word appears in.
   verseId         String
-  verseId         String
   /// The specific form of the lemma for the word.
-  form            LemmaForm      @relation(fields: [formId], references: [id])
-  form            LemmaForm      @relation(fields: [formId], references: [id])
+  form            LemmaForm        @relation(fields: [formId], references: [id])
   /// The ID of the specific form of the lemma for the word.
-  formId          String
   formId          String
   /// The list of glosses in different languages for this word.
   glosses         Gloss[]
@@ -168,6 +164,8 @@ model Word {
   machineGlosses  MachineGloss[]
   // The list of translator notes in different languages for this word.
   translatorNotes TranslatorNote[]
+  // The list of footnotes in different languages for this word.
+  footnotes       Footnote[]
   // The list of comments for this word.
   comments        Comment[]
 
@@ -225,6 +223,8 @@ model Language {
   machineGlosses      MachineGloss[]
   // The list of translator notes of different words for this language.
   translatorNotes     TranslatorNote[]
+  // The list of footnotes of different words for this language.
+  footnotes           Footnote[]
   // The list of comments of different words for this language.
   comments            Comment[]
   /// The list of roles for members of this language.
@@ -338,6 +338,28 @@ model TranslatorNote {
   /// The language that the note applies to.
   language   Language @relation(fields: [languageId], references: [id])
   /// The ID of the language of that the note applies to.
+  languageId String   @db.Uuid
+  /// The author of the most recent update to the note.
+  author     AuthUser @relation(fields: [authorId], references: [id])
+  /// The ID of the author of the most recent update to the note.
+  authorId   String   @db.Uuid
+  /// The timestamp of the last update.
+  timestamp  DateTime
+  /// The content of the note.
+  content    String
+
+  @@id([wordId, languageId])
+}
+
+/// The footnote for a word in a particular language.
+model Footnote {
+  /// The word being noted.
+  word       Word     @relation(fields: [wordId], references: [id])
+  /// The ID of the word being noted.
+  wordId     String
+  /// The language that the note applies to.
+  language   Language @relation(fields: [languageId], references: [id])
+  /// The ID of the language that the note applies to.
   languageId String   @db.Uuid
   /// The author of the most recent update to the note.
   author     AuthUser @relation(fields: [authorId], references: [id])

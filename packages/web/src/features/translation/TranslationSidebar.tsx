@@ -1,6 +1,7 @@
 import { Tab } from '@headlessui/react';
 import { useQuery } from '@tanstack/react-query';
 import { Verse } from '@translation/api-types';
+import { bdbBookRefNames } from 'data/bdb-book-ref-names';
 import DOMPurify from 'dompurify';
 import { throttle } from 'lodash';
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -10,8 +11,9 @@ import apiClient from '../../shared/apiClient';
 import { Icon } from '../../shared/components/Icon';
 import LoadingSpinner from '../../shared/components/LoadingSpinner';
 import RichText from '../../shared/components/RichText';
-import RichTextInput from '../../shared/components/form/RichTextInput';
 import Button from '../../shared/components/actions/Button';
+import RichTextInput from '../../shared/components/form/RichTextInput';
+import { parseVerseId } from './verse-utils';
 
 type TranslationSidebarProps = {
   language: string;
@@ -43,12 +45,16 @@ export const TranslationSidebar = ({
   );
   const lexiconEntry = lexiconResource?.entry ?? '';
 
-  const translatorNotesQuery = useQuery(
+  const notesQuery = useQuery(
     ['verse-translator-notes', language, verse.id],
-    () => apiClient.verses.findTranslatorNotes(verse.id, language)
+    () => apiClient.verses.findNotes(verse.id, language)
   );
-  const translatorNote = translatorNotesQuery.isSuccess
-    ? translatorNotesQuery.data.data[word.id]
+  const translatorNote = notesQuery.isSuccess
+    ? notesQuery.data.data.translatorNotes[word.id]
+    : null;
+
+  const footnote = notesQuery.isSuccess
+    ? notesQuery.data.data.footnotes[word.id]
     : null;
 
   const tabTitles = ['translate:lexicon', 'translate:notes'];
@@ -57,19 +63,28 @@ export const TranslationSidebar = ({
   }
 
   const userCan = useAccessControl();
-  const canViewNote = userCan('read', { type: 'Language', id: language });
+  const hasLanguageReadPermissions = userCan('read', {
+    type: 'Language',
+    id: language,
+  });
   const canEditNote = userCan('translate', { type: 'Language', id: language });
 
-  const [noteContent, setNoteContent] = useState('');
+  const [translatorNoteContent, setTranslatorNoteContent] = useState('');
+  const [footnoteContent, setFootnoteContent] = useState('');
   const wordId = useRef('');
   useEffect(() => {
-    if (translatorNotesQuery.isSuccess && word.id !== wordId.current) {
+    if (notesQuery.isSuccess && word.id !== wordId.current) {
       wordId.current = word.id;
-      setNoteContent(translatorNotesQuery.data.data[word.id]?.content ?? '');
+      setTranslatorNoteContent(
+        notesQuery.data.data.translatorNotes[word.id]?.content ?? ''
+      );
+      setFootnoteContent(
+        notesQuery.data.data.footnotes[word.id]?.content ?? ''
+      );
     }
-  }, [word.id, translatorNotesQuery]);
+  }, [word.id, notesQuery]);
 
-  const saveNote = useMemo(
+  const saveTranslatorNote = useMemo(
     () =>
       throttle(
         async (noteContent: string) => {
@@ -78,13 +93,44 @@ export const TranslationSidebar = ({
             language,
             note: noteContent,
           });
-          translatorNotesQuery.refetch();
+          notesQuery.refetch();
         },
         15000,
         { leading: false, trailing: true }
       ),
-    [language, translatorNotesQuery, word.id]
+    [language, notesQuery, word.id]
   );
+
+  const saveFootnote = useMemo(
+    () =>
+      throttle(
+        async (noteContent: string) => {
+          await apiClient.words.updateFootnote({
+            wordId: word.id,
+            language,
+            note: noteContent,
+          });
+          notesQuery.refetch();
+        },
+        15000,
+        { leading: false, trailing: true }
+      ),
+    [language, notesQuery, word.id]
+  );
+  const { bookId, chapterNumber, verseNumber } = parseVerseId(verse.id);
+  const bdbCurrentVerseRef = `${
+    bdbBookRefNames[bookId - 1]
+  } ${chapterNumber}:${verseNumber}`;
+
+  const lexiconEntryRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const { current } = lexiconEntryRef;
+    // Highlight references to the currently selected verse
+    current
+      ?.querySelectorAll(`a[data-ref="${bdbCurrentVerseRef}"]`)
+      .forEach((element) => element.classList.add('bg-yellow-300'));
+  }, [bdbCurrentVerseRef, lexiconEntry]);
 
   const [isWritingComment, setIsWritingComment] = useState(false);
   const [newComment, setNewComment] = useState('');
@@ -152,6 +198,7 @@ export const TranslationSidebar = ({
                   </div>
                   <div
                     className="leading-7 font-mixed"
+                    ref={lexiconEntryRef}
                     dangerouslySetInnerHTML={{
                       __html: DOMPurify.sanitize(lexiconEntry),
                     }}
@@ -160,9 +207,9 @@ export const TranslationSidebar = ({
               )}
             </Tab.Panel>
             <Tab.Panel>
-              <div className="flex flex-col gap-2 pb-2">
-                {canViewNote && (
-                  <>
+              <div className="flex flex-col gap-6 pb-2">
+                {hasLanguageReadPermissions && (
+                  <div className="flex flex-col gap-2">
                     <h2 className="font-bold">
                       {t('translate:translator_notes')}
                     </h2>
@@ -180,22 +227,51 @@ export const TranslationSidebar = ({
                     )}
                     {canEditNote ? (
                       <RichTextInput
-                        key={word.id}
-                        name="noteContent"
-                        value={noteContent}
+                        key={`translatorNote--${word.id}`}
+                        name="translatorNoteContent"
+                        value={translatorNoteContent}
                         onBlur={async (e) => {
-                          saveNote(e.target.value);
-                          saveNote.flush();
+                          saveTranslatorNote(e.target.value);
+                          saveTranslatorNote.flush();
                         }}
                         onChange={async (e) => {
-                          saveNote(e.target.value);
+                          saveTranslatorNote(e.target.value);
                         }}
                       />
                     ) : (
-                      <RichText content={noteContent} />
+                      <RichText content={translatorNoteContent} />
                     )}
-                  </>
+                  </div>
                 )}
+                <div className="flex flex-col gap-2">
+                  <h2 className="font-bold">{t('translate:footnotes')}</h2>
+                  {hasLanguageReadPermissions && footnote?.authorName && (
+                    <span className="italic">
+                      {t('translate:note_description', {
+                        timestamp: footnote?.timestamp
+                          ? new Date(footnote?.timestamp).toLocaleString()
+                          : '',
+                        authorName: footnote?.authorName ?? '',
+                      })}
+                    </span>
+                  )}
+                  {canEditNote ? (
+                    <RichTextInput
+                      key={`footnote--${word.id}`}
+                      name="footnoteContent"
+                      value={footnoteContent}
+                      onBlur={async (e) => {
+                        saveFootnote(e.target.value);
+                        saveFootnote.flush();
+                      }}
+                      onChange={async (e) => {
+                        saveFootnote(e.target.value);
+                      }}
+                    />
+                  ) : (
+                    <RichText content={footnoteContent} />
+                  )}
+                </div>
               </div>
             </Tab.Panel>
             {showComments && (

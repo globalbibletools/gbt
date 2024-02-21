@@ -9,7 +9,7 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 4.16"
+      version = "~> 5.1"
     }
 
     postgresql = {
@@ -136,4 +136,10 @@ module "google_translate_dev" {
     id   = "api-dev"
     name = "API Server (Dev)"
   }
+}
+
+module "landing" {
+  source = "./modules/landing"
+
+  aws_route53_zone_id = aws_route53_zone.main.id
 }
