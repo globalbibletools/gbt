@@ -41,7 +41,7 @@ model AuthUser {
   /// The list of emails awaiting verification.
   emailVerifications UserEmailVerification[]
   /// The list of gloss updates this user has performed.
-  glossHistory       GlossHistory[]
+  glossHistory       GlossHistoryEntry[]
   /// The list of translator notes authored by this user.
   translatorNotes    TranslatorNote[]
   /// The list of footnotes authored by this user.
@@ -160,8 +160,8 @@ model Word {
   formId          String
   /// The list of glosses in different languages for this word.
   glosses         Gloss[]
-  /// The gloss updates applied to this word.
-  glossHistory    GlossHistory[]
+  /// The gloss history of this word.
+  glossHistory    GlossHistoryEntry[]
   /// The list of machine glosses in different languages for this word.
   machineGlosses  MachineGloss[]
   // The list of translator notes in different languages for this word.
@@ -220,7 +220,7 @@ model Language {
   /// The list of glosses of different words for this language.
   glosses             Gloss[]
   // The gloss history for this language.
-  glossHistory        GlossHistory[]
+  glossHistory        GlossHistoryEntry[]
   /// The list of machine glosses of different words for this language.
   machineGlosses      MachineGloss[]
   // The list of translator notes of different words for this language.
@@ -293,7 +293,7 @@ model Gloss {
 }
 
 /// Represents a gloss update for a particular language.
-model GlossHistory {
+model GlossHistoryEntry {
   /// The word whose gloss is being updated.
   word       Word        @relation(fields: [wordId], references: [id])
   /// The ID of the word whose gloss is being updated.

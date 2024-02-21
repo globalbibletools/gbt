@@ -66,7 +66,7 @@ export default createRoute<{ code: string; wordId: string }>()
         },
       });
 
-      await client.glossHistory.create({
+      await client.glossHistoryEntry.create({
         data: {
           wordId: req.query.wordId,
           languageId: language.id,
