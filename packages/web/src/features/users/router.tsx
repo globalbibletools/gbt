@@ -1,5 +1,4 @@
 import { RouteObject } from 'react-router-dom';
-import InviteUserView from './InviteUserView';
 import UsersView from './UsersView';
 import LoginView from './LoginView';
 import AcceptInviteView, { acceptInviteLoader } from './AcceptInviteView';
@@ -8,17 +7,15 @@ import { authorize } from '../../shared/accessControl';
 import UpdateProfileView from './UpdateProfileView';
 import EmailVerificationView from './EmailVerificationView';
 
-export const userPageRoutes: RouteObject[] = [
+export const userAdminRoutes: RouteObject[] = [
   {
     path: 'users',
     loader: () => authorize('administer', 'User'),
     element: <UsersView />,
   },
-  {
-    path: 'users/invite',
-    loader: () => authorize('create', 'User'),
-    element: <InviteUserView />,
-  },
+];
+
+export const userPageRoutes: RouteObject[] = [
   {
     path: 'profile',
     element: <UpdateProfileView />,

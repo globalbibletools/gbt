@@ -33,5 +33,7 @@ library.add(
   FaSolid.faIndent,
   FaSolid.faOutdent,
   FaSolid.faArrowRotateLeft,
+  FaSolid.faLanguage,
+  FaSolid.faUser,
   FaSolid.faLanguage
 );

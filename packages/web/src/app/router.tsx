@@ -1,10 +1,16 @@
 import { createBrowserRouter, redirect } from 'react-router-dom';
 import translationRoutes from '../features/translation/router';
-import languagesRoutes from '../features/languages/router';
-import { userPageRoutes, userModalRoutes } from '../features/users/router';
+import { languageAdminRoutes } from '../features/languages/router';
+import {
+  userPageRoutes,
+  userModalRoutes,
+  userAdminRoutes,
+} from '../features/users/router';
 import Layout from './Layout';
 import ModalLayout from './ModalLayout';
 import ErrorView from './ErrorView';
+import AdminView from './AdminView';
+import { authorize } from '../shared/accessControl';
 
 const router = createBrowserRouter([
   {
@@ -18,9 +24,14 @@ const router = createBrowserRouter([
           return redirect('/interlinear');
         },
       },
+      {
+        path: '/admin',
+        element: <AdminView />,
+        loader: () => authorize('administer', 'User'),
+        children: [...userAdminRoutes, ...languageAdminRoutes],
+      },
       ...userPageRoutes,
       ...translationRoutes,
-      ...languagesRoutes,
     ],
   },
   {

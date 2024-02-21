@@ -70,6 +70,7 @@ export interface GetUsersResponseBody {
 
 export interface PostUserRequestBody {
   email: string;
+  systemRoles?: SystemRole[];
 }
 
 export interface UpdateUserRequestBody {

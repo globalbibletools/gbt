@@ -25,11 +25,6 @@
     unicode-range: U+0370-03FF, U+1F00-1FFF;
     size-adjust: 112%;
   }
-
-  dialog {
-    inset-inline-start: unset;
-    inset-inline-end: unset;
-  }
 }
 
 @layer components {

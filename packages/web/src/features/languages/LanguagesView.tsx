@@ -1,5 +1,4 @@
 import { useTranslation } from 'react-i18next';
-import Link from '../../shared/components/actions/Link';
 import apiClient from '../../shared/apiClient';
 import { Icon } from '../../shared/components/Icon';
 import {
@@ -9,15 +8,18 @@ import {
   ListHeader,
   ListHeaderCell,
   ListRow,
-  ListRowAction,
 } from '../../shared/components/List';
-import View from '../../shared/components/View';
 import ViewTitle from '../../shared/components/ViewTitle';
 import { useLoaderData } from 'react-router-dom';
 import { GetLanguagesResponseBody } from '@translation/api-types';
 import { capitalize } from '../../shared/utils';
 import { useAccessControl } from '../../shared/accessControl';
 import useTitle from '../../shared/hooks/useTitle';
+import Button from '../../shared/components/actions/Button';
+import CreateLanguageDialog, {
+  CreateLanguageDialogRef,
+} from './CreateLanguageDialog';
+import { useRef } from 'react';
 
 export function languagesViewLoader() {
   return apiClient.languages.findAll();
@@ -28,48 +30,58 @@ export default function LanguagesView() {
   const { t } = useTranslation(['languages']);
   useTitle(t('common:tab_titles.languages'));
 
-  const accessControl = useAccessControl();
+  const userCan = useAccessControl();
+
+  const createDialog = useRef<CreateLanguageDialogRef>(null);
 
   return (
-    <View fitToScreen>
-      <div className="m-auto w-fit">
+    <div className="px-8 py-6 w-fit">
+      <div className="flex items-baseline mb-4">
         <ViewTitle>
           {capitalize(t('languages:language', { count: 100 }))}
         </ViewTitle>
-        <List>
-          <ListHeader>
-            <ListHeaderCell className="min-w-[240px]">
-              {t('languages:language', { count: 1 }).toUpperCase()}
-            </ListHeaderCell>
-            <ListHeaderCell />
-          </ListHeader>
-          {accessControl('create', 'Language') && (
-            <ListRowAction colSpan={2}>
-              <Link to="./new">
-                <Icon icon="plus" className="me-1" />
-                {t('languages:add_language')}
-              </Link>
-            </ListRowAction>
-          )}
-          <ListBody>
-            {languages.data.map((language) => (
-              <ListRow key={language.code}>
-                <ListCell header>{language.name}</ListCell>
-                <ListCell>
-                  {accessControl('administer', {
-                    type: 'Language',
-                    id: language.code,
-                  }) && (
-                    <Link to={`./${language.code}`}>
-                      {t('languages:manage')}
-                    </Link>
-                  )}
-                </ListCell>
-              </ListRow>
-            ))}
-          </ListBody>
-        </List>
+        <div className="flex-grow" />
+        {userCan('create', 'Language') && (
+          <Button
+            onClick={() => createDialog.current?.showModal()}
+            variant="primary"
+          >
+            <Icon icon="plus" className="mr-1" />
+            {t('languages:add_language')}
+          </Button>
+        )}
       </div>
-    </View>
+      <CreateLanguageDialog ref={createDialog} />
+      <List>
+        <ListHeader>
+          <ListHeaderCell className="min-w-[240px]">
+            {t('languages:language', { count: 1 }).toUpperCase()}
+          </ListHeaderCell>
+          <ListHeaderCell />
+        </ListHeader>
+        <ListBody>
+          {languages.data.map((language) => (
+            <ListRow key={language.code}>
+              <ListCell header>
+                {language.name}
+                <span className="text-sm ml-1 font-normal">
+                  {language.code}
+                </span>
+              </ListCell>
+              <ListCell>
+                {userCan('administer', {
+                  type: 'Language',
+                  id: language.code,
+                }) && (
+                  <Button variant="tertiary" to={`./${language.code}`}>
+                    {t('languages:manage')}
+                  </Button>
+                )}
+              </ListCell>
+            </ListRow>
+          ))}
+        </ListBody>
+      </List>
+    </div>
   );
 }

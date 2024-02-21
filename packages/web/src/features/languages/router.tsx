@@ -10,7 +10,7 @@ import ManageLanguageView, {
 } from './ManageLanguageView';
 import NewLanguageView from './NewLanguageView';
 
-const routes: RouteObject[] = [
+export const languageAdminRoutes: RouteObject[] = [
   {
     path: 'languages',
     loader: () => authorize('administer', 'Language', languagesViewLoader),
@@ -52,5 +52,3 @@ const routes: RouteObject[] = [
     element: <ImportLanguageGlossesView />,
   },
 ];
-
-export default routes;

@@ -118,7 +118,7 @@ const ComboboxInput = forwardRef<HTMLInputElement, BaseComboboxInputProps>(
             ) : (
               filteredItems.map((item) => (
                 <Combobox.Option
-                  className="px-3 py-2 ui-active:bg-blue-800 ui-active:text-white h-10"
+                  className="px-3 py-2 ui-active:bg-green-200"
                   key={item.value}
                   value={item.value}
                 >

@@ -1,4 +1,6 @@
 import { ReactNode } from 'react';
+import { Link, LinkProps } from 'react-router-dom';
+import Button from './actions/Button';
 
 export interface ListProps {
   children?: ReactNode;
@@ -33,7 +35,7 @@ export function ListHeaderCell({
   return (
     <th
       className={`
-        border-b-2 border-slate-700 text-start text-sm px-2 first:ps-0 last:pe-0
+        border-b-2 border-green-300 text-start text-sm px-4
         ${className}
       `}
     >
@@ -45,14 +47,16 @@ export function ListHeaderCell({
 export interface ListRowActionProps {
   children?: ReactNode;
   colSpan: number;
+  to?: LinkProps['to'];
+  onClick?(): void;
 }
 
-export function ListRowAction({ children, colSpan }: ListRowActionProps) {
+export function ListRowAction({ colSpan, ...props }: ListRowActionProps) {
   return (
     <tbody>
-      <tr className="h-10">
-        <td colSpan={colSpan} className="border-b border-slate-700">
-          {children}
+      <tr className="h-10 border-b-2 border-green-300">
+        <td colSpan={colSpan} className="px-1">
+          <Button {...props} variant="tertiary" />
         </td>
       </tr>
     </tbody>
@@ -68,11 +72,14 @@ export function ListBody({ children }: ListBodyProps) {
 }
 
 export interface ListRowProps {
+  className?: string;
   children?: ReactNode;
 }
 
-export function ListRow({ children }: ListRowProps) {
-  return <tr className="h-8">{children}</tr>;
+export function ListRow({ children, className = '' }: ListRowProps) {
+  return (
+    <tr className={`h-8 border-green-200 border-b ${className}`}>{children}</tr>
+  );
 }
 
 export interface ListCellProps {
@@ -88,17 +95,9 @@ export function ListCell({
 }: ListCellProps) {
   if (header) {
     return (
-      <th
-        className={`text-start font-bold px-2 first:ps-0 last:pe-0 ${className}`}
-      >
-        {children}
-      </th>
+      <th className={`text-start font-bold px-4 ${className}`}>{children}</th>
     );
   } else {
-    return (
-      <td className={`text-start px-2 first:ps-0 last:pe-0 ${className}`}>
-        {children}
-      </td>
-    );
+    return <td className={`text-start px-4 ${className}`}>{children}</td>;
   }
 }

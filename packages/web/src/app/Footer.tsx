@@ -6,7 +6,11 @@ import LanguageDialog from '../shared/components/LanguageDialog';
 import { initialLanguageChosen } from './i18n';
 import interfaceLanguages from '../shared/languages.json';
 
-export default function Footer() {
+export interface FooterProps {
+  className?: string;
+}
+
+export default function Footer({ className = '' }: FooterProps) {
   const languageDialog = useRef<DialogRef>(null);
   const { t, i18n } = useTranslation(['languages']);
 
@@ -17,7 +21,7 @@ export default function Footer() {
   }, []);
 
   return (
-    <footer className="p-2 flex flex-row z-10 justify-end">
+    <footer className={`p-2 flex flex-row z-10 justify-end ${className}`}>
       <button
         type="button"
         onClick={() => {

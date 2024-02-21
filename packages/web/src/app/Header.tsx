@@ -35,14 +35,9 @@ export default function Header() {
       <NavLink to={'/interlinear'} className={navLinkClasses}>
         {t('translate:interlinear')}
       </NavLink>
-      {userCan('administer', 'Language') && (
-        <NavLink to={'/languages'} className={navLinkClasses}>
-          {t('languages:languages')}
-        </NavLink>
-      )}
-      {userCan('administer', 'User') && (
-        <NavLink to={'/users'} className={navLinkClasses}>
-          {t('users:users')}
+      {userCan('create', 'Language') && (
+        <NavLink to={'/admin'} className={navLinkClasses}>
+          Admin
         </NavLink>
       )}
       <div className="md:flex-grow" />
