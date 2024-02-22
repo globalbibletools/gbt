@@ -25,7 +25,7 @@ export const languageAdminRoutes: RouteObject[] = [
 const PATH_MATCH = /(settings|users|import)$/;
 export const languagePageRoutes: RouteObject[] = [
   {
-    path: 'admin/languages/:code',
+    path: 'admin?/languages/:code',
     loader: ({ params, request }) => {
       const code = params.code as string;
       return authorize(

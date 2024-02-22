@@ -12,6 +12,7 @@ import {
 import Button from '../../shared/components/actions/Button';
 import FormLabel from '../../shared/components/form/FormLabel';
 import ComboboxInput from '../../shared/components/form/ComboboxInput';
+import { useAccessControl } from '../../shared/accessControl';
 
 export interface VerseSelectorProps {
   verseId: string;
@@ -44,6 +45,8 @@ export function VerseSelector({
       }
     }
   };
+
+  const userCan = useAccessControl();
 
   return (
     <div className="flex items-center shadow-md px-6 md:px-8 py-4 mb-8">
@@ -86,12 +89,14 @@ export function VerseSelector({
           autoComplete="off"
         />
       </div>
-      <div className="pt-6">
-        <Button variant="tertiary" to={`/admin/languages/${languageCode}`}>
-          <Icon icon="sliders" className="me-1" />
-          Manage
-        </Button>
-      </div>
+      {userCan('administer', { type: 'Language', id: languageCode }) && (
+        <div className="pt-6">
+          <Button variant="tertiary" to={`/languages/${languageCode}`}>
+            <Icon icon="sliders" className="me-1" />
+            Manage
+          </Button>
+        </div>
+      )}
     </div>
   );
 }
