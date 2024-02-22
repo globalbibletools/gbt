@@ -126,7 +126,7 @@ export default function ManageLanguageSettingsView() {
   );
 
   return (
-    <div className="px-8 py-6 w-fit">
+    <div className="px-8 py-6 w-fit overflow-y-auto h-full">
       <div className="flex items-baseline mb-4">
         <ViewTitle>Settings</ViewTitle>
         <div className="ms-6 text-gray-700">
@@ -144,7 +144,7 @@ export default function ManageLanguageSettingsView() {
         </div>
       </div>
       <Form context={formContext} className="max-w-[1000px]">
-        <section className="flex gap-20 pb-8 px-10 border-b border-b-green-300">
+        <section className="flex flex-col gap-4 lg:flex-row lg:gap-20 pb-8 px-10 border-b border-b-green-300">
           <div className="flex-grow">
             <h3 className="font-bold text-lg mb-2">Identification</h3>
             <p className="text-sm mb-2">
@@ -199,7 +199,7 @@ export default function ManageLanguageSettingsView() {
             </div>
           </div>
         </section>
-        <section className="flex gap-20 py-8 px-10 border-b border-b-green-300">
+        <section className="flex flex-col gap-4 lg:flex-row lg:gap-20 py-8 px-10 border-b border-b-green-300">
           <div className="flex-grow">
             <h3 className="font-bold text-lg mb-2">Text</h3>
             <p className="text-sm">
@@ -261,7 +261,7 @@ export default function ManageLanguageSettingsView() {
             </div>
           </div>
         </section>
-        <section className="flex gap-20 py-8 px-10">
+        <section className="flex flex-col gap-4 lg:flex-row lg:gap-20 py-8 px-10">
           <div className="flex-grow">
             <h3 className="font-bold text-lg mb-2">Bible Translations</h3>
             <p className="text-sm">

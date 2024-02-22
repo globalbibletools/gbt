@@ -104,7 +104,7 @@ export default function ManageLanguageUserView() {
           {capitalize(t('users:users', { count: 100 }) ?? '')}
         </ViewTitle>
         <div className="flex-grow" />
-        {userCan('create', 'User') && (
+        {userCan('administer', 'Language') && (
           <Button
             onClick={() => inviteDialog.current?.showModal()}
             variant="primary"
@@ -123,10 +123,7 @@ export default function ManageLanguageUserView() {
           <ListHeaderCell className="min-w-[120px]">
             {t('users:name', { count: 1 }).toUpperCase()}
           </ListHeaderCell>
-          <ListHeaderCell className="min-w-[120px]">
-            {t('users:email').toUpperCase()}
-          </ListHeaderCell>
-          <ListHeaderCell className="min-w-[80px]">
+          <ListHeaderCell className="min-w-[80px] ps-4">
             {t('users:role', { count: 100 }).toUpperCase()}
           </ListHeaderCell>
           <ListHeaderCell />
@@ -134,9 +131,11 @@ export default function ManageLanguageUserView() {
         <ListBody>
           {members?.data.map((user) => (
             <ListRow key={user.userId}>
-              <ListCell header>{user.name}</ListCell>
-              <ListCell>{user.email}</ListCell>
-              <ListCell>
+              <ListCell header className="pe-4 py-2">
+                <div className="">{user.name}</div>
+                <div className="font-normal text-sm">{user.email}</div>
+              </ListCell>
+              <ListCell className="ps-4 py-2">
                 <MultiselectInput
                   className="w-full"
                   name="roles"
@@ -160,9 +159,10 @@ export default function ManageLanguageUserView() {
                   }
                 />
               </ListCell>
-              <ListCell>
+              <ListCell className="py-2">
                 <Button
                   variant="tertiary"
+                  className="text-red-700 ms-2 -me-2"
                   destructive
                   onClick={() =>
                     removeMemberMutation.mutate({
@@ -171,7 +171,8 @@ export default function ManageLanguageUserView() {
                     })
                   }
                 >
-                  Remove
+                  <Icon icon="xmark" />
+                  <span className="sr-only">Remove</span>
                 </Button>
               </ListCell>
             </ListRow>

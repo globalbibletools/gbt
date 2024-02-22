@@ -104,11 +104,13 @@ export default function UsersView() {
         <ListBody>
           {usersQuery.data?.data.map((user) => (
             <ListRow key={user.id}>
-              <ListCell header>{user.name}</ListCell>
-              <ListCell>
+              <ListCell header className="py-2 pe-2">
+                {user.name}
+              </ListCell>
+              <ListCell className="p-2">
                 {user.email}
                 {user.emailStatus !== 'VERIFIED' && (
-                  <div className="ms-2 inline-block text-sm px-2 rounded bg-red-700 text-white">
+                  <div className="block w-fit text-sm px-2 rounded bg-red-700 text-white">
                     <Icon icon="exclamation-triangle" className="me-1" />
                     {t('users:email_status', {
                       context: user.emailStatus?.toLowerCase() ?? 'unverified',
@@ -116,7 +118,7 @@ export default function UsersView() {
                   </div>
                 )}
               </ListCell>
-              <ListCell>
+              <ListCell className="py-2 ps-2">
                 <MultiselectInput
                   className="w-42"
                   value={user.systemRoles ?? []}

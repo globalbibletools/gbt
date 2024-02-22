@@ -30,7 +30,7 @@ export default function ManageLanguageView() {
 
   return (
     <div className="absolute w-full h-full flex items-stretch">
-      <div className="min-w-[280px] flex-shrink-0 bg-brown-100 p-6 pt-7">
+      <div className="w-56 flex-shrink-0 bg-brown-100 p-6 pt-7">
         <div className="px-3 mb-4">
           <h2 className="font-bold text-lg">{language.data.name}</h2>
         </div>

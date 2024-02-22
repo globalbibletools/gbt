@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { Link, LinkProps } from 'react-router-dom';
+import { LinkProps } from 'react-router-dom';
 import Button from './actions/Button';
 
 export interface ListProps {
@@ -35,7 +35,7 @@ export function ListHeaderCell({
   return (
     <th
       className={`
-        border-b-2 border-green-300 text-start text-sm px-4
+        border-b-2 border-green-300 text-start text-sm first:ps-4 last:pe-4
         ${className}
       `}
     >
@@ -95,9 +95,15 @@ export function ListCell({
 }: ListCellProps) {
   if (header) {
     return (
-      <th className={`text-start font-bold px-4 ${className}`}>{children}</th>
+      <th className={`text-start font-bold first:ps-4 last:pe-4 ${className}`}>
+        {children}
+      </th>
     );
   } else {
-    return <td className={`text-start px-4 ${className}`}>{children}</td>;
+    return (
+      <td className={`text-start first:ps-4 last:pe-4 ${className}`}>
+        {children}
+      </td>
+    );
   }
 }
