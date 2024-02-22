@@ -135,7 +135,7 @@ export const TranslationSidebar = ({
     <div
       className="
         relative h-[320px] flex flex-col gap-4 flex-shrink-0 shadow rounded-2xl bg-brown-100
-        md:h-auto md:w-1/3 md:min-w-[320px] md:max-w-[480px]
+        lg:h-auto lg:w-1/3 lg:min-w-[320px] lg:max-w-[480px]
       "
     >
       <button
