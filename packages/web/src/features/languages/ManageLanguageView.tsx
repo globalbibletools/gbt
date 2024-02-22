@@ -275,7 +275,7 @@ export default function ManageLanguageView() {
               {t('users:email').toUpperCase()}
             </ListHeaderCell>
             <ListHeaderCell className="min-w-[120px]">
-              {t('users:roles').toUpperCase()}
+              {t('users:role', { count: 100 }).toUpperCase()}
             </ListHeaderCell>
             <ListHeaderCell />
           </ListHeader>
