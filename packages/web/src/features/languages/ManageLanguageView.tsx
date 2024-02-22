@@ -324,7 +324,7 @@ export default function ManageLanguageView() {
                       })
                     }
                   >
-                    Remove
+                    {t('common:remove')}
                   </Button>
                 </ListCell>
               </ListRow>

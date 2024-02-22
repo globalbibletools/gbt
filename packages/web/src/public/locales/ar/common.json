@@ -17,6 +17,7 @@
   "next": "التالي",
   "not_found": "غير موجود",
   "not_found_message": "لم نتمكن من العثور على ما تبحث عنه.",
+  "remove": "يزيل",
   "rich_text": {
     "bold_tooltip": "عريض (Ctrl+B)",
     "italic_tooltip": "مائل (Ctrl+I)",

@@ -17,6 +17,7 @@
   "next": "Siguiente",
   "not_found": "No Encontrado",
   "not_found_message": "No pudimos encontrar lo que estás buscando.",
+  "remove": "Eliminar",
   "rich_text": {
     "bold_tooltip": "Negrita (Ctrl+B)",
     "italic_tooltip": "Cursiva (Ctrl+I)",
