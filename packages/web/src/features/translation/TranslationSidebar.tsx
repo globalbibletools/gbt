@@ -15,6 +15,7 @@ import { bdbBookRefNames } from 'data/bdb-book-ref-names';
 import { parseVerseId } from './verse-utils';
 
 type TranslationSidebarProps = {
+  className: string;
   language: string;
   verse: Verse;
   wordIndex: number;
@@ -27,6 +28,7 @@ export const TranslationSidebar = ({
   verse,
   wordIndex,
   showComments,
+  className = '',
   onClose,
 }: TranslationSidebarProps) => {
   const { t } = useTranslation(['common', 'translate']);
@@ -133,10 +135,10 @@ export const TranslationSidebar = ({
 
   return (
     <div
-      className="
-        relative h-[320px] flex flex-col gap-4 flex-shrink-0 shadow rounded-2xl bg-brown-100
-        lg:h-auto lg:w-1/3 lg:min-w-[320px] lg:max-w-[480px]
-      "
+      className={`
+        relative flex flex-col gap-4 flex-shrink-0 shadow rounded-2xl bg-brown-100
+        ${className}
+      `}
     >
       <button
         onClick={onClose}
@@ -158,7 +160,7 @@ export const TranslationSidebar = ({
       <div className="grow flex flex-col min-h-0">
         <Tab.Group>
           <Tab.List className="flex flex-row">
-            <div className="border-b border-blue-800 h-full w-4"></div>
+            <div className="border-b border-blue-800 h-full w-2"></div>
             {tabTitles.map((title) => (
               <>
                 <Tab

@@ -49,7 +49,7 @@ export function TranslationToolbar({
   const userCan = useAccessControl();
 
   return (
-    <div className="flex items-center shadow-md px-6 md:px-8 py-4 mb-8">
+    <div className="flex items-center shadow-md px-6 md:px-8 py-4">
       <div className="me-16">
         <FormLabel htmlFor="verse-reference">VERSE</FormLabel>
         <div className="relative">
