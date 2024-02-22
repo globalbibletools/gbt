@@ -83,7 +83,7 @@ export default function UsersView() {
             onClick={() => inviteDialog.current?.showModal()}
             variant="primary"
           >
-            <Icon icon="plus" className="mr-1" />
+            <Icon icon="plus" className="me-1" />
             {t('users:invite_user')}
           </Button>
         )}
@@ -108,8 +108,8 @@ export default function UsersView() {
               <ListCell>
                 {user.email}
                 {user.emailStatus !== 'VERIFIED' && (
-                  <div className="ml-2 inline-block text-sm px-2 rounded bg-red-700 text-white">
-                    <Icon icon="exclamation-triangle" className="mr-1" />
+                  <div className="ms-2 inline-block text-sm px-2 rounded bg-red-700 text-white">
+                    <Icon icon="exclamation-triangle" className="me-1" />
                     {t('users:email_status', {
                       context: user.emailStatus?.toLowerCase() ?? 'unverified',
                     })}

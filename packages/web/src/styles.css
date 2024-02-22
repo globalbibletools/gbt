@@ -32,9 +32,9 @@
     @apply font-mixed;
   }
   .rich-text ol {
-    @apply pl-7 list-decimal;
+    @apply ps-7 list-decimal;
   }
   .rich-text ul {
-    @apply pl-7 list-disc;
+    @apply ps-7 list-disc;
   }
 }

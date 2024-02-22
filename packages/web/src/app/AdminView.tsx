@@ -18,7 +18,7 @@ export default function AdminView() {
                 }`
               }
             >
-              <Icon icon="language" className="w-4 mr-2" />
+              <Icon icon="language" className="w-4 me-2" />
               Languages
             </NavLink>
           </li>
@@ -31,7 +31,7 @@ export default function AdminView() {
                 }`
               }
             >
-              <Icon icon="user" className="w-4 mr-2" />
+              <Icon icon="user" className="w-4 me-2" />
               Users
             </NavLink>
           </li>

@@ -46,13 +46,13 @@ export function VerseSelector({
   };
 
   return (
-    <div className="flex items-center shadow-md px-6 md:px-8 py-4 gap-16 mb-8">
-      <div>
+    <div className="flex items-center shadow-md px-6 md:px-8 py-4 mb-8">
+      <div className="me-16">
         <FormLabel htmlFor="verse-reference">VERSE</FormLabel>
         <div className="relative">
           <TextInput
             id="verse-reference"
-            className="pr-16 placeholder-current w-56"
+            className="pe-16 placeholder-current w-56"
             autoComplete="off"
             placeholder={generateReference(verseInfo, t)}
             onKeyDown={onKeyDown}
@@ -75,7 +75,7 @@ export function VerseSelector({
           </Button>
         </div>
       </div>
-      <div>
+      <div className="me-2">
         <FormLabel htmlFor="target-language">LANGUAGE</FormLabel>
         <ComboboxInput
           id="target-language"
@@ -85,6 +85,12 @@ export function VerseSelector({
           className="w-40"
           autoComplete="off"
         />
+      </div>
+      <div className="pt-6">
+        <Button variant="tertiary" to={`/admin/languages/${languageCode}`}>
+          <Icon icon="sliders" className="me-1" />
+          Manage
+        </Button>
       </div>
     </div>
   );

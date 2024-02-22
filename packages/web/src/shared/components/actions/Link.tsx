@@ -7,7 +7,7 @@ type LinkProps = BaseLinkProps & {
 
 export default function Link({ className, variant, ...props }: LinkProps) {
   let tailwindClasses =
-    'text-blue-600 focus:outline-none focus:underline hover:underline';
+    'text-blue-800 font-bold focus:outline-none focus:underline hover:underline';
   if (variant === 'button') {
     // Copy button styling.
     tailwindClasses = `${buttonClassMap.primary} inline-block`;

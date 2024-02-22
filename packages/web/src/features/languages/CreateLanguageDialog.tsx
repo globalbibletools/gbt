@@ -39,6 +39,8 @@ const CreateLanguageDialog = forwardRef<CreateLanguageDialogRef, unknown>(
         });
 
         flash.success(t('languages:language_created'));
+
+        root.current?.close();
       } catch (error) {
         if (error instanceof ApiClientError && error.status === 409) {
           const alreadyExistsError = error.body.errors.find(

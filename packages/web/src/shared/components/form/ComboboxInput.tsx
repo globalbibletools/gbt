@@ -78,7 +78,7 @@ const ComboboxInput = forwardRef<HTMLInputElement, BaseComboboxInputProps>(
         >
           <div
             className={`
-              border rounded shadow-inner flex outline-2 outline-offset-2 has-[:focus-visible]:outline
+              h-9 border rounded shadow-inner flex outline-2 outline-offset-2 has-[:focus-visible]:outline
               ${
                 hasErrors
                   ? 'border-red-700 shadow-red-100 outline-red-700'
@@ -92,7 +92,7 @@ const ComboboxInput = forwardRef<HTMLInputElement, BaseComboboxInputProps>(
                 setNormalizedInputValue(event.target.value.normalize('NFD'))
               }
               onBlur={onBlur}
-              className="w-full px-3 h-9 rounded-b flex-grow focus:outline-none bg-transparent rounded"
+              className="w-full px-3 h-full rounded-b flex-grow focus:outline-none bg-transparent rounded"
               displayValue={(value) =>
                 items.find((i) => i.value === value)?.label ?? ''
               }

@@ -28,6 +28,8 @@
   },
   "submitting": "submitting",
   "success": "Success",
+  "saving": "Saving",
+  "saved": "Saved",
   "tab_titles": {
     "accept_invite": "Accept Invite",
     "import_glosses": "Import {{languageName}} Glosses",

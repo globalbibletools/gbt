@@ -13,7 +13,7 @@ const sharedClasses =
 
 export const classMap: Record<ButtonVariant, string> = {
   primary: `${sharedClasses} bg-blue-800 text-white shadow-md`,
-  secondary: `${sharedClasses} text-blue-800 border-2 border-blue-800 bg-white shadow-md`,
+  secondary: `${sharedClasses} text-blue-800 border border-blue-800 bg-white shadow-md`,
   tertiary: `${sharedClasses} text-blue-800`,
 };
 

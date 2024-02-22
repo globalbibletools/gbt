@@ -141,7 +141,7 @@ export const TranslationSidebar = ({
       <button
         onClick={onClose}
         type="button"
-        className="absolute w-9 h-9 right-1 top-1 text-red-700 rounded-md focus-visible:outline outline-2 outline-green-300"
+        className="absolute w-9 h-9 end-1 top-1 text-red-700 rounded-md focus-visible:outline outline-2 outline-green-300"
       >
         <Icon icon="xmark" />
         <span className="sr-only">{t('common:close')}</span>

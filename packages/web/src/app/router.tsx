@@ -1,6 +1,9 @@
 import { createBrowserRouter, redirect } from 'react-router-dom';
 import translationRoutes from '../features/translation/router';
-import { languageAdminRoutes } from '../features/languages/router';
+import {
+  languageAdminRoutes,
+  languagePageRoutes,
+} from '../features/languages/router';
 import {
   userPageRoutes,
   userModalRoutes,
@@ -25,12 +28,13 @@ const router = createBrowserRouter([
         },
       },
       {
-        path: '/admin',
+        path: 'admin',
         element: <AdminView />,
         loader: () => authorize('administer', 'User'),
         children: [...userAdminRoutes, ...languageAdminRoutes],
       },
       ...userPageRoutes,
+      ...languagePageRoutes,
       ...translationRoutes,
     ],
   },

@@ -46,7 +46,7 @@ export default function LanguagesView() {
             onClick={() => createDialog.current?.showModal()}
             variant="primary"
           >
-            <Icon icon="plus" className="mr-1" />
+            <Icon icon="plus" className="me-1" />
             {t('languages:add_language')}
           </Button>
         )}

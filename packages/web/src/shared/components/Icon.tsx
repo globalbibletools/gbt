@@ -35,5 +35,9 @@ library.add(
   FaSolid.faArrowRotateLeft,
   FaSolid.faLanguage,
   FaSolid.faUser,
-  FaSolid.faLanguage
+  FaSolid.faGear,
+  FaSolid.faSliders,
+  FaSolid.faAlignLeft,
+  FaSolid.faAlignRight,
+  FaSolid.faExternalLink
 );
