@@ -14,7 +14,7 @@ import FormLabel from '../../shared/components/form/FormLabel';
 import ComboboxInput from '../../shared/components/form/ComboboxInput';
 import { useAccessControl } from '../../shared/accessControl';
 
-export interface VerseSelectorProps {
+export interface TranslationToolbarProps {
   verseId: string;
   languageCode: string;
   languages: { name: string; code: string }[];
@@ -22,13 +22,13 @@ export interface VerseSelectorProps {
   onLanguageChange: (languageCode: string) => void;
 }
 
-export function VerseSelector({
+export function TranslationToolbar({
   verseId,
   languages,
   languageCode,
   onLanguageChange,
   onVerseChange,
-}: VerseSelectorProps) {
+}: TranslationToolbarProps) {
   const { t } = useTranslation(['translate', 'bible']);
   const verseInfo = parseVerseId(verseId);
 

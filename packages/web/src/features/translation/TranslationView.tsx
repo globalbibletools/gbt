@@ -19,7 +19,7 @@ import {
 } from '../../shared/hooks/useFontLoader';
 import TranslateWord, { TranslateWordRef } from './TranslateWord';
 import { TranslationSidebar } from './TranslationSidebar';
-import { VerseSelector } from './VerseSelector';
+import { TranslationToolbar } from './TranslationToolbar';
 import {
   bookFirstVerseId,
   bookLastVerseId,
@@ -314,7 +314,7 @@ export default function TranslationView() {
 
   return (
     <div className="absolute w-full h-full flex flex-col flex-grow">
-      <VerseSelector
+      <TranslationToolbar
         verseId={verseId}
         languageCode={language}
         languages={translationLanguages.map(({ code, name }) => ({
