@@ -29,7 +29,7 @@ export function TranslationToolbar({
   onLanguageChange,
   onVerseChange,
 }: TranslationToolbarProps) {
-  const { t } = useTranslation(['translate', 'bible', 'common']);
+  const { t } = useTranslation(['translate', 'bible', 'common', 'languages']);
   const verseInfo = parseVerseId(verseId);
 
   const onKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
@@ -93,7 +93,7 @@ export function TranslationToolbar({
         <div className="pt-6">
           <Button variant="tertiary" to={`/languages/${languageCode}`}>
             <Icon icon="sliders" className="me-1" />
-            {t('common:manage')}
+            {t('languages:manage')}
           </Button>
         </div>
       )}
