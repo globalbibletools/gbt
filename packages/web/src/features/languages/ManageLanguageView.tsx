@@ -3,6 +3,7 @@ import { Icon } from '../../shared/components/Icon';
 import apiClient from '../../shared/apiClient';
 import queryClient from '../../shared/queryClient';
 import { useQuery } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 
 const languageQueryKey = (code: string) => ({
   queryKey: ['language', code],
@@ -25,6 +26,7 @@ function useLanguageQuery(code: string) {
 
 export default function ManageLanguageView() {
   const params = useParams() as { code: string };
+  const { t } = useTranslation(['users', 'languages']);
 
   const { data: language } = useLanguageQuery(params.code);
 
@@ -45,7 +47,7 @@ export default function ManageLanguageView() {
               }
             >
               <Icon icon="sliders" className="w-4 me-2" />
-              Settings
+              {t('languages:settings')}
             </NavLink>
           </li>
           <li>
@@ -58,7 +60,7 @@ export default function ManageLanguageView() {
               }
             >
               <Icon icon="user" className="w-4 me-2" />
-              Users
+              {t('users:users')}
             </NavLink>
           </li>
           <li>
@@ -71,7 +73,7 @@ export default function ManageLanguageView() {
               }
             >
               <Icon icon="file-import" className="w-4 me-2" />
-              Import
+              {t('languages:import')}
             </NavLink>
           </li>
         </ul>

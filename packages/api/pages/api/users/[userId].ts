@@ -90,7 +90,6 @@ export default createRoute<{ userId: string }>()
             });
           }
 
-          console.log(email != key.providerUserId);
           if (email && email !== key.providerUserId) {
             const token = randomBytes(12).toString('hex');
             await client.userEmailVerification.create({

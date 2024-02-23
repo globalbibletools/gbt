@@ -172,7 +172,7 @@ export default function ManageLanguageUserView() {
                   }
                 >
                   <Icon icon="xmark" />
-                  <span className="sr-only">Remove</span>
+                  <span className="sr-only">{t('common:remove')}</span>
                 </Button>
               </ListCell>
             </ListRow>

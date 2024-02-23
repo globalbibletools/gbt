@@ -37,7 +37,7 @@ export default function Header() {
       </NavLink>
       {userCan('create', 'Language') && (
         <NavLink to={'/admin'} className={navLinkClasses}>
-          Admin
+          {t('common:admin')}
         </NavLink>
       )}
       <div className="md:flex-grow" />

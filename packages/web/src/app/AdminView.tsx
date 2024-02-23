@@ -1,7 +1,11 @@
 import { NavLink, Outlet } from 'react-router-dom';
 import { Icon } from '../shared/components/Icon';
+import { useTranslation } from 'react-i18next';
+import { capitalize } from 'lodash';
 
 export default function AdminView() {
+  const { t } = useTranslation(['languages', 'users']);
+
   return (
     <div className="absolute w-full h-full flex items-stretch">
       <div className="min-w-[280px] flex-shrink-0 bg-brown-100 p-6 pt-7">
@@ -19,7 +23,7 @@ export default function AdminView() {
               }
             >
               <Icon icon="language" className="w-4 me-2" />
-              Languages
+              {capitalize(t('languages:language_other') ?? '')}
             </NavLink>
           </li>
           <li>
@@ -32,7 +36,7 @@ export default function AdminView() {
               }
             >
               <Icon icon="user" className="w-4 me-2" />
-              Users
+              {t('users:users')}
             </NavLink>
           </li>
         </ul>

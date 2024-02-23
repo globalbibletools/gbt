@@ -128,7 +128,7 @@ const CreateLanguageDialog = forwardRef<CreateLanguageDialogRef, unknown>(
           }
         >
           <Icon icon="xmark" />
-          <span className="sr-only">Close</span>
+          <span className="sr-only">{t('common:close')}</span>
         </Button>
       </dialog>
     );

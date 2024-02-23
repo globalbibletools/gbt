@@ -1,6 +1,6 @@
 import { debounce } from 'lodash';
 import ViewTitle from '../../shared/components/ViewTitle';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import apiClient from '../../shared/apiClient';
 import queryClient from '../../shared/queryClient';
 import fontClient from '../../shared/fontClient';
@@ -128,7 +128,7 @@ export default function ManageLanguageSettingsView() {
   return (
     <div className="px-8 py-6 w-fit overflow-y-auto h-full">
       <div className="flex items-baseline mb-4">
-        <ViewTitle>Settings</ViewTitle>
+        <ViewTitle>{t('languages:settings')}</ViewTitle>
         <div className="ms-6 text-gray-700">
           {isLoading ? (
             <>
@@ -146,22 +146,23 @@ export default function ManageLanguageSettingsView() {
       <Form context={formContext} className="max-w-[1000px]">
         <section className="flex flex-col gap-4 lg:flex-row lg:gap-20 pb-8 px-10 border-b border-b-green-300">
           <div className="flex-grow">
-            <h3 className="font-bold text-lg mb-2">Identification</h3>
-            <p className="text-sm mb-2">
-              The name of the language is shown throughout the app. We prefer it
-              to be written in the language rather than English.
-            </p>
+            <h3 className="font-bold text-lg mb-2">
+              {t('languages:identification')}
+            </h3>
+            <p className="text-sm mb-2">{t('languages:settings_help.name')}</p>
             <p className="text-sm">
-              The language code follows{' '}
-              <Link
-                to="https://en.wikipedia.org/wiki/ISO_639-3"
-                target="_blank"
-                rel="noopener"
-              >
-                ISO 639-3
-                <Icon icon="external-link" className="ms-1" />
-              </Link>{' '}
-              which uniquely identifies languages across systems.
+              <Trans i18nKey="languages:settings_help.code">
+                before
+                <Link
+                  to="https://en.wikipedia.org/wiki/ISO_639-3"
+                  target="_blank"
+                  rel="noopener"
+                >
+                  ISO 639-3
+                  <Icon icon="external-link" className="ms-1" />
+                </Link>{' '}
+                after
+              </Trans>
             </p>
           </div>
           <div className="flex-shrink-0 w-80">
@@ -202,10 +203,7 @@ export default function ManageLanguageSettingsView() {
         <section className="flex flex-col gap-4 lg:flex-row lg:gap-20 py-8 px-10 border-b border-b-green-300">
           <div className="flex-grow">
             <h3 className="font-bold text-lg mb-2">Text</h3>
-            <p className="text-sm">
-              Configure the text of the language as you would like it to appear
-              in the platform.
-            </p>
+            <p className="text-sm">{t('languages:settings_help.text')}</p>
           </div>
           <div className="flex-shrink-0 w-80">
             <div className="mb-4">
@@ -263,10 +261,11 @@ export default function ManageLanguageSettingsView() {
         </section>
         <section className="flex flex-col gap-4 lg:flex-row lg:gap-20 py-8 px-10">
           <div className="flex-grow">
-            <h3 className="font-bold text-lg mb-2">Bible Translations</h3>
+            <h3 className="font-bold text-lg mb-2">
+              {t('languages:settings_help.bible_translations')}
+            </h3>
             <p className="text-sm">
-              These translation are used in the platform when showing a passage
-              from the Bible.
+              {t('languages:settings_help.translation')}
             </p>
           </div>
           <div className="flex-shrink-0 w-80">
