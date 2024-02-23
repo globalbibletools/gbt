@@ -49,7 +49,7 @@ export default function Header() {
         >
           <DropdownMenuLink to="/profile">
             <Icon icon="user" className="me-2" fixedWidth />
-            {t('users:profile')}
+            <span className="font-bold">{t('users:profile')}</span>
           </DropdownMenuLink>
           <DropdownMenuButton
             onClick={async () => {
@@ -57,8 +57,8 @@ export default function Header() {
               window.location.href = '/';
             }}
           >
-            <Icon icon="right-from-bracket" className="me-4" fixedWidth />
-            {t('users:log_out')}
+            <Icon icon="right-from-bracket" className="me-2" fixedWidth />
+            <span className="font-bold">{t('users:log_out')}</span>
           </DropdownMenuButton>
         </DropdownMenu>
       )}

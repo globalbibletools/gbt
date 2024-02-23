@@ -2,9 +2,8 @@ import { Link } from 'react-router-dom';
 import { ReactNode, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import logo from '../../assets/images/bet-scroll.png';
-import { DialogRef } from './Dialog';
 import { Icon } from './Icon';
-import LanguageDialog from './LanguageDialog';
+import LanguageDialog, { LanguageDialogRef } from './LanguageDialog';
 import Button from './actions/Button';
 import { initialLanguageChosen } from '../../app/i18n';
 import interfaceLanguages from '../languages.json';
@@ -22,10 +21,10 @@ export default function ModalView({
 }: ModalViewProps) {
   const { t, i18n } = useTranslation(['common', 'languages']);
 
-  const languageDialog = useRef<DialogRef>(null);
+  const languageDialog = useRef<LanguageDialogRef>(null);
   useEffect(() => {
     if (!initialLanguageChosen) {
-      languageDialog.current?.open();
+      languageDialog.current?.show();
     }
   }, []);
 
@@ -48,7 +47,7 @@ export default function ModalView({
         <Button
           variant="tertiary"
           onClick={() => {
-            languageDialog.current?.open();
+            languageDialog.current?.show();
           }}
         >
           <Icon icon="language" className="me-2" fixedWidth />

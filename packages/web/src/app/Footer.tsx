@@ -1,38 +1,41 @@
 import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { DialogRef } from '../shared/components/Dialog';
 import { Icon } from '../shared/components/Icon';
-import LanguageDialog from '../shared/components/LanguageDialog';
+import LanguageDialog, {
+  LanguageDialogRef,
+} from '../shared/components/LanguageDialog';
 import { initialLanguageChosen } from './i18n';
 import interfaceLanguages from '../shared/languages.json';
+import Button from '../shared/components/actions/Button';
 
 export interface FooterProps {
   className?: string;
 }
 
 export default function Footer({ className = '' }: FooterProps) {
-  const languageDialog = useRef<DialogRef>(null);
+  const languageDialog = useRef<LanguageDialogRef>(null);
   const { t, i18n } = useTranslation(['languages']);
 
   useEffect(() => {
     if (!initialLanguageChosen) {
-      languageDialog.current?.open();
+      languageDialog.current?.show();
     }
   }, []);
 
   return (
     <footer className={`p-2 flex flex-row z-10 justify-end ${className}`}>
-      <button
-        type="button"
+      <Button
+        variant="tertiary"
+        small
         onClick={() => {
-          languageDialog.current?.open();
+          languageDialog.current?.show();
         }}
       >
-        <Icon icon="earth" className="me-2" fixedWidth />
+        <Icon icon="language" className="me-2" fixedWidth />
         {(interfaceLanguages as { [code: string]: string })[
           i18n.resolvedLanguage
         ] ?? t('languages:language', { count: 100 })}
-      </button>
+      </Button>
       <LanguageDialog ref={languageDialog} />
     </footer>
   );

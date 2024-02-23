@@ -9,7 +9,6 @@ library.add(
   FaBrands.faGoogle,
   FaSolid.faCaretUp,
   FaSolid.faCaretDown,
-  FaSolid.faEarth,
   FaSolid.faUser,
   FaSolid.faClose,
   FaSolid.faPlus,
