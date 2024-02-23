@@ -12,6 +12,8 @@ import TextInput from '../../shared/components/form/TextInput';
 import InputError from '../../shared/components/form/InputError';
 import SubmittingIndicator from '../../shared/components/form/SubmittingIndicator';
 import { languageCodes } from './../../shared/languageCodes';
+import { useMutation } from '@tanstack/react-query';
+import queryClient from '../../shared/queryClient';
 
 interface FormData {
   code: string;
@@ -25,35 +27,33 @@ export interface CreateLanguageDialogRef {
 const CreateLanguageDialog = forwardRef<CreateLanguageDialogRef, unknown>(
   (_, ref) => {
     const { t } = useTranslation(['languages', 'common']);
-
     const flash = useFlash();
-
     const root = useRef<HTMLDialogElement>(null);
-
     const formContext = useForm<FormData>();
-    async function onSubmit(data: FormData) {
-      try {
-        await apiClient.languages.create({
-          code: data.code,
-          name: data.name,
-        });
 
-        flash.success(t('languages:language_created'));
-
-        root.current?.close();
-      } catch (error) {
+    const { mutateAsync } = useMutation({
+      mutationFn({ code, name }: FormData) {
+        return apiClient.languages.create({ code, name });
+      },
+      onError(error, { code }) {
         if (error instanceof ApiClientError && error.status === 409) {
           const alreadyExistsError = error.body.errors.find(
             (error) => error.code === 'AlreadyExists'
           );
           if (alreadyExistsError) {
-            flash.error(t('languages:language_exists', { code: data.code }));
+            flash.error(t('languages:language_exists', { code }));
             return;
           }
         }
         flash.error(`${error}`);
-      }
-    }
+      },
+      onSuccess() {
+        flash.success(t('languages:language_created'));
+        root.current?.close();
+
+        queryClient.invalidateQueries(['languages']);
+      },
+    });
 
     useImperativeHandle(ref, () => ({
       showModal() {
@@ -66,7 +66,7 @@ const CreateLanguageDialog = forwardRef<CreateLanguageDialogRef, unknown>(
         ref={root}
         className="rounded-lg shadow-md bg-white mx-auto p-12 focus-visible:outline outline-green-300 outline-2"
       >
-        <Form context={formContext} onSubmit={onSubmit}>
+        <Form context={formContext} onSubmit={(data) => mutateAsync(data)}>
           <h2 className="font-bold text-xl mb-6 text-center">
             {t('languages:new_language')}
           </h2>

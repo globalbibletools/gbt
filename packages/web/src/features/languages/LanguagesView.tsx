@@ -20,18 +20,34 @@ import CreateLanguageDialog, {
   CreateLanguageDialogRef,
 } from './CreateLanguageDialog';
 import { useRef } from 'react';
+import queryClient from '../../shared/queryClient';
+import { useQuery } from '@tanstack/react-query';
+
+const languagesQueryKey = {
+  queryKey: ['languages'],
+  queryFn: () => apiClient.languages.findAll(),
+};
 
 export function languagesViewLoader() {
-  return apiClient.languages.findAll();
+  return queryClient.ensureQueryData(languagesQueryKey);
+}
+
+function useLanguagesQuery() {
+  const loaderData = useLoaderData() as Awaited<
+    ReturnType<typeof languagesViewLoader>
+  >;
+  return useQuery({
+    ...languagesQueryKey,
+    initialData: loaderData,
+  });
 }
 
 export default function LanguagesView() {
-  const languages = useLoaderData() as GetLanguagesResponseBody;
   const { t } = useTranslation(['languages', 'common']);
   useTitle(t('common:tab_titles.languages'));
-
   const userCan = useAccessControl();
 
+  const { data: languages } = useLanguagesQuery();
   const createDialog = useRef<CreateLanguageDialogRef>(null);
 
   return (
@@ -74,7 +90,7 @@ export default function LanguagesView() {
                   id: language.code,
                 }) && (
                   <Button variant="tertiary" to={`./${language.code}`}>
-                    {t('common:manage')}
+                    {t('languages:manage')}
                   </Button>
                 )}
               </ListCell>

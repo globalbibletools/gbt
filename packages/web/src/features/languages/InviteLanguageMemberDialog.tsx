@@ -11,7 +11,7 @@ import Button from '../../shared/components/actions/Button';
 import { useFlash } from '../../shared/hooks/flash';
 import { GetSessionResponse, LanguageRole } from '@translation/api-types';
 import MultiselectInput from '../../shared/components/form/MultiselectInput';
-import { useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { MouseEvent, forwardRef, useImperativeHandle, useRef } from 'react';
 import { Icon } from '../../shared/components/Icon';
 
@@ -33,45 +33,48 @@ const InviteLanguageMemberDialog = forwardRef<
   InviteLanguageMemberDialogProps
 >(({ languageCode }, ref) => {
   const { t } = useTranslation(['common', 'users']);
-
   const flash = useFlash();
   const queryClient = useQueryClient();
-
   const root = useRef<HTMLDialogElement>(null);
-
   const formContext = useForm<FormData>({
     defaultValues: {
       roles: [LanguageRole.Translator],
     },
   });
-  async function onSubmit(data: FormData) {
-    try {
-      await apiClient.languages.inviteMember(languageCode, {
-        email: data.email,
-        roles: data.roles,
+
+  const { mutateAsync } = useMutation({
+    mutationFn({ email, roles }: FormData) {
+      return apiClient.languages.inviteMember(languageCode, {
+        email,
+        roles,
       });
-      const session: GetSessionResponse | undefined = queryClient.getQueryData([
-        'session',
-      ]);
-      if (!session || session.user?.email === data.email)
-        queryClient.invalidateQueries(['session']);
-
-      flash.success(t('users:user_invited'));
-
-      root.current?.close();
-    } catch (error) {
+    },
+    onError(error, { email }) {
       if (error instanceof ApiClientError && error.status === 409) {
         const alreadyExistsError = error.body.errors.find(
           (error) => error.code === 'AlreadyExists'
         );
         if (alreadyExistsError) {
-          flash.error(t('users:errors.user_exists', { email: data.email }));
+          flash.error(t('users:errors.user_exists', { email }));
           return;
         }
       }
       flash.error(`${error}`);
-    }
-  }
+    },
+    onSuccess(_, { email }) {
+      const session: GetSessionResponse | undefined = queryClient.getQueryData([
+        'session',
+      ]);
+      if (!session || session.user?.email === email)
+        queryClient.invalidateQueries(['session']);
+
+      queryClient.invalidateQueries(['users']);
+      queryClient.invalidateQueries(['language-members', languageCode]);
+
+      root.current?.close();
+      flash.success(t('users:user_invited'));
+    },
+  });
 
   useImperativeHandle(ref, () => ({
     showModal() {
@@ -84,7 +87,7 @@ const InviteLanguageMemberDialog = forwardRef<
       ref={root}
       className="rounded-lg shadow-md bg-white mx-auto p-12 focus-visible:outline outline-green-300 outline-2"
     >
-      <Form context={formContext} onSubmit={onSubmit}>
+      <Form context={formContext} onSubmit={(data) => mutateAsync(data)}>
         <h2 className="font-bold text-xl mb-6 text-center">
           {t('users:invite_user')}
         </h2>
