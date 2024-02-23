@@ -1,4 +1,4 @@
-import { GlossState, PrismaClient } from '@translation/db';
+import { GlossState, GlossSource, PrismaClient } from '@translation/db';
 import { SQSEvent } from 'aws-lambda';
 import { bookKeys } from '../../../../data/book-keys';
 
@@ -93,6 +93,7 @@ export const lambdaHandler = async (event: SQSEvent) => {
               languageId: language.id,
               gloss,
               state: GlossState.APPROVED,
+              source: GlossSource.IMPORT,
             })),
           });
         } catch (error) {

@@ -1,4 +1,8 @@
-import { GlossState, PatchWordGlossRequestBody } from '@translation/api-types';
+import {
+  GlossState,
+  GlossSource,
+  PatchWordGlossRequestBody,
+} from '@translation/api-types';
 import * as z from 'zod';
 import createRoute from '../../../../../../shared/Route';
 import { authorize } from '../../../../../../shared/access-control/authorize';
@@ -75,6 +79,7 @@ export default createRoute<{ code: string; wordId: string }>()
             fields.gloss !== originalGloss?.gloss ? fields.gloss : undefined,
           state:
             fields.state !== originalGloss?.state ? fields.state : undefined,
+          source: GlossSource.User,
         },
       });
 

@@ -1,3 +1,6 @@
+-- CreateEnum
+CREATE TYPE "GlossSource" AS ENUM ('USER', 'IMPORT');
+
 -- CreateTable
 CREATE TABLE "GlossHistoryEntry" (
     "wordId" TEXT NOT NULL,
@@ -6,6 +9,7 @@ CREATE TABLE "GlossHistoryEntry" (
     "userId" UUID,
     "gloss" TEXT,
     "state" "GlossState",
+    "source" "GlossSource" NOT NULL,
 
     CONSTRAINT "GlossHistoryEntry_pkey" PRIMARY KEY ("wordId","languageId","timestamp")
 );
