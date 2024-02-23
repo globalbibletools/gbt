@@ -3,6 +3,8 @@
   "bible_translations": "Traducciones bíblicas",
   "code": "código",
   "font": "Fuente",
+  "identification": "Identificación",
+  "import": "Importar",
   "import_description": "Seleccione un idioma para importar glosas de <1>hebrewgreekbible.online</1>.",
   "import_glosses": "Importar glosas",
   "import_glosses_confirmation_warning": "Esto sobrescribirá cualquier brillo asociado con el lenguaje. Puede llevar algún tiempo completar.",
@@ -23,10 +25,17 @@
   "language_updated": "¡Idioma actualizado!",
   "languages": "Idiomas",
   "ltr": "Izquierda a Derecha",
-  "manage": "Administrar",
   "new_language": "Nuevo Idioma",
   "rtl": "Derecha a Izquierda",
   "select_translations": "Selecciones de traducciones",
+  "settings": "Configuración",
+  "settings_help": {
+    "name": "El nombre del idioma se muestra en toda la aplicación. Preferimos que esté escrito en el idioma en lugar de en inglés.",
+    "code": "El código de idioma sigue <1>ISO 639-3</1>, que identifica de manera única los idiomas en todos los sistemas.",
+    "text": "Configure el texto del idioma como desee que aparezca en la plataforma.",
+    "translation": "Estas traducciones se utilizan en la plataforma al mostrar un pasaje de la Biblia."
+  },
   "switch_language": "Cambiar de Idioma",
+  "text": "Texto",
   "text_direction": "Dirección del Texto"
 }

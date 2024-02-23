@@ -202,7 +202,7 @@ export default function ManageLanguageSettingsView() {
         </section>
         <section className="flex flex-col gap-4 lg:flex-row lg:gap-20 py-8 px-10 border-b border-b-green-300">
           <div className="flex-grow">
-            <h3 className="font-bold text-lg mb-2">Text</h3>
+            <h3 className="font-bold text-lg mb-2">{t('languages:text')}</h3>
             <p className="text-sm">{t('languages:settings_help.text')}</p>
           </div>
           <div className="flex-shrink-0 w-80">
@@ -262,7 +262,7 @@ export default function ManageLanguageSettingsView() {
         <section className="flex flex-col gap-4 lg:flex-row lg:gap-20 py-8 px-10">
           <div className="flex-grow">
             <h3 className="font-bold text-lg mb-2">
-              {t('languages:settings_help.bible_translations')}
+              {t('languages:bible_translations')}
             </h3>
             <p className="text-sm">
               {t('languages:settings_help.translation')}

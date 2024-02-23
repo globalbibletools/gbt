@@ -27,7 +27,7 @@ export function languagesViewLoader() {
 
 export default function LanguagesView() {
   const languages = useLoaderData() as GetLanguagesResponseBody;
-  const { t } = useTranslation(['languages']);
+  const { t } = useTranslation(['languages', 'common']);
   useTitle(t('common:tab_titles.languages'));
 
   const userCan = useAccessControl();
@@ -74,7 +74,7 @@ export default function LanguagesView() {
                   id: language.code,
                 }) && (
                   <Button variant="tertiary" to={`./${language.code}`}>
-                    {t('languages:manage')}
+                    {t('common:manage')}
                   </Button>
                 )}
               </ListCell>

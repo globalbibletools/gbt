@@ -22,12 +22,6 @@
   "language_name_required": "Please enter the language name.",
   "language_one": "language",
   "language_other": "languages",
-  "settings_help": {
-    "name": "The name of the language is shown throughout the app. We prefer it to be written in the language rather than English.",
-    "code": "The language code follows <1>ISO 639-3</1> which uniquely identifies languages across systems.",
-    "text": "Configure the text of the language as you would like it to appear in the platform.",
-    "translation": "These translation are used in the platform when showing a passage from the Bible."
-  },
   "language_updated": "Language updated!",
   "languages": "Languages",
   "ltr": "Left to Right",
@@ -36,6 +30,13 @@
   "rtl": "Right to Left",
   "select_translations": "Select translations",
   "settings": "Settings",
+  "settings_help": {
+    "name": "The name of the language is shown throughout the app. We prefer it to be written in the language rather than English.",
+    "code": "The language code follows <1>ISO 639-3</1> which uniquely identifies languages across systems.",
+    "text": "Configure the text of the language as you would like it to appear in the platform.",
+    "translation": "These translation are used in the platform when showing a passage from the Bible."
+  },
   "switch_language": "Switch Language",
+  "text": "Text",
   "text_direction": "Text Direction"
 }

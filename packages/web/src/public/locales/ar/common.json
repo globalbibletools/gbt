@@ -1,5 +1,6 @@
 {
   "add": "يضيف",
+  "admin": "المشرف",
   "app_name": "أدوات الكتاب المقدس العالمية",
   "cancel": "يلغي",
   "close": "إغلاق",
@@ -13,10 +14,12 @@
   },
   "error": "خطأ",
   "loading": "تحميل",
+  "manage": "إدارة",
   "name": "الاسم",
   "next": "التالي",
   "not_found": "غير موجود",
   "not_found_message": "لم نتمكن من العثور على ما تبحث عنه.",
+  "remove": "إزالة",
   "rich_text": {
     "bold_tooltip": "عريض (Ctrl+B)",
     "italic_tooltip": "مائل (Ctrl+I)",
@@ -28,6 +31,8 @@
   },
   "submitting": "جاري الإرسال",
   "success": "نجاح",
+  "saving": "جاري الحفظ",
+  "saved": "تم الحفظ",
   "tab_titles": {
     "accept_invite": "قبول دعوة",
     "import_glosses": "استيراد {{languageName}} لمعان",

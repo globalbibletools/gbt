@@ -121,7 +121,7 @@ export default function ManageLanguageUserView() {
       <List>
         <ListHeader>
           <ListHeaderCell className="min-w-[120px]">
-            {t('users:name', { count: 1 }).toUpperCase()}
+            {t('common:name', { count: 1 }).toUpperCase()}
           </ListHeaderCell>
           <ListHeaderCell className="min-w-[80px] ps-4">
             {t('users:role', { count: 100 }).toUpperCase()}

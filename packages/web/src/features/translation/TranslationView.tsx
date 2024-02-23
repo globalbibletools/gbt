@@ -350,7 +350,7 @@ export default function TranslationView() {
           const isHebrew = bookId < 40;
           return (
             <div className="flex flex-col flex-grow w-full min-h-0 gap-6 lg:flex-row">
-              <div className="flex flex-col max-h-full min-h-0 gap-8 overflow-auto grow pt-8 pb-10 ps-6 lg:ps-8">
+              <div className="flex flex-col max-h-full min-h-0 gap-8 overflow-auto grow pt-8 pb-10 px-6 lg:pe-0 lg:ps-8">
                 {translationQuery.data && (
                   <p
                     className="mx-2 text-base"
@@ -453,7 +453,7 @@ export default function TranslationView() {
               </div>
               {showSidebar && sidebarWordIndex < verse.words.length && (
                 <TranslationSidebar
-                  className="h-[320px] lg:h-auto lg:w-1/3 lg:min-w-[320px] lg:max-w-[480px] mt-8 mb-10 me-6 lg:me-8"
+                  className="h-[320px] lg:h-auto lg:w-1/3 lg:min-w-[320px] lg:max-w-[480px] mt-8 mb-10 mx-6 lg:ms-0 lg:me-8"
                   language={language}
                   verse={verse}
                   wordIndex={sidebarWordIndex}
