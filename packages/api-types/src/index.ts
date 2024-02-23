@@ -108,6 +108,7 @@ export interface PostLanguageImportRequestBody {
 }
 
 export interface GetLanguageImportResponseBody {
+  userId?: string;
   startDate: string;
   endDate?: string;
   succeeded?: boolean;

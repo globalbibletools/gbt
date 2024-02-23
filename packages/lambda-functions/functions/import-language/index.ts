@@ -87,10 +87,15 @@ export const lambdaHandler = async (event: SQSEvent) => {
               state: GlossState.APPROVED,
             })),
           });
+
+          const job = await client.languageImportJob.findUnique({
+            where: { languageId: language.id },
+          });
           await client.glossHistoryEntry.createMany({
             data: glossData.map(({ wordId, gloss }) => ({
               wordId,
               languageId: language.id,
+              userId: job?.userId,
               gloss,
               state: GlossState.APPROVED,
               source: GlossSource.IMPORT,

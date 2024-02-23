@@ -36,6 +36,8 @@ model AuthUser {
   auth_session       AuthSession[]
   /// The list of auth keys for the user
   auth_key           AuthKey[]
+  /// The language import jobs that this user has started.
+  importJobs         LanguageImportJob[]
   /// The roles for this user on all languages.
   languageRoles      LanguageMemberRole[]
   /// The list of emails awaiting verification.
@@ -239,6 +241,10 @@ model LanguageImportJob {
   language   Language  @relation(fields: [languageId], references: [id])
   /// The ID of the language that is being imported.
   languageId String    @id @db.Uuid
+  /// The user who started this import job.
+  user       AuthUser? @relation(fields: [userId], references: [id])
+  /// The ID of the user who started this import job.
+  userId     String?   @db.Uuid
   /// The start date of the import job
   startDate  DateTime
   /// The end date of the import job
