@@ -36,10 +36,14 @@ model AuthUser {
   auth_session       AuthSession[]
   /// The list of auth keys for the user
   auth_key           AuthKey[]
+  /// The language import jobs that this user has started.
+  importJobs         LanguageImportJob[]
   /// The roles for this user on all languages.
   languageRoles      LanguageMemberRole[]
   /// The list of emails awaiting verification.
   emailVerifications UserEmailVerification[]
+  /// The list of gloss updates this user has performed.
+  glossHistory       GlossHistoryEntry[]
   /// The list of translator notes authored by this user.
   translatorNotes    TranslatorNote[]
   /// The list of footnotes authored by this user.
@@ -145,19 +149,21 @@ model Verse {
 /// A single word within a verse.
 model Word {
   /// The ID of the verse in the format `BBCCCVVVWW`. The last two digits are in order as the words appear in the verse.
-  id              String           @id
+  id              String              @id
   /// The text in Greek, Hebrew, or Aramaic as it appears in the critical text.
   text            String
   /// The verse the word appears in.
-  verse           Verse            @relation(fields: [verseId], references: [id])
+  verse           Verse               @relation(fields: [verseId], references: [id])
   /// The ID of the verse the word appears in.
   verseId         String
   /// The specific form of the lemma for the word.
-  form            LemmaForm        @relation(fields: [formId], references: [id])
+  form            LemmaForm           @relation(fields: [formId], references: [id])
   /// The ID of the specific form of the lemma for the word.
   formId          String
   /// The list of glosses in different languages for this word.
   glosses         Gloss[]
+  /// The gloss history of this word.
+  glossHistory    GlossHistoryEntry[]
   /// The list of machine glosses in different languages for this word.
   machineGlosses  MachineGloss[]
   // The list of translator notes in different languages for this word.
@@ -215,6 +221,8 @@ model Language {
   bibleTranslationIds String[]
   /// The list of glosses of different words for this language.
   glosses             Gloss[]
+  // The gloss history for this language.
+  glossHistory        GlossHistoryEntry[]
   /// The list of machine glosses of different words for this language.
   machineGlosses      MachineGloss[]
   // The list of translator notes of different words for this language.
@@ -233,6 +241,10 @@ model LanguageImportJob {
   language   Language  @relation(fields: [languageId], references: [id])
   /// The ID of the language that is being imported.
   languageId String    @id @db.Uuid
+  /// The user who started this import job.
+  user       AuthUser? @relation(fields: [userId], references: [id])
+  /// The ID of the user who started this import job.
+  userId     String?   @db.Uuid
   /// The start date of the import job
   startDate  DateTime
   /// The end date of the import job
@@ -284,6 +296,37 @@ model Gloss {
   state      GlossState @default(UNAPPROVED)
 
   @@id([wordId, languageId])
+}
+
+/// Represents a gloss update for a particular language.
+model GlossHistoryEntry {
+  /// The word whose gloss is being updated.
+  word       Word        @relation(fields: [wordId], references: [id])
+  /// The ID of the word whose gloss is being updated.
+  wordId     String
+  /// The language of the updated gloss.
+  language   Language    @relation(fields: [languageId], references: [id])
+  /// The ID of the language of the updated gloss.
+  languageId String      @db.Uuid
+  /// The timestamp when the gloss was updated.
+  timestamp  DateTime    @default(now())
+  /// The user who updated the gloss.
+  user       AuthUser?   @relation(fields: [userId], references: [id])
+  /// The ID of the user who updated the gloss
+  userId     String?     @db.Uuid
+  /// The updated text of the gloss. Null indicates no change.
+  gloss      String?
+  /// The updated approval state of the gloss. Null indicate no change.
+  state      GlossState?
+  /// The source of the gloss. Tells whether this history entry came from an import or a direct gloss update.
+  source     GlossSource
+
+  @@id([wordId, languageId, timestamp])
+}
+
+enum GlossSource {
+  USER
+  IMPORT
 }
 
 /// A machine generated gloss of a word in a particular language.
