@@ -32,7 +32,6 @@ export default createRoute<{ code: string }>()
       }
 
       res.ok({
-        userId: job.userId ?? undefined,
         startDate: job.startDate.toISOString(),
         endDate: job.endDate?.toISOString(),
         succeeded: job.succeeded ?? undefined,
