@@ -168,6 +168,12 @@ export const GlossState = makeEnum({
 });
 export type GlossState = typeof GlossState[keyof typeof GlossState];
 
+export const GlossSource = makeEnum({
+  User: 'USER',
+  Import: 'IMPORT',
+});
+export type GlossSource = typeof GlossSource[keyof typeof GlossSource];
+
 export interface Gloss {
   wordId: string;
   gloss?: string;

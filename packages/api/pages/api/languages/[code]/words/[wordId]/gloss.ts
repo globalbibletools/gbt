@@ -1,4 +1,8 @@
-import { GlossState, PatchWordGlossRequestBody } from '@translation/api-types';
+import {
+  GlossState,
+  GlossSource,
+  PatchWordGlossRequestBody,
+} from '@translation/api-types';
 import * as z from 'zod';
 import createRoute from '../../../../../../shared/Route';
 import { authorize } from '../../../../../../shared/access-control/authorize';
@@ -43,6 +47,14 @@ export default createRoute<{ code: string; wordId: string }>()
         }
       }
 
+      const originalGloss = await client.gloss.findUnique({
+        where: {
+          wordId_languageId: {
+            wordId: req.query.wordId,
+            languageId: language.id,
+          },
+        },
+      });
       await client.gloss.upsert({
         where: {
           wordId_languageId: {
@@ -55,6 +67,19 @@ export default createRoute<{ code: string; wordId: string }>()
           ...fields,
           wordId: req.query.wordId,
           languageId: language.id,
+        },
+      });
+
+      await client.glossHistoryEntry.create({
+        data: {
+          wordId: req.query.wordId,
+          languageId: language.id,
+          userId: req.session?.user?.id,
+          gloss:
+            fields.gloss !== originalGloss?.gloss ? fields.gloss : undefined,
+          state:
+            fields.state !== originalGloss?.state ? fields.state : undefined,
+          source: GlossSource.User,
         },
       });
 
