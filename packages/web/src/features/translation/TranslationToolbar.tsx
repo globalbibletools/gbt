@@ -13,6 +13,8 @@ import Button from '../../shared/components/actions/Button';
 import FormLabel from '../../shared/components/form/FormLabel';
 import ComboboxInput from '../../shared/components/form/ComboboxInput';
 import { useAccessControl } from '../../shared/accessControl';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
 
 export interface TranslationToolbarProps {
   verseId: string;
@@ -46,11 +48,18 @@ export function TranslationToolbar({
     }
   };
 
+  const navigate = useNavigate();
   const userCan = useAccessControl();
+
+  const queryClient = useQueryClient();
+  const nextUnapprovedVerseQuery = useQuery({
+    queryKey: ['next-unapproved-verse', languageCode, verseId],
+    queryFn: () => 0,
+  });
 
   return (
     <div className="flex items-center shadow-md px-6 md:px-8 py-4">
-      <div className="me-16">
+      <div className="me-2">
         <FormLabel htmlFor="verse-reference">VERSE</FormLabel>
         <div className="relative">
           <TextInput
@@ -77,6 +86,24 @@ export function TranslationToolbar({
             <span className="sr-only">{t('translate:next_verse')}</span>
           </Button>
         </div>
+      </div>
+      <div className="me-14 pt-6">
+        <Button
+          variant="tertiary"
+          onClick={async () => {
+            const nextUnapprovedVerseId = await queryClient.ensureQueryData({
+              queryKey: ['next-unapproved-verse', languageCode, verseId],
+              queryFn: () => 0,
+            });
+            navigate(
+              `/interlinear/${languageCode}/verses/${nextUnapprovedVerseId}`
+            );
+          }}
+        >
+          Next Verse
+          <Icon icon="arrow-right" className="ms-1 rtl:hidden" />
+          <Icon icon="arrow-left" className="ms-1 ltr:hidden" />
+        </Button>
       </div>
       <div className="me-2">
         <FormLabel htmlFor="target-language">LANGUAGE</FormLabel>
