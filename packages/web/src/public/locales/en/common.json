@@ -1,5 +1,6 @@
 {
   "add": "Add",
+  "admin": "Admin",
   "app_name": "Global Bible Tools",
   "cancel": "Cancel",
   "close": "close",
@@ -17,6 +18,7 @@
   "next": "Next",
   "not_found": "Not Found",
   "not_found_message": "We couldn't find what you are looking for.",
+  "remove": "Remove",
   "rich_text": {
     "bold_tooltip": "Bold (Ctrl+B)",
     "italic_tooltip": "Italic (Ctrl+I)",
@@ -28,6 +30,8 @@
   },
   "submitting": "submitting",
   "success": "Success",
+  "saving": "Saving",
+  "saved": "Saved",
   "tab_titles": {
     "accept_invite": "Accept Invite",
     "import_glosses": "Import {{languageName}} Glosses",

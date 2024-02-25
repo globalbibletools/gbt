@@ -3,6 +3,8 @@
   "bible_translations": "Bible Translations",
   "code": "code",
   "font": "Font",
+  "identification": "Identification",
+  "import": "Import",
   "import_description": "Select a language to import glosses from <1>hebrewgreekbible.online</1>.",
   "import_glosses": "Import Glosses",
   "import_glosses_confirmation_warning": "This will overwrite any glosses associated with the language. It may take some time to complete.",
@@ -27,6 +29,14 @@
   "new_language": "New Language",
   "rtl": "Right to Left",
   "select_translations": "Select translations",
+  "settings": "Settings",
+  "settings_help": {
+    "name": "The name of the language is shown throughout the app. We prefer it to be written in the language rather than English.",
+    "code": "The language code follows <1>ISO 639-3</1> which uniquely identifies languages across systems.",
+    "text": "Configure the text of the language as you would like it to appear in the platform.",
+    "translation": "These translation are used in the platform when showing a passage from the Bible."
+  },
   "switch_language": "Switch Language",
+  "text": "Text",
   "text_direction": "Text Direction"
 }

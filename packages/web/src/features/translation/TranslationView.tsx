@@ -13,16 +13,13 @@ import bibleTranslationClient from '../../shared/bibleTranslationClient';
 import { Icon } from '../../shared/components/Icon';
 import LoadingSpinner from '../../shared/components/LoadingSpinner';
 import Button from '../../shared/components/actions/Button';
-import DropdownMenu, {
-  DropdownMenuLink,
-} from '../../shared/components/actions/DropdownMenu';
 import {
   expandFontFamily,
   useFontLoader,
 } from '../../shared/hooks/useFontLoader';
 import TranslateWord, { TranslateWordRef } from './TranslateWord';
 import { TranslationSidebar } from './TranslationSidebar';
-import { VerseSelector } from './VerseSelector';
+import { TranslationToolbar } from './TranslationToolbar';
 import {
   bookFirstVerseId,
   bookLastVerseId,
@@ -30,7 +27,6 @@ import {
   incrementVerseId,
   parseVerseId,
 } from './verse-utils';
-import View from '../../shared/components/View';
 import { isFlagEnabled } from '../../shared/featureFlags';
 import useTitle from '../../shared/hooks/useTitle';
 
@@ -317,25 +313,21 @@ export default function TranslationView() {
     !!userCan('read', { type: 'Language', id: language });
 
   return (
-    <View fitToScreen className="flex flex-col flex-grow gap-8 px-4">
-      <div className="flex items-center gap-8">
-        <VerseSelector
-          verseId={verseId}
-          onVerseChange={(verseId) =>
-            navigate(`/interlinear/${language}/verses/${verseId}`)
-          }
-        />
-        <DropdownMenu text={selectedLanguage?.name ?? 'Language'}>
-          {translationLanguages.map((language) => (
-            <DropdownMenuLink
-              key={language.code}
-              to={`/interlinear/${language.code}/verses/${verseId}`}
-            >
-              {language.name}
-            </DropdownMenuLink>
-          ))}
-        </DropdownMenu>
-      </div>
+    <div className="absolute w-full h-full flex flex-col flex-grow">
+      <TranslationToolbar
+        verseId={verseId}
+        languageCode={language}
+        languages={translationLanguages.map(({ code, name }) => ({
+          code,
+          name,
+        }))}
+        onLanguageChange={(language) => {
+          navigate(`/interlinear/${language}/verses/${verseId}`);
+        }}
+        onVerseChange={(verseId) =>
+          navigate(`/interlinear/${language}/verses/${verseId}`)
+        }
+      />
       {(() => {
         if (loading) {
           return (
@@ -357,8 +349,8 @@ export default function TranslationView() {
 
           const isHebrew = bookId < 40;
           return (
-            <div className="flex flex-col flex-grow w-full min-h-0 gap-2 md:flex-row">
-              <div className="flex flex-col max-h-full min-h-0 gap-8 overflow-auto grow">
+            <div className="flex flex-col flex-grow w-full min-h-0 gap-6 lg:flex-row">
+              <div className="flex flex-col max-h-full min-h-0 gap-8 overflow-auto grow pt-8 pb-10 px-6 lg:pe-0 lg:ps-8">
                 {translationQuery.data && (
                   <p
                     className="mx-2 text-base"
@@ -376,7 +368,7 @@ export default function TranslationView() {
                   </p>
                 )}
                 <ol
-                  className={`flex h-fit content-start flex-wrap ${
+                  className={`flex h-fit content-start flex-wrap gap-x-4 gap-y-6 ${
                     isHebrew ? 'ltr:flex-row-reverse' : 'rtl:flex-row-reverse'
                   }`}
                 >
@@ -437,7 +429,7 @@ export default function TranslationView() {
                     <li className="mx-2" dir={isHebrew ? 'rtl' : 'ltr'}>
                       <Button
                         variant="tertiary"
-                        className="mt-20"
+                        className="mt-16"
                         onClick={() => {
                           loadedFromNextButton.current = true;
                           navigate(
@@ -461,6 +453,7 @@ export default function TranslationView() {
               </div>
               {showSidebar && sidebarWordIndex < verse.words.length && (
                 <TranslationSidebar
+                  className="h-[320px] lg:h-auto lg:w-1/3 lg:min-w-[320px] lg:max-w-[480px] mt-8 mb-10 mx-6 lg:ms-0 lg:me-8"
                   language={language}
                   verse={verse}
                   wordIndex={sidebarWordIndex}
@@ -472,6 +465,6 @@ export default function TranslationView() {
           );
         }
       })()}
-    </View>
+    </div>
   );
 }

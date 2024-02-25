@@ -1,56 +1,65 @@
-import { RouteObject } from 'react-router-dom';
+import { RouteObject, redirect } from 'react-router-dom';
 import { authorize } from '../../shared/accessControl';
-import ImportLanguageGlossesView, {
-  importLanguageGlossesLoader,
-} from './ImportLanguageGlossesView';
-import InviteLanguageMemberView from './InviteLanguageMemberView';
 import LanguagesView, { languagesViewLoader } from './LanguagesView';
 import ManageLanguageView, {
   manageLanguageViewLoader,
 } from './ManageLanguageView';
-import NewLanguageView from './NewLanguageView';
+import ManageLanguageUserView, {
+  manageLanguageUsersViewLoader,
+} from './ManageLanguageUsersView';
+import ManageLanguageImportView, {
+  manageLanguageImportViewLoader,
+} from './ManageLanguageImportView';
+import ManageLanguageSettingsView, {
+  manageLanguageSettingsViewLoader,
+} from './ManageLanguageSettingsView';
 
-const routes: RouteObject[] = [
+export const languageAdminRoutes: RouteObject[] = [
   {
     path: 'languages',
     loader: () => authorize('administer', 'Language', languagesViewLoader),
     element: <LanguagesView />,
   },
+];
+
+const PATH_MATCH = /(settings|users|import)$/;
+export const languagePageRoutes: RouteObject[] = [
   {
-    path: 'languages/new',
-    loader: () => authorize('create', 'Language'),
-    element: <NewLanguageView />,
-  },
-  {
-    path: 'languages/:code',
-    loader: ({ params }) => {
+    path: 'admin?/languages/:code',
+    loader: ({ params, request }) => {
       const code = params.code as string;
-      return authorize('administer', { type: 'Language', id: code }, () =>
-        manageLanguageViewLoader(code)
+      return authorize(
+        'administer',
+        { type: 'Language', id: code },
+        async () => {
+          const url = new URL(request.url);
+          if (!PATH_MATCH.test(url.pathname)) {
+            return redirect('./settings');
+          } else {
+            return manageLanguageViewLoader(code);
+          }
+        }
       );
     },
     element: <ManageLanguageView />,
-  },
-  {
-    path: 'languages/:code/invite',
-    loader: ({ params }) =>
-      authorize('administer', { type: 'Language', id: params.code as string }),
-    element: <InviteLanguageMemberView />,
-  },
-  {
-    path: 'languages/:code/import',
-    loader: (options) => {
-      return authorize(
-        'administer',
-        {
-          type: 'Language',
-          id: options.params.code as string,
-        },
-        () => importLanguageGlossesLoader(options)
-      );
-    },
-    element: <ImportLanguageGlossesView />,
+    children: [
+      {
+        path: 'settings',
+        element: <ManageLanguageSettingsView />,
+        loader: ({ params }) =>
+          manageLanguageSettingsViewLoader(params.code as string),
+      },
+      {
+        path: 'users',
+        element: <ManageLanguageUserView />,
+        loader: ({ params }) =>
+          manageLanguageUsersViewLoader(params.code as string),
+      },
+      {
+        path: 'import',
+        element: <ManageLanguageImportView />,
+        loader: manageLanguageImportViewLoader,
+      },
+    ],
   },
 ];
-
-export default routes;
