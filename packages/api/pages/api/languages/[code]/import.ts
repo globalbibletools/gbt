@@ -80,6 +80,7 @@ export default createRoute<{ code: string }>()
           languageId: language.id,
         },
         create: {
+          userId: req.session?.user?.id,
           languageId: language.id,
           startDate: new Date(),
         },
