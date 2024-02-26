@@ -3,6 +3,7 @@ import type {
   GetVerseResponseBody,
   GetLemmaResourcesResponseBody,
   GetVerseNotesResponseBody,
+  GetNextUnapprovedVerse,
 } from '@translation/api-types';
 import ApiClient from './client';
 
@@ -36,6 +37,15 @@ export default class Verses {
   ): Promise<GetVerseNotesResponseBody> {
     return this.client.get({
       path: `/api/languages/${language}/verses/${verseId}/notes`,
+    });
+  }
+
+  getNextUnapprovedVerse(
+    verseId: string,
+    language: string
+  ): Promise<GetNextUnapprovedVerse> {
+    return this.client.get({
+      path: `/api/languages/${language}/verses/${verseId}/next-unapproved-verse`,
     });
   }
 }
