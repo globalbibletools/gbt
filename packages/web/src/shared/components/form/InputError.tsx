@@ -12,7 +12,7 @@ export default function InputError({ id, name, messages }: InputErrorProps) {
 
   if (fieldError && fieldError.type) {
     return (
-      <div id={id} className="text-red-700">
+      <div id={id} className="text-red-700 text-sm">
         {messages[fieldError.type.toString()]}
       </div>
     );

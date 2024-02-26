@@ -46,57 +46,49 @@ const SortableMultiselectInput = forwardRef<
     <div
       className={`${className} group/multiselect relative flex flex-col gap-1`}
     >
-      {selected.length > 0 && (
-        <div className="border rounded flex-col shadow-inner flex border-slate-400">
-          {selected
-            .map((v) => items.find((i) => i.value === v))
-            .filter((item?: ItemType): item is ItemType => !!item)
-            .map((item, i, value) => {
-              const isFirst = i === 0;
-              const isLast = i === value.length - 1;
-              return (
-                <div className="py-2 px-1 flex items-center" key={item.value}>
-                  <span className="grow mx-1">{item.label}</span>
-                  <button
-                    className={`w-8 h-8 pt-[2px] ${
-                      isFirst && 'disabled:opacity-25'
-                    }`}
-                    type="button"
-                    disabled={isFirst}
-                    onClick={() => moveItem(i, i - 1)}
-                    onBlur={onBlur}
-                  >
-                    <Icon icon="chevron-up" />
-                    <span className="sr-only">{t('common:direction.up')}</span>
-                  </button>
-                  <button
-                    className={`w-8 h-8 pb-[2px] ${
-                      isLast && 'disabled:opacity-25'
-                    }`}
-                    type="button"
-                    disabled={isLast}
-                    onClick={() => moveItem(i, i + 1)}
-                    onBlur={onBlur}
-                  >
-                    <Icon icon="chevron-down" />
-                    <span className="sr-only">
-                      {t('common:direction.down')}
-                    </span>
-                  </button>
-                  <button
-                    className="w-8 h-8"
-                    type="button"
-                    onClick={() => removeItem(i)}
-                    onBlur={onBlur}
-                  >
-                    <Icon icon="close" />
-                    <span className="sr-only">{t('common:close')}</span>
-                  </button>
-                </div>
-              );
-            })}
-        </div>
-      )}
+      <div className="border rounded flex-col shadow-inner flex border-gray-400 min-h-20">
+        {selected
+          .map((v) => items.find((i) => i.value === v))
+          .filter((item?: ItemType): item is ItemType => !!item)
+          .map((item, i, value) => {
+            const isFirst = i === 0;
+            const isLast = i === value.length - 1;
+            return (
+              <div className="py-2 px-1 flex items-center" key={item.value}>
+                <span className="grow mx-1">{item.label}</span>
+                <button
+                  className="w-8 h-8 pb-[2px] rounded-md text-blue-800 focus-visible:outline outline-2 outline-green-300 disabled:opacity-25"
+                  type="button"
+                  disabled={isFirst}
+                  onClick={() => moveItem(i, i - 1)}
+                  onBlur={onBlur}
+                >
+                  <Icon icon="chevron-up" />
+                  <span className="sr-only">{t('common:direction.up')}</span>
+                </button>
+                <button
+                  className="w-8 h-8 pb-[2px] rounded-md text-blue-800 focus-visible:outline outline-2 outline-green-300 disabled:opacity-25"
+                  type="button"
+                  disabled={isLast}
+                  onClick={() => moveItem(i, i + 1)}
+                  onBlur={onBlur}
+                >
+                  <Icon icon="chevron-down" />
+                  <span className="sr-only">{t('common:direction.down')}</span>
+                </button>
+                <button
+                  className="w-8 h-8 rounded-md text-red-800 focus-visible:outline outline-2 outline-red-700"
+                  type="button"
+                  onClick={() => removeItem(i)}
+                  onBlur={onBlur}
+                >
+                  <Icon icon="close" />
+                  <span className="sr-only">{t('common:close')}</span>
+                </button>
+              </div>
+            );
+          })}
+      </div>
       <div className="flex gap-1">
         <ComboboxInput
           name="new"

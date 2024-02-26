@@ -9,7 +9,6 @@ library.add(
   FaBrands.faGoogle,
   FaSolid.faCaretUp,
   FaSolid.faCaretDown,
-  FaSolid.faEarth,
   FaSolid.faUser,
   FaSolid.faClose,
   FaSolid.faPlus,
@@ -32,5 +31,12 @@ library.add(
   FaSolid.faListOl,
   FaSolid.faIndent,
   FaSolid.faOutdent,
-  FaSolid.faArrowRotateLeft
+  FaSolid.faArrowRotateLeft,
+  FaSolid.faLanguage,
+  FaSolid.faUser,
+  FaSolid.faGear,
+  FaSolid.faSliders,
+  FaSolid.faAlignLeft,
+  FaSolid.faAlignRight,
+  FaSolid.faExternalLink
 );

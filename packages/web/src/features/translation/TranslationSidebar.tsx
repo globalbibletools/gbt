@@ -15,6 +15,7 @@ import { bdbBookRefNames } from 'data/bdb-book-ref-names';
 import { parseVerseId } from './verse-utils';
 
 type TranslationSidebarProps = {
+  className: string;
   language: string;
   verse: Verse;
   wordIndex: number;
@@ -27,6 +28,7 @@ export const TranslationSidebar = ({
   verse,
   wordIndex,
   showComments,
+  className = '',
   onClose,
 }: TranslationSidebarProps) => {
   const { t } = useTranslation(['common', 'translate']);
@@ -133,20 +135,20 @@ export const TranslationSidebar = ({
 
   return (
     <div
-      className="
-        border-t h-[320px] flex flex-col gap-4 pt-3 flex-shrink-0 border-slate-400
-        md:border-t-0 md:ltr:border-l md:rtl:border-r md:h-auto md:w-1/3 md:min-w-[320px] md:max-w-[480px] md:pt-0 md:ps-3
-      "
+      className={`
+        relative flex flex-col gap-4 flex-shrink-0 shadow rounded-2xl bg-brown-100
+        ${className}
+      `}
     >
-      <div className="flex items-start">
-        <button onClick={onClose} type="button" className="w-6 h-7">
-          <Icon icon="chevron-down" className="block md:hidden" />
-          <Icon
-            icon="chevron-right"
-            className="hidden md:block rtl:rotate-180"
-          />
-          <span className="sr-only">{t('common:close')}</span>
-        </button>
+      <button
+        onClick={onClose}
+        type="button"
+        className="absolute w-9 h-9 end-1 top-1 text-red-700 rounded-md focus-visible:outline outline-2 outline-green-300"
+      >
+        <Icon icon="xmark" />
+        <span className="sr-only">{t('common:close')}</span>
+      </button>
+      <div className="flex items-start p-4 pb-0">
         <div>
           <div className="flex gap-4 items-baseline">
             <span className="font-mixed text-xl">{word.text}</span>
@@ -157,22 +159,22 @@ export const TranslationSidebar = ({
       </div>
       <div className="grow flex flex-col min-h-0">
         <Tab.Group>
-          <Tab.List className="flex flex-row md:-ms-3 -mx-4">
-            <div className="border-b border-slate-400 h-full w-4"></div>
+          <Tab.List className="flex flex-row">
+            <div className="border-b border-blue-800 h-full w-2"></div>
             {tabTitles.map((title) => (
               <>
                 <Tab
                   key={title}
-                  className="px-4 py-1 rounded-t-lg border border-slate-400 ui-selected:border-b-transparent focus:outline-blue-600 focus:outline focus:outline-2"
+                  className="px-4 py-1 text-blue-800 font-bold rounded-t-lg border border-blue-800 ui-selected:border-b-transparent outline-green-300 focus-visible:outline outline-2 outline-offset-2"
                 >
                   {t(title)}
                 </Tab>
-                <div className="border-b border-slate-400 h-full w-1"></div>
+                <div className="border-b border-blue-800 h-full w-1"></div>
               </>
             ))}
-            <div className="border-b border-slate-400 h-full grow"></div>
+            <div className="border-b border-blue-800 h-full grow"></div>
           </Tab.List>
-          <Tab.Panels className="overflow-y-auto grow p-3 md:-ms-3 -mx-4">
+          <Tab.Panels className="overflow-y-auto grow px-4 pt-4 mb-4">
             <Tab.Panel>
               {lemmaResourcesQuery.isLoading && (
                 <div className="h-full w-full flex items-center justify-center">
@@ -185,7 +187,7 @@ export const TranslationSidebar = ({
                     {lexiconResource?.resource}
                   </div>
                   <div
-                    className="leading-7 font-mixed"
+                    className="leading-relaxed text-sm font-mixed"
                     ref={lexiconEntryRef}
                     dangerouslySetInnerHTML={{
                       __html: DOMPurify.sanitize(lexiconEntry),

@@ -1,10 +1,10 @@
 const { createGlobPatternsForDependencies } = require('@nx/react/tailwind');
 const { join } = require('path');
-const utilities = require('./tailwind-utilities.js');
-const defaultTheme = require('tailwindcss/defaultTheme');
+const baseConfig = require('../../tailwind.base');
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  ...baseConfig,
   content: [
     join(
       __dirname,
@@ -12,21 +12,4 @@ module.exports = {
     ),
     ...createGlobPatternsForDependencies(__dirname),
   ],
-  safelist: ['lexicon-greek', 'lexicon-hebrew'],
-  theme: {
-    extend: {
-      fontFamily: {
-        sans: ['"Noto Sans"', ...defaultTheme.fontFamily.sans],
-        hebrew: ['"SBL-Hebrew"', ...defaultTheme.fontFamily.sans],
-        greek: ['"SBL-Greek"', ...defaultTheme.fontFamily.sans],
-        mixed: [
-          '"SBL-Greek"',
-          '"SBL-Hebrew"',
-          '"Noto Sans"',
-          ...defaultTheme.fontFamily.sans,
-        ],
-      },
-    },
-  },
-  plugins: [utilities, require('@headlessui/tailwindcss')],
 };

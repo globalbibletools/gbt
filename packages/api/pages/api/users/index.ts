@@ -48,6 +48,11 @@ export default createRoute()
   .post<PostUserRequestBody, void>({
     schema: z.object({
       email: z.string(),
+      systemRoles: z
+        .array(
+          z.enum(Object.values(SystemRole) as [SystemRole, ...SystemRole[]])
+        )
+        .optional(),
     }),
     authorize: authorize({
       action: 'create',
@@ -80,6 +85,15 @@ export default createRoute()
         text: `You've been invited to globalbibletools.com. Click the following to accept your invite and get started.\n\n${url.toString()}`,
         html: `You've been invited to globalbibletools.com. <a href="${url.toString()}">Click here<a/> to accept your invite and get started.`,
       });
+
+      if (req.body.systemRoles) {
+        await client.userSystemRole.createMany({
+          data: req.body.systemRoles.map((role) => ({
+            userId: user.id,
+            role,
+          })),
+        });
+      }
 
       res.created(`/api/users/${user.id}`);
     },

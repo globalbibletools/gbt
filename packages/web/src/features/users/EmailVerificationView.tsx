@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import Card from '../../shared/components/Card';
-import View from '../../shared/components/View';
+import ModalView from '../../shared/components/ModalView';
 import { useSearchParams } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
 import LoadingSpinner from '../../shared/components/LoadingSpinner';
@@ -31,8 +30,8 @@ export default function EmailVerificationView() {
   }, [mutate, params]);
 
   return (
-    <View fitToScreen className="flex items-start justify-center">
-      <Card className="flex-shrink p-6 mx-4 mt-4 w-96">
+    <ModalView className="max-w-[480px] w-full">
+      <p className="max-w-[320px] text-center mx-auto">
         {status === 'loading' || status === 'idle' ? (
           <LoadingSpinner />
         ) : status === 'success' ? (
@@ -40,7 +39,7 @@ export default function EmailVerificationView() {
         ) : (
           t('users:email_verification_error')
         )}
-      </Card>
-    </View>
+      </p>
+    </ModalView>
   );
 }

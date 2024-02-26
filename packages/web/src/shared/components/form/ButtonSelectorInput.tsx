@@ -41,12 +41,12 @@ export function ButtonSelectorInput({
     >
       <fieldset
         className={`
-          inline-block rounded
-          focus-within:outline focus-within:outline-2
+          inline-block rounded-lg shadow-md
+          has-[:focus-visible]:outline outline-2 outline-offset-2
           ${
             hasErrors
               ? 'focus-within:outline-red-700'
-              : 'focus-within:outline-blue-600'
+              : 'focus-within:outline-green-300'
           }
         `}
         {...props}
@@ -73,15 +73,15 @@ export function ButtonSelectorOption({
   return (
     <label
       className={`
-        inline-block py-2 px-3 font-bold h-10 bg-white border border-l-0
-        ltr:first:rounded-l ltr:first:border-l ltr:last:rounded-r
-        rtl:last:rounded-l rtl:last:border-l rtl:first:rounded-r
-        [&:has(:checked)]:bg-slate-900 [&:has(:checked)]:text-white
-        shadow-inner [&:has(:checked)]:shadow-none
+        inline-flex items-center justify-center px-3 font-bold h-9 bg-white border border-l-0
+        ltr:first:rounded-l-lg ltr:first:border-l ltr:last:rounded-r-lg
+        rtl:last:rounded-l-lg rtl:last:border-l rtl:first:rounded-r-lg
+        text-blue-800 has-[:not(:checked)]:shadow-inner
+        has-[:checked]:bg-blue-800 has-[:checked]:text-white
         ${
           selectorContext.hasErrors
             ? 'border-red-700 shadow-red-100'
-            : 'border-slate-400'
+            : 'border-blue-800'
         }
       `}
     >
