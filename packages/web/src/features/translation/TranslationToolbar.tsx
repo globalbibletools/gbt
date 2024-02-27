@@ -13,14 +13,13 @@ import Button from '../../shared/components/actions/Button';
 import FormLabel from '../../shared/components/form/FormLabel';
 import ComboboxInput from '../../shared/components/form/ComboboxInput';
 import { useAccessControl } from '../../shared/accessControl';
-import { useNavigate } from 'react-router-dom';
 import apiClient from '../../shared/apiClient';
 
 export interface TranslationToolbarProps {
   verseId: string;
   languageCode: string;
   languages: { name: string; code: string }[];
-  onVerseChange: (verseId: string) => void;
+  onVerseChange: (verseId: string, isNextUnapprovedVerse?: boolean) => void;
   onLanguageChange: (languageCode: string) => void;
 }
 
@@ -48,7 +47,6 @@ export function TranslationToolbar({
     }
   };
 
-  const navigate = useNavigate();
   const userCan = useAccessControl();
 
   return (
@@ -92,9 +90,7 @@ export function TranslationToolbar({
               );
 
             if (nextUnapprovedVerseId) {
-              navigate(
-                `/interlinear/${languageCode}/verses/${nextUnapprovedVerseId}`
-              );
+              onVerseChange(nextUnapprovedVerseId, true);
             }
           }}
         >

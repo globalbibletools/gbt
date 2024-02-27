@@ -324,9 +324,10 @@ export default function TranslationView() {
         onLanguageChange={(language) => {
           navigate(`/interlinear/${language}/verses/${verseId}`);
         }}
-        onVerseChange={(verseId) =>
-          navigate(`/interlinear/${language}/verses/${verseId}`)
-        }
+        onVerseChange={(verseId, isNextUnapprovedVerse) => {
+          if (isNextUnapprovedVerse) loadedFromNextButton.current = true;
+          navigate(`/interlinear/${language}/verses/${verseId}`);
+        }}
       />
       {(() => {
         if (loading) {
