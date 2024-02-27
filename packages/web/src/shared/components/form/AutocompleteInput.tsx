@@ -12,6 +12,7 @@ export interface AutocompleteInputProps
   inputClassName?: string;
   state?: 'success';
   value?: string;
+  right?: boolean;
   /** A change is implicit if it occurs:
    *    - when a user clicks out of the input
    *    - when a user uses the tab key to select
@@ -38,6 +39,7 @@ const AutocompleteInput = forwardRef<HTMLInputElement, AutocompleteInputProps>(
       style,
       suggestions,
       value,
+      right,
       onChange,
       onKeyDown,
       state,
@@ -118,13 +120,9 @@ const AutocompleteInput = forwardRef<HTMLInputElement, AutocompleteInputProps>(
           ref={ref}
           className={`
             ${inputClassName}
-            border rounded shadow-inner focus:outline focus:outline-2
-            w-full py-2 px-3 h-10 bg-transparent
-            ${
-              state === 'success'
-                ? 'border-green-600 focus:outline-green-700'
-                : 'border-slate-400 focus:outline-blue-600'
-            }
+            border rounded shadow-inner focus-visible:outline outline-2 outline-offset-2 outline-green-300
+            w-full px-3 h-9 bg-transparent
+            ${state === 'success' ? 'border-green-600' : 'border-gray-400'}
           `}
           autoComplete="off"
           value={
@@ -205,7 +203,11 @@ const AutocompleteInput = forwardRef<HTMLInputElement, AutocompleteInputProps>(
           }}
         />
         {isOpen && filteredSuggestions.length > 0 && (
-          <ol className="z-10 absolute min-w-full min-h-[24px] max-h-80 bg-white overflow-auto mt-1 rounded border border-slate-400 shadow">
+          <ol
+            className={`z-10 absolute min-w-full min-h-[24px] max-h-80 bg-white overflow-auto mt-1 rounded border border-gray-400 shadow ${
+              right ? 'right-0' : 'left-0'
+            }`}
+          >
             {filteredSuggestions.map((suggestion, i) => (
               <li
                 tabIndex={-1}
@@ -219,8 +221,8 @@ const AutocompleteInput = forwardRef<HTMLInputElement, AutocompleteInputProps>(
                     : undefined
                 }
                 className={`
-                  px-3 py-1 whitespace-nowrap cursor-pointer hover:bg-blue-400
-                  ${i === activeIndex ? 'bg-blue-400' : ''}
+                  px-3 py-1 whitespace-nowrap cursor-pointer
+                  ${i === activeIndex ? 'bg-blue-800 text-white' : ''}
                 `}
                 key={suggestion}
                 onClick={() => {

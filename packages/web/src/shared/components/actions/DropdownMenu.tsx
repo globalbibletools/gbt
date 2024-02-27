@@ -5,12 +5,14 @@ import { Icon } from '../Icon';
 
 export interface DropdownProps {
   className?: string;
+  buttonClassName?: string;
   text: string;
   children: ReactNode;
 }
 
 export default function DropdownMenu({
   className = '',
+  buttonClassName = '',
   children,
   text,
 }: DropdownProps) {
@@ -35,7 +37,7 @@ export default function DropdownMenu({
       onBlur={onBlur}
     >
       <button
-        className="focus:outline-none hover:underline focus:underline"
+        className={`focus:outline-none hover:underline focus:underline ${buttonClassName}`}
         type="button"
         onClick={() => setIsOpen((menu) => !menu)}
         aria-expanded={isOpen}
@@ -47,7 +49,7 @@ export default function DropdownMenu({
       <ul
         id={`${cssId}-menu`}
         className={`
-          absolute end-0 border border-slate-300 shadow-md py-2 rounded bg-white z-10
+          absolute end-0 border border-slate-300 shadow-md py-2 rounded bg-white z-10 min-w-full
           ${isOpen ? '' : 'hidden'}
         `}
         onClick={() => setIsOpen(false)}
@@ -64,11 +66,11 @@ export interface DropdownMenuLinkProps {
 }
 
 const className =
-  'focus:outline-none focus:underline hover:underline whitespace-nowrap px-4 py-1 text-start w-full';
+  'focus:outline-none focus:underline hover:underline block whitespace-nowrap px-4 py-1 text-start w-full';
 
 export function DropdownMenuLink({ children, to }: DropdownMenuLinkProps) {
   return (
-    <li>
+    <li className="w-full">
       {/* If we want to link to external URLs, we have use a standard anchor element. */}
       {typeof to === 'string' && to.startsWith('http') ? (
         <a className={className} href={to}>

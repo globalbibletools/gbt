@@ -9,7 +9,7 @@ import {
 export interface FormProps<Data extends FieldValues>
   extends Omit<ComponentProps<'form'>, 'onSubmit'> {
   context: UseFormReturn<Data>;
-  onSubmit: SubmitHandler<Data>;
+  onSubmit?: SubmitHandler<Data>;
 }
 
 export default function Form<Data extends FieldValues>({
@@ -26,7 +26,7 @@ export default function Form<Data extends FieldValues>({
       onSubmit={(e) => {
         if (!formState.isSubmitting) {
           handleSubmit(async (data) => {
-            await onSubmit(data);
+            await onSubmit?.(data);
           })(e);
         } else {
           e.preventDefault();

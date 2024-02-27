@@ -1,5 +1,6 @@
 {
   "add": "Agregar",
+  "admin": "Admin",
   "app_name": "Herramientas Bíblicas Globales",
   "cancel": "Cancelar",
   "close": "cerrar",
@@ -13,10 +14,12 @@
   },
   "error": "Error",
   "loading": "Cargando",
+  "manage": "Administrar",
   "name": "nombre",
   "next": "Siguiente",
   "not_found": "No Encontrado",
   "not_found_message": "No pudimos encontrar lo que estás buscando.",
+  "remove": "Eliminar",
   "rich_text": {
     "bold_tooltip": "Negrita (Ctrl+B)",
     "italic_tooltip": "Cursiva (Ctrl+I)",
@@ -27,6 +30,8 @@
     "outdent_tooltip": "Anular sangrado (Shift+Tab)"
   },
   "submitting": "Sumisión",
+  "saving": "Guardando",
+  "saved": "Guardado",
   "success": "Éxito",
   "tab_titles": {
     "accept_invite": "Aceptar invitación",

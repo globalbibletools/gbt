@@ -12,12 +12,12 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
       <input
         ref={ref}
         className={`
-          border rounded shadow-inner py-2 px-3 h-10
-          focus:outline focus:outline-2
+          border rounded shadow-inner px-3 h-9
+          focus-visible:outline outline-2 outline-offset-2
           ${
             hasErrors
-              ? 'border-red-700 shadow-red-100 focus:outline-red-700'
-              : 'border-slate-400 focus:outline-blue-600'
+              ? 'border-red-700 shadow-red-100 outline-red-700'
+              : 'border-gray-400 outline-green-300'
           }
           ${className}
         `}
