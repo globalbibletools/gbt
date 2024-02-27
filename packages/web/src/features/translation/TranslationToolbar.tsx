@@ -13,7 +13,6 @@ import Button from '../../shared/components/actions/Button';
 import FormLabel from '../../shared/components/form/FormLabel';
 import ComboboxInput from '../../shared/components/form/ComboboxInput';
 import { useAccessControl } from '../../shared/accessControl';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import apiClient from '../../shared/apiClient';
 
@@ -52,13 +51,6 @@ export function TranslationToolbar({
   const navigate = useNavigate();
   const userCan = useAccessControl();
 
-  const queryClient = useQueryClient();
-  const nextUnapprovedVerseQuery = useQuery({
-    queryKey: ['next-unapproved-verse', languageCode, verseId],
-    queryFn: () =>
-      apiClient.verses.getNextUnapprovedVerse(verseId, languageCode),
-  });
-
   return (
     <div className="flex items-center shadow-md px-6 md:px-8 py-4">
       <div className="me-2">
@@ -94,14 +86,11 @@ export function TranslationToolbar({
           variant="tertiary"
           onClick={async () => {
             const { verseId: nextUnapprovedVerseId } =
-              await queryClient.ensureQueryData({
-                queryKey: ['next-unapproved-verse', languageCode, verseId],
-                queryFn: () =>
-                  apiClient.verses.getNextUnapprovedVerse(
-                    verseId,
-                    languageCode
-                  ),
-              });
+              await apiClient.verses.getNextUnapprovedVerse(
+                verseId,
+                languageCode
+              );
+
             if (nextUnapprovedVerseId) {
               navigate(
                 `/interlinear/${languageCode}/verses/${nextUnapprovedVerseId}`
