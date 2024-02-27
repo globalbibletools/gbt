@@ -6,10 +6,18 @@
   "targets": {
     "build": {
       "executor": "nx:run-commands",
-      "outputs": [],
+      "outputs": ["{workspaceRoot}/dist/packages/landing"],
       "options": {
         "cwd": "packages/landing",
-        "command": "npx tailwindcss -i tailwind.css -o styles.css"
+        "commands": [
+          "mkdir -p ../../dist/packages/landing",
+          "rm -rf ../../dist/packages/landing",
+          "mkdir -p ../../dist/packages/landing/assets",
+          "npx tailwindcss -i tailwind.css -o ../../dist/packages/landing/styles.css",
+          "cp assets/* ../../dist/packages/landing/assets/",
+          "cp index.html ../../dist/packages/landing/"
+        ],
+        "parallel": false
       }
     },
     "serve": {
