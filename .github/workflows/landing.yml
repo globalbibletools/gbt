@@ -8,6 +8,10 @@ on:
       - tailwind.base.json
   workflow_dispatch:
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   build-deploy:
     runs-on: ubuntu-latest
@@ -19,13 +23,14 @@ jobs:
           node-version: 18
           cache: 'npm'
 
-      - uses: aws-actions/configure-aws-credentials@v1
+      - uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-access-key-id: ${{ secrets.AWS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+          audience: sts.amazonaws.com
           aws-region: us-east-1
+          role-to-assume: arn:aws:iam::188245254368:role/github-role
+          disable-retry: true
 
       - run: npm ci
       - run: npx nx build landing
-      - run: aws s3 sync . s3://gbt-landing
+      - run: aws s3 sync . s3://gbt-landing --delete
         working-directory: ./dist/packages/landing

@@ -3,7 +3,7 @@ variable "aws_route53_zone_id" {
   type        = string
 }
 
-variable "github_user_arn" {
-  description = "ARN for the github user used to deploy the landing site"
+variable "github_role_arn" {
+  description = "ARN for the github role used to deploy the landing site"
   type        = string
 }

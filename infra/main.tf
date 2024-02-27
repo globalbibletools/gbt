@@ -148,13 +148,9 @@ module "google_translate_dev" {
   }
 }
 
-module "github" {
-  source = "./modules/github"
-}
-
 module "landing" {
   source = "./modules/landing"
 
   aws_route53_zone_id = aws_route53_zone.main.id
-  github_user_arn     = module.github.user_arn
+  github_role_arn     = module.cloud.github_role_arn
 }
