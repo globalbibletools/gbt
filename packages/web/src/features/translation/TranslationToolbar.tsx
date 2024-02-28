@@ -50,7 +50,8 @@ export function TranslationToolbar({
 
   useEffect(() => {
     const keydownCallback = (e: globalThis.KeyboardEvent) => {
-      if (e.altKey && e.key === 'n') navigateToNextUnapprovedVerse();
+      if (e.altKey && !e.shiftKey && !e.ctrlKey && e.key === 'n')
+        navigateToNextUnapprovedVerse();
     };
     window.addEventListener('keydown', keydownCallback);
     return () => window.removeEventListener('keydown', keydownCallback);
