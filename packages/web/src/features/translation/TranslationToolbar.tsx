@@ -1,4 +1,4 @@
-import { KeyboardEvent } from 'react';
+import { KeyboardEvent, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Icon } from '../../shared/components/Icon';
 import TextInput from '../../shared/components/form/TextInput';
@@ -13,14 +13,14 @@ import Button from '../../shared/components/actions/Button';
 import FormLabel from '../../shared/components/form/FormLabel';
 import ComboboxInput from '../../shared/components/form/ComboboxInput';
 import { useAccessControl } from '../../shared/accessControl';
-import apiClient from '../../shared/apiClient';
 
 export interface TranslationToolbarProps {
   verseId: string;
   languageCode: string;
   languages: { name: string; code: string }[];
-  onVerseChange: (verseId: string, isNextUnapprovedVerse?: boolean) => void;
+  onVerseChange: (verseId: string) => void;
   onLanguageChange: (languageCode: string) => void;
+  navigateToNextUnapprovedVerse: () => void;
 }
 
 export function TranslationToolbar({
@@ -29,6 +29,7 @@ export function TranslationToolbar({
   languageCode,
   onLanguageChange,
   onVerseChange,
+  navigateToNextUnapprovedVerse,
 }: TranslationToolbarProps) {
   const { t } = useTranslation(['translate', 'bible', 'common', 'languages']);
   const verseInfo = parseVerseId(verseId);
@@ -46,6 +47,14 @@ export function TranslationToolbar({
       }
     }
   };
+
+  useEffect(() => {
+    const keydownCallback = (e: globalThis.KeyboardEvent) => {
+      if (e.altKey && e.key === 'n') navigateToNextUnapprovedVerse();
+    };
+    window.addEventListener('keydown', keydownCallback);
+    return () => window.removeEventListener('keydown', keydownCallback);
+  }, [navigateToNextUnapprovedVerse]);
 
   const userCan = useAccessControl();
 
@@ -80,21 +89,8 @@ export function TranslationToolbar({
         </div>
       </div>
       <div className="me-14 pt-6">
-        <Button
-          variant="tertiary"
-          onClick={async () => {
-            const { verseId: nextUnapprovedVerseId } =
-              await apiClient.verses.getNextUnapprovedVerse(
-                verseId,
-                languageCode
-              );
-
-            if (nextUnapprovedVerseId) {
-              onVerseChange(nextUnapprovedVerseId, true);
-            }
-          }}
-        >
-          Next Verse
+        <Button variant="tertiary" onClick={navigateToNextUnapprovedVerse}>
+          Next Unapproved
           <Icon icon="arrow-right" className="ms-1 rtl:hidden" />
           <Icon icon="arrow-left" className="ms-1 ltr:hidden" />
         </Button>

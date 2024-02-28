@@ -40,7 +40,7 @@ export default class Verses {
     });
   }
 
-  getNextUnapprovedVerse(
+  findNextUnapprovedVerse(
     verseId: string,
     language: string
   ): Promise<GetNextUnapprovedVerse> {
