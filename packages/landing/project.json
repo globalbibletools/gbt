@@ -15,7 +15,10 @@
           "mkdir -p ../../dist/packages/landing/assets",
           "npx tailwindcss -i tailwind.css -o ../../dist/packages/landing/styles.css",
           "cp assets/* ../../dist/packages/landing/assets/",
-          "cp index.html ../../dist/packages/landing/"
+          "cp index.html ../../dist/packages/landing/",
+          "./cachebust styles.css",
+          "./cachebust assets/hero.png",
+          "./cachebust assets/logo.png"
         ],
         "parallel": false
       }

@@ -1,0 +1,21 @@
+#!/bin/bash
+
+SHA_BIN="sha256sum"
+
+if [ $(uname) = "Darwin" ]; then
+  SHA_BIN="shasum"
+fi
+
+root="../../dist/packages/landing"
+filename="$1"
+
+hash=$("$SHA_BIN" "$root/$filename" | awk '{print $1}')
+hashed_filename="${filename%.*}.${hash:0:12}.${filename##*.}"
+
+files="../../dist/packages/landing/index.html"
+
+mv "$root/$filename" "$root/$hashed_filename"
+for file in $files; do
+  sed -i.bak "s/${filename//\//\\/}/${hashed_filename//\//\\/}/g" "$file"
+  rm "$file.bak"
+done
