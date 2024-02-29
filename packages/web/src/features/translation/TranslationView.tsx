@@ -29,6 +29,7 @@ import {
 } from './verse-utils';
 import { isFlagEnabled } from '../../shared/featureFlags';
 import useTitle from '../../shared/hooks/useTitle';
+import { useFlash } from '../../shared/hooks/flash';
 
 export const translationLanguageKey = 'translation-language';
 export const translationVerseIdKey = 'translation-verse-id';
@@ -312,6 +313,8 @@ export default function TranslationView() {
     isFlagEnabled('comments') &&
     !!userCan('read', { type: 'Language', id: language });
 
+  const flash = useFlash();
+
   return (
     <div className="absolute w-full h-full flex flex-col flex-grow">
       <TranslationToolbar
@@ -328,13 +331,16 @@ export default function TranslationView() {
           navigate(`/interlinear/${language}/verses/${verseId}`)
         }
         navigateToNextUnapprovedVerse={async () => {
-          loadedFromNextButton.current = true;
-          const { verseId: nextUnapprovedVerseId } =
-            await apiClient.verses.findNextUnapprovedVerse(verseId, language);
-          if (nextUnapprovedVerseId) {
-            navigate(
-              `/interlinear/${language}/verses/${nextUnapprovedVerseId}`
-            );
+          const data = await apiClient.verses.findNextUnapprovedVerse(
+            verseId,
+            language
+          );
+          if (data && data.verseId) {
+            loadedFromNextButton.current = true;
+            navigate(`/interlinear/${language}/verses/${data.verseId}`);
+          } else {
+            // TODO: figure out how to handle the situation where ALL words have been glossed (i.e. data.verseId === undefined)
+            flash.error('No unapproved verses');
           }
         }}
       />
