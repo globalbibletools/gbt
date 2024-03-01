@@ -91,7 +91,7 @@ export function TranslationToolbar({
       </div>
       <div className="me-16 pt-6">
         <Button variant="tertiary" onClick={navigateToNextUnapprovedVerse}>
-          Next Unapproved
+          {t('translate:next_unapproved')}
           <Icon icon="arrow-right" className="ms-1 rtl:hidden" />
           <Icon icon="arrow-left" className="ms-1 ltr:hidden" />
         </Button>
