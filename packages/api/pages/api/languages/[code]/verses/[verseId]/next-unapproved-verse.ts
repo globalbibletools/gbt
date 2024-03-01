@@ -1,11 +1,17 @@
 import { GetNextUnapprovedVerse } from '@translation/api-types';
 import createRoute from '../../../../../../shared/Route';
 import { client } from '../../../../../../shared/db';
+import { authorize } from '../../../../../../shared/access-control/authorize';
 
 type NextUnapprovedVerseResult = [{ nextUnapprovedVerseId: string }];
 
 export default createRoute<{ code: string; verseId: string }>()
   .get<void, GetNextUnapprovedVerse>({
+    authorize: authorize((req) => ({
+      action: 'translate',
+      subject: 'Language',
+      subjectId: req.query.code,
+    })),
     async handler(req, res) {
       const language = await client.language.findUnique({
         where: {

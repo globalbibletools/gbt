@@ -58,10 +58,14 @@ export function TranslationToolbar({
   }, [navigateToNextUnapprovedVerse]);
 
   const userCan = useAccessControl();
+  const isTranslator = userCan('translate', {
+    type: 'Language',
+    id: languageCode,
+  });
 
   return (
     <div className="flex items-center shadow-md px-6 md:px-8 py-4">
-      <div className="me-2">
+      <div className={isTranslator ? 'me-2' : 'me-16'}>
         <FormLabel htmlFor="verse-reference">VERSE</FormLabel>
         <div className="relative">
           <TextInput
@@ -89,13 +93,15 @@ export function TranslationToolbar({
           </Button>
         </div>
       </div>
-      <div className="me-16 pt-6">
-        <Button variant="tertiary" onClick={navigateToNextUnapprovedVerse}>
-          {t('translate:next_unapproved')}
-          <Icon icon="arrow-right" className="ms-1 rtl:hidden" />
-          <Icon icon="arrow-left" className="ms-1 ltr:hidden" />
-        </Button>
-      </div>
+      {isTranslator && (
+        <div className="me-16 pt-6">
+          <Button variant="tertiary" onClick={navigateToNextUnapprovedVerse}>
+            {t('translate:next_unapproved')}
+            <Icon icon="arrow-right" className="ms-1 rtl:hidden" />
+            <Icon icon="arrow-left" className="ms-1 ltr:hidden" />
+          </Button>
+        </div>
+      )}
       <div className="me-2">
         <FormLabel htmlFor="target-language">LANGUAGE</FormLabel>
         <ComboboxInput
