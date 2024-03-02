@@ -48,20 +48,22 @@ export function TranslationToolbar({
     }
   };
 
-  useEffect(() => {
-    const keydownCallback = (e: globalThis.KeyboardEvent) => {
-      if (e.altKey && !e.shiftKey && !e.ctrlKey && e.key === 'n')
-        navigateToNextUnapprovedVerse();
-    };
-    window.addEventListener('keydown', keydownCallback);
-    return () => window.removeEventListener('keydown', keydownCallback);
-  }, [navigateToNextUnapprovedVerse]);
-
   const userCan = useAccessControl();
   const isTranslator = userCan('translate', {
     type: 'Language',
     id: languageCode,
   });
+
+  useEffect(() => {
+    if (isTranslator) {
+      const keydownCallback = (e: globalThis.KeyboardEvent) => {
+        if (e.altKey && !e.shiftKey && !e.ctrlKey && e.key === 'n')
+          navigateToNextUnapprovedVerse();
+      };
+      window.addEventListener('keydown', keydownCallback);
+      return () => window.removeEventListener('keydown', keydownCallback);
+    }
+  }, [navigateToNextUnapprovedVerse, isTranslator]);
 
   return (
     <div className="flex items-center shadow-md px-6 md:px-8 py-4">
