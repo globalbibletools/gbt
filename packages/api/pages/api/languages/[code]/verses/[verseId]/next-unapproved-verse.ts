@@ -29,7 +29,7 @@ export default createRoute<{ code: string; verseId: string }>()
         SELECT "Word"."verseId" as "nextUnapprovedVerseId"
           FROM "Word" 
           LEFT OUTER JOIN language_gloss ON language_gloss."wordId" = "Word"."id" 
-        WHERE "Word"."verseId" > ${req.query.verseId} AND language_gloss <> 'APPROVED'
+        WHERE "Word"."verseId" > ${req.query.verseId} AND (language_gloss."state" = 'UNAPPROVED' OR language_gloss."state" IS NULL)
         ORDER BY "Word"."id" LIMIT 1;
       `;
 
