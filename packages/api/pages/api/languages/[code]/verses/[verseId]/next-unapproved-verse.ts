@@ -26,11 +26,10 @@ export default createRoute<{ code: string; verseId: string }>()
         WITH language_gloss as 
           (SELECT * FROM "Gloss" 
             WHERE "Gloss"."languageId" = ${language.id}::uuid)
-        SELECT "Verse"."id" as "nextUnapprovedVerseId" FROM "Verse"
-          JOIN "Word" ON "Word"."verseId" = "Verse"."id"
+        SELECT "Word"."verseId" as "nextUnapprovedVerseId"
+          FROM "Word" 
           LEFT OUTER JOIN language_gloss ON language_gloss."wordId" = "Word"."id" 
-        WHERE "Verse"."id" > ${req.query.verseId} AND (language_gloss."state" = 'UNAPPROVED' 
-                OR language_gloss."state" IS NULL)
+        WHERE "Word"."verseId" > ${req.query.verseId} AND language_gloss <> 'APPROVED'
         ORDER BY "Word"."id" LIMIT 1;
       `;
 
