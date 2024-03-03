@@ -90,10 +90,26 @@ export function TranslationToolbar({
         />
       </div>
       {userCan('administer', { type: 'Language', id: languageCode }) && (
-        <div className="pt-6">
+        <div className="pt-6 me-16">
           <Button variant="tertiary" to={`/languages/${languageCode}`}>
             <Icon icon="sliders" className="me-1" />
             {t('languages:manage')}
+          </Button>
+        </div>
+      )}
+      {userCan('translate', {
+        type: 'Language',
+        id: languageCode,
+      }) && (
+        <div className="pt-6">
+          <Button
+            variant="secondary"
+            onClick={() => {
+              return;
+            }}
+          >
+            <Icon icon="check" className="me-1" />
+            Approve All
           </Button>
         </div>
       )}
