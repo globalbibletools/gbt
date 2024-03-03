@@ -23,13 +23,12 @@ export default createRoute<{ code: string; verseId: string }>()
       }
 
       const [result] = await client.$queryRaw<NextUnapprovedVerseResult>`
-        WITH language_gloss as 
-          (SELECT * FROM "Gloss" 
-            WHERE "Gloss"."languageId" = ${language.id}::uuid)
         SELECT "Word"."verseId" as "nextUnapprovedVerseId"
           FROM "Word" 
-          LEFT OUTER JOIN language_gloss ON language_gloss."wordId" = "Word"."id" 
-        WHERE "Word"."verseId" > ${req.query.verseId} AND (language_gloss."state" = 'UNAPPROVED' OR language_gloss."state" IS NULL)
+          LEFT OUTER JOIN "Gloss" ON "Gloss"."wordId" = "Word"."id" 
+            AND "Gloss"."languageId" = ${language.id}::uuid
+        WHERE "Word"."verseId" > ${req.query.verseId} 
+          AND ("Gloss"."state" = 'UNAPPROVED' OR "Gloss"."state" IS NULL)
         ORDER BY "Word"."id" LIMIT 1;
       `;
 
