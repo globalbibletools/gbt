@@ -1,19 +1,19 @@
-import apiClient from '../../shared/apiClient';
-import TextInput from '../../shared/components/form/TextInput';
-import FormLabel from '../../shared/components/form/FormLabel';
-import { useTranslation } from 'react-i18next';
-import { ApiClientError } from '@translation/api-client';
-import Form from '../../shared/components/form/Form';
-import InputError from '../../shared/components/form/InputError';
-import { Controller, useForm } from 'react-hook-form';
-import SubmittingIndicator from '../../shared/components/form/SubmittingIndicator';
-import Button from '../../shared/components/actions/Button';
-import { useFlash } from '../../shared/hooks/flash';
-import { GetSessionResponse, LanguageRole } from '@translation/api-types';
-import MultiselectInput from '../../shared/components/form/MultiselectInput';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { ApiClientError } from '@translation/api-client';
+import { GetSessionResponse, LanguageRole } from '@translation/api-types';
 import { MouseEvent, forwardRef, useImperativeHandle, useRef } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
+import apiClient from '../../shared/apiClient';
 import { Icon } from '../../shared/components/Icon';
+import Button from '../../shared/components/actions/Button';
+import Form from '../../shared/components/form/Form';
+import FormLabel from '../../shared/components/form/FormLabel';
+import InputError from '../../shared/components/form/InputError';
+import MultiselectInput from '../../shared/components/form/MultiselectInput';
+import SubmitButton from '../../shared/components/form/SubmitButton';
+import TextInput from '../../shared/components/form/TextInput';
+import { useFlash } from '../../shared/hooks/flash';
 
 interface FormData {
   email: string;
@@ -132,10 +132,7 @@ const InviteLanguageMemberDialog = forwardRef<
             )}
           />
         </div>
-        <Button className="w-full" type="submit">
-          {t('users:invite')}
-        </Button>
-        <SubmittingIndicator className="ms-3" />
+        <SubmitButton className="w-full">{t('users:invite')}</SubmitButton>
       </Form>
       <Button
         className="absolute right-2 top-2 w-9"

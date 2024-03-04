@@ -9,7 +9,7 @@ export interface SubmitButtonProps {
   children?: ReactNode;
 }
 
-export default function SubmittingIndicator({
+export default function SubmitButton({
   className = '',
   children,
 }: SubmitButtonProps) {
