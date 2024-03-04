@@ -1,22 +1,22 @@
+import { ApiClientError } from '@translation/api-client';
+import { useEffect, useRef, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { LoaderFunctionArgs, useLoaderData } from 'react-router-dom';
-import ViewTitle from '../../shared/components/ViewTitle';
 import apiClient from '../../shared/apiClient';
-import { ApiClientError } from '@translation/api-client';
-import { useFlash } from '../../shared/hooks/flash';
-import { useEffect, useRef, useState } from 'react';
 import ConfirmationDialog, {
   ConfirmationDialogRef,
 } from '../../shared/components/ConfirmationDialog';
-import { Controller, useForm } from 'react-hook-form';
+import { Icon } from '../../shared/components/Icon';
 import LoadingSpinner from '../../shared/components/LoadingSpinner';
+import ViewTitle from '../../shared/components/ViewTitle';
 import Button from '../../shared/components/actions/Button';
+import Link from '../../shared/components/actions/Link';
+import ComboboxInput from '../../shared/components/form/ComboboxInput';
 import Form from '../../shared/components/form/Form';
 import FormLabel from '../../shared/components/form/FormLabel';
-import ComboboxInput from '../../shared/components/form/ComboboxInput';
-import { Icon } from '../../shared/components/Icon';
-import SubmittingIndicator from '../../shared/components/form/SubmittingIndicator';
-import Link from '../../shared/components/actions/Link';
+import SubmitButton from '../../shared/components/form/SubmitButton';
+import { useFlash } from '../../shared/hooks/flash';
 
 export async function manageLanguageImportViewLoader({
   params,
@@ -197,11 +197,10 @@ export default function ManageLanguageImportView() {
                     />
                   </div>
                   <div>
-                    <Button type="submit">
+                    <SubmitButton>
                       <Icon icon="file-import" className="me-4" />
                       {t('languages:import_glosses')}
-                    </Button>
-                    <SubmittingIndicator className="ms-3" />
+                    </SubmitButton>
                   </div>
                 </Form>
               </div>

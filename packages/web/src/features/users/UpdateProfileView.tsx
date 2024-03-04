@@ -1,18 +1,17 @@
-import { useTranslation } from 'react-i18next';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
+import apiClient from '../../shared/apiClient';
 import Card from '../../shared/components/Card';
-import FormLabel from '../../shared/components/form/FormLabel';
-import TextInput from '../../shared/components/form/TextInput';
 import View from '../../shared/components/View';
 import ViewTitle from '../../shared/components/ViewTitle';
-import apiClient from '../../shared/apiClient';
 import Form from '../../shared/components/form/Form';
+import FormLabel from '../../shared/components/form/FormLabel';
 import InputError from '../../shared/components/form/InputError';
-import Button from '../../shared/components/actions/Button';
-import SubmittingIndicator from '../../shared/components/form/SubmittingIndicator';
+import SubmitButton from '../../shared/components/form/SubmitButton';
+import TextInput from '../../shared/components/form/TextInput';
 import { useFlash } from '../../shared/hooks/flash';
 import useAuth from '../../shared/hooks/useAuth';
-import { useEffect } from 'react';
 import useTitle from '../../shared/hooks/useTitle';
 
 interface FormData {
@@ -152,8 +151,7 @@ export default function UpdateProfileView() {
             />
           </div>
           <div>
-            <Button type="submit">{t('common:update')}</Button>
-            <SubmittingIndicator className="ms-3" />
+            <SubmitButton>{t('common:update')}</SubmitButton>
           </div>
         </Form>
       </Card>

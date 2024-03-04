@@ -1,25 +1,23 @@
-import { useTranslation } from 'react-i18next';
+import { QueryClient } from '@tanstack/query-core';
+import { useQuery } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
-import Card from '../../shared/components/Card';
-import FormLabel from '../../shared/components/form/FormLabel';
-import TextInput from '../../shared/components/form/TextInput';
-import ModalView, { ModalViewTitle } from '../../shared/components/ModalView';
-import apiClient from '../../shared/apiClient';
-import Form from '../../shared/components/form/Form';
-import InputError from '../../shared/components/form/InputError';
-import Button from '../../shared/components/actions/Button';
-import Link from '../../shared/components/actions/Link';
-import SubmittingIndicator from '../../shared/components/form/SubmittingIndicator';
-import { useFlash } from '../../shared/hooks/flash';
-import useAuth from '../../shared/hooks/useAuth';
+import { useTranslation } from 'react-i18next';
 import {
   LoaderFunctionArgs,
   useLoaderData,
   useNavigate,
   useSearchParams,
 } from 'react-router-dom';
-import { QueryClient } from '@tanstack/query-core';
-import { useQuery } from '@tanstack/react-query';
+import apiClient from '../../shared/apiClient';
+import ModalView, { ModalViewTitle } from '../../shared/components/ModalView';
+import Button from '../../shared/components/actions/Button';
+import Form from '../../shared/components/form/Form';
+import FormLabel from '../../shared/components/form/FormLabel';
+import InputError from '../../shared/components/form/InputError';
+import SubmitButton from '../../shared/components/form/SubmitButton';
+import TextInput from '../../shared/components/form/TextInput';
+import { useFlash } from '../../shared/hooks/flash';
+import useAuth from '../../shared/hooks/useAuth';
 import useTitle from '../../shared/hooks/useTitle';
 
 const createInviteQuery = (token?: string) => ({
@@ -199,12 +197,7 @@ export default function AcceptInviteView() {
             messages={{ confirms: t('users:errors.password_confirmation') }}
           />
         </div>
-        <Button className="w-full" type="submit">
-          {t('common:create')}
-        </Button>
-        <div>
-          <SubmittingIndicator className="ms-3" />
-        </div>
+        <SubmitButton className="w-full">{t('common:create')}</SubmitButton>
       </Form>
     </ModalView>
   );
