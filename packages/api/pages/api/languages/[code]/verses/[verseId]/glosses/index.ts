@@ -1,9 +1,14 @@
-import { GetVerseGlossesResponseBody } from '@translation/api-types';
-import { client, PrismaTypes } from '../../../../../../shared/db';
-import createRoute from '../../../../../../shared/Route';
-import { machineTranslationClient } from '../../../../../../shared/machine-translation';
-import languageMap from '../../../../../../../../data/language-mapping.json';
+import {
+  GetVerseGlossesResponseBody,
+  GlossSource,
+  GlossState,
+} from '@translation/api-types';
+import { client, PrismaTypes } from '../../../../../../../shared/db';
+import createRoute from '../../../../../../../shared/Route';
+import { machineTranslationClient } from '../../../../../../../shared/machine-translation';
+import languageMap from '../../../../../../../../../data/language-mapping.json';
 import { Language, Prisma } from '@prisma/client';
+import { authorize } from '../../../../../../../shared/access-control/authorize';
 
 interface WordQuery {
   wordId: string;
@@ -74,6 +79,9 @@ async function generateMachineGlossesForVerse(
   return wordMapper;
 }
 
+interface PatchVerseGlossesRequestBody {
+  [wordId: string]: { gloss?: string; state?: GlossState };
+}
 export default createRoute<{ code: string; verseId: string }>()
   .get<void, GetVerseGlossesResponseBody>({
     async handler(req, res) {
@@ -160,4 +168,125 @@ export default createRoute<{ code: string; verseId: string }>()
       }
     },
   })
+  .patch<PatchVerseGlossesRequestBody, void>({
+    authorize: authorize((req) => ({
+      action: 'translate',
+      subject: 'Language',
+      subjectId: req.query.code,
+    })),
+    async handler(req, res) {
+      const language = await client.language.findUnique({
+        where: { code: req.query.code },
+      });
+      if (!language) {
+        return res.notFound();
+      }
+
+      const glosses = await client.gloss.findMany({
+        where: { wordId: { startsWith: req.query.verseId } },
+      });
+
+      await client.gloss.updateMany({
+        data: Object.entries(req.body)
+          .filter(([wordId]) =>
+            glosses.find((gloss) => gloss.wordId === wordId)
+          )
+          .map(([wordId, { gloss, state }]) => {
+            return { languageId: language.id, wordId, gloss, state };
+          }),
+      });
+      await client.glossHistoryEntry.createMany({
+        data: Object.entries(req.body)
+          .filter(([wordId]) =>
+            glosses.find((gloss) => gloss.wordId === wordId)
+          )
+          .map(([wordId, { gloss, state }]) => {
+            return {
+              languageId: language.id,
+              wordId,
+              gloss:
+                glosses.find((gloss) => gloss.wordId === wordId)?.gloss !==
+                gloss
+                  ? gloss
+                  : undefined,
+              state:
+                glosses.find((gloss) => gloss.wordId === wordId)?.state !==
+                state
+                  ? state
+                  : undefined,
+              source: GlossSource.User,
+            };
+          }),
+      });
+      await client.gloss.createMany({
+        data: Object.entries(req.body)
+          .filter(
+            ([wordId]) => !glosses.find((gloss) => gloss.wordId === wordId)
+          )
+          .map(([wordId, { gloss, state }]) => {
+            return { languageId: language.id, wordId, gloss, state };
+          }),
+      });
+      await client.glossHistoryEntry.createMany({
+        data: Object.entries(req.body)
+          .filter(
+            ([wordId]) => !glosses.find((gloss) => gloss.wordId === wordId)
+          )
+          .map(([wordId, { gloss, state }]) => {
+            return {
+              languageId: language.id,
+              wordId,
+              gloss,
+              state,
+              source: GlossSource.User,
+            };
+          }),
+      });
+      res.ok();
+    },
+  })
   .build();
+
+/***************
+  export default createRoute<{ code: string; verseId: string }>()
+    .patch<ApproveAllVerseGlossesRequestBody, void>({
+      authorize: authorize((req) => ({
+        action: 'translate',
+        subject: 'Language',
+        subjectId: req.query.code,
+      })),
+      async handler(req, res) {
+        const language = await client.language.findUnique({
+          where: {
+            code: req.query.code,
+          },
+        });
+        if (!language) {
+          return res.notFound();
+        }
+        const approvedGlosses = await client.$queryRaw<{ wordId: string }[]>`
+              UPDATE "Gloss"
+                  SET "Gloss"."state" = 'APPROVED'
+              WHERE 
+                  "Gloss"."languageId" = ${language.id}
+                  AND "Gloss"."wordId" ^@ ${req.query.verseId}
+                  AND "Gloss"."state" = 'UNAPPROVED'
+                  AND "Gloss"."gloss" <> ''
+              RETURNING "Gloss"."wordId" as "wordId"
+          `;
+        const result = await client.glossHistoryEntry.createMany({
+          data: approvedGlosses.map(({ wordId }) => ({
+            wordId,
+            languageId: language.id,
+            userId: req.session?.user?.id,
+            state: GlossState.Approved,
+            source: GlossSource.USER,
+          })),
+        });
+        result.count;
+        return;
+      },
+    })
+    .build();
+
+    *****************/
