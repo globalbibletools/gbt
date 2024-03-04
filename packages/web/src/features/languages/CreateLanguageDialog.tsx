@@ -14,6 +14,7 @@ import SubmittingIndicator from '../../shared/components/form/SubmittingIndicato
 import { languageCodes } from './../../shared/languageCodes';
 import { useMutation } from '@tanstack/react-query';
 import queryClient from '../../shared/queryClient';
+import SubmitButton from '../../shared/components/form/SubmitButton';
 
 interface FormData {
   code: string;
@@ -114,10 +115,7 @@ const CreateLanguageDialog = forwardRef<CreateLanguageDialogRef, unknown>(
               }}
             />
           </div>
-          <Button className="w-full" type="submit">
-            {t('common:create')}
-          </Button>
-          <SubmittingIndicator className="ms-3" />
+          <SubmitButton className="w-full">{t('common:create')}</SubmitButton>
         </Form>
         <Button
           className="absolute right-2 top-2 w-9"
