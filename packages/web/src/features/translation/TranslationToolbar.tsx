@@ -60,8 +60,8 @@ export function TranslationToolbar({
       verseId,
       languageCode
     );
-    if (data && data.verseId) {
-      onVerseChange(data.verseId);
+    if (data && data.nextUnapprovedVerseId) {
+      onVerseChange(data.nextUnapprovedVerseId);
     } else {
       // TODO: figure out how to handle the situation where ALL words have been glossed (i.e. data.verseId === undefined)
       flash.error('No unapproved verses');

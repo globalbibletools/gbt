@@ -245,6 +245,6 @@ export interface GetLemmaResourcesResponseBody {
   data: Record<string, Resource[]>;
 }
 
-export interface GetNextUnapprovedVerse {
-  verseId?: string;
+export interface GetNextUnapprovedVerseResponseBody {
+  nextUnapprovedVerseId?: string;
 }

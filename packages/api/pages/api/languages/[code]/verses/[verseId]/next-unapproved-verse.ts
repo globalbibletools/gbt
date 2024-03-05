@@ -1,4 +1,4 @@
-import { GetNextUnapprovedVerse } from '@translation/api-types';
+import { GetNextUnapprovedVerseResponseBody } from '@translation/api-types';
 import createRoute from '../../../../../../shared/Route';
 import { client } from '../../../../../../shared/db';
 import { authorize } from '../../../../../../shared/access-control/authorize';
@@ -6,7 +6,7 @@ import { authorize } from '../../../../../../shared/access-control/authorize';
 type NextUnapprovedVerseResult = [{ nextUnapprovedVerseId: string }];
 
 export default createRoute<{ code: string; verseId: string }>()
-  .get<void, GetNextUnapprovedVerse>({
+  .get<void, GetNextUnapprovedVerseResponseBody>({
     authorize: authorize((req) => ({
       action: 'translate',
       subject: 'Language',
