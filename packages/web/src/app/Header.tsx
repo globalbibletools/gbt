@@ -36,7 +36,7 @@ export default function Header() {
         {t('translate:interlinear')}
       </NavLink>
       {userCan('create', 'Language') && (
-        <NavLink to={'/admin'} className={navLinkClasses}>
+        <NavLink to={'/admin/languages'} className={navLinkClasses}>
           {t('common:admin')}
         </NavLink>
       )}
