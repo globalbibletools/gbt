@@ -2,6 +2,7 @@ import {
   GetVerseGlossesResponseBody,
   GlossSource,
   GlossState,
+  PatchVerseGlossesRequestBody,
 } from '@translation/api-types';
 import { client, PrismaTypes } from '../../../../../../../shared/db';
 import createRoute from '../../../../../../../shared/Route';
@@ -9,6 +10,7 @@ import { machineTranslationClient } from '../../../../../../../shared/machine-tr
 import languageMap from '../../../../../../../../../data/language-mapping.json';
 import { Language, Prisma } from '@prisma/client';
 import { authorize } from '../../../../../../../shared/access-control/authorize';
+import * as z from 'zod';
 
 interface WordQuery {
   wordId: string;
@@ -79,9 +81,6 @@ async function generateMachineGlossesForVerse(
   return wordMapper;
 }
 
-interface PatchVerseGlossesRequestBody {
-  [wordId: string]: { gloss?: string; state?: GlossState };
-}
 export default createRoute<{ code: string; verseId: string }>()
   .get<void, GetVerseGlossesResponseBody>({
     async handler(req, res) {
@@ -169,6 +168,17 @@ export default createRoute<{ code: string; verseId: string }>()
     },
   })
   .patch<PatchVerseGlossesRequestBody, void>({
+    schema: z.object({
+      data: z.record(
+        z.string(),
+        z.object({
+          gloss: z.string().optional(),
+          state: z
+            .enum(Object.values(GlossState) as [GlossState, ...GlossState[]])
+            .optional(),
+        })
+      ),
+    }),
     authorize: authorize((req) => ({
       action: 'translate',
       subject: 'Language',
@@ -182,66 +192,95 @@ export default createRoute<{ code: string; verseId: string }>()
         return res.notFound();
       }
 
-      const glosses = await client.gloss.findMany({
-        where: { wordId: { startsWith: req.query.verseId } },
-      });
+      // const glosses = await client.gloss.findMany({
+      //   where: { wordId: { startsWith: req.query.verseId } },
+      // });
 
-      await client.gloss.updateMany({
-        data: Object.entries(req.body)
-          .filter(([wordId]) =>
-            glosses.find((gloss) => gloss.wordId === wordId)
-          )
-          .map(([wordId, { gloss, state }]) => {
-            return { languageId: language.id, wordId, gloss, state };
-          }),
-      });
-      await client.glossHistoryEntry.createMany({
-        data: Object.entries(req.body)
-          .filter(([wordId]) =>
-            glosses.find((gloss) => gloss.wordId === wordId)
-          )
-          .map(([wordId, { gloss, state }]) => {
-            return {
-              languageId: language.id,
-              wordId,
-              gloss:
-                glosses.find((gloss) => gloss.wordId === wordId)?.gloss !==
-                gloss
-                  ? gloss
-                  : undefined,
-              state:
-                glosses.find((gloss) => gloss.wordId === wordId)?.state !==
-                state
-                  ? state
-                  : undefined,
-              source: GlossSource.User,
-            };
-          }),
+      await client.gloss.deleteMany({
+        where: { wordId: { in: Object.keys(req.body.data) } },
       });
       await client.gloss.createMany({
-        data: Object.entries(req.body)
-          .filter(
-            ([wordId]) => !glosses.find((gloss) => gloss.wordId === wordId)
-          )
-          .map(([wordId, { gloss, state }]) => {
-            return { languageId: language.id, wordId, gloss, state };
-          }),
+        data: Object.entries(req.body.data).map(([wordId, fields]) => ({
+          languageId: language.id,
+          wordId,
+          ...fields,
+        })),
       });
-      await client.glossHistoryEntry.createMany({
-        data: Object.entries(req.body)
-          .filter(
-            ([wordId]) => !glosses.find((gloss) => gloss.wordId === wordId)
-          )
-          .map(([wordId, { gloss, state }]) => {
-            return {
-              languageId: language.id,
-              wordId,
-              gloss,
-              state,
-              source: GlossSource.User,
-            };
-          }),
-      });
+
+      // await client.gloss.updateMany({
+      //   data: Object.entries(req.body.data)
+      //     .filter(([wordId]) =>
+      //       glosses.find((gloss) => gloss.wordId === wordId)
+      //     )
+      //     .map(([, { gloss, state }]) => {
+      //       return {gloss, state };
+      //     }),
+      // });
+
+      // for (const [wordId, fields] of Object.entries(req.body.data).filter(
+      //   ([wordId]) => glosses.find((gloss) => gloss.wordId === wordId)
+      // )) {
+      //   console.log(`Meshing: ${wordId}`);
+      //   await client.gloss.update({
+      //     where: { wordId_languageId: { languageId: language.id, wordId } },
+      //     data: fields,
+      //   });
+      // }
+
+      // await client.$executeRaw`
+      //   UPDATE "Gloss"
+      //     SET "gloss" = DATA."gloss",
+      //         "state" = DATA."state"
+      //     FROM (VALUES ${Obje})
+      // `;
+      //------------------------------------------------------------------------------------
+      // await client.glossHistoryEntry.createMany({
+      //   data: Object.entries(req.body.data)
+      //     .filter(([wordId]) =>
+      //       glosses.find((gloss) => gloss.wordId === wordId)
+      //     )
+      //     .map(([wordId, { gloss, state }]) => {
+      //       return {
+      //         languageId: language.id,
+      //         wordId,
+      //         gloss:
+      //           glosses.find((gloss) => gloss.wordId === wordId)?.gloss !==
+      //           gloss
+      //             ? gloss
+      //             : undefined,
+      //         state:
+      //           glosses.find((gloss) => gloss.wordId === wordId)?.state !==
+      //           state
+      //             ? state
+      //             : undefined,
+      //         source: GlossSource.User,
+      //       };
+      //     }),
+      // });
+      // await client.gloss.createMany({
+      //   data: Object.entries(req.body.data)
+      //     .filter(
+      //       ([wordId]) => !glosses.find((gloss) => gloss.wordId === wordId)
+      //     )
+      //     .map(([wordId, { gloss, state }]) => {
+      //       return { languageId: language.id, wordId, gloss, state };
+      //     }),
+      // });
+      // await client.glossHistoryEntry.createMany({
+      //   data: Object.entries(req.body.data)
+      //     .filter(
+      //       ([wordId]) => !glosses.find((gloss) => gloss.wordId === wordId)
+      //     )
+      //     .map(([wordId, { gloss, state }]) => {
+      //       return {
+      //         languageId: language.id,
+      //         wordId,
+      //         gloss,
+      //         state,
+      //         source: GlossSource.User,
+      //       };
+      //     }),
+      // });
       res.ok();
     },
   })

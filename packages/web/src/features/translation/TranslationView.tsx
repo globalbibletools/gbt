@@ -315,6 +315,21 @@ export default function TranslationView() {
   return (
     <div className="absolute w-full h-full flex flex-col flex-grow">
       <TranslationToolbar
+        getGlossesAsDisplayed={() =>
+          targetGlossesQuery.data &&
+          Object.fromEntries(
+            targetGlossesQuery.data.data.map((targetGloss) => [
+              targetGloss.wordId,
+              {
+                gloss:
+                  targetGloss.gloss ||
+                  targetGloss.suggestions[0] ||
+                  targetGloss.machineGloss,
+                state: targetGloss.state,
+              },
+            ])
+          )
+        }
         verseId={verseId}
         languageCode={language}
         languages={translationLanguages.map(({ code, name }) => ({

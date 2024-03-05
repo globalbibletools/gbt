@@ -186,6 +186,11 @@ export interface Gloss {
 export interface GetVerseGlossesResponseBody {
   data: Gloss[];
 }
+export interface PatchVerseGlossesRequestBody {
+  data: {
+    [wordId: string]: { gloss?: string; state?: GlossState };
+  };
+}
 
 export interface PatchWordGlossRequestBody {
   gloss?: string;

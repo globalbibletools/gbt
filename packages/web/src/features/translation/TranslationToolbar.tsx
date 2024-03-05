@@ -13,6 +13,8 @@ import Button from '../../shared/components/actions/Button';
 import FormLabel from '../../shared/components/form/FormLabel';
 import ComboboxInput from '../../shared/components/form/ComboboxInput';
 import { useAccessControl } from '../../shared/accessControl';
+import apiClient from '../../shared/apiClient';
+import { GlossState } from '@translation/api-types';
 
 export interface TranslationToolbarProps {
   verseId: string;
@@ -28,7 +30,14 @@ export function TranslationToolbar({
   languageCode,
   onLanguageChange,
   onVerseChange,
-}: TranslationToolbarProps) {
+  getGlossesAsDisplayed,
+}: TranslationToolbarProps & {
+  getGlossesAsDisplayed: () =>
+    | {
+        [wordId: string]: { gloss?: string; state?: GlossState };
+      }
+    | undefined;
+}) {
   const { t } = useTranslation(['translate', 'bible', 'common', 'languages']);
   const verseInfo = parseVerseId(verseId);
 
@@ -105,7 +114,16 @@ export function TranslationToolbar({
           <Button
             variant="secondary"
             onClick={() => {
-              return;
+              const glossesAsDisplayed = getGlossesAsDisplayed();
+              if (glossesAsDisplayed) {
+                for (const gloss of Object.values(glossesAsDisplayed)) {
+                  gloss.state = GlossState.Approved;
+                }
+                console.log(JSON.stringify(glossesAsDisplayed));
+                apiClient.verses.updateVerseGlosses(verseId, languageCode, {
+                  data: glossesAsDisplayed,
+                });
+              }
             }}
           >
             <Icon icon="check" className="me-1" />
