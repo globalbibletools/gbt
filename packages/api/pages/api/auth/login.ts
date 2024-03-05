@@ -13,38 +13,23 @@ export default createRoute()
       password: z.string(),
     }),
     async handler(req, res) {
-      let userId;
-      try {
-        const user = await client.user.findFirst({
-          where: {
-            email: req.body.email.toLowerCase(),
-          },
-        });
-
-        console.log(user);
-
-        if (!user?.hashedPassword) {
-          res.unauthorized();
-          return;
-        }
-
-        if (
-          !(await scrypt.verify(
-            user.hashedPassword.slice(3),
-            req.body.password
-          ))
-        ) {
-          res.unauthorized();
-          return;
-        }
-
-        userId = user.id;
-      } catch (error) {
+      const user = await client.user.findUnique({
+        where: {
+          email: req.body.email.toLowerCase(),
+        },
+      });
+      if (!user?.hashedPassword) {
         res.unauthorized();
         return;
       }
 
-      await res.login(userId);
+      if (!(await scrypt.verify(user.hashedPassword, req.body.password))) {
+        res.unauthorized();
+        return;
+      }
+
+      await res.login(user.id);
+
       res.ok();
     },
   })
