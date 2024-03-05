@@ -1,4 +1,4 @@
-import { KeyboardEvent, useEffect } from 'react';
+import { KeyboardEvent, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Icon } from '../../shared/components/Icon';
 import TextInput from '../../shared/components/form/TextInput';
@@ -13,6 +13,8 @@ import Button from '../../shared/components/actions/Button';
 import FormLabel from '../../shared/components/form/FormLabel';
 import ComboboxInput from '../../shared/components/form/ComboboxInput';
 import { useAccessControl } from '../../shared/accessControl';
+import apiClient from '../../shared/apiClient';
+import { useFlash } from '../../shared/hooks/flash';
 
 export interface TranslationToolbarProps {
   verseId: string;
@@ -20,7 +22,6 @@ export interface TranslationToolbarProps {
   languages: { name: string; code: string }[];
   onVerseChange: (verseId: string) => void;
   onLanguageChange: (languageCode: string) => void;
-  navigateToNextUnapprovedVerse: () => void;
 }
 
 export function TranslationToolbar({
@@ -29,9 +30,9 @@ export function TranslationToolbar({
   languageCode,
   onLanguageChange,
   onVerseChange,
-  navigateToNextUnapprovedVerse,
 }: TranslationToolbarProps) {
   const { t } = useTranslation(['translate', 'bible', 'common', 'languages']);
+  const flash = useFlash();
   const verseInfo = parseVerseId(verseId);
 
   const onKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
@@ -53,6 +54,19 @@ export function TranslationToolbar({
     type: 'Language',
     id: languageCode,
   });
+
+  const navigateToNextUnapprovedVerse = useCallback(async () => {
+    const data = await apiClient.verses.findNextUnapprovedVerse(
+      verseId,
+      languageCode
+    );
+    if (data && data.verseId) {
+      onVerseChange(data.verseId);
+    } else {
+      // TODO: figure out how to handle the situation where ALL words have been glossed (i.e. data.verseId === undefined)
+      flash.error('No unapproved verses');
+    }
+  }, [onVerseChange, flash, verseId, languageCode]);
 
   useEffect(() => {
     if (isTranslator) {
