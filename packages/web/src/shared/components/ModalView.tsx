@@ -34,7 +34,7 @@ export default function ModalView({
     >
       <div className="flex items-center mb-12">
         <Link
-          className="flex items-center rounded focus-visible:outline outline-2 outline-green-300 outline-offset-2"
+          className="flex items-center rounded focus-visible:outline outline-2 outline-green-300 outline-offset-0"
           to="/"
         >
           <img src={logo} className="w-10 h-10" />

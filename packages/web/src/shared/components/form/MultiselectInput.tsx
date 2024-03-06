@@ -43,7 +43,7 @@ const MultiselectInput = forwardRef<HTMLInputElement, MultiselectInputProps>(
           <div
             className={`
             border rounded shadow-inner flex
-            has-[:focus-visible]:outline outline-2 outline-offset-2
+            has-[:focus-visible]:outline outline-2 outline-offset-0
             ${
               hasErrors
                 ? 'border-red-700 shadow-red-100 outline-red-700'

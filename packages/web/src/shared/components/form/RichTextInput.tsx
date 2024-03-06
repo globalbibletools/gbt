@@ -72,7 +72,7 @@ const RichTextInput = forwardRef<RichTextInputRef, RichTextInputProps>(
     }, [value, editor]);
 
     return (
-      <div className="border rounded border-gray-400 has-[:focus-visible]:outline outline-2 outline-green-300 outline-offset-2 bg-white">
+      <div className="border rounded border-gray-400 has-[:focus-visible]:outline outline-2 outline-green-300 outline-offset-0 bg-white">
         <input type="hidden" ref={hiddenInput} name={name} />
         <div className="border-gray-400 border-b p-1 flex gap-3">
           <div className="flex gap-1">
