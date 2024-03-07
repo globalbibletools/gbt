@@ -1,6 +1,7 @@
 import { createTransport, SendMailOptions } from 'nodemailer';
 import { EmailStatus } from '@translation/db';
 import { auth } from './auth';
+import { client } from './db';
 
 if (!process.env['EMAIL_SERVER'] && process.env.NODE_ENV === 'production') {
   throw new Error('missing EMAIL_SERVER environment variable');
@@ -42,10 +43,10 @@ export class EmailNotVerifiedError extends Error {
   }
 }
 
-export class MissingEmailAddressError extends Error {
+export class MissingEmailUserError extends Error {
   constructor(userId: string) {
     super(
-      `We can't send emails to user with id ${userId} because they are missing an email address.`
+      `We can't send emails to user with id ${userId} because they don't exist.`
     );
   }
 }
@@ -66,22 +67,18 @@ export default {
     if ('email' in options) {
       email = options.email;
     } else {
-      let user, primaryKey;
-      try {
-        user = await auth.getUser(options.userId);
-        const keys = await auth.getAllUserKeys(options.userId);
-        primaryKey = keys.find(
-          (key) => key.type === 'persistent' && key.primary
-        );
-      } catch (error) {
-        throw new MissingEmailAddressError(options.userId);
+      const user = await client.user.findUnique({
+        where: {
+          id: options.userId,
+        },
+      });
+      if (!user) {
+        throw new MissingEmailUserError(options.userId);
       }
-
-      if (!primaryKey) throw new MissingEmailAddressError(options.userId);
-      if (user.emailStatus !== EmailStatus.VERIFIED)
-        throw new EmailNotVerifiedError(primaryKey?.providerUserId);
-
-      email = primaryKey.providerUserId;
+      if (user.emailStatus !== EmailStatus.VERIFIED) {
+        throw new EmailNotVerifiedError(user.email);
+      }
+      email = user.email;
     }
 
     await this.transporter.sendMail({
