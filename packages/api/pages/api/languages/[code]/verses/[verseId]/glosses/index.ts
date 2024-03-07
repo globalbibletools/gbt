@@ -197,7 +197,10 @@ export default createRoute<{ code: string; verseId: string }>()
       // });
 
       await client.gloss.deleteMany({
-        where: { wordId: { in: Object.keys(req.body.data) } },
+        where: {
+          languageId: language.id,
+          wordId: { in: Object.keys(req.body.data) },
+        },
       });
       await client.gloss.createMany({
         data: Object.entries(req.body.data).map(([wordId, fields]) => ({
@@ -206,6 +209,8 @@ export default createRoute<{ code: string; verseId: string }>()
           ...fields,
         })),
       });
+
+      // throw new Error(`${agBefore._count.wordId} : ${agAfter._count.wordId}`);
 
       // await client.gloss.updateMany({
       //   data: Object.entries(req.body.data)

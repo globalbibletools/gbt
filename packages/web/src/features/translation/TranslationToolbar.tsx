@@ -31,12 +31,14 @@ export function TranslationToolbar({
   onLanguageChange,
   onVerseChange,
   getGlossesAsDisplayed,
+  refetchGlosses: invalidateGlosses,
 }: TranslationToolbarProps & {
   getGlossesAsDisplayed: () =>
     | {
         [wordId: string]: { gloss?: string; state?: GlossState };
       }
     | undefined;
+  refetchGlosses: () => void;
 }) {
   const { t } = useTranslation(['translate', 'bible', 'common', 'languages']);
   const verseInfo = parseVerseId(verseId);
@@ -113,16 +115,21 @@ export function TranslationToolbar({
         <div className="pt-6">
           <Button
             variant="secondary"
-            onClick={() => {
+            onClick={async () => {
               const glossesAsDisplayed = getGlossesAsDisplayed();
               if (glossesAsDisplayed) {
                 for (const gloss of Object.values(glossesAsDisplayed)) {
                   gloss.state = GlossState.Approved;
                 }
                 console.log(JSON.stringify(glossesAsDisplayed));
-                apiClient.verses.updateVerseGlosses(verseId, languageCode, {
-                  data: glossesAsDisplayed,
-                });
+                await apiClient.verses.updateVerseGlosses(
+                  verseId,
+                  languageCode,
+                  {
+                    data: glossesAsDisplayed,
+                  }
+                );
+                invalidateGlosses();
               }
             }}
           >

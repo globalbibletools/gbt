@@ -315,6 +315,7 @@ export default function TranslationView() {
   return (
     <div className="absolute w-full h-full flex flex-col flex-grow">
       <TranslationToolbar
+        refetchGlosses={() => targetGlossesQuery.refetch()}
         getGlossesAsDisplayed={() =>
           targetGlossesQuery.data &&
           Object.fromEntries(
