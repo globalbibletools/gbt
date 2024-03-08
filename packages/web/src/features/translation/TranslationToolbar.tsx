@@ -1,4 +1,4 @@
-import { KeyboardEvent } from 'react';
+import { KeyboardEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Icon } from '../../shared/components/Icon';
 import TextInput from '../../shared/components/form/TextInput';
@@ -15,6 +15,7 @@ import ComboboxInput from '../../shared/components/form/ComboboxInput';
 import { useAccessControl } from '../../shared/accessControl';
 import apiClient from '../../shared/apiClient';
 import { GlossState } from '@translation/api-types';
+import { useFlash } from '../../shared/hooks/flash';
 
 export interface TranslationToolbarProps {
   verseId: string;
@@ -31,7 +32,7 @@ export function TranslationToolbar({
   onLanguageChange,
   onVerseChange,
   getGlossesAsDisplayed,
-  refetchGlosses: invalidateGlosses,
+  refetchGlosses,
 }: TranslationToolbarProps & {
   getGlossesAsDisplayed: () =>
     | {
@@ -58,6 +59,9 @@ export function TranslationToolbar({
   };
 
   const userCan = useAccessControl();
+  const flash = useFlash();
+
+  const [, rebuild] = useState({});
 
   return (
     <div className="flex items-center shadow-md px-6 md:px-8 py-4">
@@ -115,6 +119,9 @@ export function TranslationToolbar({
         <div className="pt-6">
           <Button
             variant="secondary"
+            disabled={Object.values(getGlossesAsDisplayed() ?? { _: {} }).every(
+              (gloss) => gloss.state === GlossState.Approved || !gloss.gloss
+            )}
             onClick={async () => {
               const glossesAsDisplayed = getGlossesAsDisplayed();
               if (glossesAsDisplayed) {
@@ -129,7 +136,9 @@ export function TranslationToolbar({
                     data: glossesAsDisplayed,
                   }
                 );
-                invalidateGlosses();
+                refetchGlosses();
+                flash.success('All glosses approved');
+                rebuild({});
               }
             }}
           >
