@@ -78,7 +78,7 @@ const ComboboxInput = forwardRef<HTMLInputElement, BaseComboboxInputProps>(
         >
           <div
             className={`
-              h-9 border rounded shadow-inner flex outline-2 outline-offset-0 has-[:focus-visible]:outline
+              h-9 border rounded shadow-inner flex outline-2 has-[:focus-visible]:outline
               ${
                 hasErrors
                   ? 'border-red-700 shadow-red-100 outline-red-700'

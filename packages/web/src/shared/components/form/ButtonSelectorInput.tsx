@@ -42,7 +42,7 @@ export function ButtonSelectorInput({
       <fieldset
         className={`
           inline-block rounded-lg shadow-md
-          has-[:focus-visible]:outline outline-2 outline-offset-0
+          has-[:focus-visible]:outline outline-2
           ${
             hasErrors
               ? 'focus-within:outline-red-700'

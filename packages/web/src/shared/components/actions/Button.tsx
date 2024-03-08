@@ -10,7 +10,7 @@ export type ButtonProps = (LinkProps | ComponentProps<'button'>) & {
 };
 
 const sharedClasses =
-  'inline-flex justify-center items-center rounded-lg font-bold outline-2 outline-offset-0 disabled:opacity-50 focus-visible:outline';
+  'inline-flex justify-center items-center rounded-lg font-bold outline-2 disabled:opacity-50 focus-visible:outline';
 
 function buttonClasses(
   variant: ButtonVariant,
