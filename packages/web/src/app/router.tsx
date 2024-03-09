@@ -30,7 +30,7 @@ const router = createBrowserRouter([
       {
         path: 'admin',
         element: <AdminView />,
-        loader: ({ params, request }) => {
+        loader: ({ request }) => {
           return authorize('administer', 'User', async () => {
             const url = new URL(request.url);
             if (url.pathname === '/admin') {
