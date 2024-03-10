@@ -199,10 +199,14 @@ export default createRoute<{ code: string; verseId: string }>()
       // `;
       // ------------------------------------------------------------------------------------
       req.body.data = Object.fromEntries(
-        Object.entries(req.body.data).filter(
-          ([, { gloss, state }]) =>
-            gloss !== '' && (gloss !== undefined || state !== undefined)
-        )
+        Object.entries(req.body.data)
+          .filter(
+            ([, { gloss, state }]) => gloss !== undefined || state !== undefined
+          )
+          .map(([wordId, { gloss, state }]) => [
+            wordId,
+            { gloss, state: gloss !== '' ? state : GlossState.Unapproved },
+          ])
       );
       const glosses = await client.gloss.findMany({
         where: {
