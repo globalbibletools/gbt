@@ -1,4 +1,4 @@
-import { KeyboardEvent, useState } from 'react';
+import { KeyboardEvent, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Icon } from '../../shared/components/Icon';
 import TextInput from '../../shared/components/form/TextInput';
@@ -59,9 +59,49 @@ export function TranslationToolbar({
   };
 
   const userCan = useAccessControl();
+  const isTranslator = userCan('translate', {
+    type: 'Language',
+    id: languageCode,
+  });
   const flash = useFlash();
-
   const [, rebuild] = useState({});
+
+  useEffect(() => {
+    if (isTranslator) {
+      const keydownCallback = async (e: globalThis.KeyboardEvent) => {
+        if (e.altKey && !e.shiftKey && !e.ctrlKey && e.key === 'a') {
+          const glossesAsDisplayed = getGlossesAsDisplayed();
+          if (glossesAsDisplayed) {
+            if (
+              Object.values(glossesAsDisplayed).every(
+                (gloss) => gloss.state === GlossState.Approved || !gloss.gloss
+              )
+            )
+              return;
+            for (const gloss of Object.values(glossesAsDisplayed)) {
+              gloss.state = GlossState.Approved;
+            }
+            console.log(JSON.stringify(glossesAsDisplayed));
+            await apiClient.verses.updateVerseGlosses(verseId, languageCode, {
+              data: glossesAsDisplayed,
+            });
+            refetchGlosses();
+            flash.success('All glosses approved');
+            rebuild({});
+          }
+        }
+      };
+      window.addEventListener('keydown', keydownCallback);
+      return () => window.removeEventListener('keydown', keydownCallback);
+    }
+  }, [
+    flash,
+    getGlossesAsDisplayed,
+    languageCode,
+    refetchGlosses,
+    verseId,
+    isTranslator,
+  ]);
 
   return (
     <div className="flex items-center shadow-md px-6 md:px-8 py-4">
