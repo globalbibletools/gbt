@@ -191,24 +191,107 @@ export default createRoute<{ code: string; verseId: string }>()
       if (!language) {
         return res.notFound();
       }
-
-      // const glosses = await client.gloss.findMany({
-      //   where: { wordId: { startsWith: req.query.verseId } },
-      // });
-
-      await client.gloss.deleteMany({
+      // await client.$executeRaw`
+      //   UPDATE "Gloss"
+      //     SET "gloss" = DATA."gloss",
+      //         "state" = DATA."state"
+      //     FROM (VALUES ${Obje})
+      // `;
+      // ------------------------------------------------------------------------------------
+      req.body.data = Object.fromEntries(
+        Object.entries(req.body.data).filter(
+          ([, { gloss, state }]) =>
+            gloss !== '' && (gloss !== undefined || state !== undefined)
+        )
+      );
+      const glosses = await client.gloss.findMany({
         where: {
           languageId: language.id,
-          wordId: { in: Object.keys(req.body.data) },
+          wordId: { startsWith: req.query.verseId },
         },
       });
-      await client.gloss.createMany({
-        data: Object.entries(req.body.data).map(([wordId, fields]) => ({
-          languageId: language.id,
-          wordId,
-          ...fields,
-        })),
+      for (const [wordId, fields] of Object.entries(req.body.data).filter(
+        ([wordId]) => glosses.find((gloss) => gloss.wordId === wordId)
+      )) {
+        console.log(`Meshing: ${wordId}`);
+        await client.gloss.update({
+          where: { wordId_languageId: { languageId: language.id, wordId } },
+          data: fields,
+        });
+        console.log(`- Meshed!`);
+      }
+
+      console.log('Making gloss history entries for update...');
+      await client.glossHistoryEntry.createMany({
+        data: Object.entries(req.body.data)
+          .filter(([wordId, data]) => {
+            const gloss = glosses.find((gloss) => gloss.wordId === wordId);
+            return (
+              gloss &&
+              (gloss.gloss !== data.gloss || gloss.state !== data.state)
+            );
+          })
+          .map(([wordId, { gloss, state }]) => {
+            return {
+              languageId: language.id,
+              wordId,
+              userId: req.session?.user?.id,
+              gloss:
+                glosses.find((gloss) => gloss.wordId === wordId)?.gloss !==
+                gloss
+                  ? gloss
+                  : undefined,
+              state:
+                glosses.find((gloss) => gloss.wordId === wordId)?.state !==
+                state
+                  ? state
+                  : undefined,
+              source: GlossSource.User,
+            };
+          }),
       });
+
+      console.log('Creating gloss entries...');
+      await client.gloss.createMany({
+        data: Object.entries(req.body.data)
+          .filter(
+            ([wordId]) => !glosses.find((gloss) => gloss.wordId === wordId)
+          )
+          .map(([wordId, { gloss, state }]) => {
+            return { languageId: language.id, wordId, gloss, state };
+          }),
+      });
+      console.log('Making gloss history entries for create...');
+      await client.glossHistoryEntry.createMany({
+        data: Object.entries(req.body.data)
+          .filter(
+            ([wordId]) => !glosses.find((gloss) => gloss.wordId === wordId)
+          )
+          .map(([wordId, { gloss, state }]) => {
+            return {
+              languageId: language.id,
+              wordId,
+              userId: req.session?.user?.id,
+              gloss,
+              state,
+              source: GlossSource.User,
+            };
+          }),
+      });
+
+      // await client.gloss.deleteMany({
+      //   where: {
+      //     languageId: language.id,
+      //     wordId: { in: Object.keys(req.body.data) },
+      //   },
+      // });
+      // await client.gloss.createMany({
+      //   data: Object.entries(req.body.data).map(([wordId, fields]) => ({
+      //     languageId: language.id,
+      //     wordId,
+      //     ...fields,
+      //   })),
+      // });
 
       // throw new Error(`${agBefore._count.wordId} : ${agAfter._count.wordId}`);
 
@@ -222,70 +305,6 @@ export default createRoute<{ code: string; verseId: string }>()
       //     }),
       // });
 
-      // for (const [wordId, fields] of Object.entries(req.body.data).filter(
-      //   ([wordId]) => glosses.find((gloss) => gloss.wordId === wordId)
-      // )) {
-      //   console.log(`Meshing: ${wordId}`);
-      //   await client.gloss.update({
-      //     where: { wordId_languageId: { languageId: language.id, wordId } },
-      //     data: fields,
-      //   });
-      // }
-
-      // await client.$executeRaw`
-      //   UPDATE "Gloss"
-      //     SET "gloss" = DATA."gloss",
-      //         "state" = DATA."state"
-      //     FROM (VALUES ${Obje})
-      // `;
-      //------------------------------------------------------------------------------------
-      // await client.glossHistoryEntry.createMany({
-      //   data: Object.entries(req.body.data)
-      //     .filter(([wordId]) =>
-      //       glosses.find((gloss) => gloss.wordId === wordId)
-      //     )
-      //     .map(([wordId, { gloss, state }]) => {
-      //       return {
-      //         languageId: language.id,
-      //         wordId,
-      //         gloss:
-      //           glosses.find((gloss) => gloss.wordId === wordId)?.gloss !==
-      //           gloss
-      //             ? gloss
-      //             : undefined,
-      //         state:
-      //           glosses.find((gloss) => gloss.wordId === wordId)?.state !==
-      //           state
-      //             ? state
-      //             : undefined,
-      //         source: GlossSource.User,
-      //       };
-      //     }),
-      // });
-      // await client.gloss.createMany({
-      //   data: Object.entries(req.body.data)
-      //     .filter(
-      //       ([wordId]) => !glosses.find((gloss) => gloss.wordId === wordId)
-      //     )
-      //     .map(([wordId, { gloss, state }]) => {
-      //       return { languageId: language.id, wordId, gloss, state };
-      //     }),
-      // });
-      // await client.glossHistoryEntry.createMany({
-      //   data: Object.entries(req.body.data)
-      //     .filter(
-      //       ([wordId]) => !glosses.find((gloss) => gloss.wordId === wordId)
-      //     )
-      //     .map(([wordId, { gloss, state }]) => {
-      //       return {
-      //         languageId: language.id,
-      //         wordId,
-      //         gloss,
-      //         state,
-      //         source: GlossSource.User,
-      //       };
-      //     }),
-      // });
       res.ok();
     },
   })
