@@ -78,12 +78,17 @@ export function TranslationToolbar({
               )
             )
               return;
-            for (const gloss of Object.values(glossesAsDisplayed)) {
-              gloss.state = GlossState.Approved;
-            }
-            console.log(JSON.stringify(glossesAsDisplayed));
+            const data = Object.fromEntries(
+              Object.entries(glossesAsDisplayed)
+                .filter(([, { gloss }]) => gloss !== undefined)
+                .map(([wordId, { gloss }]) => [
+                  wordId,
+                  { gloss, state: GlossState.Approved },
+                ])
+            );
+            console.log(JSON.stringify(data));
             await apiClient.verses.updateVerseGlosses(verseId, languageCode, {
-              data: glossesAsDisplayed,
+              data,
             });
             refetchGlosses();
             flash.success('All glosses approved');
@@ -168,12 +173,20 @@ export function TranslationToolbar({
                 for (const gloss of Object.values(glossesAsDisplayed)) {
                   gloss.state = GlossState.Approved;
                 }
-                console.log(JSON.stringify(glossesAsDisplayed));
+                const data = Object.fromEntries(
+                  Object.entries(glossesAsDisplayed)
+                    .filter(([, { gloss }]) => gloss !== undefined)
+                    .map(([wordId, { gloss }]) => [
+                      wordId,
+                      { gloss, state: GlossState.Approved },
+                    ])
+                );
+                console.log(JSON.stringify(data));
                 await apiClient.verses.updateVerseGlosses(
                   verseId,
                   languageCode,
                   {
-                    data: glossesAsDisplayed,
+                    data,
                   }
                 );
                 refetchGlosses();
