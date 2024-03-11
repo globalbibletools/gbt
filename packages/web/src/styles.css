@@ -38,3 +38,8 @@
     @apply ps-7 list-disc;
   }
 }
+
+.ref {
+  background: black;
+  color: white;
+}
