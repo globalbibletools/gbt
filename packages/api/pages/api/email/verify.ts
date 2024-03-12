@@ -43,7 +43,7 @@ export default createRoute()
       if (verification.user.emailStatus === PrismaTypes.EmailStatus.VERIFIED) {
         await mailer.sendEmail({
           email: verification.user.email,
-          subject: 'Password Changed',
+          subject: 'Email Changed',
           text: `Your email address for Global Bible Tools was changed to ${verification.email}.`,
           html: `Your email address for Global Bible Tools was changed to <strong>${verification.email}</strong>.`,
         });
