@@ -30,7 +30,16 @@ const router = createBrowserRouter([
       {
         path: 'admin',
         element: <AdminView />,
-        loader: () => authorize('administer', 'User'),
+        loader: ({ request }) => {
+          return authorize('administer', 'User', async () => {
+            const url = new URL(request.url);
+            if (url.pathname === '/admin') {
+              // Default to the languages section.
+              return redirect('./languages');
+            }
+            return null;
+          });
+        },
         children: [...userAdminRoutes, ...languageAdminRoutes],
       },
       ...userPageRoutes,
