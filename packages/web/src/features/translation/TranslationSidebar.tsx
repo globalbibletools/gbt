@@ -131,6 +131,17 @@ export const TranslationSidebar = ({
     current
       ?.querySelectorAll(`a[data-ref="${bdbCurrentVerseRef}"]`)
       .forEach((element) => element.classList.add('bg-yellow-300'));
+
+    const referenceLinks = current
+      ?.querySelectorAll<HTMLAnchorElement>(`a.ref`)
+      .forEach((element) => {
+        element.onclick = () => {
+          const reference = element.innerText;
+          console.log('reference clicked:', reference);
+          // TODO: insert verse contents for the reference
+        };
+      });
+    console.log('REFERENCE LINKS:', referenceLinks);
   }, [bdbCurrentVerseRef, lexiconEntry]);
 
   return (
