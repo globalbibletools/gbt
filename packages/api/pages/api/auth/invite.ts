@@ -5,9 +5,12 @@ import {
   GetInviteResponseBody,
   PostInviteRequestBody,
 } from '@translation/api-types';
-import { auth } from '../../../shared/auth';
 import { NotFoundError } from '../../../shared/errors';
 import { EmailStatus } from '@translation/db';
+import { client } from '../../../shared/db';
+import { Scrypt } from 'oslo/password';
+
+const scrypt = new Scrypt();
 
 export default createRoute()
   .get<GetInviteRequestQuery, GetInviteResponseBody>({
@@ -15,22 +18,24 @@ export default createRoute()
       token: z.string(),
     }),
     async handler(req, res) {
-      try {
-        const key = await auth.getKey('invite-verification', req.body.token);
-        const keys = await auth.getAllUserKeys(key.userId);
-        const primary = keys.find(
-          (key) => key.type === 'persistent' && key.primary
-        );
-        if (primary) {
-          res.ok({
-            email: primary.providerUserId,
-          });
-        } else {
-          throw new NotFoundError();
-        }
-      } catch {
+      const invite = await client.userInvitation.findUnique({
+        where: {
+          token: req.body.token,
+        },
+        include: {
+          user: {
+            select: { email: true },
+          },
+        },
+      });
+
+      if (!invite) {
         throw new NotFoundError();
       }
+
+      res.ok({
+        email: invite.user.email,
+      });
     },
   })
   .post<PostInviteRequestBody, void>({
@@ -40,32 +45,34 @@ export default createRoute()
       password: z.string(),
     }),
     async handler(req, res) {
-      let key;
-      try {
-        const verificationKey = await auth.getKey(
-          'invite-verification',
-          req.body.token
-        );
-        const allKeys = await auth.getAllUserKeys(verificationKey.userId);
-        key = allKeys.find((key) => key.providerId === 'username');
-        if (!key) {
-          throw new Error('username key not found');
-        }
-        await auth.deleteKey('invite-verification', req.body.token);
-      } catch {
+      const invite = await client.userInvitation.findUnique({
+        where: {
+          token: req.body.token,
+        },
+      });
+      if (!invite) {
         throw new NotFoundError();
       }
 
-      await auth.updateKeyPassword(
-        'username',
-        key.providerUserId,
-        req.body.password
-      );
-      await auth.updateUserAttributes(key.userId, {
-        name: req.body.name,
-        emailStatus: EmailStatus.VERIFIED,
-      });
-      await res.login(key.userId);
+      await client.$transaction([
+        client.user.update({
+          where: {
+            id: invite.userId,
+          },
+          data: {
+            hashedPassword: await scrypt.hash(req.body.password),
+            name: req.body.name,
+            emailStatus: EmailStatus.VERIFIED,
+          },
+        }),
+        client.userInvitation.delete({
+          where: {
+            userId: invite.userId,
+          },
+        }),
+      ]);
+
+      await res.login(invite.userId);
 
       res.ok();
     },

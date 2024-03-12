@@ -1,33 +1,31 @@
-import lucia from 'lucia-auth';
-import { nextjs } from 'lucia-auth/middleware';
-import prisma from '@lucia-auth/adapter-prisma';
-import { client, ulid } from './db';
-import 'lucia-auth/polyfill/node';
-import { CookieOption } from 'lucia-auth/auth/cookie';
-import { originAllowlist } from './env';
+import { Lucia } from 'lucia';
+import { PrismaAdapter } from '@lucia-auth/adapter-prisma';
+import { client, PrismaTypes } from './db';
 
-export const auth = lucia({
-  adapter: prisma(client),
-  env: process.env.NODE_ENV === 'production' ? 'PROD' : 'DEV',
-  middleware: nextjs(),
-  origin: originAllowlist,
-  generateCustomUserId() {
-    return ulid();
-  },
+import { webcrypto } from 'node:crypto';
+(globalThis.crypto as any) = webcrypto;
+
+export const auth = new Lucia(new PrismaAdapter(client.session, client.user), {
   sessionCookie: {
-    // Lucia typings don't allow for same site none cookies, but we need them for vercel preview apps.
-    sameSite: (process.env.VERCEL_ENV === 'preview'
-      ? 'none'
-      : 'lax') as CookieOption['sameSite'],
-    path: '/',
+    attributes: {
+      secure: process.env.NODE_ENV === 'production',
+    },
   },
-  transformDatabaseUser(user) {
+  getUserAttributes(attributes) {
     return {
-      id: user.id,
-      name: user.name,
-      emailStatus: user.emailStatus,
+      email: attributes.email,
+      name: attributes.name,
     };
   },
 });
 
-export type Auth = typeof auth;
+declare module 'lucia' {
+  interface Register {
+    Lucia: typeof auth;
+    DatabaseUserAttributes: {
+      email: string;
+      name: string;
+      emailStatus: PrismaTypes.EmailStatus;
+    };
+  }
+}

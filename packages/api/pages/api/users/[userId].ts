@@ -3,10 +3,12 @@ import { SystemRole, UpdateUserRequestBody } from '@translation/api-types';
 import { authorize } from '../../../shared/access-control/authorize';
 import createRoute from '../../../shared/Route';
 import { client } from '../../../shared/db';
-import { auth } from '../../../shared/auth';
 import { randomBytes } from 'crypto';
 import mailer from '../../../shared/mailer';
 import { redirects } from '../../../shared/redirects';
+import { Scrypt } from 'oslo/password';
+
+const scrypt = new Scrypt();
 
 export default createRoute<{ userId: string }>()
   .patch<UpdateUserRequestBody, void>({
@@ -22,10 +24,10 @@ export default createRoute<{ userId: string }>()
     }),
     authorize: authorize((req) => ({
       action: req.body.systemRoles ? 'administer' : 'update',
-      subject: 'AuthUser',
+      subject: 'User',
     })),
     async handler(req, res) {
-      const user = await client.authUser.findUnique({
+      const user = await client.user.findUnique({
         where: {
           id: req.query.userId,
         },
@@ -62,7 +64,7 @@ export default createRoute<{ userId: string }>()
       }
 
       if (name) {
-        await client.authUser.update({
+        await client.user.update({
           where: {
             id: req.query.userId,
           },
@@ -70,46 +72,42 @@ export default createRoute<{ userId: string }>()
         });
       }
 
-      if (password || email) {
-        const key = (await auth.getAllUserKeys(user.id)).find(
-          (key) => key.providerId === 'username'
-        );
-        if (key) {
-          if (password) {
-            await auth.updateKeyPassword(
-              key.providerId,
-              key.providerUserId,
-              password
-            );
+      if (password) {
+        await client.user.update({
+          where: {
+            id: user.id,
+          },
+          data: {
+            hashedPassword: await scrypt.hash(password),
+          },
+        });
 
-            await mailer.sendEmail({
-              userId: user.id,
-              subject: 'Password Changed',
-              text: `Your password for Global Bible Tools has changed.`,
-              html: `Your password for Global Bible Tools has changed.`,
-            });
-          }
+        await mailer.sendEmail({
+          userId: user.id,
+          subject: 'Password Changed',
+          text: `Your password for Global Bible Tools has changed.`,
+          html: `Your password for Global Bible Tools has changed.`,
+        });
+      }
 
-          if (email && email !== key.providerUserId) {
-            const token = randomBytes(12).toString('hex');
-            await client.userEmailVerification.create({
-              data: {
-                userId: user.id,
-                token,
-                email,
-                expires: Date.now() + 60 * 60 * 1000,
-              },
-            });
+      if (email && email !== user.email) {
+        const token = randomBytes(12).toString('hex');
+        await client.userEmailVerification.create({
+          data: {
+            userId: user.id,
+            token,
+            email,
+            expires: Date.now() + 60 * 60 * 1000,
+          },
+        });
 
-            const url = redirects.emailVerification(token);
-            await mailer.sendEmail({
-              email,
-              subject: 'Email Verification',
-              text: `Please click the link to verify your new email \n\n${url.toString()}`,
-              html: `<a href="${url.toString()}">Click here<a/> to verify your new email.`,
-            });
-          }
-        }
+        const url = redirects.emailVerification(token);
+        await mailer.sendEmail({
+          email,
+          subject: 'Email Verification',
+          text: `Please click the link to verify your new email \n\n${url.toString()}`,
+          html: `<a href="${url.toString()}">Click here<a/> to verify your new email.`,
+        });
       }
 
       res.ok();

@@ -1,8 +1,8 @@
 import { SNSMessage } from '@translation/api-types';
 import { EmailStatus } from '@translation/db';
-import { auth } from '../../../shared/auth';
 import * as z from 'zod';
 import createRoute from '../../../shared/Route';
+import { client } from '../../../shared/db';
 
 const messageSchema = z.discriminatedUnion('notificationType', [
   z.object({
@@ -57,12 +57,13 @@ export default createRoute()
                       async ({ emailAddress }) => {
                         try {
                           console.log(`Email bounced: ${emailAddress}`);
-                          const key = await auth.getKey(
-                            'username',
-                            emailAddress
-                          );
-                          await auth.updateUserAttributes(key.userId, {
-                            emailStatus: EmailStatus.BOUNCED,
+                          client.user.update({
+                            where: {
+                              email: emailAddress.toLowerCase(),
+                            },
+                            data: {
+                              emailStatus: EmailStatus.BOUNCED,
+                            },
                           });
                         } catch {
                           // If a user doesn't exist, continue.
@@ -79,9 +80,13 @@ export default createRoute()
                     async ({ emailAddress }) => {
                       try {
                         console.log(`Email complaint: ${emailAddress}`);
-                        const key = await auth.getKey('username', emailAddress);
-                        await auth.updateUserAttributes(key.userId, {
-                          emailStatus: EmailStatus.COMPLAINED,
+                        client.user.update({
+                          where: {
+                            email: emailAddress.toLowerCase(),
+                          },
+                          data: {
+                            emailStatus: EmailStatus.COMPLAINED,
+                          },
                         });
                       } catch {
                         // If a user doesn't exist, continue.
