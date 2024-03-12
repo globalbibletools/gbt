@@ -37,9 +37,7 @@
   .rich-text ul {
     @apply ps-7 list-disc;
   }
-}
-
-.ref {
-  background: black;
-  color: white;
+  .ref {
+    @apply text-green-600 font-bold hover:underline cursor-pointer;
+  }
 }
