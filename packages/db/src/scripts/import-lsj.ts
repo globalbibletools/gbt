@@ -32,6 +32,12 @@ async function lineByLine(filename: string, callback: (line: string) => void) {
 }
 
 function toMarkDown(raw: string): string {
+  const replaceRef = (match: string) => {
+    console.log('MATCH:', match);
+    const seq = match.split(' ');
+    // TODO: generate actual anchor tags based on references in match.
+    return '<a class="ref">Mat.1.1</a> <a class="ref">1.2</a>';
+  };
   return (
     raw
       .replaceAll('<Level1>', '')
@@ -46,8 +52,8 @@ function toMarkDown(raw: string): string {
       .replaceAll('</a>]', '')
       .replaceAll('</a>', '')
       .replaceAll(/\[?<a[^>]*>/g, '')
-      .replaceAll(/<ref=".*?">(.*?)<\/ref>/g, '<a class="ref">$&</a>')
-      .replaceAll(/<ref='.*?'>(.*?)<\/ref>/g, '<a class="ref">$&</a>')
+      .replaceAll(/<ref=".*?">(.*?)<\/ref>/g, replaceRef)
+      .replaceAll(/<ref='.*?'>(.*?)<\/ref>/g, replaceRef)
       .replaceAll('<date>', '')
       .replaceAll('</date>', '')
       // We wrap all greek text in a span so we can control its style separately.
