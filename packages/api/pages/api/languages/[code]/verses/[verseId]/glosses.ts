@@ -1,5 +1,6 @@
 import {
   GetVerseGlossesResponseBody,
+  GlossSource,
   GlossState,
   PatchVerseGlossesRequestBody,
 } from '@translation/api-types';
@@ -190,219 +191,89 @@ export default createRoute<{ code: string; verseId: string }>()
       if (!language) {
         return res.notFound();
       }
-      // await client.$executeRaw`
-      //   UPDATE "Gloss"
-      //     SET "gloss" = DATA."gloss",
-      //         "state" = DATA."state"
-      //     FROM (VALUES ${Obje})
-      // `;
-      req.body.data = Object.fromEntries(
-        Object.entries(req.body.data)
-          .filter(
-            // If the gloss is undefined and the state is undefined, nothing will be updated
-            ([, { gloss, state }]) => gloss !== undefined || state !== undefined
-          )
-          .map(([wordId, { gloss, state }]) => [
-            wordId,
-            // If the gloss is empty, the state should be unapproved
-            { gloss, state: gloss === '' ? GlossState.Unapproved : state },
-          ])
+
+      const glosses = Object.fromEntries(
+        (
+          await client.$queryRaw<PrismaTypes.Gloss[]>`
+        SELECT "wordId", "gloss", "state" FROM "Gloss" JOIN "Word" ON "Gloss"."wordId" = "Word"."id"
+          WHERE "Word"."verseId" = ${req.query.verseId} AND "Gloss"."languageId" = ${language.id}::uuid
+      `
+        ).map(({ wordId, ...data }) => [wordId, data])
       );
 
-      await client.$executeRaw`
-      -- WITH old_glosses as (SELECT * FROM "Gloss" 
-      --   JOIN "Word" ON "Word"."id" = "Gloss"."wordId" 
-      --   WHERE "languageId" = $}::uuid)
-              UPDATE "Gloss"
-                  SET "gloss" = COALESCE(NewData."gloss", "Gloss"."gloss")
-                  SET "state" = COALESCE(NewData."state", "Gloss"."state")
-              FROM (VALUES ${Prisma.join(
-                Object.values(req.body.data).map(
-                  ({ gloss, state }) =>
-                    Prisma.sql`(${gloss ?? null}, ${state ?? null})`
-                )
-              )}) as NewData("gloss", "state"), "Gloss" as OldGloss
-              WHERE 
-                  "Gloss"."languageId" = ${language.id}
-                  AND OldGloss."languageId" = ${language.id}
-                  AND OldGloss."wordId" = "Gloss"."wordId"
-                  AND NewData."wordId" = "Gloss"."wordId"
-              RETURNING "Gloss"."wordId" as "wordId", 
-                OldGloss."gloss" as "oldGloss", 
-                "Gloss"."gloss" as "newGloss", 
-                
-                OldGloss."state" as "oldState" ;
-                "Gloss"."state" as "newGloss" ;
-      `;
-      // -- UPDATE
-      // -- --- Upsert many
-      // --   WITH updated as (
-      // --     INSERT INTO "Gloss" ("wordId", "languageId", "gloss", "state")
-      // --       VALUES $Prisma.join(
-      // --         Object.entries(req.body.data).map(
-      // --           ([wordId, { gloss, state }]) =>
-      // --             Prisma.sql`($wordId}, {language.id}::uuid, $
-      // --               gloss ?? null
-      // --             }, $state})`
-      // --         )
-      // --       )}
-      // --     ON CONFLICT ("wordId", "languageId")
-      // --       DO UPDATE SET
-      // --         "gloss" = COALESCE(EXCLUDED."gloss", "Gloss"."gloss"),
-      // --         "state" = COALESCE(EXCLUDED."state", "Gloss"."state")
-      // --     RETURNING *)
-      // --   INSERT INTO "GlossHistoryEntry" ("wordId", "languageId", "userId", "gloss", "state")
-      // --     SELECT updated."wordId", updated."languageId", $
-      // --       req.session?.user ?? null
-      // --     }::uuid as "userId", updated."gloss", updated."state" FROM updated
-      // --   ;
+      const entriesToPatch = Object.entries(req.body.data)
+        .map(([wordId, { gloss, state }]) => ({
+          wordId,
+          gloss,
+          // If the gloss is empty, the state should be unapproved
+          state: gloss === '' ? GlossState.Unapproved : state,
+        }))
+        .filter(
+          // If the gloss is undefined and the state is undefined, nothing will be updated, making the entry useless.
+          ({ gloss, state }) => gloss !== undefined || state !== undefined
+        );
 
-      // const glosses = await client.gloss.findMany({
-      //   where: {
-      //     languageId: language.id,
-      //     wordId: { startsWith: req.query.verseId },
-      //   },
-      // });
-      // for (const [wordId, fields] of Object.entries(req.body.data).filter(
-      //   ([wordId]) => glosses.find((gloss) => gloss.wordId === wordId)
-      // )) {
-      //   console.log(`Meshing: ${wordId}`);
-      //   await client.gloss.update({
-      //     where: { wordId_languageId: { languageId: language.id, wordId } },
-      //     data: fields,
-      //   });
-      //   console.log(`- Meshed!`);
-      // }
+      const entriesToInsert = entriesToPatch.filter(
+        ({ wordId }) => !glosses[wordId]
+      );
+      const entriesToUpdate = entriesToPatch.filter(({ wordId, ...data }) => {
+        const oldGloss = glosses[wordId];
+        return (
+          !!oldGloss &&
+          // Only include updates where something has actually changed.
+          ((data.gloss && data.gloss !== oldGloss.gloss) ||
+            (data.state && data.state !== oldGloss.state))
+        );
+      });
 
-      // console.log('Making gloss history entries for update...');
-      // await client.glossHistoryEntry.createMany({
-      //   data: Object.entries(req.body.data)
-      //     .filter(([wordId, data]) => {
-      //       const gloss = glosses.find((gloss) => gloss.wordId === wordId);
-      //       return (
-      //         gloss &&
-      //         (gloss.gloss !== data.gloss || gloss.state !== data.state)
-      //       );
-      //     })
-      //     .map(([wordId, { gloss, state }]) => {
-      //       return {
-      //         languageId: language.id,
-      //         wordId,
-      //         userId: req.session?.user?.id,
-      //         gloss:
-      //           glosses.find((gloss) => gloss.wordId === wordId)?.gloss !==
-      //           gloss
-      //             ? gloss
-      //             : undefined,
-      //         state:
-      //           glosses.find((gloss) => gloss.wordId === wordId)?.state !==
-      //           state
-      //             ? state
-      //             : undefined,
-      //         source: GlossSource.User,
-      //       };
-      //     }),
-      // });
+      await client.gloss.createMany({
+        data: entriesToInsert.map((data) => ({
+          languageId: language.id,
+          ...data,
+        })),
+      });
+      await client.glossHistoryEntry.createMany({
+        data: entriesToInsert.map((data) => {
+          return {
+            languageId: language.id,
+            ...data,
+            userId: req.session?.user?.id,
+            source: GlossSource.User,
+          };
+        }),
+      });
 
-      // console.log('Creating gloss entries...');
-      // await client.gloss.createMany({
-      //   data: Object.entries(req.body.data)
-      //     .filter(
-      //       ([wordId]) => !glosses.find((gloss) => gloss.wordId === wordId)
-      //     )
-      //     .map(([wordId, { gloss, state }]) => {
-      //       return { languageId: language.id, wordId, gloss, state };
-      //     }),
-      // });
-      // console.log('Making gloss history entries for create...');
-      // await client.glossHistoryEntry.createMany({
-      //   data: Object.entries(req.body.data)
-      //     .filter(
-      //       ([wordId]) => !glosses.find((gloss) => gloss.wordId === wordId)
-      //     )
-      //     .map(([wordId, { gloss, state }]) => {
-      //       return {
-      //         languageId: language.id,
-      //         wordId,
-      //         userId: req.session?.user?.id,
-      //         gloss,
-      //         state,
-      //         source: GlossSource.User,
-      //       };
-      //     }),
-      // });
-
-      // await client.gloss.deleteMany({
-      //   where: {
-      //     languageId: language.id,
-      //     wordId: { in: Object.keys(req.body.data) },
-      //   },
-      // });
-      // await client.gloss.createMany({
-      //   data: Object.entries(req.body.data).map(([wordId, fields]) => ({
-      //     languageId: language.id,
-      //     wordId,
-      //     ...fields,
-      //   })),
-      // });
-
-      // throw new Error(`${agBefore._count.wordId} : ${agAfter._count.wordId}`);
-
-      // await client.gloss.updateMany({
-      //   data: Object.entries(req.body.data)
-      //     .filter(([wordId]) =>
-      //       glosses.find((gloss) => gloss.wordId === wordId)
-      //     )
-      //     .map(([, { gloss, state }]) => {
-      //       return {gloss, state };
-      //     }),
-      // });
-
+      if (entriesToUpdate.length > 0) {
+        await client.$executeRaw`
+          UPDATE "Gloss" SET 
+            "gloss" = COALESCE(gloss_updates."gloss", "Gloss"."gloss"),
+            "state" = COALESCE(gloss_updates."state", "Gloss"."state")
+          FROM (VALUES ${Prisma.join(
+            entriesToUpdate.map(
+              ({ wordId, gloss, state }) =>
+                Prisma.sql`(${wordId}, ${gloss ?? null}, ${
+                  state ?? null
+                }::"GlossState")`
+            )
+          )}) as gloss_updates("wordId", "gloss", "state")
+          WHERE "Gloss"."languageId" = ${language.id}::uuid
+            AND gloss_updates."wordId" = "Gloss"."wordId"
+        `;
+      }
+      await client.glossHistoryEntry.createMany({
+        data: entriesToUpdate.map(({ wordId, ...data }) => {
+          const oldGloss = glosses[wordId];
+          return {
+            languageId: language.id,
+            wordId,
+            gloss: data.gloss !== oldGloss.gloss ? data.gloss : undefined,
+            state: data.state !== oldGloss.state ? data.state : undefined,
+            userId: req.session?.user?.id,
+            source: GlossSource.User,
+          };
+        }),
+      });
       res.ok();
     },
   })
   .build();
-
-/***************
-  export default createRoute<{ code: string; verseId: string }>()
-    .patch<ApproveAllVerseGlossesRequestBody, void>({
-      authorize: authorize((req) => ({
-        action: 'translate',
-        subject: 'Language',
-        subjectId: req.query.code,
-      })),
-      async handler(req, res) {
-        const language = await client.language.findUnique({
-          where: {
-            code: req.query.code,
-          },
-        });
-        if (!language) {
-          return res.notFound();
-        }
-        const approvedGlosses = await client.$queryRaw<{ wordId: string }[]>`
-              UPDATE "Gloss"
-                  SET "Gloss"."state" = 'APPROVED'
-              WHERE 
-                  "Gloss"."languageId" = ${language.id}
-                  AND "Gloss"."wordId" ^@ ${req.query.verseId}
-                  AND "Gloss"."state" = 'UNAPPROVED'
-                  AND "Gloss"."gloss" <> ''
-              RETURNING "Gloss"."wordId" as "wordId"
-          `;
-        const result = await client.glossHistoryEntry.createMany({
-          data: approvedGlosses.map(({ wordId }) => ({
-            wordId,
-            languageId: language.id,
-            userId: req.session?.user?.id,
-            state: GlossState.Approved,
-            source: GlossSource.USER,
-          })),
-        });
-        result.count;
-        return;
-      },
-    })
-    .build();
-
-    *****************/
