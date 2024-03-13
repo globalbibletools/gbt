@@ -351,7 +351,7 @@ export default function TranslationView() {
     },
     onSuccess: async () => {
       await targetGlossesQuery.refetch();
-      flash.success('All Glosses Approved');
+      flash.success(t('translate:all_glosses_approved'));
     },
   });
 

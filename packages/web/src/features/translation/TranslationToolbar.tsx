@@ -125,7 +125,7 @@ export function TranslationToolbar({
             onClick={approveAllGlosses}
           >
             <Icon icon="check" className="me-1" />
-            Approve All
+            {t('translate:approve_all')}
           </Button>
         </div>
       )}
