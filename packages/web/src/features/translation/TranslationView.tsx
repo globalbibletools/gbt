@@ -29,6 +29,7 @@ import {
 } from './verse-utils';
 import { isFlagEnabled } from '../../shared/featureFlags';
 import useTitle from '../../shared/hooks/useTitle';
+import { useFlash } from '../../shared/hooks/flash';
 
 export const translationLanguageKey = 'translation-language';
 export const translationVerseIdKey = 'translation-verse-id';
@@ -312,25 +313,60 @@ export default function TranslationView() {
     isFlagEnabled('comments') &&
     !!userCan('read', { type: 'Language', id: language });
 
+  const flash = useFlash();
+
+  const getGlossesAsDisplayed = useCallback(
+    () =>
+      targetGlossesQuery.data?.data.map((targetGloss) => ({
+        wordId: targetGloss.wordId,
+        glossAsDisplayed:
+          targetGloss.gloss ||
+          targetGloss.suggestions[0] ||
+          targetGloss.machineGloss,
+        state: targetGloss.state,
+      })),
+    [targetGlossesQuery]
+  );
+
+  const approveAllGlossesMutation = useMutation({
+    mutationFn: async () => {
+      const glossesAsDisplayed = getGlossesAsDisplayed();
+      if (glossesAsDisplayed) {
+        const data = Object.fromEntries(
+          glossesAsDisplayed
+            .filter(
+              ({ glossAsDisplayed, state }) =>
+                glossAsDisplayed !== undefined &&
+                state === GlossState.Unapproved
+            )
+            .map(({ wordId, glossAsDisplayed }) => [
+              wordId,
+              { gloss: glossAsDisplayed, state: GlossState.Approved },
+            ])
+        );
+        await apiClient.verses.updateVerseGlosses(verseId, language, {
+          data,
+        });
+      }
+    },
+    onSuccess: async () => {
+      await targetGlossesQuery.refetch();
+      flash.success('All Glosses Approved');
+    },
+  });
+
   return (
     <div className="absolute w-full h-full flex flex-col flex-grow">
       <TranslationToolbar
-        refetchGlosses={() => targetGlossesQuery.refetch()}
-        getGlossesAsDisplayed={() =>
-          targetGlossesQuery.data &&
-          Object.fromEntries(
-            targetGlossesQuery.data.data.map((targetGloss) => [
-              targetGloss.wordId,
-              {
-                gloss:
-                  targetGloss.gloss ||
-                  targetGloss.suggestions[0] ||
-                  targetGloss.machineGloss,
-                state: targetGloss.state,
-              },
-            ])
+        canApproveAllGlosses={
+          !approveAllGlossesMutation.isLoading &&
+          !targetGlossesQuery.isFetching &&
+          !!getGlossesAsDisplayed()?.some(
+            ({ glossAsDisplayed, state }) =>
+              glossAsDisplayed && state === GlossState.Unapproved
           )
         }
+        approveAllGlosses={async () => approveAllGlossesMutation.mutate()}
         verseId={verseId}
         languageCode={language}
         languages={translationLanguages.map(({ code, name }) => ({
