@@ -23,19 +23,22 @@ enum EmailStatus {
 }
 
 /// A user who can authenticate into the system.
-model AuthUser {
+model User {
   /// The ID of the user.
-  id                 String                  @id @default(dbgenerated("generate_ulid()")) @db.Uuid
+  id             String      @id @default(dbgenerated("generate_ulid()")) @db.Uuid
   /// The display name of the user.
-  name               String?
+  name           String?
+  /// The email address of the user.
+  email          String      @unique
   /// The status of the email (whether we can send emails or not).
-  emailStatus        EmailStatus             @default(UNVERIFIED)
+  emailStatus    EmailStatus @default(UNVERIFIED)
+  /// The user's password protected by a hash
+  hashedPassword String?
+
   /// The list of system roles this user has
   systemRoles        UserSystemRole[]
   /// The list of sessions for the user.
-  auth_session       AuthSession[]
-  /// The list of auth keys for the user
-  auth_key           AuthKey[]
+  sessions           Session[]
   /// The language import jobs that this user has started.
   importJobs         LanguageImportJob[]
   /// The roles for this user on all languages.
@@ -48,56 +51,47 @@ model AuthUser {
   translatorNotes    TranslatorNote[]
   /// The list of footnotes authored by this user.
   footnotes          Footnote[]
+  /// An invitation for the user.
+  invitation         UserInvitation?
 
   @@map("User")
 }
 
 /// A authenticated session for a user.
-model AuthSession {
+model Session {
   /// The ID of the session as stored in the cookie.
-  id             String   @id @unique
-  /// The id of the authenticated user
-  user_id        String   @db.Uuid
+  id        String   @id @unique
   /// The time that the session will expire.
-  active_expires BigInt
-  /// The time that the session will become idle.
-  idle_expires   BigInt
+  expiresAt DateTime
+  /// The id of the authenticated user
+  userId    String   @db.Uuid
   /// The authenticated user.
-  auth_user      AuthUser @relation(references: [id], fields: [user_id], onDelete: Cascade)
+  user      User     @relation(references: [id], fields: [userId], onDelete: Cascade)
 
-  @@index([user_id])
-  @@map("Session")
+  @@index([userId])
 }
 
-/// A authentication method for a user.
-model AuthKey {
-  /// The ID of the key, will usually contain a key type and value.
-  id              String   @id @unique
-  /// The encrypted password, if the key supports it.
-  hashed_password String?
-  /// The ID of the user the key is for.
-  user_id         String   @db.Uuid
-  /// Whether this is the primary key that cannot be deleted.
-  primary_key     Boolean
-  /// The date that the key is no longer valid
-  expires         BigInt?
-  /// The user the key is for.
-  auth_user       AuthUser @relation(references: [id], fields: [user_id], onDelete: Cascade)
-
-  @@index([user_id])
-  @@map("UserAuthentication")
+model UserInvitation {
+  /// The id of the authenticated user
+  userId  String @unique @db.Uuid
+  /// The authenticated user.
+  user    User   @relation(references: [id], fields: [userId], onDelete: Cascade)
+  /// The token used to verify the invitation
+  token   String @id
+  /// The date the invitation token is no longer valid
+  expires BigInt
 }
 
 /// A new email for a user awaiting verification.
 model UserEmailVerification {
   /// The ID of the user whose email needs to be verified.
-  userId  String   @db.Uuid
+  userId  String @db.Uuid
   /// The user whose email needs to be verified.
-  user    AuthUser @relation(references: [id], fields: [userId], onDelete: Cascade)
+  user    User   @relation(references: [id], fields: [userId], onDelete: Cascade)
   /// The email address being verified.
   email   String
   /// The token being used for verification.
-  token   String   @id @unique
+  token   String @id @unique
   /// The date the verification token is no longer valid.
   expires BigInt
 }
@@ -109,7 +103,7 @@ enum SystemRole {
 /// A system level role for a user.
 model UserSystemRole {
   /// The user with the role.
-  user   AuthUser   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user   User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   /// The ID of the user with the role.
   userId String     @db.Uuid
   /// The role given to the user.
@@ -242,7 +236,7 @@ model LanguageImportJob {
   /// The ID of the language that is being imported.
   languageId String    @id @db.Uuid
   /// The user who started this import job.
-  user       AuthUser? @relation(fields: [userId], references: [id])
+  user       User?     @relation(fields: [userId], references: [id])
   /// The ID of the user who started this import job.
   userId     String?   @db.Uuid
   /// The start date of the import job
@@ -262,7 +256,7 @@ enum LanguageRole {
 /// A role given to a user for a language.
 model LanguageMemberRole {
   /// The user who is granted the role for the language.
-  user       AuthUser     @relation(fields: [userId], references: [id])
+  user       User         @relation(fields: [userId], references: [id])
   /// The ID of the user who is granted the role for the language.
   userId     String       @db.Uuid
   /// The language the user is given the role for.
@@ -311,7 +305,7 @@ model GlossHistoryEntry {
   /// The timestamp when the gloss was updated.
   timestamp  DateTime    @default(now())
   /// The user who updated the gloss.
-  user       AuthUser?   @relation(fields: [userId], references: [id])
+  user       User?       @relation(fields: [userId], references: [id])
   /// The ID of the user who updated the gloss
   userId     String?     @db.Uuid
   /// The updated text of the gloss. Null indicates no change.
@@ -377,7 +371,7 @@ model TranslatorNote {
   /// The ID of the language that the note applies to.
   languageId String   @db.Uuid
   /// The author of the most recent update to the note.
-  author     AuthUser @relation(fields: [authorId], references: [id])
+  author     User     @relation(fields: [authorId], references: [id])
   /// The ID of the author of the most recent update to the note.
   authorId   String   @db.Uuid
   /// The timestamp of the last update.
@@ -399,7 +393,7 @@ model Footnote {
   /// The ID of the language that the note applies to.
   languageId String   @db.Uuid
   /// The author of the most recent update to the note.
-  author     AuthUser @relation(fields: [authorId], references: [id])
+  author     User     @relation(fields: [authorId], references: [id])
   /// The ID of the author of the most recent update to the note.
   authorId   String   @db.Uuid
   /// The timestamp of the last update.

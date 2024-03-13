@@ -244,3 +244,7 @@ export interface Resource {
 export interface GetLemmaResourcesResponseBody {
   data: Record<string, Resource[]>;
 }
+
+export interface GetNextUnapprovedVerseResponseBody {
+  nextUnapprovedVerseId?: string;
+}

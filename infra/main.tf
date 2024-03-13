@@ -21,9 +21,19 @@ terraform {
       source  = "hashicorp/google"
       version = "~> 5.4"
     }
+
+    github = {
+      source  = "integrations/github"
+      version = "~> 5.0"
+    }
   }
 
   required_version = ">= 1.2.0"
+}
+
+provider "github" {
+  owner = "globalbibletools"
+  token = var.github_token
 }
 
 provider "aws" {
@@ -142,4 +152,5 @@ module "landing" {
   source = "./modules/landing"
 
   aws_route53_zone_id = aws_route53_zone.main.id
+  github_role_arn     = module.cloud.github_role_arn
 }

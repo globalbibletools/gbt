@@ -6,16 +6,9 @@ export default createRoute()
   .get<void, GetSessionResponse>({
     async handler(req, res) {
       if (req.session?.user) {
-        const user = await client.authUser.findUnique({
+        const user = await client.user.findUnique({
           where: {
             id: req.session.user.id,
-          },
-          include: {
-            auth_key: {
-              where: {
-                primary_key: true,
-              },
-            },
           },
         });
 
@@ -41,7 +34,7 @@ export default createRoute()
             user: {
               id: user.id,
               name: user.name ?? undefined,
-              email: user.auth_key[0]?.id.split(':')[1] ?? undefined,
+              email: user.email,
               systemRoles: req.session.user.systemRoles,
               languages: languages.map((language) => ({
                 code: language.code,

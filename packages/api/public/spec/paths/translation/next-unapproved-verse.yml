@@ -1,0 +1,22 @@
+get:
+  tags:
+    - Languages
+  summary: Get the next unapproved verse after the current verse.
+  parameters:
+    - $ref: '../../schemas/parameters.yml#languageCode'
+    - $ref: '../../schemas/parameters.yml#verseId'
+  responses:
+    '200':
+      description: Ok
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  verseId:
+                    type: string
+                    description: The ID of the next unapproved verse
+                    example: '02003001'
