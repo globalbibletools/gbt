@@ -6,22 +6,34 @@ resource "aws_s3_bucket_public_access_block" "this" {
   bucket = aws_s3_bucket.this.id
 }
 
+data "aws_iam_policy_document" "bucket_access" {
+  statement {
+    sid       = "AllowPublic"
+    actions   = ["s3:GetObject"]
+    resources = ["${aws_s3_bucket.this.arn}/**"]
+    principals {
+      type        = "*"
+      identifiers = ["*"]
+    }
+  }
+  statement {
+    sid     = "GitHubDeploy"
+    actions = ["s3:PutObject", "s3:GetObject", "s3:ListBucket", "s3:DeleteObject", "s3:ListBucketMultipartUploads", "s3:AbortMultipartUpload"]
+    resources = [
+      "${aws_s3_bucket.this.arn}/**",
+      "${aws_s3_bucket.this.arn}"
+    ]
+    principals {
+      type        = "AWS"
+      identifiers = [var.github_role_arn]
+    }
+  }
+}
+
 resource "aws_s3_bucket_policy" "this" {
   bucket = aws_s3_bucket.this.id
 
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Id      = "AllowGetObjects"
-    Statement = [
-      {
-        Sid       = "AllowPublic"
-        Effect    = "Allow"
-        Principal = "*"
-        Action    = "s3:GetObject"
-        Resource  = "${aws_s3_bucket.this.arn}/**"
-      }
-    ]
-  })
+  policy = data.aws_iam_policy_document.bucket_access.json
 
   depends_on = [aws_s3_bucket_public_access_block.this]
 }
@@ -39,11 +51,11 @@ resource "aws_cloudfront_function" "redirect_index" {
   async function handler(event) {
     const request = event.request;
     const uri = request.uri;
-    
+
     // Check whether the URI is missing a file name.
     if (uri.endsWith('/')) {
         request.uri += 'index.html';
-    } 
+    }
     // Check whether the URI is missing a file extension.
     else if (!uri.includes('.')) {
         request.uri += '/index.html';
@@ -55,7 +67,6 @@ resource "aws_cloudfront_function" "redirect_index" {
 }
 
 resource "aws_cloudfront_distribution" "this" {
-  # TODO: add certificate for this domain
   aliases = ["globalbibletools.com"]
 
 

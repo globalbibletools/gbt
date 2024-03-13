@@ -9,6 +9,7 @@ import { auth } from './auth';
 import { client } from './db';
 import { ForbiddenError } from '@casl/ability';
 import { IncomingHttpHeaders } from 'http';
+import { User } from 'lucia';
 
 export interface SessionUser {
   id: string;
@@ -131,6 +132,31 @@ export interface RouteBuilder<Params> {
   ): RouteBuilder<Params>;
 }
 
+async function validateRequest(
+  req: NextApiRequest,
+  res: NextApiResponse
+): Promise<{ user: User; id: string } | null> {
+  const sessionId = req.cookies[auth.sessionCookieName];
+  if (!sessionId) {
+    return null;
+  }
+  const { session, user } = await auth.validateSession(sessionId);
+  if (!session) {
+    res.setHeader('Set-Cookie', auth.createBlankSessionCookie().serialize());
+  }
+  if (session && session.fresh) {
+    res.setHeader(
+      'Set-Cookie',
+      auth.createSessionCookie(session.id).serialize()
+    );
+  }
+  if (user && session) {
+    return { user, id: session.id };
+  } else {
+    return null;
+  }
+}
+
 /**
  * Creates a route handler for a nextjs API route.
  * The result of `build()` is exported and consumed by nextjs.
@@ -145,21 +171,26 @@ export default function createRoute<
     definition: RouteDefinition<Params, RequestBody, ResponseBody>
   ): NextApiHandler {
     return async (req, res) => {
-      const authRequest = auth.handleRequest({ req, res });
-      const sessionData = await authRequest.validate();
+      const session = await validateRequest(req, res);
 
       const responseHelper: ResponseHelper<ResponseBody> = {
         async login(userId: string) {
-          if (sessionData) {
-            await auth.invalidateSession(sessionData.sessionId);
+          if (session) {
+            await auth.invalidateSession(session.id);
           }
-          authRequest.setSession(await auth.createSession(userId));
+
+          const newSession = await auth.createSession(userId, {});
+          const sessionCookie = auth.createSessionCookie(newSession.id);
+          res.setHeader('Set-Cookie', sessionCookie.serialize());
         },
         async logout() {
-          if (sessionData) {
-            await auth.invalidateSession(sessionData.sessionId);
+          if (session) {
+            await auth.invalidateSession(session.id);
           }
-          authRequest.setSession(null);
+          res.setHeader(
+            'Set-Cookie',
+            auth.createBlankSessionCookie().serialize()
+          );
         },
         setHeader(header: string, value: string) {
           res.setHeader(header, value);
@@ -216,13 +247,13 @@ export default function createRoute<
         }
 
         // If the session is valid, load the user's auth information.
-        let session: Session | undefined;
-        if (sessionData) {
-          session = { id: sessionData.sessionId };
+        let sessionData: Session | undefined;
+        if (session) {
+          sessionData = { id: session.id };
 
-          const userData = await client.authUser.findUnique({
+          const userData = await client.user.findUnique({
             where: {
-              id: sessionData.userId,
+              id: session.user.id,
             },
             include: {
               systemRoles: true,
@@ -230,7 +261,7 @@ export default function createRoute<
           });
 
           if (userData) {
-            session.user = {
+            sessionData.user = {
               id: userData.id,
               systemRoles: userData.systemRoles.map(({ role }) => role),
             };
@@ -240,8 +271,8 @@ export default function createRoute<
         const request: RouteRequest<Params, RequestBody> = {
           query: req.query as Params,
           body,
-          session,
-          policy: createPolicyFor(session?.user),
+          session: sessionData,
+          policy: createPolicyFor(sessionData?.user),
           headers: req.headers,
         };
 

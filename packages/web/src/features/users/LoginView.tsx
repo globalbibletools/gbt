@@ -1,18 +1,16 @@
-import { useTranslation } from 'react-i18next';
+import { ApiClientError } from '@translation/api-client';
 import { useForm } from 'react-hook-form';
-import Card from '../../shared/components/Card';
-import FormLabel from '../../shared/components/form/FormLabel';
-import TextInput from '../../shared/components/form/TextInput';
-import ModalView, { ModalViewTitle } from '../../shared/components/ModalView';
+import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import apiClient from '../../shared/apiClient';
+import ModalView, { ModalViewTitle } from '../../shared/components/ModalView';
 import Form from '../../shared/components/form/Form';
+import FormLabel from '../../shared/components/form/FormLabel';
 import InputError from '../../shared/components/form/InputError';
-import Button from '../../shared/components/actions/Button';
-import SubmittingIndicator from '../../shared/components/form/SubmittingIndicator';
+import SubmitButton from '../../shared/components/form/SubmitButton';
+import TextInput from '../../shared/components/form/TextInput';
 import { useFlash } from '../../shared/hooks/flash';
 import useAuth from '../../shared/hooks/useAuth';
-import { useNavigate } from 'react-router-dom';
-import { ApiClientError } from '@translation/api-client';
 import useTitle from '../../shared/hooks/useTitle';
 
 interface FormData {
@@ -94,12 +92,7 @@ export default function LoginView() {
             }}
           />
         </div>
-        <Button className="w-full" type="submit">
-          {t('users:log_in')}
-        </Button>
-        <div>
-          <SubmittingIndicator className="ms-3" />
-        </div>
+        <SubmitButton className="w-full">{t('users:log_in')}</SubmitButton>
       </Form>
     </ModalView>
   );

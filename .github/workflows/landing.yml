@@ -1,0 +1,36 @@
+name: Deploy Landing to S3
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - packages/landing/**
+      - tailwind.base.json
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: 'npm'
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          audience: sts.amazonaws.com
+          aws-region: us-east-1
+          role-to-assume: arn:aws:iam::188245254368:role/github-role
+          disable-retry: true
+
+      - run: npm ci
+      - run: npx nx build landing
+      - run: aws s3 sync . s3://gbt-landing --delete
+        working-directory: ./dist/packages/landing

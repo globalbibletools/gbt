@@ -14,26 +14,35 @@
 
   <body class="flex flex-col h-screen text-gray-800">
     <nav
-      class="bg-white flex items-center h-20 border-b border-gray-200 relative flex-shrink-0 px-6 md:px-8"
+      class="bg-white flex items-center h-20 border-b border-gray-200 relative flex-shrink-0 px-4 md:px-8"
     >
       <a href="#hero" class="flex items-center mr-8 lg:mr-12">
-        <img src="./assets/logo.png" />
-        <h1 class="font-bold ms-2 hidden sm:text-lg md:text-2xl sm:block">
+        <img
+          src="./assets/logo.png"
+          class="w-8 h-8 sm:w-10 sm:h-10 md:w-14 md:h-14"
+        />
+        <h1 class="font-bold ms-2 text-base sm:text-lg lg:text-2xl">
           Global Bible Tools
         </h1>
       </a>
       <div class="flex-grow md:flex-grow-0"></div>
       <a
-        class="h-full w-24 text-center block pt-[28px] md:pt-[30px] font-bold md:mx-2"
+        class="h-full text-center hidden md:block pt-[30px] font-bold mx-3"
         href="#resources"
       >
         Resources
       </a>
       <a
-        class="h-full w-24 text-center block pt-[28px] md:pt-[30px] font-bold md:mx-2"
+        class="h-full text-center hidden md:block pt-[30px] font-bold mx-3"
         href="#volunteer"
       >
         Volunteer
+      </a>
+      <a
+        class="h-full text-center hidden md:block pt-[30px] font-bold mx-3"
+        href="#go-deeper"
+      >
+        Go Deeper
       </a>
       <div class="md:flex-grow"></div>
       <a
@@ -43,17 +52,17 @@
         Interlinear
       </a>
     </nav>
-    <main class="flex-grow overflow-auto bg-blue-800">
+    <main class="flex-grow overflow-auto">
       <section id="hero" class="relative">
         <img src="./assets/hero.png" class="w-full" />
         <div
           class="absolute top-0 bottom-0 w-full flex flex-col items-center justify-center sm:mb-10 md:mb-20 px-8"
         >
           <p
-            class="text-white text-center font-bold text-md sm:text-lg md:text-xl lg:text-2xl max-w-[600px] mb-16"
+            class="text-white text-center font-bold text-md sm:text-lg md:text-xl lg:text-2xl max-w-[600px] mb-6 sm:mb-16"
           >
-            The Global Church needs freely available biblical language learning
-            and study tools translated into local languages
+            The global Church needs access to serious biblical language study
+            tools without cost or hindrance.
           </p>
           <a
             class="rounded-lg bg-blue-800 text-white font-bold shadow-xl px-4 md:px-6 lg:px-8 flex items-center justify-center h-8 md:h-10 lg:h-12 md:text-lg lg:text-xl"
@@ -66,7 +75,6 @@
       <section
         id="resources"
         class="relative bg-brown-100 pt-12 md:pt-16 lg:pt-24 pb-32 px-6 md:px-8"
-        style="clip-path: polygon(0 0, 100% 0, 100% 100%, 0 calc(100% - 80px))"
       >
         <div class="w-full max-w-[1000px] mx-auto">
           <h2 class="text-3xl md:text-5xl font-bold mb-8">Resources</h2>
@@ -81,7 +89,7 @@
             <h3
               class="text-center text-xl font-bold border-b-4 border-black pb-2 mx-4"
             >
-              Langage Learning
+              Language Learning
             </h3>
             <div class="rounded-[16px] bg-white p-6 shadow">
               <h4 class="text-lg font-bold mb-3">Language Lessons</h4>
@@ -98,14 +106,15 @@
                   href="https://www.youtube.com/@AlphawithAngela"
                   >Alpha with Angela</a
                 >
-                teach Greek and Hebrew to anyone for free.
+                provide free Greek and Hebrew training to everyone.
               </p>
             </div>
             <div class="rounded-[16px] bg-white p-6 shadow">
               <h4 class="text-lg font-bold mb-3">Reader's Bible</h4>
               <p>
                 A digital reader’s Bible helps language learners accelerate
-                their comprehension by reading the biblical text with assistance
+                their comprehension by reading the biblical text with
+                assistance.
               </p>
             </div>
             <h3
@@ -139,7 +148,8 @@
       </section>
       <section
         id="volunteer"
-        class="pt-12 pb-16 md:pb-24 lg:pb-32 px-6 md:px-8"
+        class="bg-blue-800 -mt-10 pt-20 md:pt-24 pb-40 px-6 md:px-8"
+        style="clip-path: polygon(0 0, 100% 40px, 100% 100%, 0 100%)"
       >
         <div class="w-full max-w-[1000px] mx-auto">
           <h2 class="text-3xl md:text-5xl font-bold mb-8 text-white">
@@ -157,7 +167,7 @@
                 out our
                 <a
                   class="font-bold text-blue-800 underline"
-                  href="https://github.com/arrocke/gloss-translation"
+                  href="https://github.com/globalbibletools/gbt"
                   >GitHub repository</a
                 >.
               </p>
@@ -191,6 +201,26 @@
               </p>
             </li>
           </ul>
+        </div>
+      </section>
+      <section
+        id="go-deeper"
+        class="bg-brown-100 -mt-10 pt-20 md:pt-24 pb-16 md:pb-24 lg:pb-32 px-6 md:px-8"
+        style="clip-path: polygon(0 40px, 100% 0, 100% 100%, 0 100%)"
+      >
+        <div class="w-full max-w-[1000px] mx-auto">
+          <h2 class="text-3xl md:text-5xl font-bold mb-8">Go Deeper</h2>
+          <p>
+            This is a significant need and endeavor for the global Church. We
+            invite you to
+            <a
+              class="font-bold text-blue-800 underline"
+              href="https://docs.google.com/document/d/1PfgkStvqrCJutpcQzq73zN_fZkfl17zs3MdQIhT3xg4/"
+              >read the introduction</a
+            >
+            to our vision and roadmap for democratizing access to serious
+            bibilical language tools.
+          </p>
         </div>
       </section>
     </main>
