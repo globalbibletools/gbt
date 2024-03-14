@@ -22,7 +22,7 @@ export interface TranslationToolbarProps {
   languages: { name: string; code: string }[];
   onVerseChange: (verseId: string) => void;
   onLanguageChange: (languageCode: string) => void;
-  approveAllGlosses: () => Promise<void>;
+  approveAllGlosses: () => void;
   canApproveAllGlosses: boolean;
 }
 

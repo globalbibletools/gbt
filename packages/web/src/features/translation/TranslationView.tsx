@@ -4,7 +4,7 @@ import {
   GlossState,
   TextDirection,
 } from '@translation/api-types';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLoaderData, useNavigate, useParams } from 'react-router-dom';
 import { useAccessControl } from '../../shared/accessControl';
@@ -315,7 +315,7 @@ export default function TranslationView() {
 
   const flash = useFlash();
 
-  const getGlossesAsDisplayed = useCallback(
+  const glossesAsDisplayed = useMemo(
     () =>
       targetGlossesQuery.data?.data.map((targetGloss) => ({
         wordId: targetGloss.wordId,
@@ -325,12 +325,11 @@ export default function TranslationView() {
           targetGloss.machineGloss,
         state: targetGloss.state,
       })),
-    [targetGlossesQuery]
+    [targetGlossesQuery.data]
   );
 
   const approveAllGlossesMutation = useMutation({
     mutationFn: async () => {
-      const glossesAsDisplayed = getGlossesAsDisplayed();
       if (glossesAsDisplayed) {
         const data = Object.fromEntries(
           glossesAsDisplayed
@@ -361,12 +360,12 @@ export default function TranslationView() {
         canApproveAllGlosses={
           !approveAllGlossesMutation.isLoading &&
           !targetGlossesQuery.isFetching &&
-          !!getGlossesAsDisplayed()?.some(
+          !!glossesAsDisplayed?.some(
             ({ glossAsDisplayed, state }) =>
               glossAsDisplayed && state === GlossState.Unapproved
           )
         }
-        approveAllGlosses={async () => approveAllGlossesMutation.mutate()}
+        approveAllGlosses={approveAllGlossesMutation.mutate}
         verseId={verseId}
         languageCode={language}
         languages={translationLanguages.map(({ code, name }) => ({
