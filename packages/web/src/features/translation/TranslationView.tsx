@@ -359,7 +359,6 @@ export default function TranslationView() {
       <TranslationToolbar
         canApproveAllGlosses={
           !approveAllGlossesMutation.isLoading &&
-          !targetGlossesQuery.isFetching &&
           !!glossesAsDisplayed?.some(
             ({ glossAsDisplayed, state }) =>
               glossAsDisplayed && state === GlossState.Unapproved
