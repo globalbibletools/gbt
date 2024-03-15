@@ -349,7 +349,7 @@ export default function TranslationView() {
       }
     },
     onSuccess: async () => {
-      await targetGlossesQuery.refetch();
+      await queryClient.invalidateQueries(['verse-glosses', language, verseId]);
       flash.success(t('translate:all_glosses_approved'));
     },
   });
