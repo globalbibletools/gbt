@@ -3,7 +3,6 @@ import type {
   GetVerseResponseBody,
   GetLemmaResourcesResponseBody,
   GetVerseNotesResponseBody,
-  PatchVerseGlossesRequestBody,
   GetNextUnapprovedVerseResponseBody,
 } from '@translation/api-types';
 import ApiClient from './client';
@@ -25,17 +24,6 @@ export default class Verses {
   ): Promise<GetVerseGlossesResponseBody> {
     return this.client.get({
       path: `/api/languages/${language}/verses/${verseId}/glosses`,
-    });
-  }
-
-  async updateVerseGlosses(
-    verseId: string,
-    language: string,
-    body: PatchVerseGlossesRequestBody
-  ): Promise<void> {
-    await this.client.patch({
-      path: `/api/languages/${language}/verses/${verseId}/glosses`,
-      body,
     });
   }
 

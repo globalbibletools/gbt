@@ -343,7 +343,7 @@ export default function TranslationView() {
               { gloss: glossAsDisplayed, state: GlossState.Approved },
             ])
         );
-        await apiClient.verses.updateVerseGlosses(verseId, language, {
+        await apiClient.languages.bulkUpdateGlosses(language, {
           data,
         });
       }

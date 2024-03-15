@@ -186,7 +186,7 @@ export interface Gloss {
 export interface GetVerseGlossesResponseBody {
   data: Gloss[];
 }
-export interface PatchVerseGlossesRequestBody {
+export interface PostBulkGlossesRequestBody {
   data: {
     [wordId: string]: { gloss?: string; state?: GlossState };
   };
