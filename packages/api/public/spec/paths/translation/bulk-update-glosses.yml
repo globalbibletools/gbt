@@ -1,0 +1,39 @@
+patch:
+  tags:
+    - Languages
+  summary: Update glosses in bulk for a language.
+  parameters:
+    - $ref: '../../schemas/parameters.yml#languageCode'
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            data:
+              type: object
+              additionalProperties:
+                type: object
+                properties:
+                  gloss:
+                    type: string
+                    nullable: true
+                    description: The patched gloss for the word in the selected language.
+                  state:
+                    type: string
+                    nullable: true
+                    description: The new approval state of the gloss
+              example:
+                01001001:
+                  gloss: 'habló'
+                  state: APPROVED
+                01002003:
+                  gloss: 'Jehová'
+                  state: null
+                03003007:
+                  gloss: null
+                  state: UNAPPROVED
+  responses:
+    '200':
+      description: Ok

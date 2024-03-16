@@ -32,6 +32,8 @@ paths:
     $ref: ./paths/languages/languages.yml
   /languages/{code}:
     $ref: ./paths/languages/language.yml
+  /languages/{code}/glosses/bulk:
+    $ref: ./paths/translation/bulk-update-glosses.yml
   /languages/{code}/import:
     $ref: ./paths/languages/languages-import.yml
   /languages/{code}/verses/{verseId}/translation:
