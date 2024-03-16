@@ -64,7 +64,12 @@ export default createRoute<{ code: string }>()
             INSERT INTO "Gloss"("languageId", "wordId", "gloss", "state") VALUES ${Prisma.join(
               entriesToPatch.map(
                 ({ wordId, gloss, state }) =>
-                  Prisma.sql`(${language.id}::uuid, ${wordId}, ${gloss}, ${state}::"GlossState")`
+                  Prisma.sql`(${language.id}::uuid, ${wordId}, ${gloss}, ${
+                    // If the gloss hasn't been created and the update state is undefined, use `GlossState.Unapproved` as a default.
+                    !oldGlosses[wordId] && !state
+                      ? GlossState.Unapproved
+                      : state
+                  }::"GlossState")`
               )
             )}
             ON CONFLICT ("languageId", "wordId")
