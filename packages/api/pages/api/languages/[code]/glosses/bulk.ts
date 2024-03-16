@@ -77,7 +77,9 @@ export default createRoute<{ code: string }>()
           const updatedGlosses = patchedGlosses.filter(
             (patchedGloss) => !!oldGlosses[patchedGloss.wordId]
           );
-          await tx.$executeRaw`
+
+          if (updatedGlosses.length > 0) {
+            await tx.$executeRaw`
             INSERT INTO "GlossHistoryEntry"("languageId", "userId", "wordId", "gloss", "state", "source") 
             VALUES ${Prisma.join(
               updatedGlosses.map((updatedGloss) => {
@@ -92,6 +94,7 @@ export default createRoute<{ code: string }>()
               })
             )}
         `;
+          }
         });
       }
       res.ok();
