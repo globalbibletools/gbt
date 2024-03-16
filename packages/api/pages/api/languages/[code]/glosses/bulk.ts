@@ -65,10 +65,7 @@ export default createRoute<{ code: string }>()
               entriesToPatch.map(
                 ({ wordId, gloss, state }) =>
                   Prisma.sql`(${language.id}::uuid, ${wordId}, ${gloss}, ${
-                    // If the gloss hasn't been created and the update state is undefined, use `GlossState.Unapproved` as a default.
-                    !oldGlosses[wordId] && !state
-                      ? GlossState.Unapproved
-                      : state
+                    state ?? oldGlosses[wordId]?.state ?? GlossState.Unapproved
                   }::"GlossState")`
               )
             )}
