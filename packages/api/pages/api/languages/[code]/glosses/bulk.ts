@@ -76,22 +76,18 @@ export default createRoute<{ code: string }>()
             RETURNING *;
         `;
 
-          const updatedGlosses = patchedGlosses.filter(
-            (patchedGloss) => !!oldGlosses[patchedGloss.wordId]
-          );
-
-          if (updatedGlosses.length > 0) {
+          if (patchedGlosses.length > 0) {
             await tx.$executeRaw`
             INSERT INTO "GlossHistoryEntry"("languageId", "userId", "wordId", "gloss", "state", "source") 
             VALUES ${Prisma.join(
-              updatedGlosses.map((updatedGloss) => {
-                const oldGloss = oldGlosses[updatedGloss.wordId];
+              patchedGlosses.map((patchedGloss) => {
+                const oldGloss = oldGlosses[patchedGloss.wordId];
                 return Prisma.sql`
                     (${language.id}::uuid, 
                     ${req.session?.user?.id}::uuid, 
-                    ${updatedGloss.wordId}, 
-                    NULLIF(${updatedGloss.gloss}, ${oldGloss.gloss}), 
-                    NULLIF(${updatedGloss.state}, ${oldGloss.state})::"GlossState", 
+                    ${patchedGloss.wordId}, 
+                    NULLIF(${patchedGloss.gloss}, ${oldGloss?.gloss}), 
+                    NULLIF(${patchedGloss.state}, ${oldGloss?.state})::"GlossState", 
                     'USER')`;
               })
             )}
