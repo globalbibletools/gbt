@@ -159,7 +159,7 @@ export function bookName(bookId: number, t: TFunction) {
  * @returns The verse ID if it can be determined, otherwise `null`.
  */
 export function parseReference(reference: string, t: TFunction): string | null {
-  const referenceRegex = /^(.+?)(?:\s*(\d+)(?:([:.,]|\s)(\d+))?)?$/;
+  const referenceRegex = /^(.+?)(?:[.]?\s*(\d+)(?:([:.,]|\s)(\d+))?)?[;]?$/;
 
   // Parse the reference into three parts.
   const matches = reference.match(referenceRegex);
@@ -192,6 +192,26 @@ export function parseReference(reference: string, t: TFunction): string | null {
     ? clamp(parseInt(verseStr), 1, verseCount(bookId, chapterNumber))
     : 1;
   return generateVerseId({ bookId, chapterNumber, verseNumber });
+}
+
+/**
+ * Try to parse an array of verse IDs from a reference, using the i18n
+ * translation function.
+ * @param reference The string that should be parsed. In the form
+ *                  "bookName chapterNumber:startVerseNumber-endVerseNumber".
+ *                  Example: "Exo 3:14-15". The dash and end verse number are
+ *                  optional.
+ * @param t The i18n translation function to use.
+ * @returns An array of verse IDs, may be empty if no verse IDs can be parsed.
+ */
+export function parseReferenceRange(reference: string, t: TFunction): string[] {
+  const results = reference.split('-');
+  console.log(results);
+  const base = parseReference(results[0], t);
+  if (base == null) {
+    return [];
+  }
+  return [base]; // TODO: add more items
 }
 
 /**

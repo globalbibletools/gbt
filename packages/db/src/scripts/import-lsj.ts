@@ -77,7 +77,7 @@ const replaceRef = (_match: string, overallRef: string) => {
     } else if (split.length == 2) {
       currentChapter = split[0];
       // Prepend the current book
-      fullRef = currentBook + ':' + ref;
+      fullRef = currentBook + '.' + ref;
     } else if (split.length == 3) {
       currentBook = split[0];
       currentChapter = split[1];

@@ -12,7 +12,7 @@ import LoadingSpinner from '../../shared/components/LoadingSpinner';
 import RichText from '../../shared/components/RichText';
 import RichTextInput from '../../shared/components/form/RichTextInput';
 import { bdbBookRefNames } from 'data/bdb-book-ref-names';
-import { parseVerseId } from './verse-utils';
+import { parseVerseId, parseReferenceRange } from './verse-utils';
 
 type TranslationSidebarProps = {
   className: string;
@@ -31,7 +31,7 @@ export const TranslationSidebar = ({
   className = '',
   onClose,
 }: TranslationSidebarProps) => {
-  const { t } = useTranslation(['common', 'translate']);
+  const { t } = useTranslation(['common', 'translate', 'bible']);
 
   const word = verse.words[wordIndex];
   const lemmaResourcesQuery = useQuery(
@@ -136,13 +136,15 @@ export const TranslationSidebar = ({
       ?.querySelectorAll<HTMLAnchorElement>(`a.ref`)
       .forEach((element) => {
         element.onclick = () => {
-          const reference = element.innerText;
+          const reference = element.getAttribute('data-ref') ?? '';
           console.log('reference clicked:', reference);
-          // TODO: insert verse contents for the reference
+          const verseIds = parseReferenceRange(reference, t);
+          console.log('verseIds:', verseIds);
+          // TODO: insert verse contents for the verse IDs
         };
       });
     console.log('REFERENCE LINKS:', referenceLinks);
-  }, [bdbCurrentVerseRef, lexiconEntry]);
+  }, [bdbCurrentVerseRef, lexiconEntry, t]);
 
   return (
     <div
