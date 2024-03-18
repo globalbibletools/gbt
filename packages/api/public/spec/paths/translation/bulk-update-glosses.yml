@@ -25,13 +25,13 @@ patch:
                     nullable: true
                     description: The new approval state of the gloss
               example:
-                01001001:
-                  gloss: 'habló'
+                0100100101:
+                  gloss: 'Al principio'
                   state: APPROVED
-                01002003:
+                0100200408:
                   gloss: 'Jehová'
                   state: null
-                03003007:
+                0300300703:
                   gloss: null
                   state: UNAPPROVED
   responses:
