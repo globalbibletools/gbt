@@ -48,6 +48,8 @@ paths:
     $ref: ./paths/languages/word-translator-note.yml
   /languages/{code}/words/{wordId}/footnote:
     $ref: ./paths/languages/word-footnote.yml
+  /languages/{code}/glosses/bulk:
+    $ref: ./paths/translation/bulk-update-glosses.yml
   /languages/{code}/members:
     $ref: ./paths/languages/language-members.yml
   /languages/{code}/members/{userId}:
