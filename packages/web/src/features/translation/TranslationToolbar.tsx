@@ -22,6 +22,8 @@ export interface TranslationToolbarProps {
   languages: { name: string; code: string }[];
   onVerseChange: (verseId: string) => void;
   onLanguageChange: (languageCode: string) => void;
+  approveAllGlosses: () => void;
+  canApproveAllGlosses: boolean;
 }
 
 export function TranslationToolbar({
@@ -30,6 +32,8 @@ export function TranslationToolbar({
   languageCode,
   onLanguageChange,
   onVerseChange,
+  approveAllGlosses,
+  canApproveAllGlosses,
 }: TranslationToolbarProps) {
   const { t } = useTranslation(['translate', 'bible', 'common', 'languages']);
   const flash = useFlash();
@@ -54,6 +58,18 @@ export function TranslationToolbar({
     type: 'Language',
     id: languageCode,
   });
+
+  useEffect(() => {
+    if (isTranslator) {
+      const keydownCallback = async (e: globalThis.KeyboardEvent) => {
+        if (e.altKey && !e.shiftKey && !e.ctrlKey && e.key === 'a') {
+          approveAllGlosses();
+        }
+      };
+      window.addEventListener('keydown', keydownCallback);
+      return () => window.removeEventListener('keydown', keydownCallback);
+    }
+  }, [approveAllGlosses, isTranslator]);
 
   const navigateToNextUnapprovedVerse = useCallback(async () => {
     const data = await apiClient.verses.findNextUnapprovedVerse(
@@ -130,10 +146,22 @@ export function TranslationToolbar({
         />
       </div>
       {userCan('administer', { type: 'Language', id: languageCode }) && (
-        <div className="pt-6">
+        <div className="pt-6 me-16">
           <Button variant="tertiary" to={`/languages/${languageCode}`}>
             <Icon icon="sliders" className="me-1" />
             {t('languages:manage')}
+          </Button>
+        </div>
+      )}
+      {isTranslator && (
+        <div className="pt-6">
+          <Button
+            variant="secondary"
+            disabled={!canApproveAllGlosses}
+            onClick={approveAllGlosses}
+          >
+            <Icon icon="check" className="me-1" />
+            {t('translate:approve_all')}
           </Button>
         </div>
       )}

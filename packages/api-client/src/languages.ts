@@ -1,5 +1,6 @@
 import {
   GetLanguageImportResponseBody,
+  PostBulkGlossesRequestBody,
   type GetLanguageMembersResponseBody,
   type GetLanguageResponseBody,
   type GetLanguagesResponseBody,
@@ -64,6 +65,16 @@ export default class Languages {
     await this.client.patch({
       path: `/api/languages/${code}`,
       body: language,
+    });
+  }
+
+  async bulkUpdateGlosses(
+    code: string,
+    body: PostBulkGlossesRequestBody
+  ): Promise<void> {
+    await this.client.post({
+      path: `/api/languages/${code}/glosses/bulk`,
+      body,
     });
   }
 
