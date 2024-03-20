@@ -210,8 +210,25 @@ export function parseReferenceRange(reference: string, t: TFunction): string[] {
   const base = parseReference(results[0], t);
   if (base == null) {
     return [];
+  } else if (results.length === 1) {
+    return [base];
+  } else {
+    const {
+      bookId,
+      chapterNumber,
+      verseNumber: firstVerseNumber,
+    } = parseVerseId(base);
+    const endVerseNumber = parseInt(results[1]);
+    const sequence = [base];
+    for (
+      let verseNumber = firstVerseNumber + 1;
+      verseNumber <= endVerseNumber;
+      verseNumber++
+    ) {
+      sequence.push(generateVerseId({ bookId, chapterNumber, verseNumber }));
+    }
+    return sequence;
   }
-  return [base]; // TODO: add more items
 }
 
 /**

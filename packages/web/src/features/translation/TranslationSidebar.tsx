@@ -143,7 +143,6 @@ export const TranslationSidebar = ({
           // TODO: insert verse contents for the verse IDs
         };
       });
-    console.log('REFERENCE LINKS:', referenceLinks);
   }, [bdbCurrentVerseRef, lexiconEntry, t]);
 
   return (
