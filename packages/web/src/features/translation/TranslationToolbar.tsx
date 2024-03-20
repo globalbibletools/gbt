@@ -1,11 +1,4 @@
-import {
-  FormEvent,
-  FormEventHandler,
-  KeyboardEvent,
-  useCallback,
-  useEffect,
-  useRef,
-} from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Icon } from '../../shared/components/Icon';
 import TextInput from '../../shared/components/form/TextInput';
@@ -23,7 +16,7 @@ import { useAccessControl } from '../../shared/accessControl';
 import apiClient from '../../shared/apiClient';
 import { useFlash } from '../../shared/hooks/flash';
 import Form from '../../shared/components/form/Form';
-import { useForm, useFormContext } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import useMergedRef from '../../shared/hooks/mergeRefs';
 
 export interface TranslationToolbarProps {
@@ -92,22 +85,19 @@ export function TranslationToolbar({
   }, [navigateToNextUnapprovedVerse, isTranslator]);
 
   const formContext = useForm<{ verseReference: string }>();
-  const verseReferenceRegistration = formContext.register('verseReference');
-  const verseReferenceInputRef = useRef<HTMLInputElement>(null);
-  const verseReferenceMergedRef = useMergedRef(
-    verseReferenceRegistration.ref,
-    verseReferenceInputRef
-  );
+  const verseReferenceAttributes = formContext.register('verseReference');
+  const verseReferenceInput = useRef<HTMLInputElement>(null);
+
   return (
     <div className="flex items-center shadow-md px-6 md:px-8 py-4">
       <Form
         context={formContext}
         onSubmit={({ verseReference }) => {
+          if (verseReferenceInput.current) {
+            verseReferenceInput.current.value = '';
+            verseReferenceInput.current?.blur();
+          }
           const newVerseId = parseReference(verseReference, t);
-          verseReferenceInputRef.current &&
-            (verseReferenceInputRef.current.value = '');
-
-          verseReferenceInputRef.current?.blur();
           if (newVerseId == null) {
             // TODO: handle invalid input.
             console.log('UNKNOWN REFERENCE:', verseReference);
@@ -124,8 +114,11 @@ export function TranslationToolbar({
               className="pe-16 placeholder-current w-56"
               autoComplete="off"
               placeholder={generateReference(verseInfo, t)}
-              {...verseReferenceRegistration}
-              ref={verseReferenceMergedRef}
+              {...verseReferenceAttributes}
+              ref={useMergedRef(
+                verseReferenceAttributes.ref,
+                verseReferenceInput
+              )}
             />
             <Button
               className="absolute end-8 top-1 w-7 !h-7"
