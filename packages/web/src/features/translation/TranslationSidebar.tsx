@@ -12,7 +12,11 @@ import LoadingSpinner from '../../shared/components/LoadingSpinner';
 import RichText from '../../shared/components/RichText';
 import RichTextInput from '../../shared/components/form/RichTextInput';
 import { bdbBookRefNames } from 'data/bdb-book-ref-names';
-import { parseVerseId, parseReferenceRange } from './verse-utils';
+import {
+  parseVerseId,
+  parseReferenceRange,
+  generateReference,
+} from './verse-utils';
 
 type TranslationSidebarProps = {
   className: string;
@@ -132,17 +136,29 @@ export const TranslationSidebar = ({
       ?.querySelectorAll(`a[data-ref="${bdbCurrentVerseRef}"]`)
       .forEach((element) => element.classList.add('bg-yellow-300'));
 
-    const referenceLinks = current
-      ?.querySelectorAll<HTMLAnchorElement>(`a.ref`)
-      .forEach((element) => {
-        element.onclick = () => {
-          const reference = element.getAttribute('data-ref') ?? '';
-          console.log('reference clicked:', reference);
-          const verseIds = parseReferenceRange(reference, t);
-          console.log('verseIds:', verseIds);
-          // TODO: insert verse contents for the verse IDs
-        };
-      });
+    current?.querySelectorAll<HTMLAnchorElement>(`a.ref`).forEach((element) => {
+      element.onclick = () => {
+        const oldPreview = current?.querySelector('#ref-preview');
+        oldPreview?.remove();
+
+        const reference = element.getAttribute('data-ref') ?? '';
+        const verseIds = parseReferenceRange(reference, t);
+
+        const previewElement = document.createElement('div');
+        previewElement.id = 'ref-preview';
+        previewElement.style.width = 'calc(100% + 32px)';
+        previewElement.style.margin = '4px -16px';
+        previewElement.style.padding = '16px';
+        previewElement.style.backgroundColor = '#ffffff80';
+        previewElement.style.float = 'left';
+        // TODO: set contents using portal
+        previewElement.innerText = generateReference(
+          parseVerseId(verseIds[0]),
+          t
+        );
+        element.insertAdjacentElement('afterend', previewElement);
+      };
+    });
   }, [bdbCurrentVerseRef, lexiconEntry, t]);
 
   return (
