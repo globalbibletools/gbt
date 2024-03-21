@@ -84,14 +84,15 @@ export function TranslationToolbar({
     }
   }, [navigateToNextUnapprovedVerse, isTranslator]);
 
-  const formContext = useForm<{ verseReference: string }>();
-  const verseReferenceAttributes = formContext.register('verseReference');
+  const verseReferenceForm = useForm<{ verseReference: string }>();
+  const verseReferenceAttributes =
+    verseReferenceForm.register('verseReference');
   const verseReferenceInput = useRef<HTMLInputElement>(null);
 
   return (
     <div className="flex items-center shadow-md px-6 md:px-8 py-4">
       <Form
-        context={formContext}
+        context={verseReferenceForm}
         onSubmit={({ verseReference }) => {
           if (verseReferenceInput.current) {
             verseReferenceInput.current.value = '';
