@@ -1,11 +1,11 @@
-import { Language, AuthUser, SystemRole, LanguageRole } from '@translation/db';
+import { Language, User, SystemRole, LanguageRole } from '@translation/db';
 import { PureAbility, AbilityBuilder } from '@casl/ability';
 import { Subjects } from '@casl/prisma';
 import { createPrismaAbility, PrismaQuery } from './casl';
 
 export type Subject = Subjects<{
   Language: Language;
-  AuthUser: AuthUser;
+  User: User;
 }>;
 export type RawSubject = Extract<Subject, string>;
 export type Action = 'create' | 'read' | 'translate' | 'administer' | 'update';
@@ -46,18 +46,18 @@ export function createPolicyFor(user?: Actor) {
       },
     });
 
-    can('read', 'AuthUser', { id: user.id });
-    can('update', 'AuthUser', { id: user.id });
+    can('read', 'User', { id: user.id });
+    can('update', 'User', { id: user.id });
 
     if (user.systemRoles.includes(SystemRole.ADMIN)) {
       can('create', 'Language');
       can('read', 'Language');
       can('administer', 'Language');
 
-      can('create', 'AuthUser');
-      can('read', 'AuthUser');
-      can('administer', 'AuthUser');
-      can('update', 'AuthUser');
+      can('create', 'User');
+      can('read', 'User');
+      can('administer', 'User');
+      can('update', 'User');
     }
   }
 

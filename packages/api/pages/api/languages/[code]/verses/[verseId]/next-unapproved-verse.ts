@@ -32,7 +32,7 @@ export default createRoute<{ code: string; verseId: string }>()
         ORDER BY "Word"."id" LIMIT 1;
       `;
 
-      res.ok({ verseId: result.nextUnapprovedVerseId });
+      res.ok({ nextUnapprovedVerseId: result.nextUnapprovedVerseId });
     },
   })
   .build();

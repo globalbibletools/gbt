@@ -4,7 +4,7 @@ import {
   GlossState,
   TextDirection,
 } from '@translation/api-types';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLoaderData, useNavigate, useParams } from 'react-router-dom';
 import { useAccessControl } from '../../shared/accessControl';
@@ -29,6 +29,7 @@ import {
 } from './verse-utils';
 import { isFlagEnabled } from '../../shared/featureFlags';
 import useTitle from '../../shared/hooks/useTitle';
+import { useFlash } from '../../shared/hooks/flash';
 
 export const translationLanguageKey = 'translation-language';
 export const translationVerseIdKey = 'translation-verse-id';
@@ -312,9 +313,58 @@ export default function TranslationView() {
     isFlagEnabled('comments') &&
     !!userCan('read', { type: 'Language', id: language });
 
+  const flash = useFlash();
+
+  const glossesAsDisplayed = useMemo(
+    () =>
+      targetGlossesQuery.data?.data.map((targetGloss) => ({
+        wordId: targetGloss.wordId,
+        glossAsDisplayed:
+          targetGloss.gloss ||
+          targetGloss.suggestions[0] ||
+          targetGloss.machineGloss,
+        state: targetGloss.state,
+      })),
+    [targetGlossesQuery.data]
+  );
+
+  const approveAllGlossesMutation = useMutation({
+    mutationFn: async () => {
+      if (glossesAsDisplayed) {
+        const data = Object.fromEntries(
+          glossesAsDisplayed
+            .filter(
+              ({ glossAsDisplayed, state }) =>
+                glossAsDisplayed !== undefined &&
+                state === GlossState.Unapproved
+            )
+            .map(({ wordId, glossAsDisplayed }) => [
+              wordId,
+              { gloss: glossAsDisplayed, state: GlossState.Approved },
+            ])
+        );
+        await apiClient.languages.bulkUpdateGlosses(language, {
+          data,
+        });
+      }
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries(['verse-glosses', language, verseId]);
+      flash.success(t('translate:all_glosses_approved'));
+    },
+  });
+
   return (
     <div className="absolute w-full h-full flex flex-col flex-grow">
       <TranslationToolbar
+        canApproveAllGlosses={
+          !approveAllGlossesMutation.isLoading &&
+          !!glossesAsDisplayed?.some(
+            ({ glossAsDisplayed, state }) =>
+              glossAsDisplayed && state === GlossState.Unapproved
+          )
+        }
+        approveAllGlosses={approveAllGlossesMutation.mutate}
         verseId={verseId}
         languageCode={language}
         languages={translationLanguages.map(({ code, name }) => ({
