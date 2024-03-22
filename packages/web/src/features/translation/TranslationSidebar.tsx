@@ -17,6 +17,7 @@ import {
   parseReferenceRange,
   generateReference,
 } from './verse-utils';
+import { createPortal } from 'react-dom';
 
 type TranslationSidebarProps = {
   className: string;
@@ -128,6 +129,9 @@ export const TranslationSidebar = ({
   } ${chapterNumber}:${verseNumber}`;
 
   const lexiconEntryRef = useRef<HTMLDivElement>(null);
+  const [previewElement, setPreviewElement] = useState<HTMLDivElement | null>(
+    null
+  );
 
   useEffect(() => {
     const { current } = lexiconEntryRef;
@@ -151,12 +155,8 @@ export const TranslationSidebar = ({
         previewElement.style.padding = '16px';
         previewElement.style.backgroundColor = '#ffffff80';
         previewElement.style.float = 'left';
-        // TODO: set contents using portal
-        previewElement.innerText = generateReference(
-          parseVerseId(verseIds[0]),
-          t
-        );
         element.insertAdjacentElement('afterend', previewElement);
+        setPreviewElement(previewElement);
       };
     });
   }, [bdbCurrentVerseRef, lexiconEntry, t]);
@@ -221,6 +221,8 @@ export const TranslationSidebar = ({
                       __html: DOMPurify.sanitize(lexiconEntry),
                     }}
                   />
+                  {previewElement !== null &&
+                    createPortal(<p>Hello from React!</p>, previewElement)}
                 </div>
               )}
             </Tab.Panel>
