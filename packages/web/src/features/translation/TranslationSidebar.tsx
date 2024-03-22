@@ -18,6 +18,7 @@ import {
   generateReference,
 } from './verse-utils';
 import { createPortal } from 'react-dom';
+import { VersesPreview } from './VersesPreview';
 
 type TranslationSidebarProps = {
   className: string;
@@ -132,6 +133,7 @@ export const TranslationSidebar = ({
   const [previewElement, setPreviewElement] = useState<HTMLDivElement | null>(
     null
   );
+  const [previewVerseIds, setPreviewVerseIds] = useState<string[]>([]);
 
   useEffect(() => {
     const { current } = lexiconEntryRef;
@@ -146,7 +148,7 @@ export const TranslationSidebar = ({
         oldPreview?.remove();
 
         const reference = element.getAttribute('data-ref') ?? '';
-        const verseIds = parseReferenceRange(reference, t);
+        setPreviewVerseIds(parseReferenceRange(reference, t));
 
         const previewElement = document.createElement('div');
         previewElement.id = 'ref-preview';
@@ -222,7 +224,10 @@ export const TranslationSidebar = ({
                     }}
                   />
                   {previewElement !== null &&
-                    createPortal(<p>Hello from React!</p>, previewElement)}
+                    createPortal(
+                      <VersesPreview verseIds={previewVerseIds} />,
+                      previewElement
+                    )}
                 </div>
               )}
             </Tab.Panel>
