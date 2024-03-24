@@ -58,6 +58,16 @@ export interface PostInviteRequestBody {
   password: string;
 }
 
+export interface PostForgotPasswordRequestBody {
+  email: string;
+}
+
+export interface PostResetPasswordRequestBody {
+  email: string;
+  password: string;
+  token: string;
+}
+
 export interface GetUsersResponseBody {
   data: {
     id: string;
