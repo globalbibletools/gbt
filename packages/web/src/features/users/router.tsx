@@ -7,7 +7,7 @@ import { authorize } from '../../shared/accessControl';
 import UpdateProfileView from './UpdateProfileView';
 import EmailVerificationView from './EmailVerificationView';
 import ForgotPasswordView from './ForgotPasswordView';
-import ResetPasswordView from './ResetPasswordView';
+import ResetPasswordView, { resetPasswordLoader } from './ResetPasswordView';
 
 export const userAdminRoutes: RouteObject[] = [
   {
@@ -39,5 +39,9 @@ export const userModalRoutes: RouteObject[] = [
     element: <EmailVerificationView />,
   },
   { path: 'forgot-password', element: <ForgotPasswordView /> },
-  { path: 'reset-password', element: <ResetPasswordView /> },
+  {
+    path: 'reset-password',
+    loader: resetPasswordLoader(queryClient),
+    element: <ResetPasswordView />,
+  },
 ];

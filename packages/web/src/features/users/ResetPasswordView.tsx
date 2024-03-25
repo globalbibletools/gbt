@@ -10,8 +10,37 @@ import apiClient from '../../shared/apiClient';
 import { ApiClientError } from '@translation/api-client';
 import Form from '../../shared/components/form/Form';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
+import {
+  LoaderFunctionArgs,
+  useLoaderData,
+  useNavigate,
+  useSearchParams,
+} from 'react-router-dom';
 import useAuth from '../../shared/hooks/useAuth';
+import { QueryClient, useQuery } from '@tanstack/react-query';
+
+const createResetPasswordQuery = (token?: string) => ({
+  queryKey: ['reset-password', token],
+  queryFn: () => apiClient.auth.getResetPasswordToken(token ?? ''),
+});
+
+export const resetPasswordLoader =
+  (queryClient: QueryClient) =>
+  ({ request }: LoaderFunctionArgs) => {
+    const url = new URL(request.url);
+    const token = url.searchParams.get('token') ?? undefined;
+    return queryClient.ensureQueryData(createResetPasswordQuery(token));
+  };
+
+const useResetPasswordTokenQuery = (token?: string) => {
+  const initialData = useLoaderData() as Awaited<
+    ReturnType<ReturnType<typeof resetPasswordLoader>>
+  >;
+  return useQuery({
+    ...createResetPasswordQuery(token),
+    initialData,
+  });
+};
 
 export default function ResetPasswordView() {
   const { refreshAuth } = useAuth();
@@ -20,15 +49,19 @@ export default function ResetPasswordView() {
   const flash = useFlash();
   const formContext = useForm<{ newPassword: string }>();
 
+  const [search] = useSearchParams();
+  const token = search.get('token') ?? undefined;
+
+  const { data: resetPasswordToken } = useResetPasswordTokenQuery(token);
+
   async function onSubmit({ newPassword }: { newPassword: string }) {
     try {
       await apiClient.auth.resetPassword({
-        email: 'tycebrown247@gmail.com',
         password: newPassword,
-        token: '1A2434ZF8U',
+        token: token ?? '',
       });
       await apiClient.auth.login({
-        email: 'tycebrown247@gmail.com',
+        email: resetPasswordToken.email,
         password: newPassword,
       });
       refreshAuth();
