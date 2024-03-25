@@ -72,6 +72,28 @@ session:
                               type: string
                               enum: ['ADMIN', 'TRANSLATOR']
 invite:
+  get:
+    summary: Get an invite
+    tags:
+      - Authentication
+    parameters:
+      - name: token
+        in: query
+        description: the single use token
+    responses:
+      200:
+        description: Ok
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    email:
+                      type: string
+                      example: 'joe@example.com'
   post:
     summary: Accept an invite
     tags:
@@ -117,32 +139,6 @@ forgot-password:
       204:
         description: No Content
 reset-password:
-  get:
-    summary: Get a reset password token
-    tags:
-      - Authentication
-    requestBody:
-      required: true
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              token:
-                type: string
-                example: 37ec201b62a952e9a8421564
-                description: A single use token
-    responses:
-      200:
-        description: Ok
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                email:
-                  type: string
-                  example: 'joe@example.com'
   post:
     summary: Reset the password and delete the created token
     tags:
