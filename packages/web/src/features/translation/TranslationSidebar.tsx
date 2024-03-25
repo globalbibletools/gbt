@@ -226,6 +226,7 @@ export const TranslationSidebar = ({
                   {previewElement !== null &&
                     createPortal(
                       <VersesPreview
+                        language={language}
                         verseIds={previewVerseIds}
                         onClose={() => {
                           setPreviewVerseIds([]);

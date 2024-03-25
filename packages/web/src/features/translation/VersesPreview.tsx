@@ -1,11 +1,61 @@
+import { useQuery } from '@tanstack/react-query';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { generateReference, parseVerseId } from './verse-utils';
+import apiClient from '../../shared/apiClient';
+import bibleTranslationClient from '../../shared/bibleTranslationClient';
 import { Icon } from '../../shared/components/Icon';
-import { useState, useEffect } from 'react';
+import { generateReference, parseVerseId } from './verse-utils';
+import { expandFontFamily } from '../../shared/hooks/useFontLoader';
+import { TextDirection } from '@translation/api-types';
 
-type VersesPreviewProps = { verseIds: string[]; onClose: () => void };
+type VersesPreviewProps = {
+  language: string;
+  verseIds: string[];
+  onClose: () => void;
+};
 
-export const VersesPreview = ({ verseIds, onClose }: VersesPreviewProps) => {
+function usePreviewQueries(
+  language: string,
+  getContent: boolean,
+  verseIds: string[]
+) {
+  const languagesQuery = useQuery(['languages'], () =>
+    apiClient.languages.findAll()
+  );
+  const translationLanguages = languagesQuery.data?.data ?? [];
+  const selectedLanguage = translationLanguages.find(
+    (l) => l.code === language
+  );
+
+  const translationQuery = useQuery(
+    ['verse-translation', language, verseIds.join(','), getContent],
+    () =>
+      getContent
+        ? Promise.all(
+            verseIds.map(
+              (verseId) =>
+                bibleTranslationClient.getTranslation(
+                  verseId,
+                  selectedLanguage?.bibleTranslationIds ?? []
+                ),
+              { enabled: !!selectedLanguage }
+            )
+          )
+        : null
+  );
+
+  return {
+    translationLanguages,
+    selectedLanguage,
+    translationQuery,
+  };
+}
+
+export const VersesPreview = ({
+  language,
+  verseIds,
+  onClose,
+}: VersesPreviewProps) => {
   const { t } = useTranslation(['common', 'bible']);
   const [title, setTitle] = useState('');
   const [isValid, setIsValid] = useState(false);
@@ -23,7 +73,12 @@ export const VersesPreview = ({ verseIds, onClose }: VersesPreviewProps) => {
       setTitle(t('common:not_found') ?? '');
       setIsValid(false);
     }
-  });
+  }, [verseIds, t]);
+
+  const { translationLanguages, selectedLanguage, translationQuery } =
+    usePreviewQueries(language, isValid, verseIds);
+
+  console.log(translationQuery.data);
   return (
     <div>
       <div className="flex ltr:flex-row rtl:flex-row-reverse items-center justify-between">
@@ -37,6 +92,21 @@ export const VersesPreview = ({ verseIds, onClose }: VersesPreviewProps) => {
           <span className="sr-only">{t('common:close')}</span>
         </button>
       </div>
+      {isValid &&
+        translationQuery.data &&
+        translationQuery.data.map((verseContent) => (
+          <p
+            className="mx-2 text-base"
+            dir={selectedLanguage?.textDirection ?? TextDirection.LTR}
+            style={{
+              fontFamily: expandFontFamily(
+                selectedLanguage?.font ?? 'Noto Sans'
+              ),
+            }}
+          >
+            <span>{verseContent?.translation}</span>
+          </p>
+        ))}
     </div>
   );
 };
