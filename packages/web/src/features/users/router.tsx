@@ -38,7 +38,10 @@ export const userModalRoutes: RouteObject[] = [
     path: 'verify-email',
     element: <EmailVerificationView />,
   },
-  { path: 'forgot-password', element: <ForgotPasswordView /> },
+  {
+    path: 'forgot-password',
+    element: <ForgotPasswordView />,
+  },
   {
     path: 'reset-password',
     element: <ResetPasswordView />,

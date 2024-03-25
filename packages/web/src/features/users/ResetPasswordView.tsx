@@ -52,7 +52,7 @@ export default function ResetPasswordView() {
         className="max-w-[300px] w-full mx-auto"
       >
         <div className="mb-6">
-          <FormLabel htmlFor="password">
+          <FormLabel htmlFor="newPassword">
             {t('users:password').toUpperCase()}
           </FormLabel>
           <TextInput

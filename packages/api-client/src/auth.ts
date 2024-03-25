@@ -5,7 +5,6 @@ import type {
   PostLoginRequest,
   PostForgotPasswordRequestBody,
   PostResetPasswordRequestBody,
-  GetResetPasswordTokenResponseBody,
 } from '@translation/api-types';
 import ApiClient from './client';
 
@@ -46,15 +45,6 @@ export default class Auth {
     await this.client.post({
       path: '/api/auth/invite',
       body: { token, name, password },
-    });
-  }
-
-  getResetPasswordToken(
-    token: string
-  ): Promise<GetResetPasswordTokenResponseBody> {
-    return this.client.get({
-      path: '/api/auth/reset-password',
-      query: { token },
     });
   }
 
