@@ -9,16 +9,18 @@ import apiClient from '../../shared/apiClient';
 import { ApiClientError } from '@translation/api-client';
 import Form from '../../shared/components/form/Form';
 import { useTranslation } from 'react-i18next';
+import useTitle from '../../shared/hooks/useTitle';
 
 export default function ForgotPasswordView() {
-  const { t } = useTranslation();
+  const { t } = useTranslation(['users']);
+  useTitle(t('common:tab_titles.forgot_password'));
   const flash = useFlash();
-  const formContext = useForm<{ email: string }>();
 
+  const formContext = useForm<{ email: string }>();
   async function onSubmit({ email }: { email: string }) {
     try {
       await apiClient.auth.forgotPassword({ email });
-      flash.success(`Link to reset password sent to "${email}"`);
+      flash.success(t('users:reset_password_link_sent', { email }));
     } catch (error) {
       if (error instanceof ApiClientError && error.status === 401) {
         flash.error(t('users:errors.invalid_auth'));
@@ -30,7 +32,7 @@ export default function ForgotPasswordView() {
 
   return (
     <ModalView className="max-w-[480px] w-full">
-      <ModalViewTitle>Forgot Password?</ModalViewTitle>
+      <ModalViewTitle>{t('users:forgot_password')}</ModalViewTitle>
       <Form
         context={formContext}
         onSubmit={onSubmit}
@@ -57,7 +59,9 @@ export default function ForgotPasswordView() {
             }}
           />
         </div>
-        <SubmitButton className="w-full">Reset Password</SubmitButton>
+        <SubmitButton className="w-full">
+          {t('users:reset_password')}
+        </SubmitButton>
       </Form>
     </ModalView>
   );

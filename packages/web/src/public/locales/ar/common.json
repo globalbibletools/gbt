@@ -35,6 +35,7 @@
   "saved": "تم الحفظ",
   "tab_titles": {
     "accept_invite": "قبول دعوة",
+    "forgot_password": "هل نسيت كلمة السر",
     "import_glosses": "استيراد {{languageName}} لمعان",
     "interlinear": "{{languageName}} مراوح",
     "invite_language_member": "دعوة عضو اللغة",
@@ -43,6 +44,7 @@
     "login": "تسجيل الدخول",
     "manage_language": "إدارة {{languageName}}",
     "new_language": "إنشاء لغة",
+    "reset_password": "إعادة تعيين كلمة المرور",
     "update_profile": "الملف الشخصي",
     "users": "المستخدمون",
     "verify_email": "التحقق من البريد الإلكتروني"

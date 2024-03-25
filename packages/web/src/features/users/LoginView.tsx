@@ -82,7 +82,7 @@ export default function LoginView() {
               className="italic text-xs"
               to={'/forgot-password'}
             >
-              Forgot Password?
+              {t('users:forgot_password')}
             </Button>
           </div>
           <TextInput

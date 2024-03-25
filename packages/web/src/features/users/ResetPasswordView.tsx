@@ -16,6 +16,7 @@ import {
   useSearchParams,
 } from 'react-router-dom';
 import useAuth from '../../shared/hooks/useAuth';
+import useTitle from '../../shared/hooks/useTitle';
 import { QueryClient, useQuery } from '@tanstack/react-query';
 
 const createResetPasswordQuery = (token?: string) => ({
@@ -42,17 +43,20 @@ const useResetPasswordTokenQuery = (token?: string) => {
 };
 
 export default function ResetPasswordView() {
+  const { t } = useTranslation(['users', 'common']);
+  useTitle(t('common:tab_titles.reset_password'));
+
   const { refreshAuth } = useAuth();
-  const navigate = useNavigate();
-  const { t } = useTranslation();
-  const flash = useFlash();
-  const formContext = useForm<{ newPassword: string }>();
 
   const [search] = useSearchParams();
   const token = search.get('token') ?? undefined;
 
   const { data: resetPasswordToken } = useResetPasswordTokenQuery(token);
 
+  const navigate = useNavigate();
+  const flash = useFlash();
+
+  const formContext = useForm<{ newPassword: string }>();
   async function onSubmit({ newPassword }: { newPassword: string }) {
     try {
       await apiClient.auth.resetPassword({
@@ -76,7 +80,7 @@ export default function ResetPasswordView() {
 
   return (
     <ModalView className="max-w-[480px] w-full">
-      <ModalViewTitle>New Password</ModalViewTitle>
+      <ModalViewTitle>{t('users:new_password')}</ModalViewTitle>
       <Form
         context={formContext}
         onSubmit={onSubmit}
@@ -103,7 +107,7 @@ export default function ResetPasswordView() {
             }}
           />
         </div>
-        <SubmitButton className="w-full">Submit</SubmitButton>
+        <SubmitButton className="w-full">{t('common:confirm')}</SubmitButton>
       </Form>
     </ModalView>
   );

@@ -35,6 +35,7 @@
   "success": "Éxito",
   "tab_titles": {
     "accept_invite": "Aceptar invitación",
+    "forgot_password": "Olvidar la contraseña",
     "import_glosses": "Importar {{languageName}} glosas",
     "interlinear": "{{languageName}} Interlineal",
     "invite_language_member": "Invitar miembro lingüístico",
@@ -43,6 +44,7 @@
     "login": "Iniciar sesión",
     "manage_language": "Administrar {{languageName}}",
     "new_language": "Crear idioma",
+    "reset_password": "Restablecer la contraseña",
     "update_profile": "Perfil",
     "users": "Usuarios",
     "verify_email": "Verificar correo electrónico"

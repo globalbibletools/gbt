@@ -34,6 +34,7 @@
   "saved": "Saved",
   "tab_titles": {
     "accept_invite": "Accept Invite",
+    "forgot_password": "Forgot Password",
     "import_glosses": "Import {{languageName}} Glosses",
     "interlinear": "{{languageName}} Interlinear",
     "invite_language_member": "Invite Language Member",
@@ -42,6 +43,7 @@
     "login": "Login",
     "manage_language": "Manage {{languageName}}",
     "new_language": "Create Language",
+    "reset_password": "Reset Password",
     "update_profile": "Profile",
     "users": "Users",
     "verify_email": "Verify Email"
