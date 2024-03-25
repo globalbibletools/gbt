@@ -1,5 +1,4 @@
 import ModalView, { ModalViewTitle } from '../../shared/components/ModalView';
-import Button from '../../shared/components/actions/Button';
 import FormLabel from '../../shared/components/form/FormLabel';
 import InputError from '../../shared/components/form/InputError';
 import SubmitButton from '../../shared/components/form/SubmitButton';

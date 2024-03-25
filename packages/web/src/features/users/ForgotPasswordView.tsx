@@ -1,6 +1,4 @@
-import { t } from 'i18next';
 import ModalView, { ModalViewTitle } from '../../shared/components/ModalView';
-import Button from '../../shared/components/actions/Button';
 import FormLabel from '../../shared/components/form/FormLabel';
 import InputError from '../../shared/components/form/InputError';
 import SubmitButton from '../../shared/components/form/SubmitButton';
@@ -10,8 +8,10 @@ import { useFlash } from '../../shared/hooks/flash';
 import apiClient from '../../shared/apiClient';
 import { ApiClientError } from '@translation/api-client';
 import Form from '../../shared/components/form/Form';
+import { useTranslation } from 'react-i18next';
 
 export default function ForgotPasswordView() {
+  const { t } = useTranslation();
   const flash = useFlash();
   const formContext = useForm<{ email: string }>();
 

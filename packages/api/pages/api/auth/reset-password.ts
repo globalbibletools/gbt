@@ -16,11 +16,11 @@ export default createRoute()
     schema: z.object({ token: z.string() }),
     async handler(req, res) {
       const resetPasswordToken = await client.resetPasswordToken.findUnique({
-        where: { token: req.query.token },
+        where: { token: req.body.token },
         include: { user: { select: { email: true } } },
       });
 
-      if (!resetPasswordToken) {
+      if (!resetPasswordToken || resetPasswordToken.expires < Date.now()) {
         throw new InvalidTokenError();
       }
 
@@ -44,7 +44,7 @@ export default createRoute()
         where: { id: resetPasswordToken.userId },
       });
       if (!user) {
-        return res.notFound();
+        throw new InvalidTokenError();
       }
 
       await client.$transaction([
