@@ -9,38 +9,9 @@ import apiClient from '../../shared/apiClient';
 import { ApiClientError } from '@translation/api-client';
 import Form from '../../shared/components/form/Form';
 import { useTranslation } from 'react-i18next';
-import {
-  LoaderFunctionArgs,
-  useLoaderData,
-  useNavigate,
-  useSearchParams,
-} from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import useAuth from '../../shared/hooks/useAuth';
 import useTitle from '../../shared/hooks/useTitle';
-import { QueryClient, useQuery } from '@tanstack/react-query';
-
-const createResetPasswordQuery = (token?: string) => ({
-  queryKey: ['reset-password', token],
-  queryFn: () => apiClient.auth.getResetPasswordToken(token ?? ''),
-});
-
-export const resetPasswordLoader =
-  (queryClient: QueryClient) =>
-  ({ request }: LoaderFunctionArgs) => {
-    const url = new URL(request.url);
-    const token = url.searchParams.get('token') ?? undefined;
-    return queryClient.ensureQueryData(createResetPasswordQuery(token));
-  };
-
-const useResetPasswordTokenQuery = (token?: string) => {
-  const initialData = useLoaderData() as Awaited<
-    ReturnType<ReturnType<typeof resetPasswordLoader>>
-  >;
-  return useQuery({
-    ...createResetPasswordQuery(token),
-    initialData,
-  });
-};
 
 export default function ResetPasswordView() {
   const { t } = useTranslation(['users', 'common']);
@@ -51,8 +22,6 @@ export default function ResetPasswordView() {
   const [search] = useSearchParams();
   const token = search.get('token') ?? undefined;
 
-  const { data: resetPasswordToken } = useResetPasswordTokenQuery(token);
-
   const navigate = useNavigate();
   const flash = useFlash();
 
@@ -62,10 +31,6 @@ export default function ResetPasswordView() {
       await apiClient.auth.resetPassword({
         password: newPassword,
         token: token ?? '',
-      });
-      await apiClient.auth.login({
-        email: resetPasswordToken.email,
-        password: newPassword,
       });
       refreshAuth();
       navigate('/');

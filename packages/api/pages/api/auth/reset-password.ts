@@ -1,32 +1,13 @@
 import * as z from 'zod';
 import createRoute from '../../../shared/Route';
 import { client } from '../../../shared/db';
-import {
-  GetResetPasswordTokenRequestQuery,
-  GetResetPasswordTokenResponseBody,
-  PostResetPasswordRequestBody,
-} from '@translation/api-types';
+import { PostResetPasswordRequestBody } from '@translation/api-types';
 import { Scrypt } from 'oslo/password';
 import { InvalidTokenError } from '../../../shared/errors';
 
 const scrypt = new Scrypt();
 
 export default createRoute()
-  .get<GetResetPasswordTokenRequestQuery, GetResetPasswordTokenResponseBody>({
-    schema: z.object({ token: z.string() }),
-    async handler(req, res) {
-      const resetPasswordToken = await client.resetPasswordToken.findUnique({
-        where: { token: req.body.token },
-        include: { user: { select: { email: true } } },
-      });
-
-      if (!resetPasswordToken || resetPasswordToken.expires < Date.now()) {
-        throw new InvalidTokenError();
-      }
-
-      res.ok({ email: resetPasswordToken.user.email });
-    },
-  })
   .post<PostResetPasswordRequestBody, void>({
     schema: z.object({
       token: z.string(),
@@ -54,6 +35,9 @@ export default createRoute()
         }),
         client.resetPasswordToken.delete({ where: { token: req.body.token } }),
       ]);
+
+      await res.login(user.id);
+
       return res.ok();
     },
   })
