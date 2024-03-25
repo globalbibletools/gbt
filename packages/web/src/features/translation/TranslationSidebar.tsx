@@ -154,7 +154,7 @@ export const TranslationSidebar = ({
         previewElement.id = 'ref-preview';
         previewElement.style.width = 'calc(100% + 32px)';
         previewElement.style.margin = '4px -16px';
-        previewElement.style.padding = '16px';
+        previewElement.style.padding = '8px 16px';
         previewElement.style.backgroundColor = '#ffffff80';
         previewElement.style.float = 'left';
         element.insertAdjacentElement('afterend', previewElement);
@@ -225,7 +225,14 @@ export const TranslationSidebar = ({
                   />
                   {previewElement !== null &&
                     createPortal(
-                      <VersesPreview verseIds={previewVerseIds} />,
+                      <VersesPreview
+                        verseIds={previewVerseIds}
+                        onClose={() => {
+                          setPreviewVerseIds([]);
+                          setPreviewElement(null);
+                          previewElement.remove();
+                        }}
+                      />,
                       previewElement
                     )}
                 </div>
