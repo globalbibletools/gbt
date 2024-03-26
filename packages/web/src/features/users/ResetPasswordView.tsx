@@ -25,7 +25,10 @@ export default function ResetPasswordView() {
   const navigate = useNavigate();
   const flash = useFlash();
 
-  const formContext = useForm<{ newPassword: string }>();
+  const formContext = useForm<{
+    newPassword: string;
+    confirmNewPassword: string;
+  }>();
   async function onSubmit({ newPassword }: { newPassword: string }) {
     try {
       await apiClient.auth.resetPassword({
@@ -71,6 +74,29 @@ export default function ResetPasswordView() {
               required: t('users:errors.password_required'),
             }}
           />
+          <div className="mb-4">
+            <FormLabel htmlFor="confirm-new-password">
+              {t('users:confirm_password').toUpperCase()}
+            </FormLabel>
+            <TextInput
+              {...formContext.register('confirmNewPassword', {
+                validate: {
+                  confirms: (value: unknown) =>
+                    value === formContext.getValues().newPassword,
+                },
+              })}
+              type="password"
+              id="confirm-new-password"
+              className="w-full"
+              autoComplete="new-password"
+              aria-describedby="confirm-password-error"
+            />
+            <InputError
+              id="confirm-password-error"
+              name="confirmNewPassword"
+              messages={{ confirms: t('users:errors.password_confirmation') }}
+            />
+          </div>
         </div>
         <SubmitButton className="w-full">{t('common:confirm')}</SubmitButton>
       </Form>
