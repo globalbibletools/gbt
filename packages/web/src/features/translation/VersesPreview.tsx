@@ -7,6 +7,7 @@ import { Icon } from '../../shared/components/Icon';
 import { generateReference, parseVerseId } from './verse-utils';
 import { expandFontFamily } from '../../shared/hooks/useFontLoader';
 import { TextDirection } from '@translation/api-types';
+import LoadingSpinner from '../../shared/components/LoadingSpinner';
 
 type VersesPreviewProps = {
   language: string;
@@ -92,6 +93,12 @@ export const VersesPreview = ({
           <span className="sr-only">{t('common:close')}</span>
         </button>
       </div>
+      {isValid && translationQuery.isLoading && (
+        <div>
+          {' '}
+          <LoadingSpinner className="mx-auto" />
+        </div>
+      )}
       {isValid &&
         translationQuery.data &&
         translationQuery.data.map((verseContent) => (
