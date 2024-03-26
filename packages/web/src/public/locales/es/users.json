@@ -21,7 +21,7 @@
     "user_exists": "Ya existe un usuario con correo electrónico \"{{email}}\""
   },
   "first_name": "Nombre",
-  "forgot_password": "¿Olvidó la contraseña?",
+  "forgot_password": "Olvidó la contraseña",
   "invitation": "Invitación",
   "invite": "Invitar",
   "invite_user": "Invitar Usuario",

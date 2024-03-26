@@ -13,7 +13,7 @@ import useTitle from '../../shared/hooks/useTitle';
 
 export default function ForgotPasswordView() {
   const { t } = useTranslation(['users']);
-  useTitle(t('common:tab_titles.forgot_password'));
+  useTitle(t('users:forgot_password'));
   const flash = useFlash();
 
   const formContext = useForm<{ email: string }>();

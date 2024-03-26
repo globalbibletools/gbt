@@ -15,7 +15,7 @@ import useTitle from '../../shared/hooks/useTitle';
 
 export default function ResetPasswordView() {
   const { t } = useTranslation(['users', 'common']);
-  useTitle(t('common:tab_titles.reset_password'));
+  useTitle(t('users:reset_password'));
 
   const { refreshAuth } = useAuth();
 

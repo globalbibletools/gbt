@@ -21,7 +21,7 @@
     "user_exists": "يوجد مستخدم بالبريد الإلكتروني \"{{email}}\" بالفعل."
   },
   "first_name": "الاسم الأول",
-  "forgot_password": "هل نسيت كلمة السر؟",
+  "forgot_password": "هل نسيت كلمة السر",
   "invitation": "دعوة",
   "invite": "دعوة",
   "invite_user": "دعوة مستخدم",
