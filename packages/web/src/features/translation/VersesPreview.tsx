@@ -28,26 +28,38 @@ function usePreviewQueries(
     (l) => l.code === language
   );
 
+  const originalLanguageQuery = useQuery(
+    ['verse', verseIds.join(','), getContent],
+    () =>
+      getContent
+        ? Promise.all(
+            verseIds.map(async (verseId) =>
+              (await apiClient.verses.findById(verseId)).data.words
+                .map((w) => w.text)
+                .join(' ')
+            )
+          )
+        : null
+  );
+
   const translationQuery = useQuery(
     ['verse-translation', language, verseIds.join(','), getContent],
     () =>
       getContent
         ? Promise.all(
-            verseIds.map(
-              (verseId) =>
-                bibleTranslationClient.getTranslation(
-                  verseId,
-                  selectedLanguage?.bibleTranslationIds ?? []
-                ),
-              { enabled: !!selectedLanguage }
+            verseIds.map((verseId) =>
+              bibleTranslationClient.getTranslation(
+                verseId,
+                selectedLanguage?.bibleTranslationIds ?? []
+              )
             )
           )
         : null
   );
 
   return {
-    translationLanguages,
     selectedLanguage,
+    originalLanguageQuery,
     translationQuery,
   };
 }
@@ -77,7 +89,7 @@ export const VersesPreview = ({
     }
   }, [verseIds, t]);
 
-  const { translationLanguages, selectedLanguage, translationQuery } =
+  const { selectedLanguage, originalLanguageQuery, translationQuery } =
     usePreviewQueries(language, isValid, verseIds);
 
   console.log(translationQuery.data);
@@ -100,6 +112,7 @@ export const VersesPreview = ({
           <LoadingSpinner className="mx-auto" />
         </div>
       )}
+      {/* TODO: use original language data */}
       {isValid &&
         translationQuery.data &&
         translationQuery.data.map((verseContent) => (
