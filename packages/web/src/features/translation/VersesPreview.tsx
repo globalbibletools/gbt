@@ -70,7 +70,8 @@ export const VersesPreview = ({
             : '')
       );
       setIsValid(true);
-    } catch {
+    } catch (e) {
+      console.error(e);
       setTitle(t('common:not_found') ?? '');
       setIsValid(false);
     }
