@@ -14,6 +14,7 @@
     "email_required": "Por favor ingrese su dirección de correo electrónico.",
     "invalid_auth": "Tu correo electrónico o contraseña no son válidos.",
     "name_required": "Ingrese su nombre",
+    "no_reset_password_token": "Error, no se proporcionó ningún token para restablecer la contraseña; el enlace está roto.",
     "password_confirmation": "La confirmación de su contraseña no coincide.",
     "password_format": "Su contraseña debe tener al menos 8 caracteres.",
     "password_required": "Por favor ingrese su contraseña.",

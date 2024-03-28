@@ -14,6 +14,7 @@
     "email_required": "Please input your email address.",
     "invalid_auth": "Your email or password are invalid.",
     "name_required": "Please input your name",
+    "no_reset_password_token": "Error, no reset password token provided; link is broken.",
     "password_confirmation": "Your password confirmation does not match.",
     "password_format": "Your password should be at least 8 characters.",
     "password_required": "Please input your password.",

@@ -6,12 +6,12 @@ import TextInput from '../../shared/components/form/TextInput';
 import { useForm } from 'react-hook-form';
 import { useFlash } from '../../shared/hooks/flash';
 import apiClient from '../../shared/apiClient';
-import { ApiClientError } from '@translation/api-client';
 import Form from '../../shared/components/form/Form';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import useAuth from '../../shared/hooks/useAuth';
 import useTitle from '../../shared/hooks/useTitle';
+import { useEffect } from 'react';
 
 export default function ResetPasswordView() {
   const { t } = useTranslation(['users', 'common']);
@@ -20,10 +20,17 @@ export default function ResetPasswordView() {
   const { refreshAuth } = useAuth();
 
   const [search] = useSearchParams();
-  const token = search.get('token') ?? undefined;
+  const token = search.get('token') ?? '';
 
   const navigate = useNavigate();
   const flash = useFlash();
+
+  useEffect(() => {
+    if (!token) {
+      navigate('/');
+      flash.error(t('users:errors.no_reset_password_token'));
+    }
+  }, [token, flash, navigate, t]);
 
   const formContext = useForm<{
     newPassword: string;
@@ -33,7 +40,7 @@ export default function ResetPasswordView() {
     try {
       await apiClient.auth.resetPassword({
         password: newPassword,
-        token: token ?? '',
+        token,
       });
       refreshAuth();
       navigate('/');
