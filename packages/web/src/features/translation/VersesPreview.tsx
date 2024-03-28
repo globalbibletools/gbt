@@ -30,13 +30,16 @@ function usePreviewQueries(
 
   const originalLanguageQuery = useQuery(
     ['verse', verseIds.join(','), getContent],
-    () =>
+    async () =>
       getContent
-        ? Promise.all(
-            verseIds.map(async (verseId) =>
-              (await apiClient.verses.findById(verseId)).data.words
-                .map((w) => w.text)
-                .join(' ')
+        ? Object.fromEntries(
+            await Promise.all(
+              verseIds.map(async (verseId) => [
+                verseId,
+                (await apiClient.verses.findById(verseId)).data.words
+                  .map((w) => w.text)
+                  .join(' '),
+              ])
             )
           )
         : null
@@ -44,14 +47,17 @@ function usePreviewQueries(
 
   const translationQuery = useQuery(
     ['verse-translation', language, verseIds.join(','), getContent],
-    () =>
+    async () =>
       getContent
-        ? Promise.all(
-            verseIds.map((verseId) =>
-              bibleTranslationClient.getTranslation(
+        ? Object.fromEntries(
+            await Promise.all(
+              verseIds.map(async (verseId) => [
                 verseId,
-                selectedLanguage?.bibleTranslationIds ?? []
-              )
+                await bibleTranslationClient.getTranslation(
+                  verseId,
+                  selectedLanguage?.bibleTranslationIds ?? []
+                ),
+              ])
             )
           )
         : null
@@ -92,7 +98,6 @@ export const VersesPreview = ({
   const { selectedLanguage, originalLanguageQuery, translationQuery } =
     usePreviewQueries(language, isValid, verseIds);
 
-  console.log(translationQuery.data);
   return (
     <div>
       <div className="flex ltr:flex-row rtl:flex-row-reverse items-center justify-between">
@@ -106,27 +111,32 @@ export const VersesPreview = ({
           <span className="sr-only">{t('common:close')}</span>
         </button>
       </div>
-      {isValid && translationQuery.isLoading && (
-        <div>
-          {' '}
-          <LoadingSpinner className="mx-auto" />
-        </div>
-      )}
-      {/* TODO: use original language data */}
       {isValid &&
+        (originalLanguageQuery.isLoading || translationQuery.isLoading) && (
+          <div>
+            <LoadingSpinner className="mx-auto" />
+          </div>
+        )}
+      {isValid &&
+        originalLanguageQuery.data &&
         translationQuery.data &&
-        translationQuery.data.map((verseContent) => (
-          <p
-            className="mx-2 text-base"
-            dir={selectedLanguage?.textDirection ?? TextDirection.LTR}
-            style={{
-              fontFamily: expandFontFamily(
-                selectedLanguage?.font ?? 'Noto Sans'
-              ),
-            }}
-          >
-            <span>{verseContent?.translation}</span>
-          </p>
+        verseIds.map((verseId) => (
+          <div key={verseId} className="mb-4">
+            <p className="mb-2 mx-2 text-base font-mixed">
+              <span>{originalLanguageQuery.data[verseId]}</span>
+            </p>
+            <p
+              className="mx-2 text-base"
+              dir={selectedLanguage?.textDirection ?? TextDirection.LTR}
+              style={{
+                fontFamily: expandFontFamily(
+                  selectedLanguage?.font ?? 'Noto Sans'
+                ),
+              }}
+            >
+              <span>{translationQuery.data[verseId]?.translation}</span>
+            </p>
+          </div>
         ))}
     </div>
   );
