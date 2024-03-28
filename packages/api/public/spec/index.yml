@@ -16,6 +16,10 @@ paths:
     $ref: ./paths/users/auth.yml#session
   /auth/invite:
     $ref: ./paths/users/auth.yml#invite
+  /auth/forgot-password:
+    $ref: ./paths/users/auth.yml#forgot-password
+  /auth/reset-password:
+    $ref: ./paths/users/auth.yml#reset-password
   /users:
     $ref: ./paths/users/users.yml
   /users/{userId}:

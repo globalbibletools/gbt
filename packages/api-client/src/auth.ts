@@ -3,6 +3,8 @@ import type {
   GetSessionResponse,
   PostInviteRequestBody,
   PostLoginRequest,
+  PostForgotPasswordRequestBody,
+  PostResetPasswordRequestBody,
 } from '@translation/api-types';
 import ApiClient from './client';
 
@@ -43,6 +45,25 @@ export default class Auth {
     await this.client.post({
       path: '/api/auth/invite',
       body: { token, name, password },
+    });
+  }
+
+  async forgotPassword({
+    email,
+  }: PostForgotPasswordRequestBody): Promise<void> {
+    await this.client.post({
+      path: '/api/auth/forgot-password',
+      body: { email },
+    });
+  }
+
+  async resetPassword({
+    token,
+    password,
+  }: PostResetPasswordRequestBody): Promise<void> {
+    await this.client.post({
+      path: `/api/auth/reset-password`,
+      body: { token, password },
     });
   }
 }

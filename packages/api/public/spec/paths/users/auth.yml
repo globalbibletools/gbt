@@ -118,3 +118,45 @@ invite:
     responses:
       204:
         description: No Content
+forgot-password:
+  post:
+    summary: Used for when the user forgot their password. Creates a ResetPasswordToken from the given email
+    tags:
+      - Authentication
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              email:
+                type: string
+                format: email
+                example: platform_admin@example.com
+                description: The email of the user who forgot their password.
+    responses:
+      204:
+        description: No Content
+reset-password:
+  post:
+    summary: Reset the password and delete the created token
+    tags:
+      - Authentication
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              token:
+                type: string
+                description: A single use token
+                example: a29j3bad34
+              password:
+                type: string
+                example: qwer5678
+    responses:
+      204:
+        description: No Content
