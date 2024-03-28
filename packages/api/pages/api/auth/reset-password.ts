@@ -4,6 +4,7 @@ import { client } from '../../../shared/db';
 import { PostResetPasswordRequestBody } from '@translation/api-types';
 import { Scrypt } from 'oslo/password';
 import { InvalidTokenError } from '../../../shared/errors';
+import mailer from '../../../shared/mailer';
 
 const scrypt = new Scrypt();
 
@@ -35,6 +36,13 @@ export default createRoute()
         }),
         client.resetPasswordToken.delete({ where: { token: req.body.token } }),
       ]);
+
+      await mailer.sendEmail({
+        userId: user.id,
+        subject: 'Password Changed',
+        text: `Your password for Global Bible Tools has changed.`,
+        html: `Your password for Global Bible Tools has changed.`,
+      });
 
       await res.login(user.id);
 
