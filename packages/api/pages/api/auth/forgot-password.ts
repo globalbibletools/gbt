@@ -16,10 +16,8 @@ export default createRoute()
       if (!user) {
         return res.ok();
       }
-      const { token } = await client.resetPasswordToken.upsert({
-        where: { userId: user.id },
-        update: { expires: Date.now() + 60 * 60 * 1000 },
-        create: {
+      const { token } = await client.resetPasswordToken.create({
+        data: {
           userId: user.id,
           token: randomBytes(12).toString('hex'),
           expires: Date.now() + 60 * 60 * 1000,
