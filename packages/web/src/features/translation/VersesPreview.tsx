@@ -122,6 +122,7 @@ export const VersesPreview = ({
         translationQuery.data &&
         verseIds.map((verseId) => (
           <div key={verseId} className="mb-4">
+            {/* TODO: align right for hebrew */}
             <p className="mb-2 mx-2 text-base font-mixed">
               <span>{originalLanguageQuery.data[verseId]}</span>
             </p>
