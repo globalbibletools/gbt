@@ -6,7 +6,6 @@ import TextInput from '../../shared/components/form/TextInput';
 import { useForm } from 'react-hook-form';
 import { useFlash } from '../../shared/hooks/flash';
 import apiClient from '../../shared/apiClient';
-import { ApiClientError } from '@translation/api-client';
 import Form from '../../shared/components/form/Form';
 import { useTranslation } from 'react-i18next';
 import useTitle from '../../shared/hooks/useTitle';

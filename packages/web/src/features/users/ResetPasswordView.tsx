@@ -65,6 +65,7 @@ export default function ResetPasswordView() {
             id="newPassword"
             type="password"
             className="w-full"
+            autoComplete="new-password"
             aria-describedby="password-error"
           />
           <InputError
