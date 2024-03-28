@@ -76,14 +76,6 @@ export default function LoginView() {
             <FormLabel htmlFor="password">
               {t('users:password').toUpperCase()}
             </FormLabel>
-            <Button
-              small
-              variant="tertiary"
-              className="italic text-xs"
-              to={'/forgot-password'}
-            >
-              {t('users:forgot_password')}
-            </Button>
           </div>
           <TextInput
             {...formContext.register('password', {
@@ -103,7 +95,12 @@ export default function LoginView() {
             }}
           />
         </div>
-        <SubmitButton className="w-full">{t('users:log_in')}</SubmitButton>
+        <SubmitButton className="w-full mb-2">{t('users:log_in')}</SubmitButton>
+        <div className="text-center">
+          <Button variant="tertiary" to={'/forgot-password'}>
+            {t('users:forgot_password')}
+          </Button>
+        </div>
       </Form>
     </ModalView>
   );

@@ -38,7 +38,7 @@ export default function ForgotPasswordView() {
         onSubmit={onSubmit}
         className="max-w-[300px] w-full mx-auto"
       >
-        <div className="mb-4">
+        <div className="mb-6">
           <FormLabel htmlFor="email">
             {t('users:email').toUpperCase()}
           </FormLabel>
