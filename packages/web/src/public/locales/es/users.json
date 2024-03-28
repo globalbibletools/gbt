@@ -33,7 +33,7 @@
   "profile": "Perfil",
   "profile_updated": "¡Perfil actualizado con éxito!",
   "reset_password": "Cambiar la contraseña",
-  "reset_password_link_sent": "Enlace para restablecer la contraseña enviado a \"{{email}}\"",
+  "reset_password_link_sent": "Por favor, revise su correo electrónico para restablecer su contraseña",
   "role": "Role",
   "role_admin": "Administrador",
   "role_other": "Roles",

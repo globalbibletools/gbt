@@ -14,7 +14,7 @@ export default createRoute()
         where: { email: req.body.email },
       });
       if (!user) {
-        return res.notFound();
+        return res.ok();
       }
       const { token } = await client.resetPasswordToken.upsert({
         where: { userId: user.id },
