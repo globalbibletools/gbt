@@ -38,11 +38,7 @@ export default function ResetPasswordView() {
       refreshAuth();
       navigate('/');
     } catch (error) {
-      if (error instanceof ApiClientError && error.status === 401) {
-        flash.error(t('users:errors.invalid_auth'));
-      } else {
-        flash.error(`${error}`);
-      }
+      flash.error(`${error}`);
     }
   }
 
