@@ -22,11 +22,7 @@ export default function ForgotPasswordView() {
       await apiClient.auth.forgotPassword({ email });
       flash.success(t('users:reset_password_link_sent', { email }));
     } catch (error) {
-      if (error instanceof ApiClientError && error.status === 401) {
-        flash.error(t('users:errors.invalid_auth'));
-      } else {
-        flash.error(`${error}`);
-      }
+      flash.error(`${error}`);
     }
   }
 
