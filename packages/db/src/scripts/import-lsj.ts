@@ -43,12 +43,11 @@ function toMarkDown(raw: string): string {
       .replaceAll('</Level3>', '')
       .replaceAll('</Level4>', '')
       .replaceAll('<lb />', '')
-      .replaceAll(/<ref=".*">/g, '')
-      .replaceAll(/<ref='.*'>/g, '')
-      .replaceAll('</ref>', '')
-      .replaceAll(/\[?<a[^>]*>/g, '')
       .replaceAll('</a>]', '')
       .replaceAll('</a>', '')
+      .replaceAll(/\[?<a[^>]*>/g, '')
+      .replaceAll(/<ref=".*?">(.*?)<\/ref>/g, replaceRef)
+      .replaceAll(/<ref='.*?'>(.*?)<\/ref>/g, replaceRef)
       .replaceAll('<date>', '')
       .replaceAll('</date>', '')
       // We wrap all greek text in a span so we can control its style separately.
@@ -62,6 +61,33 @@ function toMarkDown(raw: string): string {
       )
   );
 }
+
+// TODO: unit test this function.
+const replaceRef = (_match: string, overallRef: string) => {
+  const refs = overallRef.split(' ');
+  let currentBook = '';
+  let currentChapter = '';
+  const outputRefs: string[] = [];
+  for (const ref of refs) {
+    const split = ref.split(/[.]|:/g).filter((s) => s != '');
+    let fullRef;
+    if (split.length == 1) {
+      // Prepend the current book and chapter
+      fullRef = currentBook + '.' + currentChapter + ':' + ref;
+    } else if (split.length == 2) {
+      currentChapter = split[0];
+      // Prepend the current book
+      fullRef = currentBook + '.' + ref;
+    } else if (split.length == 3) {
+      currentBook = split[0];
+      currentChapter = split[1];
+      // The ref is good as-is
+      fullRef = ref;
+    }
+    outputRefs.push(`<a class="ref" data-ref="${fullRef}">${ref}</a>`);
+  }
+  return outputRefs.join(' ');
+};
 
 async function importLSJ() {
   console.log(`Importing LSJ definitions...`);
