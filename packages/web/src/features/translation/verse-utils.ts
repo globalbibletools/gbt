@@ -36,7 +36,8 @@ export function verseCount(bookId: number, chapterNumber: number): number {
  * @returns true when the verse ID comes from an Old Testament book, false otherwise.
  */
 export function isOldTestament(verseId: string): boolean {
-  return parseVerseId(verseId).bookId < 40;
+  const matthewBookId = 40;
+  return parseVerseId(verseId).bookId < matthewBookId;
 }
 
 /**
