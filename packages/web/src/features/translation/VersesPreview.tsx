@@ -78,10 +78,14 @@ export const VersesPreview = ({
   const { t } = useTranslation(['common', 'bible']);
   const [title, setTitle] = useState('');
   const [isValid, setIsValid] = useState(false);
+  const [isHebrew, setIsHebrew] = useState(false);
+
   useEffect(() => {
     try {
+      const firstVerse = parseVerseId(verseIds[0]);
+      setIsHebrew(firstVerse.bookId < 40);
       setTitle(
-        generateReference(parseVerseId(verseIds[0]), t) +
+        generateReference(firstVerse, t) +
           (verseIds.length > 1
             ? ' - ' +
               generateReference(parseVerseId(verseIds[verseIds.length - 1]), t)
@@ -122,8 +126,11 @@ export const VersesPreview = ({
         translationQuery.data &&
         verseIds.map((verseId) => (
           <div key={verseId} className="mb-4">
-            {/* TODO: align right for hebrew */}
-            <p className="mb-2 mx-2 text-base font-mixed">
+            <p
+              className={`mb-2 mx-2 text-base font-mixed ${
+                isHebrew ? 'text-right' : 'text-left'
+              }`}
+            >
               <span>{originalLanguageQuery.data[verseId]}</span>
             </p>
             <p
