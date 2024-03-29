@@ -31,6 +31,15 @@ export function verseCount(bookId: number, chapterNumber: number): number {
 }
 
 /**
+ * Check if the verse ID comes from an Old Testament book.
+ * @param verseId The verse ID to check, in the form BBCCCVVV.
+ * @returns true when the verse ID comes from an Old Testament book, false otherwise.
+ */
+export function isOldTestament(verseId: string): boolean {
+  return parseVerseId(verseId).bookId < 40;
+}
+
+/**
  * Parse a verse ID of form BBCCCVVV.
  * BB - `bookId`
  * CCC - `chapterNumber`
