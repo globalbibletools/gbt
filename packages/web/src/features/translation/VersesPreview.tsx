@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import apiClient from '../../shared/apiClient';
 import bibleTranslationClient from '../../shared/bibleTranslationClient';
 import { Icon } from '../../shared/components/Icon';
-import { generateReference, parseVerseId } from './verse-utils';
+import { generateReference, isOldTestament, parseVerseId } from './verse-utils';
 import { expandFontFamily } from '../../shared/hooks/useFontLoader';
 import { TextDirection } from '@translation/api-types';
 import LoadingSpinner from '../../shared/components/LoadingSpinner';
@@ -82,10 +82,9 @@ export const VersesPreview = ({
 
   useEffect(() => {
     try {
-      const firstVerse = parseVerseId(verseIds[0]);
-      setIsHebrew(firstVerse.bookId < 40);
+      setIsHebrew(isOldTestament(verseIds[0]));
       setTitle(
-        generateReference(firstVerse, t) +
+        generateReference(parseVerseId(verseIds[0]), t) +
           (verseIds.length > 1
             ? ' - ' +
               generateReference(parseVerseId(verseIds[verseIds.length - 1]), t)
