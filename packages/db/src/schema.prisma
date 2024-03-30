@@ -177,6 +177,8 @@ model Word {
   translatorNotes TranslatorNote[]
   // The list of footnotes in different languages for this word.
   footnotes       Footnote[]
+  /// The list of phrases this word is connected to in different languages.
+  phrases         PhraseWord[]
 
   @@index([formId])
 }
@@ -240,6 +242,8 @@ model Language {
   roles               LanguageMemberRole[]
   /// The pending import job if any.
   importJob           LanguageImportJob?
+  /// The phrases in this language.
+  phrases             Phrase[]
 }
 
 /// Keeps track of a language import job.
@@ -282,6 +286,38 @@ model LanguageMemberRole {
   @@id([languageId, userId, role])
 }
 
+// A phrase connects one or more words into a single unit for a single language.
+model Phrase {
+  id         Int      @id @default(autoincrement())
+  /// The language the phrase belongs to.
+  language   Language @relation(fields: [languageId], references: [id])
+  /// The ID of the language the phrase belongs to.
+  languageId String   @db.Uuid
+
+  /// The list of words in the phrase.
+  words          PhraseWord[]
+  /// The gloss for the phrase
+  gloss          Gloss?
+  /// The translator note for the phrase.
+  translatorNote TranslatorNote?
+  /// The footnote for the phrase.
+  footnote       Footnote?
+}
+
+// Connects one or more words to a phrase in a language.
+model PhraseWord {
+  /// The phrase the word is in.
+  phrase   Phrase @relation(fields: [phraseId], references: [id], onDelete: Cascade)
+  /// The ID of the phrase the word is in.
+  phraseId Int
+  /// The word being connecte to a phrase.
+  word     Word   @relation(fields: [wordId], references: [id])
+  /// The ID of the word being connecte to a phrase.
+  wordId   String
+
+  @@id([phraseId, wordId])
+}
+
 enum GlossState {
   APPROVED
   UNAPPROVED
@@ -301,6 +337,10 @@ model Gloss {
   gloss      String?
   /// The approval state of the gloss.
   state      GlossState @default(UNAPPROVED)
+  /// The phrase the gloss applies to.
+  phrase     Phrase?    @relation(fields: [phraseId], references: [id])
+  /// The ID of phrase the gloss applies to.
+  phraseId   Int?       @unique
 
   @@id([wordId, languageId])
 }
@@ -391,6 +431,10 @@ model TranslatorNote {
   timestamp  DateTime
   /// The content of the note.
   content    String
+  /// The phrase the note applies to.
+  phrase     Phrase?  @relation(fields: [phraseId], references: [id])
+  /// The ID of phrase the note applies to.
+  phraseId   Int?     @unique
 
   @@id([wordId, languageId])
 }
@@ -413,6 +457,10 @@ model Footnote {
   timestamp  DateTime
   /// The content of the note.
   content    String
+  /// The phrase the note applies to.
+  phrase     Phrase?  @relation(fields: [phraseId], references: [id])
+  /// The ID of phrase the note applies to.
+  phraseId   Int?     @unique
 
   @@id([wordId, languageId])
 }
