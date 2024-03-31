@@ -33,7 +33,11 @@ export default createRoute<{ code: string; wordId: string }>()
         return;
       }
 
-      const fields: { gloss?: string; state?: PrismaTypes.GlossState } = {};
+      const fields: {
+        gloss?: string;
+        state?: PrismaTypes.GlossState;
+        phraseId?: number;
+      } = {};
 
       if (typeof req.body.state !== 'undefined') {
         fields.state = req.body.state;
@@ -47,40 +51,70 @@ export default createRoute<{ code: string; wordId: string }>()
         }
       }
 
-      const originalGloss = await client.gloss.findUnique({
-        where: {
-          wordId_languageId: {
-            wordId: req.query.wordId,
+      await client.$transaction(async (tx) => {
+        let phrase = await tx.phrase.findFirst({
+          where: {
             languageId: language.id,
+            words: {
+              some: {
+                wordId: req.query.wordId,
+              },
+            },
           },
-        },
-      });
-      await client.gloss.upsert({
-        where: {
-          wordId_languageId: {
-            wordId: req.query.wordId,
-            languageId: language.id,
+          select: {
+            id: true,
           },
-        },
-        update: fields,
-        create: {
-          ...fields,
-          wordId: req.query.wordId,
-          languageId: language.id,
-        },
-      });
+        });
+        if (!phrase) {
+          phrase = await tx.phrase.create({
+            data: {
+              languageId: language.id,
+              words: {
+                create: [{ wordId: req.query.wordId }],
+              },
+            },
+            select: {
+              id: true,
+            },
+          });
+        }
+        fields.phraseId = phrase.id;
 
-      await client.glossHistoryEntry.create({
-        data: {
-          wordId: req.query.wordId,
-          languageId: language.id,
-          userId: req.session?.user?.id,
-          gloss:
-            fields.gloss !== originalGloss?.gloss ? fields.gloss : undefined,
-          state:
-            fields.state !== originalGloss?.state ? fields.state : undefined,
-          source: GlossSource.User,
-        },
+        const originalGloss = await tx.gloss.findUnique({
+          where: {
+            wordId_languageId: {
+              wordId: req.query.wordId,
+              languageId: language.id,
+            },
+          },
+        });
+        await tx.gloss.upsert({
+          where: {
+            wordId_languageId: {
+              wordId: req.query.wordId,
+              languageId: language.id,
+            },
+          },
+          update: fields,
+          create: {
+            ...fields,
+            wordId: req.query.wordId,
+            languageId: language.id,
+          },
+        });
+
+        await tx.glossHistoryEntry.create({
+          data: {
+            wordId: req.query.wordId,
+            languageId: language.id,
+            userId: req.session?.user?.id,
+            gloss:
+              fields.gloss !== originalGloss?.gloss ? fields.gloss : undefined,
+            state:
+              fields.state !== originalGloss?.state ? fields.state : undefined,
+            source: GlossSource.User,
+          },
+        });
       });
 
       res.ok();
