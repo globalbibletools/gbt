@@ -111,6 +111,31 @@ export const lambdaHandler = async (event: SQSEvent) => {
             })),
           });
 
+          const phrases = await client.$queryRaw<{ id: number }[]>`
+            INSERT INTO "Phrase" ("languageId")
+            SELECT ${language.id}::uuid FROM generate_series(1,${glossData.length})
+            RETURNING id
+          `;
+          for (const i in glossData) {
+            glossData[i].phraseId = phrases[i].id;
+          }
+
+          await client.phraseWord.createMany({
+            data: glossData.map((word) => ({
+              wordId: word.wordId,
+              phraseId: word.phraseId,
+            })),
+          });
+
+          await client.gloss.createMany({
+            data: glossData.map((word) => ({
+              wordId: word.wordId,
+              languageId: language.id,
+              gloss: word.gloss,
+              phraseId: word.phraseId,
+            })),
+          });
+
           const job = await client.languageImportJob.findUnique({
             where: { languageId: language.id },
           });
