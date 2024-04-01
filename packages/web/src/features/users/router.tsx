@@ -6,6 +6,8 @@ import queryClient from '../../shared/queryClient';
 import { authorize } from '../../shared/accessControl';
 import UpdateProfileView from './UpdateProfileView';
 import EmailVerificationView from './EmailVerificationView';
+import ForgotPasswordView from './ForgotPasswordView';
+import ResetPasswordView from './ResetPasswordView';
 
 export const userAdminRoutes: RouteObject[] = [
   {
@@ -35,5 +37,13 @@ export const userModalRoutes: RouteObject[] = [
   {
     path: 'verify-email',
     element: <EmailVerificationView />,
+  },
+  {
+    path: 'forgot-password',
+    element: <ForgotPasswordView />,
+  },
+  {
+    path: 'reset-password',
+    element: <ResetPasswordView />,
   },
 ];

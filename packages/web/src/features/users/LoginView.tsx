@@ -12,6 +12,7 @@ import TextInput from '../../shared/components/form/TextInput';
 import { useFlash } from '../../shared/hooks/flash';
 import useAuth from '../../shared/hooks/useAuth';
 import useTitle from '../../shared/hooks/useTitle';
+import Button from '../../shared/components/actions/Button';
 
 interface FormData {
   email: string;
@@ -71,9 +72,11 @@ export default function LoginView() {
           />
         </div>
         <div className="mb-6">
-          <FormLabel htmlFor="password">
-            {t('users:password').toUpperCase()}
-          </FormLabel>
+          <div className="flex flex-row justify-between">
+            <FormLabel htmlFor="password">
+              {t('users:password').toUpperCase()}
+            </FormLabel>
+          </div>
           <TextInput
             {...formContext.register('password', {
               required: true,
@@ -92,7 +95,12 @@ export default function LoginView() {
             }}
           />
         </div>
-        <SubmitButton className="w-full">{t('users:log_in')}</SubmitButton>
+        <SubmitButton className="w-full mb-2">{t('users:log_in')}</SubmitButton>
+        <div className="text-center">
+          <Button variant="tertiary" to={'/forgot-password'}>
+            {t('users:forgot_password')}
+          </Button>
+        </div>
       </Form>
     </ModalView>
   );

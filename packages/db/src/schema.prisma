@@ -53,6 +53,8 @@ model User {
   footnotes          Footnote[]
   /// An invitation for the user.
   invitation         UserInvitation?
+  /// The password reset tokens connected to this user.
+  passwordResetToken ResetPasswordToken[]
 
   @@map("User")
 }
@@ -79,6 +81,17 @@ model UserInvitation {
   /// The token used to verify the invitation
   token   String @id
   /// The date the invitation token is no longer valid
+  expires BigInt
+}
+
+model ResetPasswordToken {
+  /// The id of the user who is resetting their password
+  userId  String @db.Uuid
+  /// The user who is resetting their password.
+  user    User   @relation(references: [id], fields: [userId], onDelete: Cascade)
+  /// The token used to verify the reset password action
+  token   String @id
+  /// The date this token is no longer valid
   expires BigInt
 }
 
