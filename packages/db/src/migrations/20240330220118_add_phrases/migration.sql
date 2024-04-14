@@ -30,11 +30,6 @@ CREATE TABLE "PhraseWord" (
 
     CONSTRAINT "PhraseWord_pkey" PRIMARY KEY ("phraseId","wordId")
 );
--- DropForeignKey
-ALTER TABLE "PhraseWord" DROP CONSTRAINT "PhraseWord_phraseId_fkey";
-
--- AddForeignKey
-ALTER TABLE "PhraseWord" ADD CONSTRAINT "PhraseWord_phraseId_fkey" FOREIGN KEY ("phraseId") REFERENCES "Phrase"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Footnote_phraseId_key" ON "Footnote"("phraseId");
