@@ -76,27 +76,24 @@ export const VersesPreview = ({
   onClose,
 }: VersesPreviewProps) => {
   const { t } = useTranslation(['common', 'bible']);
-  const [title, setTitle] = useState('');
-  const [isValid, setIsValid] = useState(false);
-  const [isHebrew, setIsHebrew] = useState(false);
+  let title = '';
+  let isValid = false;
+  let isHebrew = false;
 
-  useEffect(() => {
-    try {
-      setIsHebrew(isOldTestament(verseIds[0]));
-      setTitle(
-        generateReference(parseVerseId(verseIds[0]), t) +
-          (verseIds.length > 1
-            ? ' - ' +
-              generateReference(parseVerseId(verseIds[verseIds.length - 1]), t)
-            : '')
-      );
-      setIsValid(true);
-    } catch (e) {
-      console.error(e);
-      setTitle(t('common:not_found') ?? '');
-      setIsValid(false);
-    }
-  }, [verseIds, t]);
+  try {
+    isHebrew = isOldTestament(verseIds[0]);
+    title =
+      generateReference(parseVerseId(verseIds[0]), t) +
+      (verseIds.length > 1
+        ? ' - ' +
+          generateReference(parseVerseId(verseIds[verseIds.length - 1]), t)
+        : '');
+    isValid = true;
+  } catch (e) {
+    console.error(e);
+    title = t('common:not_found') ?? '';
+    isValid = false;
+  }
 
   const { selectedLanguage, originalLanguageQuery, translationQuery } =
     usePreviewQueries(language, isValid, verseIds);
