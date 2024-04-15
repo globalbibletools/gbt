@@ -216,7 +216,6 @@ export function parseReference(reference: string, t: TFunction): string | null {
  */
 export function parseReferenceRange(reference: string, t: TFunction): string[] {
   const results = reference.split('-');
-  console.log(results);
   const base = parseReference(results[0], t);
   if (base == null) {
     return [];
