@@ -96,14 +96,22 @@ export default createRoute<{ code: string; verseId: string }>()
       }
 
       const words = await client.$queryRaw<WordQuery[]>`
-        SELECT w.id AS "wordId", t_g.gloss AS "gloss", t_g.state AS "state", r_g.gloss AS "refGloss", ma.gloss AS "machineGloss", suggestion.suggestions AS "suggestions"
+        SELECT
+          w.id AS "wordId",
+          target.gloss AS "gloss", target.state AS "state",
+          ref.gloss AS "refGloss",
+          ma.gloss AS "machineGloss",
+          suggestion.suggestions AS "suggestions"
         FROM "Word" AS w
 
         LEFT JOIN (
-          SELECT id AS form_id, array_agg(gloss ORDER BY count DESC) AS "suggestions" FROM (
+          SELECT
+            id AS form_id,
+            array_agg(gloss ORDER BY count DESC) AS "suggestions"
+          FROM (
             SELECT form.id, g.gloss, COUNT(1) FROM (
-              SELECT DISTINCT ON(w."formId") w."formId" AS id FROM "Word" AS w
-              WHERE w."verseId" = ${req.query.verseId}
+              SELECT DISTINCT ON(wd."formId") wd."formId" AS id FROM "Word" AS wd
+              WHERE wd."verseId" = ${req.query.verseId}
             ) AS form
             JOIN "Word" AS w ON w."formId" = form.id
             JOIN "PhraseWord" AS phw ON phw."wordId" = w.id
@@ -116,18 +124,24 @@ export default createRoute<{ code: string; verseId: string }>()
           GROUP BY id
         ) AS suggestion ON suggestion.form_id = w."formId"
 
-        LEFT JOIN "PhraseWord" AS t_phw ON t_phw."wordId" = w.id
-        LEFT JOIN "Phrase" AS t_ph ON t_ph.id = t_phw."phraseId"
-          AND t_ph."languageId" = ${language.id}::uuid
-        LEFT JOIN "Gloss" AS t_g ON t_g."phraseId" = t_ph.id
+        LEFT JOIN LATERAL (
+          SELECT phw."wordId", g.gloss, g.state FROM "PhraseWord" AS phw
+          JOIN "Phrase" AS ph ON ph.id = phw."phraseId"
+            AND ph."languageId" = ${language.id}::uuid
+          JOIN "Gloss" AS g ON g."phraseId" = ph.id
+          WHERE phw."wordId" = w.id
+        ) AS target ON true
 
-        LEFT JOIN "PhraseWord" AS r_phw ON r_phw."wordId" = w.id
-        LEFT JOIN "Phrase" AS r_ph ON r_ph.id = r_phw."phraseId"
-        LEFT JOIN "Language" AS r_l ON r_l.id = r_ph."languageId" AND r_l.code = 'eng'
-        LEFT JOIN "Gloss" AS r_g ON r_g."phraseId" = r_ph.id
+        LEFT JOIN LATERAL (
+          SELECT phw."wordId", g.gloss FROM "PhraseWord" AS phw
+          JOIN "Phrase" AS ph ON ph.id = phw."phraseId"
+          JOIN "Language" AS l ON l.id = ph."languageId" AND l.code = 'eng'
+          JOIN "Gloss" AS g ON g."phraseId" = ph.id
+          WHERE phw."wordId" = w.id
+        ) AS ref ON true
 
         LEFT JOIN "MachineGloss" AS ma ON ma."wordId" = w.id
-          AND ma."languageId" = ${language.id}::uuid
+          AND ma."languageId" = '018bba77-bbea-1edf-c38a-d72521f05821'::uuid
 
         WHERE w."verseId" = ${req.query.verseId}
         ORDER BY w.id
