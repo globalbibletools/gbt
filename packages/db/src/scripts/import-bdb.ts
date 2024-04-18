@@ -320,7 +320,8 @@ function processEntry(entry: string): string {
       // Remove hrefs from hyperlinks
       .replaceAll(/href=".*?"/g, '')
       // Add ref class so refs can be handled for previews
-      .replaceAll('<a', '<a class="ref"')
+      .replaceAll(/<a data-ref=".*?"\s+>(.*?)<\/a>/g, replaceRef)
+      .replaceAll(/<a data-ref='.*?'\s+>(.*?)<\/a>/g, replaceRef)
       // Fix various prefixes in refs
       .replaceAll('data-ref="Psalms', 'data-ref="Psalm')
       .replaceAll('data-ref="II', 'data-ref="2')
@@ -336,6 +337,14 @@ function processEntry(entry: string): string {
       )
   );
 }
+
+// TODO: unit test this function.
+const replaceRef = (_match: string, overallRef: string) => {
+  console.log('MATCH:', _match);
+  console.log('overallRef:', overallRef);
+  const ref = overallRef;
+  return `<a class="ref" data-ref="${ref}">${ref}</a>`;
+};
 
 async function run() {
   await client.lemmaResource.deleteMany({
@@ -375,6 +384,12 @@ async function run() {
   console.log(`Creating BDB entries...`);
   await client.lemmaResource.createMany({
     data: data.map((d) => {
+      if (d!.strongs == 'H0430') {
+        console.log('=====');
+        console.log(d!.strongs);
+        console.log('---');
+        console.log(d!.entry!.content);
+      }
       return {
         lemmaId: d!.strongs,
         content: processEntry(d!.entry!.content),
