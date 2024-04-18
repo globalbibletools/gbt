@@ -20,13 +20,10 @@ function usePreviewQueries(
   getContent: boolean,
   verseIds: string[]
 ) {
-  const languagesQuery = useQuery(['languages'], () =>
-    apiClient.languages.findAll()
+  const languagesQuery = useQuery(['language', language], () =>
+    apiClient.languages.findByCode(language)
   );
-  const translationLanguages = languagesQuery.data?.data ?? [];
-  const selectedLanguage = translationLanguages.find(
-    (l) => l.code === language
-  );
+  const selectedLanguage = languagesQuery.data?.data;
 
   const originalLanguageQuery = useQuery(
     ['verse', verseIds.join(','), getContent],
