@@ -310,7 +310,7 @@ model PhraseWord {
   phrase   Phrase @relation(fields: [phraseId], references: [id], onDelete: Cascade)
   /// The ID of the phrase the word is in.
   phraseId Int
-  /// The word being connecte to a phrase.
+  /// The word being connected to a phrase.
   word     Word   @relation(fields: [wordId], references: [id])
   /// The ID of the word being connecte to a phrase.
   wordId   String
