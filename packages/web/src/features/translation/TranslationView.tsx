@@ -142,6 +142,7 @@ export default function TranslationView() {
   );
 
   const [sidebarWordIndex, setSidebarWordIndex] = useState(0);
+  const [sidebarTabIndex, setSidebarTabIndex] = useState(0);
   const [showSidebar, setShowSidebar] = useState(true);
 
   useEffect(() => {
@@ -465,6 +466,9 @@ export default function TranslationView() {
                         }}
                         onFocus={() => setSidebarWordIndex(i)}
                         onShowDetail={() => setShowSidebar(true)}
+                        onOpenNotes={() => {
+                          setSidebarTabIndex(1);
+                        }}
                         ref={(() => {
                           if (i === 0) {
                             return firstWord;
@@ -507,6 +511,8 @@ export default function TranslationView() {
                   language={language}
                   verse={verse}
                   wordIndex={sidebarWordIndex}
+                  tabIndex={sidebarTabIndex}
+                  setTabIndex={setSidebarTabIndex}
                   showComments={commentsEnabled}
                   onClose={() => setShowSidebar(false)}
                 />

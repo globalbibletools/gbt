@@ -19,6 +19,8 @@ type TranslationSidebarProps = {
   language: string;
   verse: Verse;
   wordIndex: number;
+  tabIndex: number;
+  setTabIndex: (newIndex: number) => void;
   showComments: boolean;
   onClose: () => void;
 };
@@ -27,6 +29,8 @@ export const TranslationSidebar = ({
   language,
   verse,
   wordIndex,
+  tabIndex,
+  setTabIndex,
   showComments,
   className = '',
   onClose,
@@ -158,7 +162,7 @@ export const TranslationSidebar = ({
         </div>
       </div>
       <div className="grow flex flex-col min-h-0">
-        <Tab.Group>
+        <Tab.Group selectedIndex={tabIndex} onChange={setTabIndex}>
           <Tab.List className="flex flex-row">
             <div className="border-b border-blue-800 h-full w-2"></div>
             {tabTitles.map((title) => (

@@ -14,6 +14,10 @@ import { capitalize } from '../../shared/utils';
 import AutocompleteInput from '../../shared/components/form/AutocompleteInput';
 import { TextDirection } from '@translation/api-types';
 import Button from '../../shared/components/actions/Button';
+import { useAccessControl } from '../../shared/accessControl';
+import { useParams } from 'react-router-dom';
+import apiClient from '../../shared/apiClient';
+import { useQuery } from '@tanstack/react-query';
 
 export interface TranslateWordProps {
   editable?: boolean;
@@ -28,6 +32,7 @@ export interface TranslateWordProps {
   onChange(data: { gloss?: string; approved?: boolean }): void;
   onFocus?: () => void;
   onShowDetail?: () => void;
+  onOpenNotes?: () => void;
 }
 
 export interface TranslateWordRef {
@@ -49,10 +54,16 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
       onChange,
       onFocus,
       onShowDetail,
+      onOpenNotes,
     }: TranslateWordProps,
     ref
   ) => {
     const { t, i18n } = useTranslation(['translate']);
+    const params = useParams() as {
+      language: string;
+      verseId: string;
+    };
+    const userCan = useAccessControl();
     const input = useRef<HTMLInputElement>(null);
 
     const root = useRef<HTMLLIElement>(null);
@@ -70,6 +81,10 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
       glossValue ?? ''
     );
     const hasMachineSuggestion = !gloss && !suggestions[0] && !!machineGloss;
+    const notesQuery = useQuery(
+      ['verse-translator-notes', params.language, params.verseId],
+      () => apiClient.verses.findNotes(params.verseId, params.language)
+    );
 
     const glossWidth = useTextWidth({
       text: glossValue ?? '',
@@ -107,6 +122,22 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
           <span className="inline-block" ref={ancientWord}>
             {word.text}
           </span>
+          <Button
+            className={
+              notesQuery.data?.data?.footnotes[word.id].content ||
+              (notesQuery.data?.data?.translatorNotes[word.id].content &&
+                userCan('read', { type: 'Language', id: params.language }))
+                ? ''
+                : 'hidden'
+            }
+            small
+            variant="tertiary"
+            onClick={() => {
+              onOpenNotes?.();
+            }}
+          >
+            <Icon icon="sticky-note" />
+          </Button>
         </div>
         <div
           className={`h-8 ${
