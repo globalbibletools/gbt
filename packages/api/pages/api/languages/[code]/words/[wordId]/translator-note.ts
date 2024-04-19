@@ -28,25 +28,43 @@ export default createRoute<{ code: string; wordId: string }>()
         throw Error('No session user.');
       }
 
-      const fields = {
-        timestamp: new Date(),
-        authorId: req.session.user.id,
-        content: req.body.note,
-      };
-      await client.translatorNote.upsert({
-        where: {
-          wordId_languageId: {
-            wordId: req.query.wordId,
-            languageId: language.id,
-          },
-        },
-        update: fields,
-        create: {
-          ...fields,
-          wordId: req.query.wordId,
-          languageId: language.id,
-        },
-      });
+      const timestamp = new Date();
+      await client.$executeRaw`
+        WITH phrase AS (
+          SELECT "phraseId", "wordId" FROM "PhraseWord"
+          JOIN "Phrase" ON "Phrase".id = "PhraseWord"."phraseId"
+          WHERE "PhraseWord"."wordId" = ${req.query.wordId}
+            AND "Phrase"."languageId" = ${language.id}::uuid
+        ),
+        new_phrase AS (
+          INSERT INTO "Phrase" ("languageId")
+          SELECT ${language.id}::uuid
+          WHERE NOT EXISTS (SELECT * FROM phrase)
+          RETURNING "id"
+        ),
+        new_phrase_word AS (
+          INSERT INTO "PhraseWord" ("phraseId", "wordId")
+          SELECT new_phrase.id, ${req.query.wordId}
+          FROM new_phrase
+          RETURNING "phraseId", "wordId"
+        ),
+        upsert_phrase AS (
+          (SELECT * FROM phrase) UNION (SELECT * FROM new_phrase_word)
+        )
+        INSERT INTO "TranslatorNote" ("wordId", "languageId", "phraseId", "content", "authorId", "timestamp")
+        SELECT
+          ${req.query.wordId},
+          ${language.id}::uuid,
+          upsert_phrase."phraseId",
+          ${req.body.note},
+          ${req.session.user.id}::uuid,
+          ${timestamp}
+        FROM upsert_phrase
+        ON CONFLICT ("phraseId") DO UPDATE SET
+          "content" = ${req.body.note},
+          "authorId" = ${req.session.user.id}::uuid,
+          "timestamp" = ${timestamp}
+      `;
 
       res.ok();
     },
