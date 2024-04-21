@@ -30,6 +30,7 @@ import {
 import { isFlagEnabled } from '../../shared/featureFlags';
 import useTitle from '../../shared/hooks/useTitle';
 import { useFlash } from '../../shared/hooks/flash';
+import { RichTextInputRef } from '../../shared/components/form/RichTextInput';
 
 export const translationLanguageKey = 'translation-language';
 export const translationVerseIdKey = 'translation-verse-id';
@@ -355,6 +356,8 @@ export default function TranslationView() {
     },
   });
 
+  const notesEditorRef = useRef<RichTextInputRef>(null);
+
   return (
     <div className="absolute w-full h-full flex flex-col flex-grow">
       <TranslationToolbar
@@ -399,6 +402,7 @@ export default function TranslationView() {
           });
 
           const isHebrew = bookId < 40;
+
           return (
             <div className="flex flex-col flex-grow w-full min-h-0 gap-6 lg:flex-row">
               <div className="flex flex-col max-h-full min-h-0 gap-8 overflow-auto grow pt-8 pb-10 px-6 lg:pe-0 lg:ps-8">
@@ -468,6 +472,7 @@ export default function TranslationView() {
                         onShowDetail={() => setShowSidebar(true)}
                         onOpenNotes={() => {
                           setSidebarTabIndex(1);
+                          notesEditorRef.current?.focus();
                         }}
                         ref={(() => {
                           if (i === 0) {
@@ -508,6 +513,7 @@ export default function TranslationView() {
               {showSidebar && sidebarWordIndex < verse.words.length && (
                 <TranslationSidebar
                   className="h-[320px] lg:h-auto lg:w-1/3 lg:min-w-[320px] lg:max-w-[480px] mt-8 mb-10 mx-6 lg:ms-0 lg:me-8"
+                  notesEditorRef={notesEditorRef}
                   language={language}
                   verse={verse}
                   wordIndex={sidebarWordIndex}

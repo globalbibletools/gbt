@@ -3,19 +3,22 @@ import { useQuery } from '@tanstack/react-query';
 import { Verse } from '@translation/api-types';
 import DOMPurify from 'dompurify';
 import { throttle } from 'lodash';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { Ref, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAccessControl } from '../../shared/accessControl';
 import apiClient from '../../shared/apiClient';
 import { Icon } from '../../shared/components/Icon';
 import LoadingSpinner from '../../shared/components/LoadingSpinner';
 import RichText from '../../shared/components/RichText';
-import RichTextInput from '../../shared/components/form/RichTextInput';
+import RichTextInput, {
+  RichTextInputRef,
+} from '../../shared/components/form/RichTextInput';
 import { bdbBookRefNames } from 'data/bdb-book-ref-names';
 import { parseVerseId } from './verse-utils';
 
 type TranslationSidebarProps = {
   className: string;
+  notesEditorRef?: Ref<RichTextInputRef>;
   language: string;
   verse: Verse;
   wordIndex: number;
@@ -26,6 +29,7 @@ type TranslationSidebarProps = {
 };
 
 export const TranslationSidebar = ({
+  notesEditorRef,
   language,
   verse,
   wordIndex,
@@ -221,6 +225,7 @@ export const TranslationSidebar = ({
                     )}
                     {canEditNote ? (
                       <RichTextInput
+                        ref={notesEditorRef}
                         key={`translatorNote--${word.id}`}
                         name="translatorNoteContent"
                         value={translatorNoteContent}
