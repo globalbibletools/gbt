@@ -17,6 +17,8 @@ export interface RichTextInputProps {
   defaultValue?: string;
   onChange?: ChangeHandler;
   onBlur?: ChangeHandler;
+  onFocus?: ChangeHandler;
+  autoFocus?: boolean;
   'aria-labelledby'?: string;
   'aria-label'?: string;
 }
@@ -36,7 +38,19 @@ export const extensions = [
 ];
 
 const RichTextInput = forwardRef<RichTextInputRef, RichTextInputProps>(
-  ({ name, onChange, onBlur, value, defaultValue, ...props }, ref) => {
+  (
+    {
+      name,
+      onChange,
+      onBlur,
+      onFocus,
+      autoFocus,
+      value,
+      defaultValue,
+      ...props
+    },
+    ref
+  ) => {
     const { t } = useTranslation(['common']);
     const hiddenInput = useRef<HTMLInputElement>(null);
 
@@ -69,6 +83,9 @@ const RichTextInput = forwardRef<RichTextInputRef, RichTextInputProps>(
           onBlur?.({ target: input });
         }
       },
+      onFocus() {
+        hiddenInput.current && onFocus?.({ target: hiddenInput.current });
+      },
     });
 
     useEffect(() => {
@@ -79,9 +96,17 @@ const RichTextInput = forwardRef<RichTextInputRef, RichTextInputProps>(
 
     useImperativeHandle(
       ref,
-      () => ({ focus: () => editor?.commands.focus() }),
+      () => ({
+        focus: () => {
+          editor?.commands.focus();
+        },
+      }),
       [editor]
     );
+
+    useEffect(() => {
+      if (autoFocus) editor?.commands.focus();
+    }, [autoFocus, editor]);
 
     return (
       <div className="border rounded border-gray-400 has-[:focus-visible]:outline outline-2 outline-green-300 bg-white">

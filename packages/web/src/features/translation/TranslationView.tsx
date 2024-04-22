@@ -18,7 +18,10 @@ import {
   useFontLoader,
 } from '../../shared/hooks/useFontLoader';
 import TranslateWord, { TranslateWordRef } from './TranslateWord';
-import { TranslationSidebar } from './TranslationSidebar';
+import {
+  TranslationSidebar,
+  TranslationSidebarRef,
+} from './TranslationSidebar';
 import { TranslationToolbar } from './TranslationToolbar';
 import {
   bookFirstVerseId,
@@ -30,7 +33,6 @@ import {
 import { isFlagEnabled } from '../../shared/featureFlags';
 import useTitle from '../../shared/hooks/useTitle';
 import { useFlash } from '../../shared/hooks/flash';
-import { RichTextInputRef } from '../../shared/components/form/RichTextInput';
 
 export const translationLanguageKey = 'translation-language';
 export const translationVerseIdKey = 'translation-verse-id';
@@ -143,7 +145,6 @@ export default function TranslationView() {
   );
 
   const [sidebarWordIndex, setSidebarWordIndex] = useState(0);
-  const [sidebarTabIndex, setSidebarTabIndex] = useState(0);
   const [showSidebar, setShowSidebar] = useState(true);
 
   useEffect(() => {
@@ -356,8 +357,7 @@ export default function TranslationView() {
     },
   });
 
-  const notesEditorRef = useRef<RichTextInputRef>(null);
-  const [shouldFocusRef, setShouldFocusRef] = useState(false);
+  const sidebarRef = useRef<TranslationSidebarRef>(null);
 
   return (
     <div className="absolute w-full h-full flex flex-col flex-grow">
@@ -472,8 +472,7 @@ export default function TranslationView() {
                         onFocus={() => setSidebarWordIndex(i)}
                         onShowDetail={() => setShowSidebar(true)}
                         onOpenNotes={() => {
-                          setSidebarTabIndex(1);
-                          setShouldFocusRef(true);
+                          sidebarRef.current?.openNotes();
                         }}
                         ref={(() => {
                           if (i === 0) {
@@ -513,16 +512,11 @@ export default function TranslationView() {
               </div>
               {showSidebar && sidebarWordIndex < verse.words.length && (
                 <TranslationSidebar
+                  ref={sidebarRef}
                   className="h-[320px] lg:h-auto lg:w-1/3 lg:min-w-[320px] lg:max-w-[480px] mt-8 mb-10 mx-6 lg:ms-0 lg:me-8"
-                  notesEditorRef={
-                    (shouldFocusRef || undefined) &&
-                    ((current) => current?.focus() && setShouldFocusRef(false))
-                  }
                   language={language}
                   verse={verse}
                   wordIndex={sidebarWordIndex}
-                  tabIndex={sidebarTabIndex}
-                  setTabIndex={setSidebarTabIndex}
                   showComments={commentsEnabled}
                   onClose={() => setShowSidebar(false)}
                 />
