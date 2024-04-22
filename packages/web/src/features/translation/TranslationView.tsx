@@ -357,6 +357,7 @@ export default function TranslationView() {
   });
 
   const notesEditorRef = useRef<RichTextInputRef>(null);
+  const [shouldFocusRef, setShouldFocusRef] = useState(false);
 
   return (
     <div className="absolute w-full h-full flex flex-col flex-grow">
@@ -472,7 +473,7 @@ export default function TranslationView() {
                         onShowDetail={() => setShowSidebar(true)}
                         onOpenNotes={() => {
                           setSidebarTabIndex(1);
-                          notesEditorRef.current?.focus();
+                          setShouldFocusRef(true);
                         }}
                         ref={(() => {
                           if (i === 0) {
@@ -513,7 +514,10 @@ export default function TranslationView() {
               {showSidebar && sidebarWordIndex < verse.words.length && (
                 <TranslationSidebar
                   className="h-[320px] lg:h-auto lg:w-1/3 lg:min-w-[320px] lg:max-w-[480px] mt-8 mb-10 mx-6 lg:ms-0 lg:me-8"
-                  notesEditorRef={notesEditorRef}
+                  notesEditorRef={
+                    (shouldFocusRef || undefined) &&
+                    ((current) => current?.focus() && setShouldFocusRef(false))
+                  }
                   language={language}
                   verse={verse}
                   wordIndex={sidebarWordIndex}
