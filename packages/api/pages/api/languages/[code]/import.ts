@@ -91,16 +91,16 @@ export default createRoute<{ code: string }>()
         },
       });
 
-      await sqsClient.send(
-        new SendMessageCommand({
-          QueueUrl: process.env.LANGUAGE_IMPORT_QUEUE_URL,
-          MessageGroupId: req.query.code,
-          MessageBody: JSON.stringify({
-            languageCode: req.query.code,
-            importLanguage: req.body.import,
-          }),
-        })
-      );
+      // await sqsClient.send(
+      //   new SendMessageCommand({
+      //     QueueUrl: process.env.LANGUAGE_IMPORT_QUEUE_URL,
+      //     MessageGroupId: req.query.code,
+      //     MessageBody: JSON.stringify({
+      //       languageCode: req.query.code,
+      //       importLanguage: req.body.import,
+      //     }),
+      //   })
+      // );
 
       res.ok();
     },
