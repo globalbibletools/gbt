@@ -163,13 +163,6 @@ export const TranslationSidebar = forwardRef<
       },
     }));
 
-    // useEffect(() => {
-    //   if (tabIndex === 1 && shouldFocusNotesEditor) {
-    //     translatorNotesRef.current?.focus();
-    //     setShouldFocusNotesEditor(false);
-    //   }
-    // }, [shouldFocusNotesEditor, tabIndex]);
-
     return (
       <div
         className={`
@@ -254,14 +247,11 @@ export const TranslationSidebar = forwardRef<
                       )}
                       {canEditNote ? (
                         <RichTextInput
-                          // ref={translatorNotesCallback}
                           autoFocus={translatorNotesAutoFocus}
-                          onFocus={async () => console.log('focusing....')}
                           key={`translatorNote--${word.id}`}
                           name="translatorNoteContent"
                           value={translatorNoteContent}
                           onBlur={async (e) => {
-                            console.log('blurring....');
                             setTranslatorNotesAutoFocus(false);
                             saveTranslatorNote(e.target.value);
                             saveTranslatorNote.flush();
