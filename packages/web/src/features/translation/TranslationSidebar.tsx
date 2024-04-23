@@ -140,11 +140,6 @@ export const TranslationSidebar = forwardRef<
     const bdbCurrentVerseRef = `${
       bdbBookRefNames[bookId - 1]
     } ${chapterNumber}:${verseNumber}`;
-    const lexiconEntryRef = useRef<HTMLDivElement>(null);
-    const [previewElement, setPreviewElement] = useState<HTMLDivElement | null>(
-      null
-    );
-    const [previewVerseIds, setPreviewVerseIds] = useState<string[]>([]);
 
     useEffect(() => {
       const { current } = lexiconEntryRef;
@@ -153,24 +148,6 @@ export const TranslationSidebar = forwardRef<
         ?.querySelectorAll(`a[data-ref="${bdbCurrentVerseRef}"]`)
         .forEach((element) => element.classList.add('bg-yellow-300'));
     }, [bdbCurrentVerseRef, lexiconEntry, t]);
-
-    const openPreview = (anchorElement: HTMLAnchorElement) => {
-      const oldPreview = document.querySelector('#ref-preview');
-      oldPreview?.remove();
-
-      const reference = anchorElement.getAttribute('data-ref') ?? '';
-      setPreviewVerseIds(parseReferenceRange(reference, t));
-
-      const previewElement = document.createElement('div');
-      previewElement.id = 'ref-preview';
-      previewElement.style.width = 'calc(100% + 32px)';
-      previewElement.style.margin = '4px -16px';
-      previewElement.style.padding = '8px 16px';
-      previewElement.style.backgroundColor = '#ffffff80';
-      previewElement.style.float = 'left';
-      anchorElement.insertAdjacentElement('afterend', previewElement);
-      setPreviewElement(previewElement);
-    };
 
     const lexiconEntryRef = useRef<HTMLDivElement>(null);
     const [previewElement, setPreviewElement] = useState<HTMLDivElement | null>(
