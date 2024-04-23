@@ -18,6 +18,9 @@ We use an AWS lambda function to import data from hebrewgreekbible.online to the
    2. Select the language to import from hebrewgreekbible.online.
    3. Click "Import Glosses".
    4. Submit the confirmation dialog.
-4. Run `nx serve lambda-functions` in a terminal to make the lambda functions available on port 3000.
+4. Update `packages/lambda-functions/event.json`
+   1. Set `languageCode` to the language code in your local environment
+   2. Set `importLanguage` to the name of the language on hebrewgreekbible.online
+5. Run `nx serve lambda-functions` to trigger the import language lambda function.
    - The `Failed to parse source map` error is normal and can be safely ignored.
    - You have to restart this every time you make lambda function code changes. Hot reload isn't trivial when running local lambda functions - see [here](https://github.com/aws/aws-sam-cli/issues/901) and [here](https://github.com/aws/aws-sam-cli/issues/921).
