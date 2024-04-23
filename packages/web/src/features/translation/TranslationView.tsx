@@ -476,10 +476,7 @@ export default function TranslationView() {
                         }}
                         onFocus={() => setSidebarWordIndex(i)}
                         onShowDetail={() => setShowSidebar(true)}
-                        onOpenNotes={() => {
-                          setShouldOpenNotes(true);
-                          // sidebarRef.current?.openNotes();
-                        }}
+                        onOpenNotes={() => setShouldOpenNotes(true)}
                         ref={(() => {
                           if (i === 0) {
                             return firstWord;
