@@ -181,14 +181,6 @@ export const TranslationSidebar = forwardRef<
       setPreviewElement(previewElement);
     };
 
-    useEffect(() => {
-      const { current } = lexiconEntryRef;
-      // Highlight references to the currently selected verse
-      current
-        ?.querySelectorAll(`a[data-ref="${bdbCurrentVerseRef}"]`)
-        .forEach((element) => element.classList.add('bg-yellow-300'));
-    }, [bdbCurrentVerseRef, lexiconEntry]);
-
     const [tabIndex, setTabIndex] = useState(0);
     const [translatorNotesAutoFocus, setTranslatorNotesAutoFocus] =
       useState(false);

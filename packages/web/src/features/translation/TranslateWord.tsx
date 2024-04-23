@@ -64,6 +64,10 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
       verseId: string;
     };
     const userCan = useAccessControl();
+    const hasLanguageReadPermissions = userCan('read', {
+      type: 'Language',
+      id: params.language,
+    });
     const input = useRef<HTMLInputElement>(null);
 
     const root = useRef<HTMLLIElement>(null);
@@ -106,6 +110,10 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
       );
     }, [glossWidth, hasMachineSuggestion]);
 
+    const hasTranslatorNote =
+      !!notesQuery.data?.data?.translatorNotes[word.id].content;
+    const hasFootnote = !!notesQuery.data?.data?.footnotes[word.id].content;
+
     return (
       <li ref={root} dir={originalLanguage === 'hebrew' ? 'rtl' : 'ltr'}>
         <div
@@ -124,17 +132,13 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
           </span>
           <Button
             className={
-              notesQuery.data?.data?.footnotes[word.id].content ||
-              (notesQuery.data?.data?.translatorNotes[word.id].content &&
-                userCan('read', { type: 'Language', id: params.language }))
+              hasTranslatorNote || (hasFootnote && hasLanguageReadPermissions)
                 ? ''
                 : 'hidden'
             }
             small
             variant="tertiary"
-            onClick={() => {
-              onOpenNotes?.();
-            }}
+            onClick={onOpenNotes}
           >
             <Icon icon="sticky-note" />
           </Button>
