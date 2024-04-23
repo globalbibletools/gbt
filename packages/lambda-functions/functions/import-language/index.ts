@@ -27,6 +27,11 @@ export const lambdaHandler = async (event: SQSEvent) => {
     if (language) {
       // Delete all the glosses for the language.
       console.log(`deleting glosses ... start`);
+      await client.phrase.deleteMany({
+        where: {
+          languageId: language.id,
+        },
+      });
       await client.gloss.deleteMany({
         where: {
           languageId: language.id,
@@ -44,7 +49,11 @@ export const lambdaHandler = async (event: SQSEvent) => {
           const referenceUrl = `${importServer}/files/${key}.js`;
           const referenceData = await fetchGlossData(referenceUrl);
 
-          const glossData: { wordId: string; gloss: string }[] = [];
+          const glossData: {
+            wordId: string;
+            gloss: string;
+            phraseId: number;
+          }[] = [];
 
           // Accumulate gloss data
           for (
@@ -73,7 +82,7 @@ export const lambdaHandler = async (event: SQSEvent) => {
                   wordNumber.toString().padStart(2, '0'),
                 ].join('');
                 const gloss = verseData[wordIndex][0];
-                glossData.push({ wordId, gloss });
+                glossData.push({ wordId, gloss, phraseId: 0 });
               }
             }
           }
@@ -85,6 +94,31 @@ export const lambdaHandler = async (event: SQSEvent) => {
               languageId: language.id,
               gloss,
               state: GlossState.APPROVED,
+            })),
+          });
+
+          const phrases = await client.$queryRaw<{ id: number }[]>`
+            INSERT INTO "Phrase" ("languageId")
+            SELECT ${language.id}::uuid FROM generate_series(1,${glossData.length})
+            RETURNING id
+          `;
+          for (const i in glossData) {
+            glossData[i].phraseId = phrases[i].id;
+          }
+
+          await client.phraseWord.createMany({
+            data: glossData.map((word) => ({
+              wordId: word.wordId,
+              phraseId: word.phraseId,
+            })),
+          });
+
+          await client.gloss.createMany({
+            data: glossData.map((word) => ({
+              wordId: word.wordId,
+              languageId: language.id,
+              gloss: word.gloss,
+              phraseId: word.phraseId,
             })),
           });
 

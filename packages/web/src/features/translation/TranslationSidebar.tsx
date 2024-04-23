@@ -6,7 +6,6 @@ import { throttle } from 'lodash';
 import {
   Ref,
   forwardRef,
-  useCallback,
   useEffect,
   useImperativeHandle,
   useMemo,
@@ -19,11 +18,11 @@ import apiClient from '../../shared/apiClient';
 import { Icon } from '../../shared/components/Icon';
 import LoadingSpinner from '../../shared/components/LoadingSpinner';
 import RichText from '../../shared/components/RichText';
-import RichTextInput, {
-  RichTextInputRef,
-} from '../../shared/components/form/RichTextInput';
+import RichTextInput from '../../shared/components/form/RichTextInput';
 import { bdbBookRefNames } from 'data/bdb-book-ref-names';
-import { parseVerseId } from './verse-utils';
+import { parseVerseId, parseReferenceRange } from './verse-utils';
+import { createPortal } from 'react-dom';
+import { VersesPreview } from './VersesPreview';
 
 type TranslationSidebarProps = {
   ref?: Ref<TranslationSidebarRef>;
@@ -141,6 +140,37 @@ export const TranslationSidebar = forwardRef<
     const bdbCurrentVerseRef = `${
       bdbBookRefNames[bookId - 1]
     } ${chapterNumber}:${verseNumber}`;
+    const lexiconEntryRef = useRef<HTMLDivElement>(null);
+    const [previewElement, setPreviewElement] = useState<HTMLDivElement | null>(
+      null
+    );
+    const [previewVerseIds, setPreviewVerseIds] = useState<string[]>([]);
+
+    useEffect(() => {
+      const { current } = lexiconEntryRef;
+      // Highlight references to the currently selected verse
+      current
+        ?.querySelectorAll(`a[data-ref="${bdbCurrentVerseRef}"]`)
+        .forEach((element) => element.classList.add('bg-yellow-300'));
+    }, [bdbCurrentVerseRef, lexiconEntry, t]);
+
+    const openPreview = (anchorElement: HTMLAnchorElement) => {
+      const oldPreview = document.querySelector('#ref-preview');
+      oldPreview?.remove();
+
+      const reference = anchorElement.getAttribute('data-ref') ?? '';
+      setPreviewVerseIds(parseReferenceRange(reference, t));
+
+      const previewElement = document.createElement('div');
+      previewElement.id = 'ref-preview';
+      previewElement.style.width = 'calc(100% + 32px)';
+      previewElement.style.margin = '4px -16px';
+      previewElement.style.padding = '8px 16px';
+      previewElement.style.backgroundColor = '#ffffff80';
+      previewElement.style.float = 'left';
+      anchorElement.insertAdjacentElement('afterend', previewElement);
+      setPreviewElement(previewElement);
+    };
 
     const lexiconEntryRef = useRef<HTMLDivElement>(null);
 
@@ -219,10 +249,32 @@ export const TranslationSidebar = forwardRef<
                     <div
                       className="leading-relaxed text-sm font-mixed"
                       ref={lexiconEntryRef}
+                      onClick={(event) => {
+                        const target = event.target as HTMLElement;
+                        if (
+                          target.nodeName === 'A' &&
+                          target.classList.contains('ref')
+                        ) {
+                          openPreview(target as HTMLAnchorElement);
+                        }
+                      }}
                       dangerouslySetInnerHTML={{
                         __html: DOMPurify.sanitize(lexiconEntry),
                       }}
                     />
+                    {previewElement !== null &&
+                      createPortal(
+                        <VersesPreview
+                          language={language}
+                          verseIds={previewVerseIds}
+                          onClose={() => {
+                            setPreviewVerseIds([]);
+                            setPreviewElement(null);
+                            previewElement.remove();
+                          }}
+                        />,
+                        previewElement
+                      )}
                   </div>
                 )}
               </Tab.Panel>
@@ -265,35 +317,39 @@ export const TranslationSidebar = forwardRef<
                       )}
                     </div>
                   )}
-                  <div className="flex flex-col gap-2">
-                    <h2 className="font-bold">{t('translate:footnotes')}</h2>
-                    {hasLanguageReadPermissions && footnote?.authorName && (
-                      <span className="italic">
-                        {t('translate:note_description', {
-                          timestamp: footnote?.timestamp
-                            ? new Date(footnote?.timestamp).toLocaleString()
-                            : '',
-                          authorName: footnote?.authorName ?? '',
-                        })}
-                      </span>
-                    )}
-                    {canEditNote ? (
-                      <RichTextInput
-                        key={`footnote--${word.id}`}
-                        name="footnoteContent"
-                        value={footnoteContent}
-                        onBlur={async (e) => {
-                          saveFootnote(e.target.value);
-                          saveFootnote.flush();
-                        }}
-                        onChange={async (e) => {
-                          saveFootnote(e.target.value);
-                        }}
-                      />
-                    ) : (
-                      <RichText content={footnoteContent} />
-                    )}
-                  </div>
+                </div>
+                <div className="flex flex-col gap-6 pb-2">
+                  {hasLanguageReadPermissions && (
+                    <div className="flex flex-col gap-2">
+                      <h2 className="font-bold">{t('translate:footnotes')}</h2>
+                      {hasLanguageReadPermissions && footnote?.authorName && (
+                        <span className="italic">
+                          {t('translate:note_description', {
+                            timestamp: footnote?.timestamp
+                              ? new Date(footnote?.timestamp).toLocaleString()
+                              : '',
+                            authorName: footnote?.authorName ?? '',
+                          })}
+                        </span>
+                      )}
+                      {canEditNote ? (
+                        <RichTextInput
+                          key={`footnote--${word.id}`}
+                          name="footnoteContent"
+                          value={footnoteContent}
+                          onBlur={async (e) => {
+                            saveFootnote(e.target.value);
+                            saveFootnote.flush();
+                          }}
+                          onChange={async (e) => {
+                            saveFootnote(e.target.value);
+                          }}
+                        />
+                      ) : (
+                        <RichText content={footnoteContent} />
+                      )}
+                    </div>
+                  )}
                 </div>
               </Tab.Panel>
               {showComments && <Tab.Panel>{t('common:coming_soon')}</Tab.Panel>}

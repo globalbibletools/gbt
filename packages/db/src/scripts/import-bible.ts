@@ -1,6 +1,6 @@
 import { bookKeys } from '../../../../data/book-keys';
 import { morphologyData } from '../../../../data/morphology';
-import { PrismaClient } from '@prisma/client';
+import { Prisma, PrismaClient } from '@prisma/client';
 
 const client = new PrismaClient();
 
@@ -14,6 +14,7 @@ async function run() {
     grammar: string;
     strongs: string;
     english: string;
+    phraseId: number;
   }[] = [];
   const lemmas: {
     [strongs: string]: {
@@ -76,6 +77,7 @@ async function run() {
             grammar,
             strongs,
             english,
+            phraseId: 0,
           });
 
           lemmas[strongs] ??= {};
@@ -131,11 +133,28 @@ async function run() {
     },
   });
 
+  const phrases = await client.$queryRaw<{ id: number }[]>`
+    INSERT INTO "Phrase" ("languageId")
+    SELECT ${language.id}::uuid FROM generate_series(1,${wordData.length})
+    RETURNING id
+  `;
+  for (const i in wordData) {
+    wordData[i].phraseId = phrases[i].id;
+  }
+
+  await client.phraseWord.createMany({
+    data: wordData.map((word) => ({
+      wordId: word.id,
+      phraseId: word.phraseId,
+    })),
+  });
+
   await client.gloss.createMany({
     data: wordData.map((word) => ({
       wordId: word.id,
       languageId: language.id,
       gloss: word.english,
+      phraseId: word.phraseId,
     })),
   });
 
