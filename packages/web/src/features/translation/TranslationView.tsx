@@ -28,6 +28,7 @@ import {
   bookLastVerseId,
   decrementVerseId,
   incrementVerseId,
+  isOldTestament,
   parseVerseId,
 } from './verse-utils';
 import { isFlagEnabled } from '../../shared/featureFlags';
@@ -402,15 +403,12 @@ export default function TranslationView() {
           const referenceGlosses = referenceGlossesQuery.data.data;
           const targetGlosses = targetGlossesQuery.data.data;
 
-          const { bookId } = parseVerseId(verse.id);
-
           const canEdit = userCan('translate', {
             type: 'Language',
             id: language,
           });
 
-          const isHebrew = bookId < 40;
-
+          const isHebrew = isOldTestament(verse.id);
           return (
             <div className="flex flex-col flex-grow w-full min-h-0 gap-6 lg:flex-row">
               <div className="flex flex-col max-h-full min-h-0 gap-8 overflow-auto grow pt-8 pb-10 px-6 lg:pe-0 lg:ps-8">
@@ -478,10 +476,7 @@ export default function TranslationView() {
                         }}
                         onFocus={() => setSidebarWordIndex(i)}
                         onShowDetail={() => setShowSidebar(true)}
-                        onOpenNotes={() => {
-                          setShouldOpenNotes(true);
-                          // sidebarRef.current?.openNotes();
-                        }}
+                        onOpenNotes={() => setShouldOpenNotes(true)}
                         ref={(() => {
                           if (i === 0) {
                             return firstWord;
