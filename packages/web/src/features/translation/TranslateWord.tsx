@@ -132,8 +132,8 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
           </span>
           <Button
             className={
-              hasTranslatorNote || (hasFootnote && hasLanguageReadPermissions)
-                ? ''
+              hasFootnote || (hasTranslatorNote && hasLanguageReadPermissions)
+                ? 'inline-block'
                 : 'hidden'
             }
             small
