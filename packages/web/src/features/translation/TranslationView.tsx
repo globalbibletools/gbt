@@ -358,6 +358,13 @@ export default function TranslationView() {
   });
 
   const sidebarRef = useRef<TranslationSidebarRef>(null);
+  const [shouldOpenNotes, setShouldOpenNotes] = useState(false);
+  useEffect(() => {
+    if (shouldOpenNotes) {
+      sidebarRef.current?.openNotes();
+      setShouldOpenNotes(false);
+    }
+  }, [shouldOpenNotes]);
 
   return (
     <div className="absolute w-full h-full flex flex-col flex-grow">
@@ -472,7 +479,8 @@ export default function TranslationView() {
                         onFocus={() => setSidebarWordIndex(i)}
                         onShowDetail={() => setShowSidebar(true)}
                         onOpenNotes={() => {
-                          sidebarRef.current?.openNotes();
+                          setShouldOpenNotes(true);
+                          // sidebarRef.current?.openNotes();
                         }}
                         ref={(() => {
                           if (i === 0) {
