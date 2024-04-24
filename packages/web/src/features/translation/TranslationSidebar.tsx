@@ -33,7 +33,6 @@ type TranslationSidebarProps = {
   showComments: boolean;
   onClose: () => void;
 };
-
 export type TranslationSidebarRef = {
   openNotes: () => void;
 };
