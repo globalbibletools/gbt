@@ -18,10 +18,12 @@ import apiClient from '../../shared/apiClient';
 import { Icon } from '../../shared/components/Icon';
 import LoadingSpinner from '../../shared/components/LoadingSpinner';
 import RichText from '../../shared/components/RichText';
-import RichTextInput from '../../shared/components/form/RichTextInput';
+import RichTextInput, {
+  RichTextInputRef,
+} from '../../shared/components/form/RichTextInput';
 import { bdbBookRefNames } from 'data/bdb-book-ref-names';
 import { parseVerseId, parseReferenceRange } from './verse-utils';
-import { createPortal } from 'react-dom';
+import { createPortal, flushSync } from 'react-dom';
 import { VersesPreview } from './VersesPreview';
 
 type TranslationSidebarProps = {
@@ -182,15 +184,15 @@ export const TranslationSidebar = forwardRef<
     };
 
     const [tabIndex, setTabIndex] = useState(0);
-    const [translatorNotesAutoFocus, setTranslatorNotesAutoFocus] =
-      useState(false);
 
     useImperativeHandle(ref, () => ({
       openNotes: () => {
-        setTabIndex(1);
-        setTranslatorNotesAutoFocus(true);
+        flushSync(() => setTabIndex(1));
+        translatorNotesRef.current?.focus();
       },
     }));
+
+    const translatorNotesRef = useRef<RichTextInputRef>(null);
 
     return (
       <div
@@ -298,12 +300,11 @@ export const TranslationSidebar = forwardRef<
                       )}
                       {canEditNote ? (
                         <RichTextInput
-                          autoFocus={translatorNotesAutoFocus}
+                          ref={translatorNotesRef}
                           key={`translatorNote--${word.id}`}
                           name="translatorNoteContent"
                           value={translatorNoteContent}
                           onBlur={async (e) => {
-                            setTranslatorNotesAutoFocus(false);
                             saveTranslatorNote(e.target.value);
                             saveTranslatorNote.flush();
                           }}
