@@ -64,7 +64,7 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
       verseId: string;
     };
     const userCan = useAccessControl();
-    const hasLanguageReadPermissions = userCan('read', {
+    const isTranslator = userCan('translate', {
       type: 'Language',
       id: params.language,
     });
@@ -132,7 +132,7 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
           </span>
           <Button
             className={
-              hasTranslatorNote || (hasFootnote && hasLanguageReadPermissions)
+              hasFootnote || (hasTranslatorNote && isTranslator)
                 ? 'inline-block'
                 : 'hidden'
             }
