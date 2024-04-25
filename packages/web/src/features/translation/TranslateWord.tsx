@@ -118,7 +118,7 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
       <li ref={root} dir={originalLanguage === 'hebrew' ? 'rtl' : 'ltr'}>
         <div
           id={`word-${word.id}`}
-          className={`flex items-center h-8 cursor-pointer font-mixed ${
+          className={`flex items-center gap-1.5 h-8 cursor-pointer font-mixed ${
             originalLanguage === 'hebrew' ? 'text-right pr-3' : 'text-left pl-3'
           }`}
           tabIndex={-1}
