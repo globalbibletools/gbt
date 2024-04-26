@@ -8,12 +8,11 @@ const importServer = 'https://hebrewgreekbible.online';
 
 export const lambdaHandler = async (event: SQSEvent) => {
   try {
-    const { languageCode, importLanguage, jobId } = JSON.parse(
+    const { languageCode, importLanguage } = JSON.parse(
       event.Records[0].body
     ) as {
       languageCode: string;
       importLanguage: string;
-      jobId: string;
     };
 
     console.log(`Import ${importLanguage} to ${languageCode} ... start`);
@@ -46,8 +45,6 @@ export const lambdaHandler = async (event: SQSEvent) => {
           const bookId = bookKeys.indexOf(key) + 1;
           const glossUrl = `${importServer}/${importLanguage}Glosses/${key}Gloss.js`;
           const bookData = await fetchGlossData(glossUrl);
-          const referenceUrl = `${importServer}/files/${key}.js`;
-          const referenceData = await fetchGlossData(referenceUrl);
 
           const glossData: {
             wordId: string;
@@ -88,15 +85,6 @@ export const lambdaHandler = async (event: SQSEvent) => {
           }
           console.log(`${key} ... complete`);
 
-          await client.gloss.createMany({
-            data: glossData.map(({ wordId, gloss }) => ({
-              wordId,
-              languageId: language.id,
-              gloss,
-              state: GlossState.APPROVED,
-            })),
-          });
-
           const phrases = await client.$queryRaw<{ id: number }[]>`
             INSERT INTO "Phrase" ("languageId")
             SELECT ${language.id}::uuid FROM generate_series(1,${glossData.length})
@@ -119,6 +107,7 @@ export const lambdaHandler = async (event: SQSEvent) => {
               languageId: language.id,
               gloss: word.gloss,
               phraseId: word.phraseId,
+              state: GlossState.APPROVED,
             })),
           });
 
