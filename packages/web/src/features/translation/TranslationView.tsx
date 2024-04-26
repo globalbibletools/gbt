@@ -455,6 +455,7 @@ export default function TranslationView() {
                         key={word.id}
                         editable={canEdit}
                         word={word}
+                        verseId={verse.id}
                         originalLanguage={isHebrew ? 'hebrew' : 'greek'}
                         status={status}
                         gloss={targetGloss?.gloss}

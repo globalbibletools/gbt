@@ -15,18 +15,18 @@ import AutocompleteInput from '../../shared/components/form/AutocompleteInput';
 import { TextDirection } from '@translation/api-types';
 import Button from '../../shared/components/actions/Button';
 import { useAccessControl } from '../../shared/accessControl';
-import { useParams } from 'react-router-dom';
 import apiClient from '../../shared/apiClient';
 import { useQuery } from '@tanstack/react-query';
 
 export interface TranslateWordProps {
   editable?: boolean;
   word: { id: string; text: string };
+  verseId: string;
   originalLanguage: 'hebrew' | 'greek';
   status: 'empty' | 'saving' | 'saved' | 'approved';
   gloss?: string;
   machineGloss?: string;
-  targetLanguage?: { textDirection: TextDirection; font: string };
+  targetLanguage?: { textDirection: TextDirection; font: string; code: string };
   referenceGloss?: string;
   suggestions: string[];
   onChange(data: { gloss?: string; approved?: boolean }): void;
@@ -44,6 +44,7 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
     {
       editable = false,
       word,
+      verseId,
       originalLanguage,
       status,
       gloss,
@@ -59,14 +60,10 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
     ref
   ) => {
     const { t, i18n } = useTranslation(['translate']);
-    const params = useParams() as {
-      language: string;
-      verseId: string;
-    };
     const userCan = useAccessControl();
     const isTranslator = userCan('translate', {
       type: 'Language',
-      id: params.language,
+      id: targetLanguage?.code ?? '',
     });
     const input = useRef<HTMLInputElement>(null);
 
@@ -86,8 +83,8 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
     );
     const hasMachineSuggestion = !gloss && !suggestions[0] && !!machineGloss;
     const notesQuery = useQuery(
-      ['verse-translator-notes', params.language, params.verseId],
-      () => apiClient.verses.findNotes(params.verseId, params.language)
+      ['verse-translator-notes', targetLanguage?.code ?? '', verseId],
+      () => apiClient.verses.findNotes(verseId, targetLanguage?.code ?? '')
     );
 
     const glossWidth = useTextWidth({
