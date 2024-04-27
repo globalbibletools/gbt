@@ -86,6 +86,7 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
     useLayoutEffect(() => {
       setWidth(
         Math.max(
+          // The extra 28 pixels accommodates the sticky note icon
           (hasNote ? 28 : 0) + (ancientWord.current?.clientWidth ?? 0),
           refGloss.current?.clientWidth ?? 0,
           // The extra 24 pixels accommodates the google icon
