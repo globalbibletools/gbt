@@ -1,7 +1,13 @@
 import { useEditor, EditorContent, Editor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import { Icon } from '../Icon';
-import { ComponentProps, forwardRef, useEffect, useRef } from 'react';
+import {
+  ComponentProps,
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+} from 'react';
 import { useTranslation } from 'react-i18next';
 import { ChangeHandler } from 'react-hook-form';
 
@@ -11,7 +17,6 @@ export interface RichTextInputProps {
   defaultValue?: string;
   onChange?: ChangeHandler;
   onBlur?: ChangeHandler;
-  autoFocus?: boolean;
   'aria-labelledby'?: string;
   'aria-label'?: string;
 }
@@ -31,10 +36,7 @@ export const extensions = [
 ];
 
 const RichTextInput = forwardRef<RichTextInputRef, RichTextInputProps>(
-  (
-    { name, onChange, onBlur, autoFocus, value, defaultValue, ...props },
-    ref
-  ) => {
+  ({ name, onChange, onBlur, value, defaultValue, ...props }, ref) => {
     const { t } = useTranslation(['common']);
     const hiddenInput = useRef<HTMLInputElement>(null);
 
@@ -75,9 +77,13 @@ const RichTextInput = forwardRef<RichTextInputRef, RichTextInputProps>(
       });
     }, [value, editor]);
 
-    useEffect(() => {
-      if (autoFocus) editor?.commands.focus();
-    }, [autoFocus, editor]);
+    useImperativeHandle(
+      ref,
+      () => ({
+        focus: () => editor?.commands.focus(),
+      }),
+      [editor]
+    );
 
     return (
       <div className="border rounded border-gray-400 has-[:focus-visible]:outline outline-2 outline-green-300 bg-white">
