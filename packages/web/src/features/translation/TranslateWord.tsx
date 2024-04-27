@@ -14,22 +14,18 @@ import { capitalize } from '../../shared/utils';
 import AutocompleteInput from '../../shared/components/form/AutocompleteInput';
 import { TextDirection } from '@translation/api-types';
 import Button from '../../shared/components/actions/Button';
-import { useAccessControl } from '../../shared/accessControl';
-import apiClient from '../../shared/apiClient';
-import { useQuery } from '@tanstack/react-query';
-import { isRichTextEmpty } from '../../shared/components/form/RichTextInput';
 
 export interface TranslateWordProps {
   editable?: boolean;
   word: { id: string; text: string };
-  verseId: string;
   originalLanguage: 'hebrew' | 'greek';
   status: 'empty' | 'saving' | 'saved' | 'approved';
   gloss?: string;
   machineGloss?: string;
-  targetLanguage?: { textDirection: TextDirection; font: string; code: string };
+  targetLanguage?: { textDirection: TextDirection; font: string };
   referenceGloss?: string;
   suggestions: string[];
+  hasNote?: boolean;
   onChange(data: { gloss?: string; approved?: boolean }): void;
   onFocus?: () => void;
   onShowDetail?: () => void;
@@ -45,7 +41,6 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
     {
       editable = false,
       word,
-      verseId,
       originalLanguage,
       status,
       gloss,
@@ -53,6 +48,7 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
       targetLanguage,
       referenceGloss,
       suggestions,
+      hasNote,
       onChange,
       onFocus,
       onShowDetail,
@@ -61,11 +57,6 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
     ref
   ) => {
     const { t, i18n } = useTranslation(['translate']);
-    const userCan = useAccessControl();
-    const isTranslator = userCan('translate', {
-      type: 'Language',
-      id: targetLanguage?.code ?? '',
-    });
     const input = useRef<HTMLInputElement>(null);
 
     const root = useRef<HTMLLIElement>(null);
@@ -83,18 +74,6 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
       glossValue ?? ''
     );
     const hasMachineSuggestion = !gloss && !suggestions[0] && !!machineGloss;
-    const notesQuery = useQuery(
-      ['verse-translator-notes', targetLanguage?.code ?? '', verseId],
-      () => apiClient.verses.findNotes(verseId, targetLanguage?.code ?? '')
-    );
-
-    const hasTranslatorNote = !isRichTextEmpty(
-      notesQuery.data?.data?.translatorNotes[word.id].content ?? ''
-    );
-    const hasFootnote = !isRichTextEmpty(
-      notesQuery.data?.data?.footnotes[word.id].content ?? ''
-    );
-    const hasNote = hasFootnote || (hasTranslatorNote && isTranslator);
 
     const glossWidth = useTextWidth({
       text: glossValue ?? '',

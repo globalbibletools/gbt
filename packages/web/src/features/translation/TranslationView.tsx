@@ -34,6 +34,7 @@ import {
 import { isFlagEnabled } from '../../shared/featureFlags';
 import useTitle from '../../shared/hooks/useTitle';
 import { useFlash } from '../../shared/hooks/flash';
+import { isRichTextEmpty } from '../../shared/components/form/RichTextInput';
 
 export const translationLanguageKey = 'translation-language';
 export const translationVerseIdKey = 'translation-verse-id';
@@ -54,6 +55,10 @@ function useTranslationQueries(language: string, verseId: string) {
   const targetGlossesQuery = useQuery(
     ['verse-glosses', language, verseId],
     () => apiClient.verses.findVerseGlosses(verseId, language)
+  );
+  const notesQuery = useQuery(
+    ['verse-translator-notes', language, verseId],
+    () => apiClient.verses.findNotes(verseId, language)
   );
 
   const translationLanguages = languagesQuery.data?.data ?? [];
@@ -93,6 +98,11 @@ function useTranslationQueries(language: string, verseId: string) {
         queryFn: ({ queryKey }) =>
           apiClient.verses.findVerseGlosses(queryKey[2], queryKey[1]),
       });
+      queryClient.prefetchQuery({
+        queryKey: ['verse-translator-notes', language, nextVerseId],
+        queryFn: ({ queryKey }) =>
+          apiClient.verses.findNotes(queryKey[2], queryKey[1]),
+      });
       if (selectedLanguage) {
         queryClient.prefetchQuery({
           queryKey: ['verse-translation', language, nextVerseId],
@@ -119,6 +129,7 @@ function useTranslationQueries(language: string, verseId: string) {
     verseQuery,
     referenceGlossesQuery,
     targetGlossesQuery,
+    notesQuery,
     translationQuery,
   };
 }
@@ -165,6 +176,7 @@ export default function TranslationView() {
     verseQuery,
     referenceGlossesQuery,
     targetGlossesQuery,
+    notesQuery,
     translationQuery,
   } = useTranslationQueries(language, verseId);
 
@@ -450,12 +462,19 @@ export default function TranslationView() {
                           : 'saved';
                     }
 
+                    const hasTranslatorNote = !isRichTextEmpty(
+                      notesQuery.data?.data?.translatorNotes[word.id].content ??
+                        ''
+                    );
+                    const hasFootnote = !isRichTextEmpty(
+                      notesQuery.data?.data?.footnotes[word.id].content ?? ''
+                    );
+
                     return (
                       <TranslateWord
                         key={word.id}
                         editable={canEdit}
                         word={word}
-                        verseId={verse.id}
                         originalLanguage={isHebrew ? 'hebrew' : 'greek'}
                         status={status}
                         gloss={targetGloss?.gloss}
@@ -463,6 +482,7 @@ export default function TranslationView() {
                         targetLanguage={selectedLanguage}
                         referenceGloss={referenceGlosses[i]?.gloss}
                         suggestions={targetGlosses[i]?.suggestions}
+                        hasNote={hasFootnote || (hasTranslatorNote && canEdit)}
                         onChange={({ gloss, approved }) => {
                           glossMutation.mutate({
                             wordId: word.id,
