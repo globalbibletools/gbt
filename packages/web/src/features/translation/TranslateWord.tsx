@@ -86,8 +86,8 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
     useLayoutEffect(() => {
       setWidth(
         Math.max(
-          // The extra 28 pixels accommodates the sticky note icon
-          (hasNote ? 28 : 0) + (ancientWord.current?.clientWidth ?? 0),
+          // The extra 36 pixels accommodates the sticky note icon
+          (hasNote ? 36 : 0) + (ancientWord.current?.clientWidth ?? 0),
           refGloss.current?.clientWidth ?? 0,
           // The extra 24 pixels accommodates the google icon
           // The extra 48 pixels accommodates the approval button
@@ -113,7 +113,7 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
             {word.text}
           </span>
           <Button
-            className={`pe-0 ${hasNote ? 'inline-block' : 'hidden'}`}
+            className={hasNote ? 'inline-block' : 'hidden'}
             small
             variant="tertiary"
             onClick={onOpenNotes}
