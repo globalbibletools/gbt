@@ -88,6 +88,14 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
       () => apiClient.verses.findNotes(verseId, targetLanguage?.code ?? '')
     );
 
+    const hasTranslatorNote = !isRichTextEmpty(
+      notesQuery.data?.data?.translatorNotes[word.id].content ?? ''
+    );
+    const hasFootnote = !isRichTextEmpty(
+      notesQuery.data?.data?.footnotes[word.id].content ?? ''
+    );
+    const hasNote = hasFootnote || (hasTranslatorNote && isTranslator);
+
     const glossWidth = useTextWidth({
       text: glossValue ?? '',
       fontFamily: expandFontFamily(targetLanguage?.font ?? 'Noto Sans'),
@@ -99,21 +107,14 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
     useLayoutEffect(() => {
       setWidth(
         Math.max(
-          ancientWord.current?.clientWidth ?? 0,
+          (hasNote ? 28 : 0) + (ancientWord.current?.clientWidth ?? 0),
           refGloss.current?.clientWidth ?? 0,
           // The extra 24 pixels accommodates the google icon
           // The extra 48 pixels accommodates the approval button
           glossWidth + (hasMachineSuggestion ? 24 : 0) + 44
         )
       );
-    }, [glossWidth, hasMachineSuggestion]);
-
-    const hasTranslatorNote = !isRichTextEmpty(
-      notesQuery.data?.data?.translatorNotes[word.id].content ?? ''
-    );
-    const hasFootnote = !isRichTextEmpty(
-      notesQuery.data?.data?.footnotes[word.id].content ?? ''
-    );
+    }, [hasNote, glossWidth, hasMachineSuggestion]);
 
     return (
       <li ref={root} dir={originalLanguage === 'hebrew' ? 'rtl' : 'ltr'}>
@@ -132,11 +133,7 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
             {word.text}
           </span>
           <Button
-            className={
-              hasFootnote || (hasTranslatorNote && isTranslator)
-                ? 'inline-block'
-                : 'hidden'
-            }
+            className={`pe-0 ${hasNote ? 'inline-block' : 'hidden'}`}
             small
             variant="tertiary"
             onClick={onOpenNotes}
