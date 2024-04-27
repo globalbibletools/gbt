@@ -17,6 +17,7 @@ import Button from '../../shared/components/actions/Button';
 import { useAccessControl } from '../../shared/accessControl';
 import apiClient from '../../shared/apiClient';
 import { useQuery } from '@tanstack/react-query';
+import { isRichTextEmpty } from '../../shared/components/form/RichTextInput';
 
 export interface TranslateWordProps {
   editable?: boolean;
@@ -107,9 +108,12 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
       );
     }, [glossWidth, hasMachineSuggestion]);
 
-    const hasTranslatorNote =
-      !!notesQuery.data?.data?.translatorNotes[word.id].content;
-    const hasFootnote = !!notesQuery.data?.data?.footnotes[word.id].content;
+    const hasTranslatorNote = !isRichTextEmpty(
+      notesQuery.data?.data?.translatorNotes[word.id].content ?? ''
+    );
+    const hasFootnote = !isRichTextEmpty(
+      notesQuery.data?.data?.footnotes[word.id].content ?? ''
+    );
 
     return (
       <li ref={root} dir={originalLanguage === 'hebrew' ? 'rtl' : 'ltr'}>

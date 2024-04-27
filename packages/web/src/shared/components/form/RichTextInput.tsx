@@ -1,4 +1,4 @@
-import { useEditor, EditorContent } from '@tiptap/react';
+import { useEditor, EditorContent, Editor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import { Icon } from '../Icon';
 import { ComponentProps, forwardRef, useEffect, useRef } from 'react';
@@ -178,4 +178,8 @@ function RichTextInputButton({
       <span className="sr-only">{label}</span>
     </button>
   );
+}
+
+export function isRichTextEmpty(richText: string) {
+  return new Editor({ extensions, content: richText }).isEmpty;
 }
