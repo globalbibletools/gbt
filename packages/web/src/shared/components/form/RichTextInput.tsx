@@ -66,7 +66,7 @@ const RichTextInput = forwardRef<RichTextInputRef, RichTextInputProps>(
     });
 
     useEffect(() => {
-      editor?.commands.setContent(value ?? '', false, {
+      editor?.commands.setContent(value ?? '', true, {
         preserveWhitespace: 'full',
       });
     }, [value, editor]);
