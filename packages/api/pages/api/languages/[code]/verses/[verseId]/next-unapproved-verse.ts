@@ -26,14 +26,14 @@ export default createRoute<{ code: string; verseId: string }>()
         SELECT w."verseId" as "nextUnapprovedVerseId"
         FROM "Word" AS w
         LEFT JOIN LATERAL (
-          SELECT FROM "PhraseWord" AS phw
+          SELECT g.state AS state FROM "PhraseWord" AS phw
           JOIN "Phrase" AS ph ON ph.id = phw."phraseId"
-            AND ph."languageId" = ${language.id}::uuid
           LEFT JOIN "Gloss" AS g ON g."phraseId" = ph.id
-            AND (g."state" = 'UNAPPROVED' OR g."state" IS NULL)
           WHERE phw."wordId" = w.id
+			      AND ph."languageId" = ${language.id}::uuid
         ) AS g ON true
         WHERE w."verseId" > ${req.query.verseId}
+          AND (g."state" = 'UNAPPROVED' OR g."state" IS NULL)
         ORDER BY w."id"
         LIMIT 1
       `;
