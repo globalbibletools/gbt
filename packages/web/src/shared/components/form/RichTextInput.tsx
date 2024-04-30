@@ -66,6 +66,7 @@ const RichTextInput = forwardRef<RichTextInputRef, RichTextInputProps>(
       onBlur() {
         const input = hiddenInput.current;
         if (input) {
+          console.log('########## blurring eh?');
           onBlur?.({ target: input });
         }
       },
@@ -75,12 +76,17 @@ const RichTextInput = forwardRef<RichTextInputRef, RichTextInputProps>(
       editor?.commands.setContent(value ?? '', false, {
         preserveWhitespace: 'full',
       });
+      console.log('!!!!!!!!!!!!!!!!!!!! settign content');
     }, [value, editor]);
 
     useImperativeHandle(
       ref,
       () => ({
-        focus: () => editor?.commands.focus(),
+        focus: () => {
+          editor?.commands.focus();
+          editor?.commands.setContent('&&&&&');
+          console.log('$$$$$$$$$$$$$$---- focusing');
+        },
       }),
       [editor]
     );

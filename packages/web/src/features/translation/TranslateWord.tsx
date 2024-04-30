@@ -103,20 +103,28 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
           className={`flex items-center gap-1.5 h-8 cursor-pointer font-mixed ${
             originalLanguage === 'hebrew' ? 'text-right pr-3' : 'text-left pl-3'
           }`}
-          tabIndex={-1}
-          onClick={() => {
-            onFocus?.();
-            onShowDetail?.();
-          }}
         >
-          <span className="inline-block" ref={ancientWord}>
+          <span
+            className="inline-block"
+            ref={ancientWord}
+            tabIndex={-1}
+            onClick={() => {
+              onFocus?.();
+              onShowDetail?.();
+            }}
+          >
             {word.text}
           </span>
           <Button
             className={hasNote ? 'inline-block' : 'hidden'}
             small
             variant="tertiary"
-            onClick={onOpenNotes}
+            tabIndex={-1}
+            onClick={() => {
+              onFocus?.();
+              onShowDetail?.();
+              onOpenNotes?.();
+            }}
           >
             <Icon icon="sticky-note" />
           </Button>
