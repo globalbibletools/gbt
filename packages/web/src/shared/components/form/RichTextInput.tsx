@@ -1,16 +1,15 @@
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import { Icon } from '../Icon';
-import { ComponentProps, forwardRef, useEffect, useRef } from 'react';
+import { ComponentProps, forwardRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ChangeHandler } from 'react-hook-form';
 
 export interface RichTextInputProps {
   name: string;
   value?: string;
   defaultValue?: string;
-  onChange?: ChangeHandler;
-  onBlur?: ChangeHandler;
+  onChange?: (newValue: string) => void;
+  onBlur?: () => void;
   'aria-labelledby'?: string;
   'aria-label'?: string;
 }
@@ -32,7 +31,6 @@ export const extensions = [
 const RichTextInput = forwardRef<RichTextInputRef, RichTextInputProps>(
   ({ name, onChange, onBlur, value, defaultValue, ...props }, ref) => {
     const { t } = useTranslation(['common']);
-    const hiddenInput = useRef<HTMLInputElement>(null);
 
     const editor = useEditor({
       extensions,
@@ -43,26 +41,8 @@ const RichTextInput = forwardRef<RichTextInputRef, RichTextInputProps>(
         },
       },
       content: value ?? defaultValue,
-      onCreate({ editor }) {
-        const input = hiddenInput.current;
-        if (input) {
-          input.value = editor.getHTML();
-        }
-      },
-      onUpdate({ editor }) {
-        const input = hiddenInput.current;
-        if (input) {
-          const value = editor.getHTML();
-          input.value = value;
-          onChange?.({ target: input });
-        }
-      },
-      onBlur() {
-        const input = hiddenInput.current;
-        if (input) {
-          onBlur?.({ target: input });
-        }
-      },
+      onUpdate: ({ editor }) => onChange?.(editor?.getHTML()),
+      onBlur,
     });
 
     useEffect(() => {
@@ -73,7 +53,6 @@ const RichTextInput = forwardRef<RichTextInputRef, RichTextInputProps>(
 
     return (
       <div className="border rounded border-gray-400 has-[:focus-visible]:outline outline-2 outline-green-300 bg-white">
-        <input type="hidden" ref={hiddenInput} name={name} />
         <div className="border-gray-400 border-b p-1 flex gap-3">
           <div className="flex gap-1">
             <RichTextInputButton
