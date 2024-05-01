@@ -18,7 +18,10 @@ import {
   useFontLoader,
 } from '../../shared/hooks/useFontLoader';
 import TranslateWord, { TranslateWordRef } from './TranslateWord';
-import { TranslationSidebar } from './TranslationSidebar';
+import {
+  TranslationSidebar,
+  TranslationSidebarRef,
+} from './TranslationSidebar';
 import { TranslationToolbar } from './TranslationToolbar';
 import {
   bookFirstVerseId,
@@ -31,6 +34,7 @@ import {
 import { isFlagEnabled } from '../../shared/featureFlags';
 import useTitle from '../../shared/hooks/useTitle';
 import { useFlash } from '../../shared/hooks/flash';
+import { isRichTextEmpty } from '../../shared/components/form/RichTextInput';
 
 export const translationLanguageKey = 'translation-language';
 export const translationVerseIdKey = 'translation-verse-id';
@@ -51,6 +55,10 @@ function useTranslationQueries(language: string, verseId: string) {
   const targetGlossesQuery = useQuery(
     ['verse-glosses', language, verseId],
     () => apiClient.verses.findVerseGlosses(verseId, language)
+  );
+  const notesQuery = useQuery(
+    ['verse-translator-notes', language, verseId],
+    () => apiClient.verses.findNotes(verseId, language)
   );
 
   const translationLanguages = languagesQuery.data?.data ?? [];
@@ -90,6 +98,11 @@ function useTranslationQueries(language: string, verseId: string) {
         queryFn: ({ queryKey }) =>
           apiClient.verses.findVerseGlosses(queryKey[2], queryKey[1]),
       });
+      queryClient.prefetchQuery({
+        queryKey: ['verse-translator-notes', language, nextVerseId],
+        queryFn: ({ queryKey }) =>
+          apiClient.verses.findNotes(queryKey[2], queryKey[1]),
+      });
       if (selectedLanguage) {
         queryClient.prefetchQuery({
           queryKey: ['verse-translation', language, nextVerseId],
@@ -116,6 +129,7 @@ function useTranslationQueries(language: string, verseId: string) {
     verseQuery,
     referenceGlossesQuery,
     targetGlossesQuery,
+    notesQuery,
     translationQuery,
   };
 }
@@ -162,6 +176,7 @@ export default function TranslationView() {
     verseQuery,
     referenceGlossesQuery,
     targetGlossesQuery,
+    notesQuery,
     translationQuery,
   } = useTranslationQueries(language, verseId);
 
@@ -355,6 +370,8 @@ export default function TranslationView() {
     },
   });
 
+  const sidebarRef = useRef<TranslationSidebarRef>(null);
+
   return (
     <div className="absolute w-full h-full flex flex-col flex-grow">
       <TranslationToolbar
@@ -438,6 +455,14 @@ export default function TranslationView() {
                           : 'saved';
                     }
 
+                    const hasTranslatorNote = !isRichTextEmpty(
+                      notesQuery.data?.data?.translatorNotes[word.id].content ??
+                        ''
+                    );
+                    const hasFootnote = !isRichTextEmpty(
+                      notesQuery.data?.data?.footnotes[word.id].content ?? ''
+                    );
+
                     return (
                       <TranslateWord
                         key={word.id}
@@ -450,6 +475,7 @@ export default function TranslationView() {
                         targetLanguage={selectedLanguage}
                         referenceGloss={referenceGlosses[i]?.gloss}
                         suggestions={targetGlosses[i]?.suggestions}
+                        hasNote={hasFootnote || (hasTranslatorNote && canEdit)}
                         onChange={({ gloss, approved }) => {
                           glossMutation.mutate({
                             wordId: word.id,
@@ -464,6 +490,9 @@ export default function TranslationView() {
                         }}
                         onFocus={() => setSidebarWordIndex(i)}
                         onShowDetail={() => setShowSidebar(true)}
+                        onOpenNotes={() =>
+                          setTimeout(() => sidebarRef.current?.openNotes(), 0)
+                        }
                         ref={(() => {
                           if (i === 0) {
                             return firstWord;
@@ -502,6 +531,7 @@ export default function TranslationView() {
               </div>
               {showSidebar && sidebarWordIndex < verse.words.length && (
                 <TranslationSidebar
+                  ref={sidebarRef}
                   className="h-[320px] lg:h-auto lg:w-1/3 lg:min-w-[320px] lg:max-w-[480px] mt-8 mb-10 mx-6 lg:ms-0 lg:me-8"
                   language={language}
                   verse={verse}

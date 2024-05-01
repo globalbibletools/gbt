@@ -38,5 +38,6 @@ library.add(
   FaSolid.faSliders,
   FaSolid.faAlignLeft,
   FaSolid.faAlignRight,
-  FaSolid.faExternalLink
+  FaSolid.faExternalLink,
+  FaSolid.faStickyNote
 );

@@ -1,7 +1,12 @@
-import { useEditor, EditorContent } from '@tiptap/react';
+import { useEditor, EditorContent, Editor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import { Icon } from '../Icon';
-import { ComponentProps, forwardRef, useEffect } from 'react';
+import {
+  ComponentProps,
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+} from 'react';
 import { useTranslation } from 'react-i18next';
 
 export interface RichTextInputProps {
@@ -50,6 +55,14 @@ const RichTextInput = forwardRef<RichTextInputRef, RichTextInputProps>(
         preserveWhitespace: 'full',
       });
     }, [value, editor]);
+
+    useImperativeHandle(
+      ref,
+      () => ({
+        focus: () => editor?.commands.focus(),
+      }),
+      [editor]
+    );
 
     return (
       <div className="border rounded border-gray-400 has-[:focus-visible]:outline outline-2 outline-green-300 bg-white">
@@ -149,4 +162,8 @@ function RichTextInputButton({
       <span className="sr-only">{label}</span>
     </button>
   );
+}
+
+export function isRichTextEmpty(richText: string) {
+  return new Editor({ extensions, content: richText }).isEmpty;
 }

@@ -25,9 +25,11 @@ export interface TranslateWordProps {
   targetLanguage?: { textDirection: TextDirection; font: string };
   referenceGloss?: string;
   suggestions: string[];
+  hasNote?: boolean;
   onChange(data: { gloss?: string; approved?: boolean }): void;
   onFocus?: () => void;
   onShowDetail?: () => void;
+  onOpenNotes?: () => void;
 }
 
 export interface TranslateWordRef {
@@ -46,9 +48,11 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
       targetLanguage,
       referenceGloss,
       suggestions,
+      hasNote,
       onChange,
       onFocus,
       onShowDetail,
+      onOpenNotes,
     }: TranslateWordProps,
     ref
   ) => {
@@ -82,31 +86,48 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
     useLayoutEffect(() => {
       setWidth(
         Math.max(
-          ancientWord.current?.clientWidth ?? 0,
+          // The extra 36 pixels accommodates the sticky note icon
+          (hasNote ? 36 : 0) + (ancientWord.current?.clientWidth ?? 0),
           refGloss.current?.clientWidth ?? 0,
           // The extra 24 pixels accommodates the google icon
           // The extra 48 pixels accommodates the approval button
           glossWidth + (hasMachineSuggestion ? 24 : 0) + 44
         )
       );
-    }, [glossWidth, hasMachineSuggestion]);
+    }, [hasNote, glossWidth, hasMachineSuggestion]);
 
     return (
       <li ref={root} dir={originalLanguage === 'hebrew' ? 'rtl' : 'ltr'}>
         <div
           id={`word-${word.id}`}
-          className={`h-8 cursor-pointer font-mixed ${
+          className={`flex items-center gap-1.5 h-8 cursor-pointer font-mixed ${
             originalLanguage === 'hebrew' ? 'text-right pr-3' : 'text-left pl-3'
           }`}
-          tabIndex={-1}
-          onClick={() => {
-            onFocus?.();
-            onShowDetail?.();
-          }}
         >
-          <span className="inline-block" ref={ancientWord}>
+          <span
+            className="inline-block"
+            ref={ancientWord}
+            tabIndex={-1}
+            onClick={() => {
+              onFocus?.();
+              onShowDetail?.();
+            }}
+          >
             {word.text}
           </span>
+          <Button
+            className={hasNote ? 'inline-block' : 'hidden'}
+            small
+            variant="tertiary"
+            tabIndex={-1}
+            onClick={() => {
+              onFocus?.();
+              onShowDetail?.();
+              onOpenNotes?.();
+            }}
+          >
+            <Icon icon="sticky-note" />
+          </Button>
         </div>
         <div
           className={`h-8 ${
