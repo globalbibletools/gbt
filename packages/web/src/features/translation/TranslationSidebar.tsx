@@ -228,7 +228,7 @@ export const TranslationSidebar = forwardRef<
               <div className="border-b border-blue-800 h-full grow"></div>
             </Tab.List>
             <Tab.Panels className="overflow-y-auto grow px-4 pt-4 mb-4">
-              <Tab.Panel>
+              <Tab.Panel unmount={false}>
                 {lemmaResourcesQuery.isLoading && (
                   <div className="h-full w-full flex items-center justify-center">
                     <LoadingSpinner />
@@ -271,7 +271,7 @@ export const TranslationSidebar = forwardRef<
                   </div>
                 )}
               </Tab.Panel>
-              <Tab.Panel>
+              <Tab.Panel unmount={false}>
                 <div className="flex flex-col gap-6 pb-2">
                   {hasLanguageReadPermissions && (
                     <div className="flex flex-col gap-2">
@@ -293,7 +293,6 @@ export const TranslationSidebar = forwardRef<
                       {canEditNote ? (
                         <RichTextInput
                           ref={translatorNotesEditorRef}
-                          key={`translatorNote--${word.id}`}
                           name="translatorNoteContent"
                           value={translatorNoteContent}
                           onBlur={() => saveTranslatorNote.flush()}
@@ -318,7 +317,6 @@ export const TranslationSidebar = forwardRef<
                     )}
                     {canEditNote ? (
                       <RichTextInput
-                        key={`footnote--${word.id}`}
                         name="footnoteContent"
                         value={footnoteContent}
                         onBlur={() => saveFootnote.flush()}
@@ -330,7 +328,9 @@ export const TranslationSidebar = forwardRef<
                   </div>
                 </div>
               </Tab.Panel>
-              {showComments && <Tab.Panel>{t('common:coming_soon')}</Tab.Panel>}
+              {showComments && (
+                <Tab.Panel unmount={false}>{t('common:coming_soon')}</Tab.Panel>
+              )}
             </Tab.Panels>
           </Tab.Group>
         </div>
