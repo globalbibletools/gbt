@@ -7,6 +7,7 @@ import {
   useEffect,
   useImperativeHandle,
   useRef,
+  useState,
 } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ChangeHandler } from 'react-hook-form';
@@ -82,14 +83,19 @@ const RichTextInput = forwardRef<RichTextInputRef, RichTextInputProps>(
     useImperativeHandle(
       ref,
       () => ({
-        focus: () => {
-          editor?.commands.focus();
-          editor?.commands.setContent('&&&&&');
-          console.log('$$$$$$$$$$$$$$---- focusing');
-        },
+        focus: () => setShouldFocus(true),
       }),
-      [editor]
+      []
     );
+
+    const [shouldFocus, setShouldFocus] = useState(false);
+
+    useEffect(() => {
+      if (shouldFocus && editor) {
+        editor.commands.focus();
+        setShouldFocus(false);
+      }
+    }, [shouldFocus, editor]);
 
     return (
       <div className="border rounded border-gray-400 has-[:focus-visible]:outline outline-2 outline-green-300 bg-white">
