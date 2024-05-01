@@ -228,22 +228,26 @@ model Language {
   textDirection       TextDirection        @default(ltr)
   /// The list of Bible translation IDs associated with this language.
   bibleTranslationIds String[]
-  /// The list of glosses of different words for this language.
-  glosses             Gloss[]
   // The gloss history for this language.
   glossHistory        GlossHistoryEntry[]
   /// The list of machine glosses of different words for this language.
   machineGlosses      MachineGloss[]
-  // The list of translator notes of different words for this language.
-  translatorNotes     TranslatorNote[]
-  // The list of footnotes of different words for this language.
-  footnotes           Footnote[]
   /// The list of roles for members of this language.
   roles               LanguageMemberRole[]
   /// The pending import job if any.
   importJob           LanguageImportJob?
   /// The phrases in this language.
   phrases             Phrase[]
+
+  /// The list of translator notes of different words for this language.
+  /// @deprecated
+  translatorNotes TranslatorNote[]
+  /// The list of footnotes of different words for this language.
+  /// @deprecated
+  footnotes       Footnote[]
+  /// The list of glosses of different words for this language.
+  /// @deprecated
+  glosses         Gloss[]
 }
 
 /// Keeps track of a language import job.
@@ -325,24 +329,29 @@ enum GlossState {
 
 /// A gloss of a word in a particular language.
 model Gloss {
+  /// The phrase the gloss applies to.
+  phrase   Phrase     @relation(fields: [phraseId], references: [id])
+  /// The ID of phrase the gloss applies to.
+  phraseId Int        @id
+  /// The text of the gloss.
+  gloss    String?
+  /// The approval state of the gloss.
+  state    GlossState @default(UNAPPROVED)
+
   /// The word being glossed.
-  word       Word       @relation(fields: [wordId], references: [id])
+  /// @deprecated
+  word       Word     @relation(fields: [wordId], references: [id])
   /// The ID of the word being glossed.
+  /// @deprecated
   wordId     String
   /// The language of the gloss.
-  language   Language   @relation(fields: [languageId], references: [id])
+  /// @deprecated
+  language   Language @relation(fields: [languageId], references: [id])
   /// The ID of the language of the gloss.
-  languageId String     @db.Uuid
-  /// The text of the gloss.
-  gloss      String?
-  /// The approval state of the gloss.
-  state      GlossState @default(UNAPPROVED)
-  /// The phrase the gloss applies to.
-  phrase     Phrase?    @relation(fields: [phraseId], references: [id])
-  /// The ID of phrase the gloss applies to.
-  phraseId   Int?       @unique
+  /// @deprecated
+  languageId String   @db.Uuid
 
-  @@id([wordId, languageId])
+  @@unique([wordId, languageId])
 }
 
 /// Represents a gloss update for a particular language.
@@ -415,52 +424,62 @@ enum ResourceCode {
 
 /// The translator note for a word in a particular language.
 model TranslatorNote {
+  /// The phrase the note applies to.
+  phrase    Phrase   @relation(fields: [phraseId], references: [id])
+  /// The ID of phrase the note applies to.
+  phraseId  Int      @id
+  /// The author of the most recent update to the note.
+  author    User     @relation(fields: [authorId], references: [id])
+  /// The ID of the author of the most recent update to the note.
+  authorId  String   @db.Uuid
+  /// The timestamp of the last update.
+  timestamp DateTime
+  /// The content of the note.
+  content   String
+
   /// The word being noted.
+  /// @deprecated
   word       Word     @relation(fields: [wordId], references: [id])
   /// The ID of the word being noted.
+  /// @deprecated
   wordId     String
   /// The language that the note applies to.
+  /// @deprecated
   language   Language @relation(fields: [languageId], references: [id])
   /// The ID of the language that the note applies to.
+  /// @deprecated
   languageId String   @db.Uuid
-  /// The author of the most recent update to the note.
-  author     User     @relation(fields: [authorId], references: [id])
-  /// The ID of the author of the most recent update to the note.
-  authorId   String   @db.Uuid
-  /// The timestamp of the last update.
-  timestamp  DateTime
-  /// The content of the note.
-  content    String
-  /// The phrase the note applies to.
-  phrase     Phrase?  @relation(fields: [phraseId], references: [id])
-  /// The ID of phrase the note applies to.
-  phraseId   Int?     @unique
 
-  @@id([wordId, languageId])
+  @@unique([wordId, languageId])
 }
 
 /// The footnote for a word in a particular language.
 model Footnote {
+  /// The phrase the note applies to.
+  phrase    Phrase   @relation(fields: [phraseId], references: [id])
+  /// The ID of phrase the note applies to.
+  phraseId  Int      @id
+  /// The author of the most recent update to the note.
+  author    User     @relation(fields: [authorId], references: [id])
+  /// The ID of the author of the most recent update to the note.
+  authorId  String   @db.Uuid
+  /// The timestamp of the last update.
+  timestamp DateTime
+  /// The content of the note.
+  content   String
+
   /// The word being noted.
+  /// @deprecated
   word       Word     @relation(fields: [wordId], references: [id])
   /// The ID of the word being noted.
+  /// @deprecated
   wordId     String
   /// The language that the note applies to.
+  /// @deprecated
   language   Language @relation(fields: [languageId], references: [id])
   /// The ID of the language that the note applies to.
+  /// @deprecated
   languageId String   @db.Uuid
-  /// The author of the most recent update to the note.
-  author     User     @relation(fields: [authorId], references: [id])
-  /// The ID of the author of the most recent update to the note.
-  authorId   String   @db.Uuid
-  /// The timestamp of the last update.
-  timestamp  DateTime
-  /// The content of the note.
-  content    String
-  /// The phrase the note applies to.
-  phrase     Phrase?  @relation(fields: [phraseId], references: [id])
-  /// The ID of phrase the note applies to.
-  phraseId   Int?     @unique
 
-  @@id([wordId, languageId])
+  @@unique([wordId, languageId])
 }

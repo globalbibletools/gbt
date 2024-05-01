@@ -15,8 +15,8 @@ import * as z from 'zod';
 interface WordQuery {
   wordId: string;
   gloss?: string;
-  suggestions: string[];
-  state: PrismaTypes.GlossState;
+  suggestions?: string[];
+  state?: PrismaTypes.GlossState;
   refGloss?: string;
   machineGloss?: string;
 }
@@ -40,7 +40,7 @@ async function saveMachineGlosses(
       ON "Gloss"."gloss" ILIKE "Map"."eng"
     WHERE "Language"."code" = 'eng'
     ON CONFLICT ON CONSTRAINT "MachineGloss_pkey"
-    DO UPDATE SET gloss = EXCLUDED."gloss" 
+    DO UPDATE SET gloss = EXCLUDED."gloss"
   `;
 }
 
@@ -61,7 +61,9 @@ async function generateMachineGlossesForVerse(
       words
         .filter(
           (word) =>
-            word.suggestions.length === 0 && !word.gloss && !word.machineGloss
+            (word.suggestions ?? []).length === 0 &&
+            !word.gloss &&
+            !word.machineGloss
         )
         .map((w) => w.refGloss?.toLowerCase())
         .filter((gloss): gloss is string => !!gloss?.match(charRegex))
@@ -94,51 +96,55 @@ export default createRoute<{ code: string; verseId: string }>()
       }
 
       const words = await client.$queryRaw<WordQuery[]>`
-        -- First we create a query with the words in a verse.
-        WITH "VerseWord" AS (
-        	SELECT "Word"."id", "Word"."formId" FROM "Verse"
-        	JOIN "Word" ON "Verse"."id" = "Word"."verseId"
-        	WHERE "verseId" = ${req.query.verseId}
-        ),
-        -- Then we gather suggestions for each word in the verse.
-        -- First we count up each unique gloss across the entire text.
-        -- Then we can build an array of suggestions in descending order of use for each word.
-        "Suggestion" AS (
-        	SELECT "id", array_agg("gloss" ORDER BY "count" DESC) AS "suggestions" FROM (
-        		SELECT "VerseWord"."id", "Gloss"."gloss", COUNT(1) FROM "VerseWord"
-        		JOIN "Word" ON "Word"."formId" = "VerseWord"."formId"
-        		JOIN "Gloss" ON "Word"."id" = "Gloss"."wordId"
-        			AND "Gloss"."languageId" = ${language.id}::uuid
-        			AND "Gloss"."state" = 'APPROVED'
-              AND "Gloss"."gloss" IS NOT NULL
-        		GROUP BY "VerseWord"."id", "Gloss"."gloss"
-        	) AS "WordSuggestion"
-        	GROUP BY "id"
-        ),
-        "RefLanguage" AS (
-          SELECT "id" FROM "Language"
-          WHERE "code" = 'eng'
-        )
-        -- Now we can gather the suggestions and other data for each word in the verse.
         SELECT
-          "VerseWord"."id" as "wordId",
-          COALESCE("Gloss"."gloss", '') AS "gloss",
-          COALESCE("Suggestion"."suggestions", '{}') AS "suggestions",
-          COALESCE("Gloss"."state", 'UNAPPROVED') AS "state",
-          "RefGloss"."gloss" AS "refGloss",
-          "MachineGloss"."gloss" AS "machineGloss"
-        FROM "VerseWord"
-        LEFT OUTER JOIN "Suggestion" ON "VerseWord"."id" = "Suggestion"."id"
-        LEFT OUTER JOIN "Gloss" ON "VerseWord"."id" = "Gloss"."wordId"
-          AND "Gloss"."languageId" = ${language.id}::uuid
-          AND "Gloss"."gloss" IS NOT NULL
-        LEFT OUTER JOIN "Gloss" AS "RefGloss" ON "VerseWord"."id" = "RefGloss"."wordId"
-          AND "RefGloss"."gloss" IS NOT NULL
-        LEFT OUTER JOIN "MachineGloss" ON "VerseWord"."id" = "MachineGloss"."wordId"
-          AND "MachineGloss"."languageId" = ${language.id}::uuid
-          AND "MachineGloss"."gloss" IS NOT NULL
-        JOIN "RefLanguage" ON "RefGloss"."languageId" = "RefLanguage"."id"
-        ORDER BY "VerseWord"."id" ASC
+          w.id AS "wordId",
+          target.gloss AS "gloss", target.state AS "state",
+          ref.gloss AS "refGloss",
+          ma.gloss AS "machineGloss",
+          suggestion.suggestions AS "suggestions"
+        FROM "Word" AS w
+
+        LEFT JOIN (
+          SELECT
+            id AS form_id,
+            array_agg(gloss ORDER BY count DESC) AS "suggestions"
+          FROM (
+            SELECT form.id, g.gloss, COUNT(1) FROM (
+              SELECT DISTINCT ON(wd."formId") wd."formId" AS id FROM "Word" AS wd
+              WHERE wd."verseId" = ${req.query.verseId}
+            ) AS form
+            JOIN "Word" AS w ON w."formId" = form.id
+            JOIN "PhraseWord" AS phw ON phw."wordId" = w.id
+            JOIN "Phrase" AS ph ON ph.id = phw."phraseId"
+            JOIN "Gloss" AS g ON g."phraseId" = ph.id
+            WHERE ph."languageId" = ${language.id}::uuid
+              AND g.gloss IS NOT NULL
+            GROUP BY form.id, g.gloss
+          ) AS form_suggestion
+          GROUP BY id
+        ) AS suggestion ON suggestion.form_id = w."formId"
+
+        LEFT JOIN LATERAL (
+          SELECT phw."wordId", g.gloss, g.state FROM "PhraseWord" AS phw
+          JOIN "Phrase" AS ph ON ph.id = phw."phraseId"
+            AND ph."languageId" = ${language.id}::uuid
+          JOIN "Gloss" AS g ON g."phraseId" = ph.id
+          WHERE phw."wordId" = w.id
+        ) AS target ON true
+
+        LEFT JOIN LATERAL (
+          SELECT phw."wordId", g.gloss FROM "PhraseWord" AS phw
+          JOIN "Phrase" AS ph ON ph.id = phw."phraseId"
+          JOIN "Language" AS l ON l.id = ph."languageId" AND l.code = 'eng'
+          JOIN "Gloss" AS g ON g."phraseId" = ph.id
+          WHERE phw."wordId" = w.id
+        ) AS ref ON true
+
+        LEFT JOIN "MachineGloss" AS ma ON ma."wordId" = w.id
+          AND ma."languageId" = '018bba77-bbea-1edf-c38a-d72521f05821'::uuid
+
+        WHERE w."verseId" = ${req.query.verseId}
+        ORDER BY w.id
       `;
 
       if (words.length === 0) {
@@ -146,12 +152,12 @@ export default createRoute<{ code: string; verseId: string }>()
       } else {
         const glossMap = await generateMachineGlossesForVerse(words, language);
         res.ok({
-          data: words.map((word, i) => {
+          data: words.map((word) => {
             return {
               wordId: word.wordId,
-              gloss: word.gloss,
-              suggestions: word.suggestions,
-              state: word.state,
+              gloss: word.gloss ?? '',
+              suggestions: word.suggestions ?? [],
+              state: word.state ?? PrismaTypes.GlossState.UNAPPROVED,
               machineGloss:
                 word.machineGloss ??
                 (word.refGloss

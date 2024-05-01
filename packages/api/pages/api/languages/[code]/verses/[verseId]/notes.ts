@@ -25,24 +25,29 @@ export default createRoute<{ code: string; verseId: string }>()
       }
 
       const notes = await client.$queryRaw<NotesQueryResult>`
-          SELECT
-            "Word"."id" as "wordId",
-            COALESCE("TranslatorNoteUser"."name", '') AS "translatorNoteAuthorName",
-            COALESCE("FootnoteUser"."name", '') AS "footnoteAuthorName",
-            "TranslatorNote"."timestamp" AS "translatorNoteTimestamp",
-            "Footnote"."timestamp" AS "footnoteTimestamp",
-            COALESCE("TranslatorNote"."content", '') AS "translatorNoteContent",
-            COALESCE("Footnote"."content", '') AS "footnoteContent"
-          FROM "Word"
-          LEFT OUTER JOIN "TranslatorNote" ON "Word"."id" = "TranslatorNote"."wordId"
-              AND "TranslatorNote"."languageId" = ${language.id}::uuid
-          LEFT OUTER JOIN "Footnote" ON "Word"."id" = "Footnote"."wordId"
-              AND "Footnote"."languageId" = ${language.id}::uuid
-          LEFT OUTER JOIN "User" AS "TranslatorNoteUser" ON "TranslatorNote"."authorId" = "TranslatorNoteUser"."id"
-          LEFT OUTER JOIN "User" AS "FootnoteUser" ON "Footnote"."authorId" = "FootnoteUser"."id"
-          WHERE "Word"."verseId" = ${req.query.verseId}
-          ORDER BY "wordId" ASC
-        `;
+        SELECT
+          w."id" as "wordId",
+          COALESCE(tn_u."name", '') AS "translatorNoteAuthorName",
+          COALESCE(fn_u."name", '') AS "footnoteAuthorName",
+          fn."timestamp" AS "translatorNoteTimestamp",
+          tn."timestamp" AS "footnoteTimestamp",
+          COALESCE(tn."content", '') AS "translatorNoteContent",
+          COALESCE(fn."content", '') AS "footnoteContent"
+        FROM "Word" AS w
+
+        LEFT JOIN "PhraseWord" AS phw ON phw."wordId" = w.id
+        LEFT JOIN "Phrase" AS ph ON ph.id = phw."phraseId"
+          AND ph."languageId" = ${language.id}::uuid
+
+        LEFT JOIN "TranslatorNote" tn ON tn."phraseId" = ph.id
+        LEFT JOIN "User" AS tn_u ON tn_u.id = tn."authorId"
+
+        LEFT JOIN "Footnote" fn ON fn."phraseId" = ph.id
+        LEFT JOIN "User" AS fn_u ON fn_u.id = fn."authorId"
+
+        WHERE w."verseId" = ${req.query.verseId}
+        ORDER BY "wordId" ASC
+      `;
 
       if (notes.length > 0) {
         return res.ok({

@@ -36,7 +36,6 @@ export default createRoute<{ code: string; wordId: string }>()
       const fields: {
         gloss?: string;
         state?: PrismaTypes.GlossState;
-        phraseId?: number;
       } = {};
 
       if (typeof req.body.state !== 'undefined') {
@@ -78,7 +77,6 @@ export default createRoute<{ code: string; wordId: string }>()
             },
           });
         }
-        fields.phraseId = phrase.id;
 
         const originalGloss = await tx.gloss.findUnique({
           where: {
@@ -98,6 +96,7 @@ export default createRoute<{ code: string; wordId: string }>()
           update: fields,
           create: {
             ...fields,
+            phraseId: phrase.id,
             wordId: req.query.wordId,
             languageId: language.id,
           },

@@ -23,13 +23,19 @@ export default createRoute<{ code: string; verseId: string }>()
       }
 
       const [result] = await client.$queryRaw<NextUnapprovedVerseResult>`
-        SELECT "Word"."verseId" as "nextUnapprovedVerseId"
-          FROM "Word" 
-          LEFT OUTER JOIN "Gloss" ON "Gloss"."wordId" = "Word"."id" 
-            AND "Gloss"."languageId" = ${language.id}::uuid
-        WHERE "Word"."verseId" > ${req.query.verseId} 
-          AND ("Gloss"."state" = 'UNAPPROVED' OR "Gloss"."state" IS NULL)
-        ORDER BY "Word"."id" LIMIT 1;
+        SELECT w."verseId" as "nextUnapprovedVerseId"
+        FROM "Word" AS w
+        LEFT JOIN LATERAL (
+          SELECT g.state AS state FROM "PhraseWord" AS phw
+          JOIN "Phrase" AS ph ON ph.id = phw."phraseId"
+          LEFT JOIN "Gloss" AS g ON g."phraseId" = ph.id
+          WHERE phw."wordId" = w.id
+			      AND ph."languageId" = ${language.id}::uuid
+        ) AS g ON true
+        WHERE w."verseId" > ${req.query.verseId}
+          AND (g."state" = 'UNAPPROVED' OR g."state" IS NULL)
+        ORDER BY w."id"
+        LIMIT 1
       `;
 
       res.ok({ nextUnapprovedVerseId: result.nextUnapprovedVerseId });
