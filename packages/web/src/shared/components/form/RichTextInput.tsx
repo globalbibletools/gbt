@@ -6,7 +6,6 @@ import {
   forwardRef,
   useEffect,
   useImperativeHandle,
-  useState,
 } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -60,7 +59,7 @@ const RichTextInput = forwardRef<RichTextInputRef, RichTextInputProps>(
     useImperativeHandle(
       ref,
       () => ({
-        focus: () => editor?.comamnds.focus(),
+        focus: () => editor?.commands.focus(),
       }),
       [editor]
     );
