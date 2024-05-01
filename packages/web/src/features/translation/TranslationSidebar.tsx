@@ -296,13 +296,8 @@ export const TranslationSidebar = forwardRef<
                           key={`translatorNote--${word.id}`}
                           name="translatorNoteContent"
                           value={translatorNoteContent}
-                          onBlur={async (e) => {
-                            saveTranslatorNote(e.target.value);
-                            saveTranslatorNote.flush();
-                          }}
-                          onChange={async (e) => {
-                            saveTranslatorNote(e.target.value);
-                          }}
+                          onBlur={() => saveTranslatorNote.flush()}
+                          onChange={saveTranslatorNote}
                         />
                       ) : (
                         <RichText content={translatorNoteContent} />
@@ -326,13 +321,8 @@ export const TranslationSidebar = forwardRef<
                         key={`footnote--${word.id}`}
                         name="footnoteContent"
                         value={footnoteContent}
-                        onBlur={async (e) => {
-                          saveFootnote(e.target.value);
-                          saveFootnote.flush();
-                        }}
-                        onChange={async (e) => {
-                          saveFootnote(e.target.value);
-                        }}
+                        onBlur={() => saveFootnote.flush()}
+                        onChange={saveFootnote}
                       />
                     ) : (
                       <RichText content={footnoteContent} />

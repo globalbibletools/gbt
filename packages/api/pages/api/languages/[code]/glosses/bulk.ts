@@ -59,6 +59,33 @@ export default createRoute<{ code: string }>()
             ).map(({ wordId, ...data }) => [wordId, data])
           );
 
+          await tx.$executeRaw`
+            WITH phw AS (
+              INSERT INTO "PhraseWord" ("phraseId", "wordId")
+              SELECT
+                nextval(pg_get_serial_sequence('"Phrase"', 'id')),
+                w.id
+              FROM "Word" AS w
+              LEFT JOIN (
+                SELECT * FROM "PhraseWord" AS phw
+                JOIN "Phrase" AS ph ON ph.id = phw."phraseId"
+                WHERE ph."languageId" = ${language.id}::uuid
+              ) ph ON ph."wordId" = w.id
+              WHERE w.id IN (${Prisma.join(
+                entriesToPatch.map((entry) => entry.wordId)
+              )})
+              RETURNING "phraseId", "wordId"
+            ),
+            phrase AS (
+              INSERT INTO "Phrase" (id, "languageId")
+              SELECT phw."phraseId", ${language.id}::uuid FROM phw
+            )
+            INSERT INTO "Gloss" ("phraseId", "languageId", "wordId")
+            SELECT phw."phraseId", ${language.id}::uuid, phw."wordId" FROM phw
+            ON CONFLICT ("languageId", "wordId") DO UPDATE
+              SET "phraseId" = EXCLUDED."phraseId"
+          `;
+
           // We can't use execute raw because we need the returned rows. See https://stackoverflow.com/questions/75191559/using-prisma-how-can-i-insert-using-executeraw-function-and-return-the-values
           const patchedGlosses = await tx.$queryRaw<Gloss[]>`
             INSERT INTO "Gloss"("languageId", "wordId", "gloss", "state") VALUES ${Prisma.join(
@@ -70,7 +97,7 @@ export default createRoute<{ code: string }>()
               )
             )}
             ON CONFLICT ("languageId", "wordId")
-                DO UPDATE SET 
+                DO UPDATE SET
                     "gloss" = COALESCE(EXCLUDED."gloss", "Gloss"."gloss"),
                     "state" = COALESCE(EXCLUDED."state", "Gloss"."state")
             RETURNING *;
@@ -78,16 +105,16 @@ export default createRoute<{ code: string }>()
 
           if (patchedGlosses.length > 0) {
             await tx.$executeRaw`
-            INSERT INTO "GlossHistoryEntry"("languageId", "userId", "wordId", "gloss", "state", "source") 
+            INSERT INTO "GlossHistoryEntry"("languageId", "userId", "wordId", "gloss", "state", "source")
             VALUES ${Prisma.join(
               patchedGlosses.map((patchedGloss) => {
                 const oldGloss = oldGlosses[patchedGloss.wordId];
                 return Prisma.sql`
-                    (${language.id}::uuid, 
-                    ${req.session?.user?.id}::uuid, 
-                    ${patchedGloss.wordId}, 
-                    NULLIF(${patchedGloss.gloss}, ${oldGloss?.gloss}), 
-                    NULLIF(${patchedGloss.state}, ${oldGloss?.state})::"GlossState", 
+                    (${language.id}::uuid,
+                    ${req.session?.user?.id}::uuid,
+                    ${patchedGloss.wordId},
+                    NULLIF(${patchedGloss.gloss}, ${oldGloss?.gloss}),
+                    NULLIF(${patchedGloss.state}, ${oldGloss?.state})::"GlossState",
                     'USER')`;
               })
             )}
