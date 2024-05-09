@@ -52,11 +52,27 @@ export default createRoute<{ code: string }>()
             (
               await tx.gloss.findMany({
                 where: {
-                  languageId: language.id,
-                  wordId: { in: entriesToPatch.map(({ wordId }) => wordId) },
+                  phrase: {
+                    words: {
+                      some: {
+                        wordId: {
+                          in: entriesToPatch.map(({ wordId }) => wordId),
+                        },
+                      },
+                    },
+                  },
+                },
+                include: {
+                  phrase: {
+                    select: {
+                      words: {
+                        select: { wordId: true },
+                      },
+                    },
+                  },
                 },
               })
-            ).map(({ wordId, ...data }) => [wordId, data])
+            ).map(({ phrase, ...data }) => [phrase.words[0].wordId, data])
           );
 
           await tx.$executeRaw`
@@ -75,33 +91,38 @@ export default createRoute<{ code: string }>()
                 entriesToPatch.map((entry) => entry.wordId)
               )})
               RETURNING "phraseId", "wordId"
-            ),
-            phrase AS (
-              INSERT INTO "Phrase" (id, "languageId")
-              SELECT phw."phraseId", ${language.id}::uuid FROM phw
             )
-            INSERT INTO "Gloss" ("phraseId", "languageId", "wordId")
-            SELECT phw."phraseId", ${language.id}::uuid, phw."wordId" FROM phw
-            ON CONFLICT ("languageId", "wordId") DO UPDATE
-              SET "phraseId" = EXCLUDED."phraseId"
+            INSERT INTO "Phrase" (id, "languageId")
+            SELECT phw."phraseId", ${language.id}::uuid FROM phw
           `;
 
-          // We can't use execute raw because we need the returned rows. See https://stackoverflow.com/questions/75191559/using-prisma-how-can-i-insert-using-executeraw-function-and-return-the-values
-          const patchedGlosses = await tx.$queryRaw<Gloss[]>`
-            INSERT INTO "Gloss"("languageId", "wordId", "gloss", "state") VALUES ${Prisma.join(
+          const patchedGlosses = await tx.$queryRaw<
+            { wordId: string; gloss: string; state: GlossState }[]
+          >`
+            WITH data (word_id, gloss, state) AS (VALUES ${Prisma.join(
               entriesToPatch.map(
                 ({ wordId, gloss, state }) =>
-                  Prisma.sql`(${language.id}::uuid, ${wordId}, ${gloss}, ${
+                  Prisma.sql`(${wordId}, ${gloss}, ${
                     state ?? oldGlosses[wordId]?.state ?? GlossState.Unapproved
                   }::"GlossState")`
               )
-            )}
-            ON CONFLICT ("languageId", "wordId")
-                DO UPDATE SET
-                    "gloss" = COALESCE(EXCLUDED."gloss", "Gloss"."gloss"),
-                    "state" = COALESCE(EXCLUDED."state", "Gloss"."state")
-            RETURNING *;
-        `;
+            )}),
+            gloss AS (
+              INSERT INTO "Gloss"("phraseId", "gloss", "state")
+              SELECT ph.id, data.gloss, data.state FROM data
+              JOIN "PhraseWord" AS phw ON phw."wordId" = data.word_id
+              JOIN "Phrase" AS ph ON ph.id = phw."phraseId"
+              WHERE ph."languageId" = ${language.id}::uuid
+              ON CONFLICT ("phraseId")
+                  DO UPDATE SET
+                      "gloss" = COALESCE(EXCLUDED."gloss", "Gloss"."gloss"),
+                      "state" = COALESCE(EXCLUDED."state", "Gloss"."state")
+              RETURNING *
+            )
+            SELECT phw."wordId", gloss.gloss, gloss.state FROM gloss
+            JOIN "Phrase" AS ph ON ph.id = gloss."phraseId"
+            JOIN "PhraseWord" AS phw ON phw."phraseId" = ph.id
+          `;
 
           if (patchedGlosses.length > 0) {
             await tx.$executeRaw`

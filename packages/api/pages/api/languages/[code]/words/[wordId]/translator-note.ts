@@ -51,10 +51,8 @@ export default createRoute<{ code: string; wordId: string }>()
         upsert_phrase AS (
           (SELECT * FROM phrase) UNION (SELECT * FROM new_phrase_word)
         )
-        INSERT INTO "TranslatorNote" ("wordId", "languageId", "phraseId", "content", "authorId", "timestamp")
+        INSERT INTO "TranslatorNote" ("phraseId", "content", "authorId", "timestamp")
         SELECT
-          ${req.query.wordId},
-          ${language.id}::uuid,
           upsert_phrase."phraseId",
           ${req.body.note},
           ${req.session.user.id}::uuid,
