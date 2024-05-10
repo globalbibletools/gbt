@@ -89,7 +89,7 @@ export default createRoute<{ code: string }>()
               ) ph ON ph."wordId" = w.id
               WHERE w.id IN (${Prisma.join(
                 entriesToPatch.map((entry) => entry.wordId)
-              )})
+              )}) AND ph.id IS NULL
               RETURNING "phraseId", "wordId"
             )
             INSERT INTO "Phrase" (id, "languageId")
@@ -107,22 +107,27 @@ export default createRoute<{ code: string }>()
                   }::"GlossState")`
               )
             )}),
+            phrase AS (
+              SELECT ph.id, phw."wordId" FROM "PhraseWord" AS phw
+              JOIN "Phrase" AS ph ON ph.id = phw."phraseId"
+              JOIN data ON data.word_id = phw."wordId"
+              WHERE ph."languageId" = ${language.id}::uuid
+            ),
             gloss AS (
               INSERT INTO "Gloss"("phraseId", "gloss", "state")
               SELECT ph.id, data.gloss, data.state FROM data
-              JOIN "PhraseWord" AS phw ON phw."wordId" = data.word_id
-              JOIN "Phrase" AS ph ON ph.id = phw."phraseId"
-              WHERE ph."languageId" = ${language.id}::uuid
+              JOIN phrase AS ph ON ph."wordId" = data.word_id
               ON CONFLICT ("phraseId")
                   DO UPDATE SET
                       "gloss" = COALESCE(EXCLUDED."gloss", "Gloss"."gloss"),
                       "state" = COALESCE(EXCLUDED."state", "Gloss"."state")
               RETURNING *
             )
-            SELECT phw."wordId", gloss.gloss, gloss.state FROM gloss
-            JOIN "Phrase" AS ph ON ph.id = gloss."phraseId"
-            JOIN "PhraseWord" AS phw ON phw."phraseId" = ph.id
+            SELECT ph."wordId", gloss.gloss, gloss.state FROM gloss
+            JOIN phrase AS ph ON ph.id = gloss."phraseId"
           `;
+
+          console.log(patchedGlosses);
 
           if (patchedGlosses.length > 0) {
             await tx.$executeRaw`
