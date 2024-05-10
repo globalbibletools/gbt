@@ -29,8 +29,8 @@ export default createRoute<{ code: string; verseId: string }>()
           w."id" as "wordId",
           COALESCE(tn_u."name", '') AS "translatorNoteAuthorName",
           COALESCE(fn_u."name", '') AS "footnoteAuthorName",
-          fn."timestamp" AS "translatorNoteTimestamp",
-          tn."timestamp" AS "footnoteTimestamp",
+          tn."timestamp" AS "translatorNoteTimestamp",
+          fn."timestamp" AS "footnoteTimestamp",
           COALESCE(tn."content", '') AS "translatorNoteContent",
           COALESCE(fn."content", '') AS "footnoteContent"
         FROM "Word" AS w
