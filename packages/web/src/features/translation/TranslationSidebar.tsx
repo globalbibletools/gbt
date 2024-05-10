@@ -1,5 +1,5 @@
 import { Tab } from '@headlessui/react';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { Verse } from '@translation/api-types';
 import DOMPurify from 'dompurify';
 import { throttle } from 'lodash';
@@ -103,39 +103,48 @@ export const TranslationSidebar = forwardRef<
         );
       }
     }, [word.id, notesQuery]);
+    const saveTranslatorNoteMutation = useMutation({
+      mutationFn: async (noteContent: string) =>
+        await apiClient.words.updateTranslatorNote({
+          wordId: word.id,
+          language,
+          note: noteContent,
+        }),
+    });
 
     const saveTranslatorNote = useMemo(
       () =>
         throttle(
           async (noteContent: string) => {
-            await apiClient.words.updateTranslatorNote({
-              wordId: word.id,
-              language,
-              note: noteContent,
-            });
+            await saveTranslatorNoteMutation.mutateAsync(noteContent);
             notesQuery.refetch();
           },
           15000,
           { leading: false, trailing: true }
         ),
-      [language, notesQuery, word.id]
+      [notesQuery, saveTranslatorNoteMutation]
     );
+
+    const saveFootnoteMutation = useMutation({
+      mutationFn: async (noteContent: string) =>
+        await apiClient.words.updateFootnote({
+          wordId: word.id,
+          language,
+          note: noteContent,
+        }),
+    });
 
     const saveFootnote = useMemo(
       () =>
         throttle(
           async (noteContent: string) => {
-            await apiClient.words.updateFootnote({
-              wordId: word.id,
-              language,
-              note: noteContent,
-            });
+            await saveFootnoteMutation.mutateAsync(noteContent);
             notesQuery.refetch();
           },
           15000,
           { leading: false, trailing: true }
         ),
-      [language, notesQuery, word.id]
+      [notesQuery, saveFootnoteMutation]
     );
     const { bookId, chapterNumber, verseNumber } = parseVerseId(verse.id);
     const bdbCurrentVerseRef = `${
@@ -275,9 +284,16 @@ export const TranslationSidebar = forwardRef<
                 <div className="flex flex-col gap-6 pb-2">
                   {hasLanguageReadPermissions && (
                     <div className="flex flex-col gap-2">
-                      <h2 className="font-bold">
-                        {t('translate:translator_notes')}
-                      </h2>
+                      <div className="flex flex-row gap-2.5">
+                        <h2 className="font-bold">
+                          {t('translate:translator_notes')}
+                        </h2>
+                        {saveTranslatorNoteMutation.isLoading && (
+                          <em>
+                            <Icon icon="save" /> Saving...
+                          </em>
+                        )}
+                      </div>
                       {translatorNote?.authorName && (
                         <span className="italic">
                           {t('translate:note_description', {
@@ -304,7 +320,14 @@ export const TranslationSidebar = forwardRef<
                     </div>
                   )}
                   <div className="flex flex-col gap-2">
-                    <h2 className="font-bold">{t('translate:footnotes')}</h2>
+                    <div className="flex flex-row gap-2.5">
+                      <h2 className="font-bold">{t('translate:footnotes')}</h2>
+                      {saveFootnoteMutation.isLoading && (
+                        <em>
+                          <Icon icon="save" /> Saving...
+                        </em>
+                      )}
+                    </div>
                     {hasLanguageReadPermissions && footnote?.authorName && (
                       <span className="italic">
                         {t('translate:note_description', {
