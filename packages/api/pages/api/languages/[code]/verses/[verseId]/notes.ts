@@ -36,7 +36,7 @@ export default createRoute<{ code: string; verseId: string }>()
         FROM "Word" AS w
 
         LEFT JOIN LATERAL (
-          SELECT phw."wordId", ph.id FROM "PhraseWord" AS phw
+          SELECT ph.id FROM "PhraseWord" AS phw
           JOIN "Phrase" AS ph ON ph.id = phw."phraseId"
           WHERE phw."wordId" = w.id
             AND ph."languageId" = ${language.id}::uuid
