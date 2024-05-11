@@ -35,9 +35,12 @@ export default createRoute<{ code: string; verseId: string }>()
           COALESCE(fn."content", '') AS "footnoteContent"
         FROM "Word" AS w
 
-        LEFT JOIN "PhraseWord" AS phw ON phw."wordId" = w.id
-        LEFT JOIN "Phrase" AS ph ON ph.id = phw."phraseId"
-          AND ph."languageId" = ${language.id}::uuid
+        LEFT JOIN LATERAL (
+          SELECT phw."wordId", ph.id FROM "PhraseWord" AS phw
+          JOIN "Phrase" AS ph ON ph.id = phw."phraseId"
+          WHERE phw."wordId" = w.id
+            AND ph."languageId" = ${language.id}::uuid
+        ) AS ph ON true
 
         LEFT JOIN "TranslatorNote" tn ON tn."phraseId" = ph.id
         LEFT JOIN "User" AS tn_u ON tn_u.id = tn."authorId"
