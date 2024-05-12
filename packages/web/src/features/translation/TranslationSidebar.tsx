@@ -290,7 +290,7 @@ export const TranslationSidebar = forwardRef<
                         </h2>
                         {saveTranslatorNoteMutation.isLoading && (
                           <em>
-                            <Icon icon="save" /> Saving...
+                            <Icon icon="save" /> {t('common:saving')}...
                           </em>
                         )}
                       </div>
@@ -324,7 +324,7 @@ export const TranslationSidebar = forwardRef<
                       <h2 className="font-bold">{t('translate:footnotes')}</h2>
                       {saveFootnoteMutation.isLoading && (
                         <em>
-                          <Icon icon="save" /> Saving...
+                          <Icon icon="save" /> {t('common:saving')}...
                         </em>
                       )}
                     </div>
