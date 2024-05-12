@@ -135,13 +135,13 @@ export default createRoute<{ code: string; verseId: string }>()
         LEFT JOIN LATERAL (
           SELECT phw."wordId", g.gloss FROM "PhraseWord" AS phw
           JOIN "Phrase" AS ph ON ph.id = phw."phraseId"
-          JOIN "Language" AS l ON l.id = ph."languageId" AND l.code = 'eng'
           JOIN "Gloss" AS g ON g."phraseId" = ph.id
           WHERE phw."wordId" = w.id
+            AND ph."languageId" = (SELECT id FROM "Language" WHERE code = 'eng')
         ) AS ref ON true
 
         LEFT JOIN "MachineGloss" AS ma ON ma."wordId" = w.id
-          AND ma."languageId" = '018bba77-bbea-1edf-c38a-d72521f05821'::uuid
+          AND ma."languageId" = ${language.id}::uuid
 
         WHERE w."verseId" = ${req.query.verseId}
         ORDER BY w.id
