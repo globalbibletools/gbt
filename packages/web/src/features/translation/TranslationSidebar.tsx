@@ -285,9 +285,9 @@ export const TranslationSidebar = forwardRef<
                           {t('translate:translator_notes')}
                         </h2>
                         {isSavingTranslatorNote && (
-                          <em>
+                          <span className="italic">
                             <Icon icon="save" /> {t('common:saving')}...
-                          </em>
+                          </span>
                         )}
                       </div>
                       {translatorNote?.authorName && (
@@ -319,9 +319,9 @@ export const TranslationSidebar = forwardRef<
                     <div className="flex flex-row gap-2.5">
                       <h2 className="font-bold">{t('translate:footnotes')}</h2>
                       {isSavingFootnote && (
-                        <em>
+                        <span className="italic">
                           <Icon icon="save" /> {t('common:saving')}...
-                        </em>
+                        </span>
                       )}
                     </div>
                     {hasLanguageReadPermissions && footnote?.authorName && (
