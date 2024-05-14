@@ -89,16 +89,16 @@ export const TranslationSidebar = forwardRef<
       id: language,
     });
 
-    // const [translatorNoteContent, setTranslatorNoteContent] = useState('');
-    const [footnoteContent, setFootnoteContent] = useState('');
     const wordId = useRef('');
 
-    const [isNotesTabMounted, setIsNotesTabMounted] = useState<boolean>(false);
+    const [hasNotesTabMounted, setHasNotesTabMounted] =
+      useState<boolean>(false);
     const translatorNotesEditorRef = useRef<RichTextInputRef>(null);
+    const footnotesEditorRef = useRef<RichTextInputRef>(null);
 
     useEffect(() => {
       if (
-        isNotesTabMounted &&
+        hasNotesTabMounted &&
         notesQuery.isSuccess &&
         word.id !== wordId.current
       ) {
@@ -106,11 +106,11 @@ export const TranslationSidebar = forwardRef<
         translatorNotesEditorRef.current &&
           (translatorNotesEditorRef.current.value =
             notesQuery.data.data.translatorNotes[word.id]?.content ?? '');
-        setFootnoteContent(
-          notesQuery.data.data.footnotes[word.id]?.content ?? ''
-        );
+        footnotesEditorRef.current &&
+          (footnotesEditorRef.current.value =
+            notesQuery.data.data.footnotes[word.id]?.content ?? '');
       }
-    }, [word.id, notesQuery, isNotesTabMounted]);
+    }, [word.id, notesQuery, hasNotesTabMounted]);
 
     const saveTranslatorNote = useMemo(
       () =>
@@ -222,7 +222,7 @@ export const TranslationSidebar = forwardRef<
             selectedIndex={tabIndex}
             onChange={(newIndex) => {
               setTabIndex(newIndex);
-              if (newIndex === 1) setIsNotesTabMounted(true);
+              if (newIndex === 1) setHasNotesTabMounted(true);
             }}
           >
             <Tab.List className="flex flex-row">
@@ -334,13 +334,17 @@ export const TranslationSidebar = forwardRef<
                     )}
                     {canEditNote ? (
                       <RichTextInput
+                        ref={footnotesEditorRef}
                         name="footnoteContent"
-                        value={footnoteContent}
                         onBlur={() => saveFootnote.flush()}
                         onChange={saveFootnote}
                       />
                     ) : (
-                      <RichText content={footnoteContent} />
+                      <RichText
+                        content={
+                          notesQuery.data?.data.footnotes[word.id].content ?? ''
+                        }
+                      />
                     )}
                   </div>
                 </div>
