@@ -20,6 +20,7 @@ export interface RichTextInputProps {
 }
 
 export interface RichTextInputRef {
+  value: string;
   focus(): void;
 }
 
@@ -59,6 +60,17 @@ const RichTextInput = forwardRef<RichTextInputRef, RichTextInputProps>(
     useImperativeHandle(
       ref,
       () => ({
+        get value() {
+          return editor?.getHTML() ?? '';
+        },
+        set value(newValue: string) {
+          console.log(
+            `!!!!!!!!!!!!!!!!!!!!!!! setting value. editor: ${editor}`
+          );
+          editor?.commands.setContent(newValue, false, {
+            preserveWhitespace: 'full',
+          });
+        },
         focus: () => editor?.commands.focus(),
       }),
       [editor]

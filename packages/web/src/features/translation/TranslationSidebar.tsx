@@ -89,20 +89,40 @@ export const TranslationSidebar = forwardRef<
       id: language,
     });
 
-    const [translatorNoteContent, setTranslatorNoteContent] = useState('');
+    // const [translatorNoteContent, setTranslatorNoteContent] = useState('');
     const [footnoteContent, setFootnoteContent] = useState('');
     const wordId = useRef('');
+
+    const [isNotesTabMounted, setIsNotesTabMounted] = useState<boolean>(false);
+    const translatorNotesEditorRef = useRef<RichTextInputRef>(null);
+
     useEffect(() => {
-      if (notesQuery.isSuccess && word.id !== wordId.current) {
+      console.log(`################### mounted? ${isNotesTabMounted}`);
+      if (
+        isNotesTabMounted &&
+        notesQuery.isSuccess &&
+        word.id !== wordId.current
+      ) {
         wordId.current = word.id;
-        setTranslatorNoteContent(
-          notesQuery.data.data.translatorNotes[word.id]?.content ?? ''
+        console.log(
+          `&&&&&&&&&&&&&&&&&&&&& notes eidtor ref: ${translatorNotesEditorRef.current}`
+        );
+        console.log(
+          `********************* notes query content: ${
+            notesQuery.data.data.translatorNotes[word.id]?.content
+          }`
+        );
+        translatorNotesEditorRef.current &&
+          (translatorNotesEditorRef.current.value =
+            notesQuery.data.data.translatorNotes[word.id]?.content ?? '');
+        console.log(
+          `^^^^^^^^^^^^^^^^^^^^^ notes editor value now: ${translatorNotesEditorRef.current?.value}`
         );
         setFootnoteContent(
           notesQuery.data.data.footnotes[word.id]?.content ?? ''
         );
       }
-    }, [word.id, notesQuery]);
+    }, [word.id, notesQuery, isNotesTabMounted]);
 
     const saveTranslatorNote = useMemo(
       () =>
@@ -148,6 +168,15 @@ export const TranslationSidebar = forwardRef<
     );
     const [previewVerseIds, setPreviewVerseIds] = useState<string[]>([]);
 
+    useImperativeHandle(ref, () => ({
+      openNotes: () => {
+        setTabIndex(1);
+        setTimeout(() => {
+          translatorNotesEditorRef.current?.focus();
+        }, 0);
+      },
+    }));
+
     useEffect(() => {
       const { current } = lexiconEntryRef;
       // Highlight references to the currently selected verse
@@ -176,16 +205,6 @@ export const TranslationSidebar = forwardRef<
 
     const [tabIndex, setTabIndex] = useState(0);
 
-    const translatorNotesEditorRef = useRef<RichTextInputRef>(null);
-    useImperativeHandle(ref, () => ({
-      openNotes: () => {
-        setTabIndex(1);
-        setTimeout(() => {
-          translatorNotesEditorRef.current?.focus();
-        }, 0);
-      },
-    }));
-
     return (
       <div
         className={`
@@ -211,7 +230,13 @@ export const TranslationSidebar = forwardRef<
           </div>
         </div>
         <div className="grow flex flex-col min-h-0">
-          <Tab.Group selectedIndex={tabIndex} onChange={setTabIndex}>
+          <Tab.Group
+            selectedIndex={tabIndex}
+            onChange={(newIndex) => {
+              setTabIndex(newIndex);
+              if (newIndex === 1) setIsNotesTabMounted(true);
+            }}
+          >
             <Tab.List className="flex flex-row">
               <div className="border-b border-blue-800 h-full w-2"></div>
               {tabTitles.map((title) => (
@@ -294,12 +319,25 @@ export const TranslationSidebar = forwardRef<
                         <RichTextInput
                           ref={translatorNotesEditorRef}
                           name="translatorNoteContent"
-                          value={translatorNoteContent}
                           onBlur={() => saveTranslatorNote.flush()}
                           onChange={saveTranslatorNote}
                         />
                       ) : (
-                        <RichText content={translatorNoteContent} />
+                        <RichText
+                          content={(() => {
+                            const value =
+                              notesQuery.data?.data.translatorNotes[word.id]
+                                .content ?? '';
+                            console.log(
+                              `%%%%%%%%%%%%%%%%%%% view only value: ${value}\n\t====================> wordId ${
+                                word.id
+                              }\n\t========================> translatorNotes: ${JSON.stringify(
+                                notesQuery.data?.data.translatorNotes
+                              )}`
+                            );
+                            return value;
+                          })()}
+                        />
                       )}
                     </div>
                   )}
