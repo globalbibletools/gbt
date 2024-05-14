@@ -312,19 +312,10 @@ export const TranslationSidebar = forwardRef<
                         />
                       ) : (
                         <RichText
-                          content={(() => {
-                            const value =
-                              notesQuery.data?.data.translatorNotes[word.id]
-                                .content ?? '';
-                            console.log(
-                              `%%%%%%%%%%%%%%%%%%% view only value: ${value}\n\t====================> wordId ${
-                                word.id
-                              }\n\t========================> translatorNotes: ${JSON.stringify(
-                                notesQuery.data?.data.translatorNotes
-                              )}`
-                            );
-                            return value;
-                          })()}
+                          content={
+                            notesQuery.data?.data.translatorNotes[word.id]
+                              .content ?? ''
+                          }
                         />
                       )}
                     </div>
