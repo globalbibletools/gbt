@@ -97,27 +97,15 @@ export const TranslationSidebar = forwardRef<
     const translatorNotesEditorRef = useRef<RichTextInputRef>(null);
 
     useEffect(() => {
-      console.log(`################### mounted? ${isNotesTabMounted}`);
       if (
         isNotesTabMounted &&
         notesQuery.isSuccess &&
         word.id !== wordId.current
       ) {
         wordId.current = word.id;
-        console.log(
-          `&&&&&&&&&&&&&&&&&&&&& notes eidtor ref: ${translatorNotesEditorRef.current}`
-        );
-        console.log(
-          `********************* notes query content: ${
-            notesQuery.data.data.translatorNotes[word.id]?.content
-          }`
-        );
         translatorNotesEditorRef.current &&
           (translatorNotesEditorRef.current.value =
             notesQuery.data.data.translatorNotes[word.id]?.content ?? '');
-        console.log(
-          `^^^^^^^^^^^^^^^^^^^^^ notes editor value now: ${translatorNotesEditorRef.current?.value}`
-        );
         setFootnoteContent(
           notesQuery.data.data.footnotes[word.id]?.content ?? ''
         );
