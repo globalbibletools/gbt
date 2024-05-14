@@ -127,8 +127,6 @@ export default createRoute<{ code: string }>()
             JOIN phrase AS ph ON ph.id = gloss."phraseId"
           `;
 
-          console.log(patchedGlosses);
-
           if (patchedGlosses.length > 0) {
             await tx.$executeRaw`
             INSERT INTO "GlossHistoryEntry"("languageId", "userId", "wordId", "gloss", "state", "source")
