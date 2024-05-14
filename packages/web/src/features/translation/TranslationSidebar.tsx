@@ -1,5 +1,5 @@
 import { Tab } from '@headlessui/react';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { Verse } from '@translation/api-types';
 import DOMPurify from 'dompurify';
 import { throttle } from 'lodash';
@@ -103,39 +103,44 @@ export const TranslationSidebar = forwardRef<
         );
       }
     }, [word.id, notesQuery]);
+    const {
+      isLoading: isSavingTranslatorNote,
+      mutateAsync: mutateTranslatorNote,
+    } = useMutation({
+      mutationFn: (data: { wordId: string; language: string; note: string }) =>
+        apiClient.words.updateTranslatorNote(data),
+      onSuccess: () => notesQuery.refetch(),
+    });
 
     const saveTranslatorNote = useMemo(
       () =>
         throttle(
-          async (noteContent: string) => {
-            await apiClient.words.updateTranslatorNote({
-              wordId: word.id,
-              language,
-              note: noteContent,
-            });
-            notesQuery.refetch();
-          },
+          (note: string) =>
+            mutateTranslatorNote({ wordId: word.id, language, note }),
           15000,
           { leading: false, trailing: true }
         ),
-      [language, notesQuery, word.id]
+      [language, mutateTranslatorNote, word.id]
     );
+
+    const { isLoading: isSavingFootnote, mutateAsync: mutateFootnote } =
+      useMutation({
+        mutationFn: (data: {
+          wordId: string;
+          language: string;
+          note: string;
+        }) => apiClient.words.updateFootnote(data),
+        onSuccess: () => notesQuery.refetch(),
+      });
 
     const saveFootnote = useMemo(
       () =>
         throttle(
-          async (noteContent: string) => {
-            await apiClient.words.updateFootnote({
-              wordId: word.id,
-              language,
-              note: noteContent,
-            });
-            notesQuery.refetch();
-          },
+          (note: string) => mutateFootnote({ wordId: word.id, language, note }),
           15000,
           { leading: false, trailing: true }
         ),
-      [language, notesQuery, word.id]
+      [language, mutateFootnote, word.id]
     );
     const { bookId, chapterNumber, verseNumber } = parseVerseId(verse.id);
     const bdbCurrentVerseRef = `${
@@ -275,9 +280,16 @@ export const TranslationSidebar = forwardRef<
                 <div className="flex flex-col gap-6 pb-2">
                   {hasLanguageReadPermissions && (
                     <div className="flex flex-col gap-2">
-                      <h2 className="font-bold">
-                        {t('translate:translator_notes')}
-                      </h2>
+                      <div className="flex flex-row gap-2.5">
+                        <h2 className="font-bold">
+                          {t('translate:translator_notes')}
+                        </h2>
+                        {isSavingTranslatorNote && (
+                          <span className="italic">
+                            <Icon icon="save" /> {t('common:saving')}...
+                          </span>
+                        )}
+                      </div>
                       {translatorNote?.authorName && (
                         <span className="italic">
                           {t('translate:note_description', {
@@ -304,7 +316,14 @@ export const TranslationSidebar = forwardRef<
                     </div>
                   )}
                   <div className="flex flex-col gap-2">
-                    <h2 className="font-bold">{t('translate:footnotes')}</h2>
+                    <div className="flex flex-row gap-2.5">
+                      <h2 className="font-bold">{t('translate:footnotes')}</h2>
+                      {isSavingFootnote && (
+                        <span className="italic">
+                          <Icon icon="save" /> {t('common:saving')}...
+                        </span>
+                      )}
+                    </div>
                     {hasLanguageReadPermissions && footnote?.authorName && (
                       <span className="italic">
                         {t('translate:note_description', {
