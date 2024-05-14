@@ -103,48 +103,44 @@ export const TranslationSidebar = forwardRef<
         );
       }
     }, [word.id, notesQuery]);
-    const saveTranslatorNoteMutation = useMutation({
-      mutationFn: async (noteContent: string) =>
-        await apiClient.words.updateTranslatorNote({
-          wordId: word.id,
-          language,
-          note: noteContent,
-        }),
+    const {
+      isLoading: isSavingTranslatorNote,
+      mutateAsync: mutateTranslatorNote,
+    } = useMutation({
+      mutationFn: (data: { wordId: string; language: string; note: string }) =>
+        apiClient.words.updateTranslatorNote(data),
+      onSuccess: () => notesQuery.refetch(),
     });
 
     const saveTranslatorNote = useMemo(
       () =>
         throttle(
-          async (noteContent: string) => {
-            await saveTranslatorNoteMutation.mutateAsync(noteContent);
-            notesQuery.refetch();
-          },
+          (note: string) =>
+            mutateTranslatorNote({ wordId: word.id, language, note }),
           15000,
           { leading: false, trailing: true }
         ),
-      [notesQuery, saveTranslatorNoteMutation]
+      [language, mutateTranslatorNote, word.id]
     );
 
-    const saveFootnoteMutation = useMutation({
-      mutationFn: async (noteContent: string) =>
-        await apiClient.words.updateFootnote({
-          wordId: word.id,
-          language,
-          note: noteContent,
-        }),
-    });
+    const { isLoading: isSavingFootnote, mutateAsync: mutateFootnote } =
+      useMutation({
+        mutationFn: (data: {
+          wordId: string;
+          language: string;
+          note: string;
+        }) => apiClient.words.updateFootnote(data),
+        onSuccess: () => notesQuery.refetch(),
+      });
 
     const saveFootnote = useMemo(
       () =>
         throttle(
-          async (noteContent: string) => {
-            await saveFootnoteMutation.mutateAsync(noteContent);
-            notesQuery.refetch();
-          },
+          (note: string) => mutateFootnote({ wordId: word.id, language, note }),
           15000,
           { leading: false, trailing: true }
         ),
-      [notesQuery, saveFootnoteMutation]
+      [language, mutateFootnote, word.id]
     );
     const { bookId, chapterNumber, verseNumber } = parseVerseId(verse.id);
     const bdbCurrentVerseRef = `${
@@ -288,7 +284,7 @@ export const TranslationSidebar = forwardRef<
                         <h2 className="font-bold">
                           {t('translate:translator_notes')}
                         </h2>
-                        {saveTranslatorNoteMutation.isLoading && (
+                        {isSavingTranslatorNote && (
                           <em>
                             <Icon icon="save" /> {t('common:saving')}...
                           </em>
@@ -322,7 +318,7 @@ export const TranslationSidebar = forwardRef<
                   <div className="flex flex-col gap-2">
                     <div className="flex flex-row gap-2.5">
                       <h2 className="font-bold">{t('translate:footnotes')}</h2>
-                      {saveFootnoteMutation.isLoading && (
+                      {isSavingFootnote && (
                         <em>
                           <Icon icon="save" /> {t('common:saving')}...
                         </em>
