@@ -175,6 +175,7 @@ model Word {
   phrases        PhraseWord[]
 
   @@index([formId])
+  @@index([verseId])
 }
 
 /// A form of a lemma. This are differentiated by grammatical forms, as well as suffixes and prefixes.
@@ -290,6 +291,8 @@ model Phrase {
   translatorNote TranslatorNote?
   /// The footnote for the phrase.
   footnote       Footnote?
+
+  @@index([languageId])
 }
 
 // Connects one or more words to a phrase in a language.
@@ -304,6 +307,7 @@ model PhraseWord {
   wordId   String
 
   @@id([phraseId, wordId])
+  @@index([wordId])
 }
 
 enum GlossState {
@@ -321,6 +325,8 @@ model Gloss {
   gloss    String?
   /// The approval state of the gloss.
   state    GlossState @default(UNAPPROVED)
+
+  @@index([phraseId])
 }
 
 /// Represents a gloss update for a particular language.
@@ -405,6 +411,8 @@ model TranslatorNote {
   timestamp DateTime
   /// The content of the note.
   content   String
+
+  @@index([phraseId])
 }
 
 /// The footnote for a word in a particular language.
@@ -421,4 +429,6 @@ model Footnote {
   timestamp DateTime
   /// The content of the note.
   content   String
+
+  @@index([phraseId])
 }
