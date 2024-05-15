@@ -39,7 +39,7 @@ import { isRichTextEmpty } from '../../shared/components/form/RichTextInput';
 export const translationLanguageKey = 'translation-language';
 export const translationVerseIdKey = 'translation-verse-id';
 
-const VERSES_TO_PREFETCH = 0;
+const VERSES_TO_PREFETCH = 2;
 
 function useTranslationQueries(language: string, verseId: string) {
   const languagesQuery = useQuery(['languages'], () =>
