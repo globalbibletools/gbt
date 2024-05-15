@@ -91,26 +91,22 @@ export const TranslationSidebar = forwardRef<
 
     const wordId = useRef('');
 
-    const [hasNotesTabMounted, setHasNotesTabMounted] =
-      useState<boolean>(false);
     const translatorNotesEditorRef = useRef<RichTextInputRef>(null);
-    const footnotesEditorRef = useRef<RichTextInputRef>(null);
+
+    const [translatorNoteContent, setTranslatorNoteContent] = useState('');
+    const [footnoteContent, setFootnoteContent] = useState('');
 
     useEffect(() => {
-      if (
-        hasNotesTabMounted &&
-        notesQuery.isSuccess &&
-        word.id !== wordId.current
-      ) {
+      if (notesQuery.isSuccess && word.id !== wordId.current) {
         wordId.current = word.id;
-        translatorNotesEditorRef.current &&
-          (translatorNotesEditorRef.current.value =
-            notesQuery.data.data.translatorNotes[word.id]?.content ?? '');
-        footnotesEditorRef.current &&
-          (footnotesEditorRef.current.value =
-            notesQuery.data.data.footnotes[word.id]?.content ?? '');
+        setTranslatorNoteContent(
+          notesQuery.data.data.translatorNotes[word.id]?.content ?? ''
+        );
+        setFootnoteContent(
+          notesQuery.data.data.footnotes[word.id]?.content ?? ''
+        );
       }
-    }, [word.id, notesQuery, hasNotesTabMounted]);
+    }, [word.id, notesQuery]);
 
     const saveTranslatorNote = useMemo(
       () =>
@@ -218,13 +214,7 @@ export const TranslationSidebar = forwardRef<
           </div>
         </div>
         <div className="grow flex flex-col min-h-0">
-          <Tab.Group
-            selectedIndex={tabIndex}
-            onChange={(newIndex) => {
-              setTabIndex(newIndex);
-              if (newIndex === 1) setHasNotesTabMounted(true);
-            }}
-          >
+          <Tab.Group selectedIndex={tabIndex} onChange={setTabIndex}>
             <Tab.List className="flex flex-row">
               <div className="border-b border-blue-800 h-full w-2"></div>
               {tabTitles.map((title) => (
@@ -306,17 +296,16 @@ export const TranslationSidebar = forwardRef<
                       {canEditNote ? (
                         <RichTextInput
                           ref={translatorNotesEditorRef}
+                          value={translatorNoteContent}
                           name="translatorNoteContent"
                           onBlur={() => saveTranslatorNote.flush()}
-                          onChange={saveTranslatorNote}
+                          onChange={(noteContent) => {
+                            setTranslatorNoteContent(noteContent);
+                            saveTranslatorNote(noteContent);
+                          }}
                         />
                       ) : (
-                        <RichText
-                          content={
-                            notesQuery.data?.data.translatorNotes[word.id]
-                              .content ?? ''
-                          }
-                        />
+                        <RichText content={translatorNoteContent} />
                       )}
                     </div>
                   )}
@@ -334,17 +323,16 @@ export const TranslationSidebar = forwardRef<
                     )}
                     {canEditNote ? (
                       <RichTextInput
-                        ref={footnotesEditorRef}
+                        value={footnoteContent}
                         name="footnoteContent"
                         onBlur={() => saveFootnote.flush()}
-                        onChange={saveFootnote}
+                        onChange={(noteContent) => {
+                          setFootnoteContent(noteContent);
+                          saveFootnote(noteContent);
+                        }}
                       />
                     ) : (
-                      <RichText
-                        content={
-                          notesQuery.data?.data.footnotes[word.id].content ?? ''
-                        }
-                      />
+                      <RichText content={footnoteContent} />
                     )}
                   </div>
                 </div>
