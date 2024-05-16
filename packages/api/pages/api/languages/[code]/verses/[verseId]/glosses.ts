@@ -1,16 +1,9 @@
-import {
-  GetVerseGlossesResponseBody,
-  GlossSource,
-  GlossState,
-  PostBulkGlossesRequestBody,
-} from '@translation/api-types';
+import { GetVerseGlossesResponseBody } from '@translation/api-types';
 import { client, PrismaTypes } from '../../../../../../shared/db';
 import createRoute from '../../../../../../shared/Route';
 import { machineTranslationClient } from '../../../../../../shared/machine-translation';
 import languageMap from '../../../../../../../../data/language-mapping.json';
 import { Language, Prisma } from '@prisma/client';
-import { authorize } from '../../../../../../shared/access-control/authorize';
-import * as z from 'zod';
 
 interface WordQuery {
   wordId: string;

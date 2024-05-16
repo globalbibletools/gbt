@@ -1,5 +1,5 @@
 import { Tab } from '@headlessui/react';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { Verse } from '@translation/api-types';
 import DOMPurify from 'dompurify';
 import { throttle } from 'lodash';
@@ -62,15 +62,17 @@ export const TranslationSidebar = forwardRef<
     );
     const lexiconEntry = lexiconResource?.entry ?? '';
 
-    const { refetch: refetchNotes, data: notesData } = useQuery(
+    const notesQuery = useQuery(
       ['verse-translator-notes', language, verse.id],
       () => apiClient.verses.findNotes(verse.id, language)
     );
-    const translatorNote = notesData
-      ? notesData.data.translatorNotes[word.id]
+    const translatorNote = notesQuery.isSuccess
+      ? notesQuery.data.data.translatorNotes[word.id]
       : null;
 
-    const footnote = notesData ? notesData.data.footnotes[word.id] : null;
+    const footnote = notesQuery.isSuccess
+      ? notesQuery.data.data.footnotes[word.id]
+      : null;
 
     const tabTitles = ['translate:lexicon', 'translate:notes'];
     if (showComments) {
@@ -93,46 +95,54 @@ export const TranslationSidebar = forwardRef<
     const [footnoteContent, setFootnoteContent] = useState('');
 
     useEffect(() => {
-      if (notesData) {
+      if (notesQuery.data) {
         setTranslatorNoteContent(
-          notesData.data.translatorNotes[word.id]?.content ?? ''
+          notesQuery.data.data.translatorNotes[word.id]?.content ?? ''
         );
-        setFootnoteContent(notesData.data.footnotes[word.id]?.content ?? '');
+        setFootnoteContent(
+          notesQuery.data.data.footnotes[word.id]?.content ?? ''
+        );
       }
-    }, [word.id, notesData]);
+    }, [word.id, notesQuery.data]);
+
+    const {
+      isLoading: isSavingTranslatorNote,
+      mutateAsync: mutateTranslatorNote,
+    } = useMutation({
+      mutationFn: (data: { wordId: string; language: string; note: string }) =>
+        apiClient.words.updateTranslatorNote(data),
+      onSuccess: () => notesQuery.refetch(),
+    });
 
     const saveTranslatorNote = useMemo(
       () =>
         throttle(
-          async (noteContent: string) => {
-            await apiClient.words.updateTranslatorNote({
-              wordId: word.id,
-              language,
-              note: noteContent,
-            });
-            refetchNotes();
-          },
+          (note: string) =>
+            mutateTranslatorNote({ wordId: word.id, language, note }),
           15000,
           { leading: false, trailing: true }
         ),
-      [language, word.id, refetchNotes]
+      [language, mutateTranslatorNote, word.id]
     );
+
+    const { isLoading: isSavingFootnote, mutateAsync: mutateFootnote } =
+      useMutation({
+        mutationFn: (data: {
+          wordId: string;
+          language: string;
+          note: string;
+        }) => apiClient.words.updateFootnote(data),
+        onSuccess: () => notesQuery.refetch(),
+      });
 
     const saveFootnote = useMemo(
       () =>
         throttle(
-          async (noteContent: string) => {
-            await apiClient.words.updateFootnote({
-              wordId: word.id,
-              language,
-              note: noteContent,
-            });
-            refetchNotes();
-          },
+          (note: string) => mutateFootnote({ wordId: word.id, language, note }),
           15000,
           { leading: false, trailing: true }
         ),
-      [language, word.id, refetchNotes]
+      [language, mutateFootnote, word.id]
     );
     const { bookId, chapterNumber, verseNumber } = parseVerseId(verse.id);
     const bdbCurrentVerseRef = `${
@@ -271,9 +281,16 @@ export const TranslationSidebar = forwardRef<
                 <div className="flex flex-col gap-6 pb-2">
                   {hasLanguageReadPermissions && (
                     <div className="flex flex-col gap-2">
-                      <h2 className="font-bold">
-                        {t('translate:translator_notes')}
-                      </h2>
+                      <div className="flex flex-row gap-2.5">
+                        <h2 className="font-bold">
+                          {t('translate:translator_notes')}
+                        </h2>
+                        {isSavingTranslatorNote && (
+                          <span className="italic">
+                            <Icon icon="save" /> {t('common:saving')}...
+                          </span>
+                        )}
+                      </div>
                       {translatorNote?.authorName && (
                         <span className="italic">
                           {t('translate:note_description', {
@@ -303,7 +320,14 @@ export const TranslationSidebar = forwardRef<
                     </div>
                   )}
                   <div className="flex flex-col gap-2">
-                    <h2 className="font-bold">{t('translate:footnotes')}</h2>
+                    <div className="flex flex-row gap-2.5">
+                      <h2 className="font-bold">{t('translate:footnotes')}</h2>
+                      {isSavingFootnote && (
+                        <span className="italic">
+                          <Icon icon="save" /> {t('common:saving')}...
+                        </span>
+                      )}
+                    </div>
                     {hasLanguageReadPermissions && footnote?.authorName && (
                       <span className="italic">
                         {t('translate:note_description', {

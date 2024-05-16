@@ -39,5 +39,6 @@ library.add(
   FaSolid.faAlignLeft,
   FaSolid.faAlignRight,
   FaSolid.faExternalLink,
-  FaSolid.faStickyNote
+  FaSolid.faStickyNote,
+  FaSolid.faSave
 );

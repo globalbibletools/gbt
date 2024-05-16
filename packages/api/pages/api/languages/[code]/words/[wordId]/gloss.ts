@@ -60,8 +60,8 @@ export default createRoute<{ code: string; wordId: string }>()
               },
             },
           },
-          select: {
-            id: true,
+          include: {
+            gloss: true,
           },
         });
         if (!phrase) {
@@ -72,33 +72,20 @@ export default createRoute<{ code: string; wordId: string }>()
                 create: [{ wordId: req.query.wordId }],
               },
             },
-            select: {
-              id: true,
+            include: {
+              gloss: true,
             },
           });
         }
 
-        const originalGloss = await tx.gloss.findUnique({
-          where: {
-            wordId_languageId: {
-              wordId: req.query.wordId,
-              languageId: language.id,
-            },
-          },
-        });
         await tx.gloss.upsert({
           where: {
-            wordId_languageId: {
-              wordId: req.query.wordId,
-              languageId: language.id,
-            },
+            phraseId: phrase.id,
           },
           update: fields,
           create: {
             ...fields,
             phraseId: phrase.id,
-            wordId: req.query.wordId,
-            languageId: language.id,
           },
         });
 
@@ -108,9 +95,9 @@ export default createRoute<{ code: string; wordId: string }>()
             languageId: language.id,
             userId: req.session?.user?.id,
             gloss:
-              fields.gloss !== originalGloss?.gloss ? fields.gloss : undefined,
+              fields.gloss !== phrase?.gloss?.gloss ? fields.gloss : undefined,
             state:
-              fields.state !== originalGloss?.state ? fields.state : undefined,
+              fields.state !== phrase?.gloss?.state ? fields.state : undefined,
             source: GlossSource.User,
           },
         });
