@@ -22,7 +22,7 @@ export default function RichText({ content, className = '' }: RichTextProps) {
     editor?.commands.setContent(content, false, {
       preserveWhitespace: 'full',
     });
-  }, [editor, content]);
+  }, [editor?.commands, content]);
 
   return <EditorContent editor={editor} className={className} />;
 }
