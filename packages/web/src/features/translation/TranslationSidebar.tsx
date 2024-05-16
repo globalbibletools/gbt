@@ -89,10 +89,10 @@ export const TranslationSidebar = forwardRef<
       id: language,
     });
 
-    const wordId = useRef("");
     const [translatorNoteContent, setTranslatorNoteContent] = useState('');
     const [footnoteContent, setFootnoteContent] = useState('');
-
+    const wordId = useRef('');
+    
     useEffect(() => {
       if (notesQuery.data && word.id !== wordId.current) {
         wordId.current = word.id;
