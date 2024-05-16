@@ -62,7 +62,7 @@ export const TranslationSidebar = forwardRef<
     );
     const lexiconEntry = lexiconResource?.entry ?? '';
 
-    const notesQuery = useQuery(
+    const { refetch: refetchNotes, ...notesQuery } = useQuery(
       ['verse-translator-notes', language, verse.id],
       () => apiClient.verses.findNotes(verse.id, language)
     );
@@ -117,12 +117,12 @@ export const TranslationSidebar = forwardRef<
               language,
               note: noteContent,
             });
-            notesQuery.refetch();
+            refetchNotes();
           },
           15000,
           { leading: false, trailing: true }
         ),
-      [language, notesQuery, word.id]
+      [language, word.id, refetchNotes]
     );
 
     const saveFootnote = useMemo(
@@ -134,12 +134,12 @@ export const TranslationSidebar = forwardRef<
               language,
               note: noteContent,
             });
-            notesQuery.refetch();
+            refetchNotes();
           },
           15000,
           { leading: false, trailing: true }
         ),
-      [language, notesQuery, word.id]
+      [language, word.id, refetchNotes]
     );
     const { bookId, chapterNumber, verseNumber } = parseVerseId(verse.id);
     const bdbCurrentVerseRef = `${
