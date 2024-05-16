@@ -62,17 +62,15 @@ export const TranslationSidebar = forwardRef<
     );
     const lexiconEntry = lexiconResource?.entry ?? '';
 
-    const { refetch: refetchNotes, ...notesQuery } = useQuery(
+    const { refetch: refetchNotes, data: notesData } = useQuery(
       ['verse-translator-notes', language, verse.id],
       () => apiClient.verses.findNotes(verse.id, language)
     );
-    const translatorNote = notesQuery.isSuccess
-      ? notesQuery.data.data.translatorNotes[word.id]
+    const translatorNote = notesData
+      ? notesData.data.translatorNotes[word.id]
       : null;
 
-    const footnote = notesQuery.isSuccess
-      ? notesQuery.data.data.footnotes[word.id]
-      : null;
+    const footnote = notesData ? notesData.data.footnotes[word.id] : null;
 
     const tabTitles = ['translate:lexicon', 'translate:notes'];
     if (showComments) {
@@ -89,24 +87,19 @@ export const TranslationSidebar = forwardRef<
       id: language,
     });
 
-    const wordId = useRef('');
-
     const translatorNotesEditorRef = useRef<RichTextInputRef>(null);
 
     const [translatorNoteContent, setTranslatorNoteContent] = useState('');
     const [footnoteContent, setFootnoteContent] = useState('');
 
     useEffect(() => {
-      if (notesQuery.isSuccess && word.id !== wordId.current) {
-        wordId.current = word.id;
+      if (notesData) {
         setTranslatorNoteContent(
-          notesQuery.data.data.translatorNotes[word.id]?.content ?? ''
+          notesData.data.translatorNotes[word.id]?.content ?? ''
         );
-        setFootnoteContent(
-          notesQuery.data.data.footnotes[word.id]?.content ?? ''
-        );
+        setFootnoteContent(notesData.data.footnotes[word.id]?.content ?? '');
       }
-    }, [word.id, notesQuery]);
+    }, [word.id, notesData]);
 
     const saveTranslatorNote = useMemo(
       () =>
