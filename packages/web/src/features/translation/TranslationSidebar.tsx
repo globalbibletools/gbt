@@ -89,8 +89,6 @@ export const TranslationSidebar = forwardRef<
       id: language,
     });
 
-    const translatorNotesEditorRef = useRef<RichTextInputRef>(null);
-
     const [translatorNoteContent, setTranslatorNoteContent] = useState('');
     const [footnoteContent, setFootnoteContent] = useState('');
 
@@ -155,15 +153,6 @@ export const TranslationSidebar = forwardRef<
     );
     const [previewVerseIds, setPreviewVerseIds] = useState<string[]>([]);
 
-    useImperativeHandle(ref, () => ({
-      openNotes: () => {
-        setTabIndex(1);
-        setTimeout(() => {
-          translatorNotesEditorRef.current?.focus();
-        }, 0);
-      },
-    }));
-
     useEffect(() => {
       const { current } = lexiconEntryRef;
       // Highlight references to the currently selected verse
@@ -191,6 +180,16 @@ export const TranslationSidebar = forwardRef<
     };
 
     const [tabIndex, setTabIndex] = useState(0);
+
+    const translatorNotesEditorRef = useRef<RichTextInputRef>(null);
+    useImperativeHandle(ref, () => ({
+      openNotes: () => {
+        setTabIndex(1);
+        setTimeout(() => {
+          translatorNotesEditorRef.current?.focus();
+        }, 0);
+      },
+    }));
 
     return (
       <div
@@ -306,8 +305,8 @@ export const TranslationSidebar = forwardRef<
                       {canEditNote ? (
                         <RichTextInput
                           ref={translatorNotesEditorRef}
-                          value={translatorNoteContent}
                           name="translatorNoteContent"
+                          value={translatorNoteContent}
                           onBlur={() => saveTranslatorNote.flush()}
                           onChange={(noteContent) => {
                             setTranslatorNoteContent(noteContent);
@@ -340,8 +339,8 @@ export const TranslationSidebar = forwardRef<
                     )}
                     {canEditNote ? (
                       <RichTextInput
-                        value={footnoteContent}
                         name="footnoteContent"
+                        value={footnoteContent}
                         onBlur={() => saveFootnote.flush()}
                         onChange={(noteContent) => {
                           setFootnoteContent(noteContent);
