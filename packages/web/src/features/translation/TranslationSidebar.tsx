@@ -92,8 +92,9 @@ export const TranslationSidebar = forwardRef<
     const [translatorNoteContent, setTranslatorNoteContent] = useState('');
     const [footnoteContent, setFootnoteContent] = useState('');
     const wordId = useRef('');
+    
     useEffect(() => {
-      if (notesQuery.isSuccess && word.id !== wordId.current) {
+      if (notesQuery.data && word.id !== wordId.current) {
         wordId.current = word.id;
         setTranslatorNoteContent(
           notesQuery.data.data.translatorNotes[word.id]?.content ?? ''
@@ -102,7 +103,8 @@ export const TranslationSidebar = forwardRef<
           notesQuery.data.data.footnotes[word.id]?.content ?? ''
         );
       }
-    }, [word.id, notesQuery]);
+    }, [word.id, notesQuery.data]);
+
     const {
       isLoading: isSavingTranslatorNote,
       mutateAsync: mutateTranslatorNote,
@@ -308,7 +310,10 @@ export const TranslationSidebar = forwardRef<
                           name="translatorNoteContent"
                           value={translatorNoteContent}
                           onBlur={() => saveTranslatorNote.flush()}
-                          onChange={saveTranslatorNote}
+                          onChange={(noteContent) => {
+                            setTranslatorNoteContent(noteContent);
+                            saveTranslatorNote(noteContent);
+                          }}
                         />
                       ) : (
                         <RichText content={translatorNoteContent} />
@@ -339,7 +344,10 @@ export const TranslationSidebar = forwardRef<
                         name="footnoteContent"
                         value={footnoteContent}
                         onBlur={() => saveFootnote.flush()}
-                        onChange={saveFootnote}
+                        onChange={(noteContent) => {
+                          setFootnoteContent(noteContent);
+                          saveFootnote(noteContent);
+                        }}
                       />
                     ) : (
                       <RichText content={footnoteContent} />
