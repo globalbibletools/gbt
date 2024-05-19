@@ -206,33 +206,35 @@ export interface PatchWordGlossRequestBody {
   state?: GlossState;
 }
 
-export interface TranslatorNote {
-  wordId: string;
-  authorName: string;
-  timestamp: number;
-  content: string;
-}
-
 export interface PatchWordTranslatorNoteRequestBody {
   note: string;
-}
-
-export interface Footnote {
-  wordId: string;
-  authorName: string;
-  timestamp: number;
-  content: string;
 }
 
 export interface PatchWordFootnoteRequestBody {
   note: string;
 }
 
+export interface Footnote {
+  authorName?: string;
+  timestamp: string;
+  content: string;
+}
+
+export interface TranslatorNote {
+  authorName?: string;
+  timestamp: string;
+  content: string;
+}
+
+export interface PhraseNote {
+  id: string;
+  wordIds: string[];
+  footnote?: Footnote;
+  translatorNote?: TranslatorNote;
+}
+
 export interface GetVerseNotesResponseBody {
-  data: {
-    footnotes: Record<string, Footnote>;
-    translatorNotes: Record<string, TranslatorNote>;
-  };
+  data: PhraseNote[];
 }
 
 export interface SNSConfirmSubscriptionMessage {

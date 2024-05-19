@@ -62,17 +62,12 @@ export const TranslationSidebar = forwardRef<
     );
     const lexiconEntry = lexiconResource?.entry ?? '';
 
-    const notesQuery = useQuery(
-      ['verse-translator-notes', language, verse.id],
-      () => apiClient.verses.findNotes(verse.id, language)
+    const notesQuery = useQuery(['verse-notes', language, verse.id], () =>
+      apiClient.verses.findNotes(verse.id, language)
     );
-    const translatorNote = notesQuery.isSuccess
-      ? notesQuery.data.data.translatorNotes[word.id]
-      : null;
-
-    const footnote = notesQuery.isSuccess
-      ? notesQuery.data.data.footnotes[word.id]
-      : null;
+    const phrase = notesQuery.data?.data.find((phrase) =>
+      phrase.wordIds.includes(word.id)
+    );
 
     const tabTitles = ['translate:lexicon', 'translate:notes'];
     if (showComments) {
@@ -91,19 +86,16 @@ export const TranslationSidebar = forwardRef<
 
     const [translatorNoteContent, setTranslatorNoteContent] = useState('');
     const [footnoteContent, setFootnoteContent] = useState('');
-    const wordId = useRef('');
-    
+    const wordId = useRef<string>('');
+    const languageCode = useRef<string>('');
     useEffect(() => {
-      if (notesQuery.data && word.id !== wordId.current) {
+      if (wordId.current !== word.id || languageCode.current !== language) {
         wordId.current = word.id;
-        setTranslatorNoteContent(
-          notesQuery.data.data.translatorNotes[word.id]?.content ?? ''
-        );
-        setFootnoteContent(
-          notesQuery.data.data.footnotes[word.id]?.content ?? ''
-        );
+        languageCode.current = language;
+        setTranslatorNoteContent(phrase?.translatorNote?.content ?? '');
+        setFootnoteContent(phrase?.footnote?.content ?? '');
       }
-    }, [word.id, notesQuery.data]);
+    }, [word.id, language, phrase]);
 
     const {
       isLoading: isSavingTranslatorNote,
@@ -292,15 +284,13 @@ export const TranslationSidebar = forwardRef<
                           </span>
                         )}
                       </div>
-                      {translatorNote?.authorName && (
+                      {phrase?.translatorNote && (
                         <span className="italic">
                           {t('translate:note_description', {
-                            timestamp: translatorNote?.timestamp
-                              ? new Date(
-                                  translatorNote?.timestamp
-                                ).toLocaleString()
-                              : '',
-                            authorName: translatorNote?.authorName ?? '',
+                            timestamp: new Date(
+                              phrase.translatorNote.timestamp
+                            ).toLocaleString(),
+                            authorName: phrase.translatorNote.authorName ?? '',
                           })}
                         </span>
                       )}
@@ -329,13 +319,13 @@ export const TranslationSidebar = forwardRef<
                         </span>
                       )}
                     </div>
-                    {hasLanguageReadPermissions && footnote?.authorName && (
+                    {hasLanguageReadPermissions && phrase?.footnote && (
                       <span className="italic">
                         {t('translate:note_description', {
-                          timestamp: footnote?.timestamp
-                            ? new Date(footnote?.timestamp).toLocaleString()
-                            : '',
-                          authorName: footnote?.authorName ?? '',
+                          timestamp: new Date(
+                            phrase.footnote?.timestamp
+                          ).toLocaleString(),
+                          authorName: phrase.footnote.authorName ?? '',
                         })}
                       </span>
                     )}

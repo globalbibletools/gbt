@@ -56,9 +56,8 @@ function useTranslationQueries(language: string, verseId: string) {
     ['verse-glosses', language, verseId],
     () => apiClient.verses.findVerseGlosses(verseId, language)
   );
-  const notesQuery = useQuery(
-    ['verse-translator-notes', language, verseId],
-    () => apiClient.verses.findNotes(verseId, language)
+  const notesQuery = useQuery(['verse-notes', language, verseId], () =>
+    apiClient.verses.findNotes(verseId, language)
   );
 
   const translationLanguages = languagesQuery.data?.data ?? [];
@@ -97,11 +96,6 @@ function useTranslationQueries(language: string, verseId: string) {
         queryKey: ['verse-glosses', language, nextVerseId],
         queryFn: ({ queryKey }) =>
           apiClient.verses.findVerseGlosses(queryKey[2], queryKey[1]),
-      });
-      queryClient.prefetchQuery({
-        queryKey: ['verse-translator-notes', language, nextVerseId],
-        queryFn: ({ queryKey }) =>
-          apiClient.verses.findNotes(queryKey[2], queryKey[1]),
       });
       if (selectedLanguage) {
         queryClient.prefetchQuery({
@@ -455,12 +449,14 @@ export default function TranslationView() {
                           : 'saved';
                     }
 
+                    const phraseNote = notesQuery.data?.data.find((phrase) =>
+                      phrase.wordIds.includes(word.id)
+                    );
                     const hasTranslatorNote = !isRichTextEmpty(
-                      notesQuery.data?.data?.translatorNotes[word.id].content ??
-                        ''
+                      phraseNote?.translatorNote?.content ?? ''
                     );
                     const hasFootnote = !isRichTextEmpty(
-                      notesQuery.data?.data?.footnotes[word.id].content ?? ''
+                      phraseNote?.footnote?.content ?? ''
                     );
 
                     return (
