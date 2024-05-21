@@ -161,6 +161,7 @@ export interface VerseWord {
   lemmaId: string;
   formId: string;
   grammar: string;
+  referenceGloss?: string;
 }
 
 export interface Verse {

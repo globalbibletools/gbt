@@ -48,10 +48,6 @@ function useTranslationQueries(language: string, verseId: string) {
   const verseQuery = useQuery(['verse', verseId], () =>
     apiClient.verses.findById(verseId)
   );
-  const referenceGlossesQuery = useQuery(
-    ['verse-glosses', 'eng', verseId],
-    () => apiClient.verses.findVerseGlosses(verseId, 'eng')
-  );
   const targetGlossesQuery = useQuery(
     ['verse-glosses', language, verseId],
     () => apiClient.verses.findVerseGlosses(verseId, language)
@@ -88,14 +84,14 @@ function useTranslationQueries(language: string, verseId: string) {
         queryFn: ({ queryKey }) => apiClient.verses.findById(queryKey[1]),
       });
       queryClient.prefetchQuery({
-        queryKey: ['verse-glosses', 'eng', nextVerseId],
-        queryFn: ({ queryKey }) =>
-          apiClient.verses.findVerseGlosses(queryKey[2], 'eng'),
-      });
-      queryClient.prefetchQuery({
         queryKey: ['verse-glosses', language, nextVerseId],
         queryFn: ({ queryKey }) =>
           apiClient.verses.findVerseGlosses(queryKey[2], queryKey[1]),
+      });
+      queryClient.prefetchQuery({
+        queryKey: ['verse-phrases', language, nextVerseId],
+        queryFn: ({ queryKey }) =>
+          apiClient.verses.findVersePhrases(queryKey[2], queryKey[1]),
       });
       if (selectedLanguage) {
         queryClient.prefetchQuery({
@@ -121,7 +117,6 @@ function useTranslationQueries(language: string, verseId: string) {
     translationLanguages,
     selectedLanguage,
     verseQuery,
-    referenceGlossesQuery,
     targetGlossesQuery,
     phrasesQuery,
     translationQuery,
@@ -168,7 +163,6 @@ export default function TranslationView() {
     translationLanguages,
     selectedLanguage,
     verseQuery,
-    referenceGlossesQuery,
     targetGlossesQuery,
     phrasesQuery,
     translationQuery,
@@ -308,7 +302,6 @@ export default function TranslationView() {
 
   const loading =
     !verseQuery.isSuccess ||
-    !referenceGlossesQuery.isSuccess ||
     !phrasesQuery.isSuccess ||
     !targetGlossesQuery.isSuccess;
 
@@ -409,7 +402,6 @@ export default function TranslationView() {
           );
         } else {
           const verse = verseQuery.data.data;
-          const referenceGlosses = referenceGlossesQuery.data.data;
           const targetGlosses = targetGlossesQuery.data.data;
 
           const canEdit = userCan('translate', {
@@ -480,7 +472,7 @@ export default function TranslationView() {
                         gloss={phrase?.gloss?.text}
                         machineGloss={targetGloss?.machineGloss}
                         targetLanguage={selectedLanguage}
-                        referenceGloss={referenceGlosses[i]?.gloss}
+                        referenceGloss={word.referenceGloss}
                         suggestions={targetGlosses[i]?.suggestions}
                         hasNote={hasFootnote || (hasTranslatorNote && canEdit)}
                         onChange={({ gloss, approved }) => {
