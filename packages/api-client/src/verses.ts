@@ -1,5 +1,5 @@
 import type {
-  GetVerseGlossesResponseBody,
+  GetVerseSuggestionsResponseBody,
   GetVerseResponseBody,
   GetLemmaResourcesResponseBody,
   GetVersePhrasesResponseBody,
@@ -27,12 +27,12 @@ export default class Verses {
     });
   }
 
-  findVerseGlosses(
+  findVerseSuggestions(
     verseId: string,
     language: string
-  ): Promise<GetVerseGlossesResponseBody> {
+  ): Promise<GetVerseSuggestionsResponseBody> {
     return this.client.get({
-      path: `/api/languages/${language}/verses/${verseId}/glosses`,
+      path: `/api/languages/${language}/verses/${verseId}/suggestions`,
     });
   }
 

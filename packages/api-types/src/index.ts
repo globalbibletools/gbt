@@ -208,6 +208,16 @@ export interface GetVersePhrasesResponseBody {
   data: VersePhrase[];
 }
 
+export interface VerseWordSuggestion {
+  wordId: string;
+  suggestions: string[];
+  machineGloss?: string;
+}
+
+export interface GetVerseSuggestionsResponseBody {
+  data: VerseWordSuggestion[];
+}
+
 export interface Gloss {
   wordId: string;
   gloss?: string;
