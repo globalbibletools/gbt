@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
-  GetVerseGlossesResponseBody,
+  GetVersePhrasesResponseBody,
   GlossState,
   TextDirection,
 } from '@translation/api-types';
@@ -180,24 +180,38 @@ export default function TranslationView() {
       const requestId = Math.floor(Math.random() * 1000000);
       setGlossRequests((requests) => [...requests, { wordId, requestId }]);
 
-      const queryKey = ['verse-glosses', language, verseId];
+      const queryKey = ['verse-phrases', language, verseId];
       await queryClient.cancelQueries({ queryKey });
       const previousGlosses = queryClient.getQueryData(queryKey);
-      queryClient.setQueryData<GetVerseGlossesResponseBody>(queryKey, (old) => {
+      queryClient.setQueryData<GetVersePhrasesResponseBody>(queryKey, (old) => {
         if (old) {
-          const glosses = old.data.slice();
-          const index = glosses.findIndex((g) => g.wordId === wordId);
+          const phrases = old.data.slice();
+          const index = phrases.findIndex((phrase) =>
+            phrase.wordIds.includes(wordId)
+          );
           if (index >= 0) {
-            const doc = glosses[index];
-            glosses.splice(index, 1, {
-              ...doc,
-              gloss: gloss ?? doc.gloss,
-              state: state ?? doc.state,
+            const phrase = phrases[index];
+            phrases.splice(index, 1, {
+              ...phrase,
+              gloss: {
+                text: gloss ?? phrase.gloss?.text,
+                state: state ?? phrase.gloss?.state ?? GlossState.Unapproved,
+              },
             });
-            return {
-              data: glosses,
-            };
           }
+          else {
+            phrases.push({
+              id: 0,
+              wordIds: [wordId],
+              gloss: {
+                text: gloss,
+                state: state ?? GlossState.Unapproved
+              }
+            })
+          }
+          return {
+            data: phrases,
+          };
         }
         return old;
       });
