@@ -177,6 +177,7 @@ export const GlossState = makeEnum({
   Approved: 'APPROVED',
   Unapproved: 'UNAPPROVED',
 });
+
 export type GlossState = typeof GlossState[keyof typeof GlossState];
 
 export const GlossSource = makeEnum({
@@ -188,7 +189,7 @@ export type GlossSource = typeof GlossSource[keyof typeof GlossSource];
 interface PhraseNote {
   content: string;
   authorName: string;
-  timestamp: number;
+  timestamp: string;
 }
 
 interface PhraseGloss {
@@ -218,17 +219,6 @@ export interface GetVerseSuggestionsResponseBody {
   data: VerseWordSuggestion[];
 }
 
-export interface Gloss {
-  wordId: string;
-  gloss?: string;
-  suggestions: string[];
-  state: GlossState;
-  machineGloss?: string;
-}
-
-export interface GetVerseGlossesResponseBody {
-  data: Gloss[];
-}
 export interface PostBulkGlossesRequestBody {
   data: {
     [wordId: string]: { gloss?: string; state?: GlossState };

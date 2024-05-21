@@ -40,10 +40,10 @@ paths:
     $ref: ./paths/languages/languages-import.yml
   /languages/{code}/verses/{verseId}/translation:
     $ref: ./paths/translation/translations.yml
-  /languages/{code}/verses/{verseId}/glosses:
-    $ref: ./paths/translation/verse-glosses.yml
-  /languages/{code}/verses/{verseId}/notes:
-    $ref: ./paths/translation/verse-notes.yml
+  /languages/{code}/verses/{verseId}/phrases:
+    $ref: ./paths/translation/verse-phrases.yml
+  /languages/{code}/verses/{verseId}/suggestions:
+    $ref: ./paths/translation/verse-suggestions.yml
   /languages/{code}/verses/{verseId}/next-unapproved-verse:
     $ref: ./paths/translation/next-unapproved-verse.yml
   /languages/{code}/words/{wordId}/gloss:
