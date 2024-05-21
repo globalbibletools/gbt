@@ -56,8 +56,8 @@ function useTranslationQueries(language: string, verseId: string) {
     ['verse-glosses', language, verseId],
     () => apiClient.verses.findVerseGlosses(verseId, language)
   );
-  const notesQuery = useQuery(['verse-notes', language, verseId], () =>
-    apiClient.verses.findNotes(verseId, language)
+  const phrasesQuery = useQuery(['verse-phrases', language, verseId], () =>
+    apiClient.verses.findVersePhrases(verseId, language)
   );
 
   const translationLanguages = languagesQuery.data?.data ?? [];
@@ -123,7 +123,7 @@ function useTranslationQueries(language: string, verseId: string) {
     verseQuery,
     referenceGlossesQuery,
     targetGlossesQuery,
-    notesQuery,
+    phrasesQuery,
     translationQuery,
   };
 }
@@ -170,7 +170,7 @@ export default function TranslationView() {
     verseQuery,
     referenceGlossesQuery,
     targetGlossesQuery,
-    notesQuery,
+    phrasesQuery,
     translationQuery,
   } = useTranslationQueries(language, verseId);
 
@@ -309,6 +309,7 @@ export default function TranslationView() {
   const loading =
     !verseQuery.isSuccess ||
     !referenceGlossesQuery.isSuccess ||
+    !phrasesQuery.isSuccess ||
     !targetGlossesQuery.isSuccess;
 
   const loadedFromNextButton = useRef(false);
@@ -327,15 +328,24 @@ export default function TranslationView() {
 
   const glossesAsDisplayed = useMemo(
     () =>
-      targetGlossesQuery.data?.data.map((targetGloss) => ({
-        wordId: targetGloss.wordId,
-        glossAsDisplayed:
-          targetGloss.gloss ||
-          targetGloss.suggestions[0] ||
-          targetGloss.machineGloss,
-        state: targetGloss.state,
-      })),
-    [targetGlossesQuery.data]
+      verseQuery.data?.data.words.map((word) => {
+        const targetGloss = targetGlossesQuery.data?.data.find(
+          (gloss) => (gloss.wordId = word.id)
+        );
+        const phrase = phrasesQuery.data?.data.find((phrase) =>
+          phrase.wordIds.includes(word.id)
+        );
+
+        return {
+          wordId: word.id,
+          glossAsDisplayed:
+            phrase?.gloss?.text ??
+            targetGloss?.suggestions[0] ??
+            targetGloss?.machineGloss,
+          state: phrase?.gloss?.state ?? GlossState.Unapproved,
+        };
+      }),
+    [verseQuery.data, targetGlossesQuery.data, phrasesQuery.data]
   );
 
   const approveAllGlossesMutation = useMutation({
@@ -434,6 +444,10 @@ export default function TranslationView() {
                 >
                   {verse.words.map((word, i) => {
                     const targetGloss = targetGlosses[i];
+
+                    const phrase = phrasesQuery.data?.data.find((phrase) =>
+                      phrase.wordIds.includes(word.id)
+                    );
                     const isSaving = glossRequests.some(
                       ({ wordId }) => wordId === word.id
                     );
@@ -442,21 +456,18 @@ export default function TranslationView() {
                       'empty';
                     if (isSaving) {
                       status = 'saving';
-                    } else if (targetGloss.gloss) {
+                    } else if (phrase?.gloss?.text) {
                       status =
-                        targetGloss.state === GlossState.Approved
+                        phrase.gloss.state === GlossState.Approved
                           ? 'approved'
                           : 'saved';
                     }
 
-                    const phraseNote = notesQuery.data?.data.find((phrase) =>
-                      phrase.wordIds.includes(word.id)
-                    );
                     const hasTranslatorNote = !isRichTextEmpty(
-                      phraseNote?.translatorNote?.content ?? ''
+                      phrase?.translatorNote?.content ?? ''
                     );
                     const hasFootnote = !isRichTextEmpty(
-                      phraseNote?.footnote?.content ?? ''
+                      phrase?.footnote?.content ?? ''
                     );
 
                     return (
@@ -466,7 +477,7 @@ export default function TranslationView() {
                         word={word}
                         originalLanguage={isHebrew ? 'hebrew' : 'greek'}
                         status={status}
-                        gloss={targetGloss?.gloss}
+                        gloss={phrase?.gloss?.text}
                         machineGloss={targetGloss?.machineGloss}
                         targetLanguage={selectedLanguage}
                         referenceGloss={referenceGlosses[i]?.gloss}

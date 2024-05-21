@@ -62,10 +62,10 @@ export const TranslationSidebar = forwardRef<
     );
     const lexiconEntry = lexiconResource?.entry ?? '';
 
-    const notesQuery = useQuery(['verse-notes', language, verse.id], () =>
-      apiClient.verses.findNotes(verse.id, language)
+    const phrasesQuery = useQuery(['verse-phrases', language, verse.id], () =>
+      apiClient.verses.findVersePhrases(verse.id, language)
     );
-    const phrase = notesQuery.data?.data.find((phrase) =>
+    const phrase = phrasesQuery.data?.data.find((phrase) =>
       phrase.wordIds.includes(word.id)
     );
 
@@ -103,7 +103,7 @@ export const TranslationSidebar = forwardRef<
     } = useMutation({
       mutationFn: (data: { wordId: string; language: string; note: string }) =>
         apiClient.words.updateTranslatorNote(data),
-      onSuccess: () => notesQuery.refetch(),
+      onSuccess: () => phrasesQuery.refetch(),
     });
 
     const saveTranslatorNote = useMemo(
@@ -124,7 +124,7 @@ export const TranslationSidebar = forwardRef<
           language: string;
           note: string;
         }) => apiClient.words.updateFootnote(data),
-        onSuccess: () => notesQuery.refetch(),
+        onSuccess: () => phrasesQuery.refetch(),
       });
 
     const saveFootnote = useMemo(
