@@ -21,16 +21,15 @@ async function saveMachineGlosses(
 ) {
   await client.$executeRaw`
     INSERT INTO "MachineGloss" ("wordId", "gloss", "languageId")
-    SELECT "Gloss"."wordId", "Map"."gloss", ${language}::uuid FROM "Gloss"
-    JOIN "Language" ON "Gloss"."languageId" = "Language"."id"
+    SELECT phw."wordId", map.gloss, ${language}::uuid FROM "Gloss" AS g
+    JOIN "Phrase" AS ph ON ph.id = g."phraseId"
+    JOIN "PhraseWord" AS phw ON phw."phraseId" = ph.id
     JOIN (VALUES ${Prisma.join(
       Object.entries(glossMap).map(
         ([eng, gloss]) => Prisma.sql`(${eng}, ${gloss})`
       )
-    )})
-      AS "Map" ("eng","gloss")
-      ON "Gloss"."gloss" ILIKE "Map"."eng"
-    WHERE "Language"."code" = 'eng'
+    )}) AS map ("eng", "gloss") ON g.gloss ILIKE map.eng
+    WHERE ph."languageId" = (SELECT id FROM "Language" WHERE code = 'eng')
     ON CONFLICT ON CONSTRAINT "MachineGloss_pkey"
     DO UPDATE SET gloss = EXCLUDED."gloss"
   `;
