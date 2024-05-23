@@ -25,6 +25,7 @@ export default createRoute<{ verseId: string }>()
           WHERE l.code = 'eng'
         ) AS g ON g."wordId" = w.id
         WHERE w."verseId" = ${req.query.verseId}
+        ORDER BY w.id
       `;
 
       if (words.length === 0) {

@@ -1,4 +1,4 @@
-import { GetVerseSuggestionsBody } from '@translation/api-types';
+import { GetVerseSuggestionsResponseBody } from '@translation/api-types';
 import { client } from '../../../../../../shared/db';
 import createRoute from '../../../../../../shared/Route';
 import { machineTranslationClient } from '../../../../../../shared/machine-translation';
@@ -75,7 +75,7 @@ async function generateMachineGlossesForVerse(
 }
 
 export default createRoute<{ code: string; verseId: string }>()
-  .get<void, GetVerseSuggestionsBody>({
+  .get<void, GetVerseSuggestionsResponseBody>({
     async handler(req, res) {
       const language = await client.language.findUnique({
         where: {
@@ -116,7 +116,7 @@ export default createRoute<{ code: string; verseId: string }>()
         ) AS suggestion ON suggestion.form_id = w."formId"
 
         LEFT JOIN LATERAL (
-          SELECT phw."wordId", g.gloss, g.state FROM "PhraseWord" AS phw
+          SELECT phw."wordId", g.gloss AS phw
           JOIN "Phrase" AS ph ON ph.id = phw."phraseId"
             AND ph."languageId" = ${language.id}::uuid
           JOIN "Gloss" AS g ON g."phraseId" = ph.id

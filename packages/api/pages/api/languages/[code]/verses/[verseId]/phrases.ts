@@ -34,7 +34,6 @@ export default createRoute<{ code: string; verseId: string }>()
         return res.notFound();
       }
 
-      // TODO: hide translator notes when not a member of the language
       const phrases = await client.$queryRaw<Phrase[]>`
         SELECT
           ph.*,
