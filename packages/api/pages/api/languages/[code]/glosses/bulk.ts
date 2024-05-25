@@ -79,11 +79,6 @@ export default createRoute<{ code: string }>()
                   }::"GlossState")`
               )
             )}),
-            phrase AS (
-              SELECT ph.id FROM "Phrase" AS ph
-              JOIN data ON data.phrase_id = ph.id
-              WHERE ph."languageId" = ${language.id}::uuid
-            ),
             gloss AS (
               INSERT INTO "Gloss"("phraseId", "gloss", "state")
               SELECT ph.id, data.gloss, data.state FROM data
@@ -95,7 +90,7 @@ export default createRoute<{ code: string }>()
               RETURNING *
             )
             SELECT phw."wordId", gloss.gloss, gloss.state FROM gloss
-            JOIN phrase AS ph ON ph.id = gloss."phraseId"
+            JOIN "Phrase" AS ph ON ph.id = gloss."phraseId"
             JOIN "PhraseWord" AS phw ON phw."phraseId" = ph.id
           `;
 
