@@ -225,16 +225,16 @@ export interface PostBulkGlossesRequestBody {
   };
 }
 
-export interface PatchWordGlossRequestBody {
+export interface PatchPhraseGlossRequestBody {
   gloss?: string;
   state?: GlossState;
 }
 
-export interface PatchWordTranslatorNoteRequestBody {
+export interface PatchPhraseTranslatorNoteRequestBody {
   note: string;
 }
 
-export interface PatchWordFootnoteRequestBody {
+export interface PatchPhraseFootnoteRequestBody {
   note: string;
 }
 

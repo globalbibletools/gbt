@@ -1,53 +1,51 @@
 import type {
-  PatchWordFootnoteRequestBody,
-  PatchWordGlossRequestBody,
-  PatchWordTranslatorNoteRequestBody,
+  PatchPhraseFootnoteRequestBody,
+  PatchPhraseGlossRequestBody,
+  PatchPhraseTranslatorNoteRequestBody,
 } from '@translation/api-types';
 import ApiClient from './client';
 
-export { PatchWordGlossRequestBody };
-
-export default class Words {
+export default class Phrases {
   constructor(private readonly client: ApiClient) {}
 
   async updateGloss({
-    wordId,
+    phraseId,
     language,
     ...body
-  }: PatchWordGlossRequestBody & {
-    wordId: string;
+  }: PatchPhraseGlossRequestBody & {
+    phraseId: number;
     language: string;
   }): Promise<void> {
     await this.client.patch({
-      path: `/api/languages/${language}/words/${wordId}/gloss`,
+      path: `/api/languages/${language}/phrases/${phraseId}/gloss`,
       body,
     });
   }
 
   async updateTranslatorNote({
-    wordId,
+    phraseId,
     language,
     ...body
-  }: PatchWordTranslatorNoteRequestBody & {
-    wordId: string;
+  }: PatchPhraseTranslatorNoteRequestBody & {
+    phraseId: number;
     language: string;
   }): Promise<void> {
     await this.client.patch({
-      path: `/api/languages/${language}/words/${wordId}/translator-note`,
+      path: `/api/languages/${language}/phrases/${phraseId}/translator-note`,
       body,
     });
   }
 
   async updateFootnote({
-    wordId,
+    phraseId,
     language,
     ...body
-  }: PatchWordFootnoteRequestBody & {
-    wordId: string;
+  }: PatchPhraseFootnoteRequestBody & {
+    phraseId: number;
     language: string;
   }): Promise<void> {
     await this.client.patch({
-      path: `/api/languages/${language}/words/${wordId}/footnote`,
+      path: `/api/languages/${language}/phrases/${phraseId}/footnote`,
       body,
     });
   }

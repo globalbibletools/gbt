@@ -46,12 +46,12 @@ paths:
     $ref: ./paths/translation/verse-suggestions.yml
   /languages/{code}/verses/{verseId}/next-unapproved-verse:
     $ref: ./paths/translation/next-unapproved-verse.yml
-  /languages/{code}/words/{wordId}/gloss:
-    $ref: ./paths/languages/word-gloss.yml
-  /languages/{code}/words/{wordId}/translator-note:
-    $ref: ./paths/languages/word-translator-note.yml
-  /languages/{code}/words/{wordId}/footnote:
-    $ref: ./paths/languages/word-footnote.yml
+  /languages/{code}/phrases/{phraseId}/gloss:
+    $ref: ./paths/languages/phrase-gloss.yml
+  /languages/{code}/phrases/{phraseId}/translator-note:
+    $ref: ./paths/languages/phrase-translator-note.yml
+  /languages/{code}/phrases/{phraseId}/footnote:
+    $ref: ./paths/languages/phrase-footnote.yml
   /languages/{code}/glosses/bulk:
     $ref: ./paths/translation/bulk-update-glosses.yml
   /languages/{code}/members:

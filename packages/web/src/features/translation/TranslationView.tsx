@@ -161,24 +161,24 @@ export default function TranslationView() {
   useFontLoader(selectedLanguage ? [selectedLanguage.font] : []);
 
   const [glossRequests, setGlossRequests] = useState<
-    { wordId: string; requestId: number }[]
+    { phraseId: number; requestId: number }[]
   >([]);
   const queryClient = useQueryClient();
   const glossMutation = useMutation({
     mutationFn: (variables: {
-      wordId: string;
+      phraseId: number;
       gloss?: string;
       state?: GlossState;
     }) =>
-      apiClient.words.updateGloss({
-        wordId: variables.wordId,
+      apiClient.phrases.updateGloss({
+        phraseId: variables.phraseId,
         language,
         gloss: variables.gloss,
         state: variables.state,
       }),
-    onMutate: async ({ wordId, gloss, state }) => {
+    onMutate: async ({ phraseId, gloss, state }) => {
       const requestId = Math.floor(Math.random() * 1000000);
-      setGlossRequests((requests) => [...requests, { wordId, requestId }]);
+      setGlossRequests((requests) => [...requests, { phraseId, requestId }]);
 
       const queryKey = ['verse-phrases', language, verseId];
       await queryClient.cancelQueries({ queryKey });
@@ -186,9 +186,7 @@ export default function TranslationView() {
       queryClient.setQueryData<GetVersePhrasesResponseBody>(queryKey, (old) => {
         if (old) {
           const phrases = old.data.slice();
-          const index = phrases.findIndex((phrase) =>
-            phrase.wordIds.includes(wordId)
-          );
+          const index = phrases.findIndex((phrase) => phrase.id === phraseId);
           if (index >= 0) {
             const phrase = phrases[index];
             phrases.splice(index, 1, {
@@ -198,16 +196,6 @@ export default function TranslationView() {
                 state: state ?? phrase.gloss?.state ?? GlossState.Unapproved,
               },
             });
-          }
-          else {
-            phrases.push({
-              id: 0,
-              wordIds: [wordId],
-              gloss: {
-                text: gloss,
-                state: state ?? GlossState.Unapproved
-              }
-            })
           }
           return {
             data: phrases,
@@ -441,18 +429,22 @@ export default function TranslationView() {
                     const phrase = phrasesQuery.data?.data.find((phrase) =>
                       phrase.wordIds.includes(word.id)
                     );
+                    if (!phrase) {
+                      throw new Error('Missing phrase');
+                    }
+
                     const wordSuggestions = suggestionsQuery.data.data.find(
                       (w) => w.wordId === word.id
                     );
                     const isSaving = glossRequests.some(
-                      ({ wordId }) => wordId === word.id
+                      ({ phraseId }) => phraseId === phrase.id
                     );
 
                     let status: 'empty' | 'saving' | 'saved' | 'approved' =
                       'empty';
                     if (isSaving) {
                       status = 'saving';
-                    } else if (phrase?.gloss?.text) {
+                    } else if (phrase.gloss?.text) {
                       status =
                         phrase.gloss.state === GlossState.Approved
                           ? 'approved'
@@ -460,10 +452,10 @@ export default function TranslationView() {
                     }
 
                     const hasTranslatorNote = !isRichTextEmpty(
-                      phrase?.translatorNote?.content ?? ''
+                      phrase.translatorNote?.content ?? ''
                     );
                     const hasFootnote = !isRichTextEmpty(
-                      phrase?.footnote?.content ?? ''
+                      phrase.footnote?.content ?? ''
                     );
 
                     return (
@@ -473,7 +465,7 @@ export default function TranslationView() {
                         word={word}
                         originalLanguage={isHebrew ? 'hebrew' : 'greek'}
                         status={status}
-                        gloss={phrase?.gloss?.text}
+                        gloss={phrase.gloss?.text}
                         machineGloss={wordSuggestions?.machineGloss}
                         targetLanguage={selectedLanguage}
                         referenceGloss={word.referenceGloss}
@@ -481,7 +473,7 @@ export default function TranslationView() {
                         hasNote={hasFootnote || (hasTranslatorNote && canEdit)}
                         onChange={({ gloss, approved }) => {
                           glossMutation.mutate({
-                            wordId: word.id,
+                            phraseId: phrase.id,
                             gloss,
                             state:
                               approved === true

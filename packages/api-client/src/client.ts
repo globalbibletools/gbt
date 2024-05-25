@@ -4,7 +4,7 @@ import Import from './import';
 import Languages from './languages';
 import Users from './users';
 import Verses from './verses';
-import Words from './words';
+import Phrases from './phrases';
 
 export interface ApiClientOptions {
   baseUrl: string;
@@ -53,7 +53,7 @@ export default class ApiClient {
   readonly languages: Languages;
   readonly import: Import;
   readonly verses: Verses;
-  readonly words: Words;
+  readonly phrases: Phrases;
   readonly users: Users;
   readonly auth: Auth;
 
@@ -61,7 +61,7 @@ export default class ApiClient {
     this.languages = new Languages(this);
     this.import = new Import(this);
     this.verses = new Verses(this);
-    this.words = new Words(this);
+    this.phrases = new Phrases(this);
     this.users = new Users(this);
     this.auth = new Auth(this);
   }

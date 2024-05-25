@@ -1,15 +1,15 @@
 import {
   GlossState,
   GlossSource,
-  PatchWordGlossRequestBody,
+  PatchPhraseGlossRequestBody,
 } from '@translation/api-types';
 import * as z from 'zod';
 import createRoute from '../../../../../../shared/Route';
 import { authorize } from '../../../../../../shared/access-control/authorize';
 import { PrismaTypes, client } from '../../../../../../shared/db';
 
-export default createRoute<{ code: string; wordId: string }>()
-  .patch<PatchWordGlossRequestBody, void>({
+export default createRoute<{ code: string; phraseId: string }>()
+  .patch<PatchPhraseGlossRequestBody, void>({
     schema: z.object({
       gloss: z.string().optional(),
       state: z
@@ -33,6 +33,14 @@ export default createRoute<{ code: string; wordId: string }>()
         return;
       }
 
+      let phraseId: number;
+      try {
+        phraseId = parseInt(req.query.phraseId);
+      } catch {
+        res.notFound();
+        return;
+      }
+
       const fields: {
         gloss?: string;
         state?: PrismaTypes.GlossState;
@@ -51,55 +59,40 @@ export default createRoute<{ code: string; wordId: string }>()
       }
 
       await client.$transaction(async (tx) => {
-        let phrase = await tx.phrase.findFirst({
-          where: {
-            languageId: language.id,
-            words: {
-              some: {
-                wordId: req.query.wordId,
-              },
-            },
-          },
+        const phrase = await tx.phrase.findUnique({
+          where: { id: phraseId, languageId: language.id },
           include: {
             gloss: true,
+            words: true,
           },
         });
         if (!phrase) {
-          phrase = await tx.phrase.create({
-            data: {
-              languageId: language.id,
-              words: {
-                create: [{ wordId: req.query.wordId }],
-              },
-            },
-            include: {
-              gloss: true,
-            },
-          });
+          res.notFound();
+          return;
         }
 
         await tx.gloss.upsert({
           where: {
-            phraseId: phrase.id,
+            phraseId,
           },
           update: fields,
           create: {
             ...fields,
-            phraseId: phrase.id,
+            phraseId,
           },
         });
 
-        await tx.glossHistoryEntry.create({
-          data: {
-            wordId: req.query.wordId,
+        await tx.glossHistoryEntry.createMany({
+          data: phrase.words.map((word) => ({
+            wordId: word.wordId,
             languageId: language.id,
             userId: req.session?.user?.id,
             gloss:
-              fields.gloss !== phrase?.gloss?.gloss ? fields.gloss : undefined,
+              fields.gloss !== phrase.gloss?.gloss ? fields.gloss : undefined,
             state:
-              fields.state !== phrase?.gloss?.state ? fields.state : undefined,
+              fields.state !== phrase.gloss?.state ? fields.state : undefined,
             source: GlossSource.User,
-          },
+          })),
         });
       });
 

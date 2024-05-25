@@ -1,10 +1,10 @@
 patch:
   tags:
     - Languages
-  summary: Update the gloss of a word for a language.
+  summary: Update the gloss of a phrase for a language.
   parameters:
     - $ref: '../../schemas/parameters.yml#languageCode'
-    - $ref: '../../schemas/parameters.yml#wordId'
+    - $ref: '../../schemas/parameters.yml#phraseId'
   requestBody:
     required: true
     content:
