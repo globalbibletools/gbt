@@ -220,9 +220,7 @@ export interface GetVerseSuggestionsResponseBody {
 }
 
 export interface PostBulkGlossesRequestBody {
-  data: {
-    [wordId: string]: { gloss?: string; state?: GlossState };
-  };
+  data: { phraseId: number; gloss?: string; state?: GlossState }[];
 }
 
 export interface PatchPhraseGlossRequestBody {

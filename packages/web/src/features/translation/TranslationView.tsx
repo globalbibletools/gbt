@@ -313,48 +313,56 @@ export default function TranslationView() {
 
   const glossesAsDisplayed = useMemo(
     () =>
-      verseQuery.data?.data.words.map((word) => {
-        const wordSuggestions = suggestionsQuery.data?.data.find(
-          (w) => w.wordId === word.id
-        );
-        const phrase = phrasesQuery.data?.data.find((phrase) =>
-          phrase.wordIds.includes(word.id)
-        );
+      verseQuery.data?.data.words
+        .map((word) => {
+          const wordSuggestions = suggestionsQuery.data?.data.find(
+            (w) => w.wordId === word.id
+          );
+          const phrase = phrasesQuery.data?.data.find((phrase) =>
+            phrase.wordIds.includes(word.id)
+          );
 
-        return {
-          wordId: word.id,
-          glossAsDisplayed:
-            phrase?.gloss?.text ??
-            wordSuggestions?.suggestions[0] ??
-            wordSuggestions?.machineGloss,
-          state: phrase?.gloss?.state ?? GlossState.Unapproved,
-        };
-      }),
+          return {
+            phraseId: phrase?.id,
+            glossAsDisplayed:
+              phrase?.gloss?.text ??
+              wordSuggestions?.suggestions[0] ??
+              wordSuggestions?.machineGloss,
+            state: phrase?.gloss?.state ?? GlossState.Unapproved,
+          };
+        })
+        .filter(
+          (
+            word
+          ): word is {
+            phraseId: number;
+            glossAsDisplayed: string | undefined;
+            state: GlossState;
+          } => !!word.phraseId
+        ),
     [verseQuery.data, suggestionsQuery.data, phrasesQuery.data]
   );
 
   const approveAllGlossesMutation = useMutation({
     mutationFn: async () => {
       if (glossesAsDisplayed) {
-        const data = Object.fromEntries(
-          glossesAsDisplayed
-            .filter(
-              ({ glossAsDisplayed, state }) =>
-                glossAsDisplayed !== undefined &&
-                state === GlossState.Unapproved
-            )
-            .map(({ wordId, glossAsDisplayed }) => [
-              wordId,
-              { gloss: glossAsDisplayed, state: GlossState.Approved },
-            ])
-        );
+        const data = glossesAsDisplayed
+          .filter(
+            ({ glossAsDisplayed, state }) =>
+              glossAsDisplayed !== undefined && state === GlossState.Unapproved
+          )
+          .map(({ phraseId, glossAsDisplayed }) => ({
+            phraseId,
+            gloss: glossAsDisplayed,
+            state: GlossState.Approved,
+          }));
         await apiClient.languages.bulkUpdateGlosses(language, {
           data,
         });
       }
     },
     onSuccess: async () => {
-      await queryClient.invalidateQueries(['verse-glosses', language, verseId]);
+      await queryClient.invalidateQueries(['verse-phrases', language, verseId]);
       flash.success(t('translate:all_glosses_approved'));
     },
   });

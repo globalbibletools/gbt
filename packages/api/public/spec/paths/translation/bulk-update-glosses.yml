@@ -12,10 +12,13 @@ patch:
           type: object
           properties:
             data:
-              type: object
-              additionalProperties:
+              type: array
+              items:
                 type: object
                 properties:
+                  phraseId:
+                    type: number
+                    description: The ID of the phrase to update.
                   gloss:
                     type: string
                     nullable: true
@@ -25,13 +28,13 @@ patch:
                     nullable: true
                     description: The new approval state of the gloss
               example:
-                0100100101:
+                - phraseId: 1
                   gloss: 'Al principio'
                   state: APPROVED
-                0100200408:
+                - phraseId: 2
                   gloss: 'Jehová'
                   state: null
-                0300300703:
+                - phraseId: 3
                   gloss: null
                   state: UNAPPROVED
   responses:

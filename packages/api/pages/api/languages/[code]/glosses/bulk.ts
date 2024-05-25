@@ -1,8 +1,4 @@
-import {
-  Gloss,
-  GlossState,
-  PostBulkGlossesRequestBody,
-} from '@translation/api-types';
+import { GlossState, PostBulkGlossesRequestBody } from '@translation/api-types';
 import createRoute from '../../../../../shared/Route';
 import * as z from 'zod';
 import { authorize } from '../../../../../shared/access-control/authorize';
@@ -11,9 +7,9 @@ import { Prisma, client } from '../../../../../shared/db';
 export default createRoute<{ code: string }>()
   .post<PostBulkGlossesRequestBody, void>({
     schema: z.object({
-      data: z.record(
-        z.string(),
+      data: z.array(
         z.object({
+          phraseId: z.number(),
           gloss: z.string().optional(),
           state: z
             .enum(Object.values(GlossState) as [GlossState, ...GlossState[]])
@@ -34,17 +30,15 @@ export default createRoute<{ code: string }>()
         return res.notFound();
       }
 
-      const entriesToPatch = Object.entries(req.body.data)
-        .map(([wordId, { gloss, state }]) => ({
-          wordId,
-          gloss,
-          // If the gloss is empty, the state should be unapproved
-          state: gloss === '' ? GlossState.Unapproved : state,
-        }))
-        .filter(
-          // If the gloss is undefined and the state is undefined, nothing will be updated, making the entry useless.
-          ({ gloss, state }) => gloss !== undefined || state !== undefined
-        );
+      const entriesToPatch = req.body.data.filter(
+        // If the gloss is undefined and the state is undefined, nothing will be updated, making the entry useless.
+        ({ gloss, state }) => gloss !== undefined || state !== undefined
+      );
+      entriesToPatch.forEach((entry) => {
+        if (entry.gloss === '') {
+          entry.state = GlossState.Unapproved;
+        }
+      });
 
       if (entriesToPatch.length > 0) {
         await client.$transaction(async (tx) => {
@@ -52,14 +46,11 @@ export default createRoute<{ code: string }>()
             (
               await tx.gloss.findMany({
                 where: {
+                  phraseId: {
+                    in: entriesToPatch.map(({ phraseId }) => phraseId),
+                  },
                   phrase: {
-                    words: {
-                      some: {
-                        wordId: {
-                          in: entriesToPatch.map(({ wordId }) => wordId),
-                        },
-                      },
-                    },
+                    languageId: language.id,
                   },
                 },
                 include: {
@@ -75,56 +66,37 @@ export default createRoute<{ code: string }>()
             ).map(({ phrase, ...data }) => [phrase.words[0].wordId, data])
           );
 
-          await tx.$executeRaw`
-            WITH phw AS (
-              INSERT INTO "PhraseWord" ("phraseId", "wordId")
-              SELECT
-                nextval(pg_get_serial_sequence('"Phrase"', 'id')),
-                w.id
-              FROM "Word" AS w
-              LEFT JOIN (
-                SELECT * FROM "PhraseWord" AS phw
-                JOIN "Phrase" AS ph ON ph.id = phw."phraseId"
-                WHERE ph."languageId" = ${language.id}::uuid
-              ) ph ON ph."wordId" = w.id
-              WHERE w.id IN (${Prisma.join(
-                entriesToPatch.map((entry) => entry.wordId)
-              )}) AND ph.id IS NULL
-              RETURNING "phraseId", "wordId"
-            )
-            INSERT INTO "Phrase" (id, "languageId")
-            SELECT phw."phraseId", ${language.id}::uuid FROM phw
-          `;
-
           const patchedGlosses = await tx.$queryRaw<
             { wordId: string; gloss: string; state: GlossState }[]
           >`
-            WITH data (word_id, gloss, state) AS (VALUES ${Prisma.join(
+            WITH data (phrase_id, gloss, state) AS (VALUES ${Prisma.join(
               entriesToPatch.map(
-                ({ wordId, gloss, state }) =>
-                  Prisma.sql`(${wordId}, ${gloss}, ${
-                    state ?? oldGlosses[wordId]?.state ?? GlossState.Unapproved
+                ({ phraseId, gloss, state }) =>
+                  Prisma.sql`(${phraseId}, ${gloss}, ${
+                    state ??
+                    oldGlosses[phraseId]?.state ??
+                    GlossState.Unapproved
                   }::"GlossState")`
               )
             )}),
             phrase AS (
-              SELECT ph.id, phw."wordId" FROM "PhraseWord" AS phw
-              JOIN "Phrase" AS ph ON ph.id = phw."phraseId"
-              JOIN data ON data.word_id = phw."wordId"
+              SELECT ph.id FROM "Phrase" AS ph
+              JOIN data ON data.phrase_id = ph.id
               WHERE ph."languageId" = ${language.id}::uuid
             ),
             gloss AS (
               INSERT INTO "Gloss"("phraseId", "gloss", "state")
               SELECT ph.id, data.gloss, data.state FROM data
-              JOIN phrase AS ph ON ph."wordId" = data.word_id
+              JOIN "Phrase" AS ph ON ph.id = data.phrase_id
               ON CONFLICT ("phraseId")
                   DO UPDATE SET
                       "gloss" = COALESCE(EXCLUDED."gloss", "Gloss"."gloss"),
                       "state" = COALESCE(EXCLUDED."state", "Gloss"."state")
               RETURNING *
             )
-            SELECT ph."wordId", gloss.gloss, gloss.state FROM gloss
+            SELECT phw."wordId", gloss.gloss, gloss.state FROM gloss
             JOIN phrase AS ph ON ph.id = gloss."phraseId"
+            JOIN "PhraseWord" AS phw ON phw."phraseId" = ph.id
           `;
 
           if (patchedGlosses.length > 0) {
