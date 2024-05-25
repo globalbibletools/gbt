@@ -116,7 +116,7 @@ export default createRoute<{ code: string; verseId: string }>()
         ) AS suggestion ON suggestion.form_id = w."formId"
 
         LEFT JOIN LATERAL (
-          SELECT phw."wordId", g.gloss AS phw
+          SELECT phw."wordId", g.gloss FROM "PhraseWord" AS phw
           JOIN "Phrase" AS ph ON ph.id = phw."phraseId"
             AND ph."languageId" = ${language.id}::uuid
           JOIN "Gloss" AS g ON g."phraseId" = ph.id
