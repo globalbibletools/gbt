@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
-  GetVerseGlossesResponseBody,
+  GetVersePhrasesResponseBody,
   GlossState,
   TextDirection,
 } from '@translation/api-types';
@@ -48,17 +48,12 @@ function useTranslationQueries(language: string, verseId: string) {
   const verseQuery = useQuery(['verse', verseId], () =>
     apiClient.verses.findById(verseId)
   );
-  const referenceGlossesQuery = useQuery(
-    ['verse-glosses', 'eng', verseId],
-    () => apiClient.verses.findVerseGlosses(verseId, 'eng')
+  const suggestionsQuery = useQuery(
+    ['verse-suggestions', language, verseId],
+    () => apiClient.verses.findVerseSuggestions(verseId, language)
   );
-  const targetGlossesQuery = useQuery(
-    ['verse-glosses', language, verseId],
-    () => apiClient.verses.findVerseGlosses(verseId, language)
-  );
-  const notesQuery = useQuery(
-    ['verse-translator-notes', language, verseId],
-    () => apiClient.verses.findNotes(verseId, language)
+  const phrasesQuery = useQuery(['verse-phrases', language, verseId], () =>
+    apiClient.verses.findVersePhrases(verseId, language)
   );
 
   const translationLanguages = languagesQuery.data?.data ?? [];
@@ -89,36 +84,21 @@ function useTranslationQueries(language: string, verseId: string) {
         queryFn: ({ queryKey }) => apiClient.verses.findById(queryKey[1]),
       });
       queryClient.prefetchQuery({
-        queryKey: ['verse-glosses', 'eng', nextVerseId],
+        queryKey: ['verse-suggestions', language, nextVerseId],
         queryFn: ({ queryKey }) =>
-          apiClient.verses.findVerseGlosses(queryKey[2], 'eng'),
+          apiClient.verses.findVerseSuggestions(queryKey[2], queryKey[1]),
       });
       queryClient.prefetchQuery({
-        queryKey: ['verse-glosses', language, nextVerseId],
+        queryKey: ['verse-phrases', language, nextVerseId],
         queryFn: ({ queryKey }) =>
-          apiClient.verses.findVerseGlosses(queryKey[2], queryKey[1]),
+          apiClient.verses.findVersePhrases(queryKey[2], queryKey[1]),
       });
-      queryClient.prefetchQuery({
-        queryKey: ['verse-translator-notes', language, nextVerseId],
-        queryFn: ({ queryKey }) =>
-          apiClient.verses.findNotes(queryKey[2], queryKey[1]),
-      });
-      if (selectedLanguage) {
-        queryClient.prefetchQuery({
-          queryKey: ['verse-translation', language, nextVerseId],
-          queryFn: ({ queryKey }) =>
-            bibleTranslationClient.getTranslation(
-              queryKey[2],
-              selectedLanguage.bibleTranslationIds
-            ),
-        });
-      }
     }
   }, [language, verseId, queryClient, selectedLanguage]);
 
   // This ensures that when the verse changes, we have the latest gloss suggestions,
   // but in the meantime, we can show what was prefetched.
-  const refetch = targetGlossesQuery.refetch;
+  const refetch = suggestionsQuery.refetch;
   useEffect(() => {
     refetch();
   }, [refetch, language, verseId]);
@@ -127,9 +107,8 @@ function useTranslationQueries(language: string, verseId: string) {
     translationLanguages,
     selectedLanguage,
     verseQuery,
-    referenceGlossesQuery,
-    targetGlossesQuery,
-    notesQuery,
+    suggestionsQuery,
+    phrasesQuery,
     translationQuery,
   };
 }
@@ -174,9 +153,8 @@ export default function TranslationView() {
     translationLanguages,
     selectedLanguage,
     verseQuery,
-    referenceGlossesQuery,
-    targetGlossesQuery,
-    notesQuery,
+    suggestionsQuery,
+    phrasesQuery,
     translationQuery,
   } = useTranslationQueries(language, verseId);
 
@@ -202,24 +180,38 @@ export default function TranslationView() {
       const requestId = Math.floor(Math.random() * 1000000);
       setGlossRequests((requests) => [...requests, { wordId, requestId }]);
 
-      const queryKey = ['verse-glosses', language, verseId];
+      const queryKey = ['verse-phrases', language, verseId];
       await queryClient.cancelQueries({ queryKey });
       const previousGlosses = queryClient.getQueryData(queryKey);
-      queryClient.setQueryData<GetVerseGlossesResponseBody>(queryKey, (old) => {
+      queryClient.setQueryData<GetVersePhrasesResponseBody>(queryKey, (old) => {
         if (old) {
-          const glosses = old.data.slice();
-          const index = glosses.findIndex((g) => g.wordId === wordId);
+          const phrases = old.data.slice();
+          const index = phrases.findIndex((phrase) =>
+            phrase.wordIds.includes(wordId)
+          );
           if (index >= 0) {
-            const doc = glosses[index];
-            glosses.splice(index, 1, {
-              ...doc,
-              gloss: gloss ?? doc.gloss,
-              state: state ?? doc.state,
+            const phrase = phrases[index];
+            phrases.splice(index, 1, {
+              ...phrase,
+              gloss: {
+                text: gloss ?? phrase.gloss?.text,
+                state: state ?? phrase.gloss?.state ?? GlossState.Unapproved,
+              },
             });
-            return {
-              data: glosses,
-            };
           }
+          else {
+            phrases.push({
+              id: 0,
+              wordIds: [wordId],
+              gloss: {
+                text: gloss,
+                state: state ?? GlossState.Unapproved
+              }
+            })
+          }
+          return {
+            data: phrases,
+          };
         }
         return old;
       });
@@ -314,8 +306,8 @@ export default function TranslationView() {
 
   const loading =
     !verseQuery.isSuccess ||
-    !referenceGlossesQuery.isSuccess ||
-    !targetGlossesQuery.isSuccess;
+    !phrasesQuery.isSuccess ||
+    !suggestionsQuery.isSuccess;
 
   const loadedFromNextButton = useRef(false);
   useEffect(() => {
@@ -333,15 +325,24 @@ export default function TranslationView() {
 
   const glossesAsDisplayed = useMemo(
     () =>
-      targetGlossesQuery.data?.data.map((targetGloss) => ({
-        wordId: targetGloss.wordId,
-        glossAsDisplayed:
-          targetGloss.gloss ||
-          targetGloss.suggestions[0] ||
-          targetGloss.machineGloss,
-        state: targetGloss.state,
-      })),
-    [targetGlossesQuery.data]
+      verseQuery.data?.data.words.map((word) => {
+        const wordSuggestions = suggestionsQuery.data?.data.find(
+          (w) => w.wordId === word.id
+        );
+        const phrase = phrasesQuery.data?.data.find((phrase) =>
+          phrase.wordIds.includes(word.id)
+        );
+
+        return {
+          wordId: word.id,
+          glossAsDisplayed:
+            phrase?.gloss?.text ??
+            wordSuggestions?.suggestions[0] ??
+            wordSuggestions?.machineGloss,
+          state: phrase?.gloss?.state ?? GlossState.Unapproved,
+        };
+      }),
+    [verseQuery.data, suggestionsQuery.data, phrasesQuery.data]
   );
 
   const approveAllGlossesMutation = useMutation({
@@ -405,8 +406,6 @@ export default function TranslationView() {
           );
         } else {
           const verse = verseQuery.data.data;
-          const referenceGlosses = referenceGlossesQuery.data.data;
-          const targetGlosses = targetGlossesQuery.data.data;
 
           const canEdit = userCan('translate', {
             type: 'Language',
@@ -439,7 +438,12 @@ export default function TranslationView() {
                   }`}
                 >
                   {verse.words.map((word, i) => {
-                    const targetGloss = targetGlosses[i];
+                    const phrase = phrasesQuery.data?.data.find((phrase) =>
+                      phrase.wordIds.includes(word.id)
+                    );
+                    const wordSuggestions = suggestionsQuery.data.data.find(
+                      (w) => w.wordId === word.id
+                    );
                     const isSaving = glossRequests.some(
                       ({ wordId }) => wordId === word.id
                     );
@@ -448,19 +452,18 @@ export default function TranslationView() {
                       'empty';
                     if (isSaving) {
                       status = 'saving';
-                    } else if (targetGloss.gloss) {
+                    } else if (phrase?.gloss?.text) {
                       status =
-                        targetGloss.state === GlossState.Approved
+                        phrase.gloss.state === GlossState.Approved
                           ? 'approved'
                           : 'saved';
                     }
 
                     const hasTranslatorNote = !isRichTextEmpty(
-                      notesQuery.data?.data?.translatorNotes[word.id].content ??
-                        ''
+                      phrase?.translatorNote?.content ?? ''
                     );
                     const hasFootnote = !isRichTextEmpty(
-                      notesQuery.data?.data?.footnotes[word.id].content ?? ''
+                      phrase?.footnote?.content ?? ''
                     );
 
                     return (
@@ -470,11 +473,11 @@ export default function TranslationView() {
                         word={word}
                         originalLanguage={isHebrew ? 'hebrew' : 'greek'}
                         status={status}
-                        gloss={targetGloss?.gloss}
-                        machineGloss={targetGloss?.machineGloss}
+                        gloss={phrase?.gloss?.text}
+                        machineGloss={wordSuggestions?.machineGloss}
                         targetLanguage={selectedLanguage}
-                        referenceGloss={referenceGlosses[i]?.gloss}
-                        suggestions={targetGlosses[i]?.suggestions}
+                        referenceGloss={word.referenceGloss}
+                        suggestions={wordSuggestions?.suggestions ?? []}
                         hasNote={hasFootnote || (hasTranslatorNote && canEdit)}
                         onChange={({ gloss, approved }) => {
                           glossMutation.mutate({

@@ -1,8 +1,8 @@
 import type {
-  GetVerseGlossesResponseBody,
+  GetVerseSuggestionsResponseBody,
   GetVerseResponseBody,
   GetLemmaResourcesResponseBody,
-  GetVerseNotesResponseBody,
+  GetVersePhrasesResponseBody,
   GetNextUnapprovedVerseResponseBody,
 } from '@translation/api-types';
 import ApiClient from './client';
@@ -18,26 +18,26 @@ export default class Verses {
     });
   }
 
-  findVerseGlosses(
+  findVersePhrases(
     verseId: string,
     language: string
-  ): Promise<GetVerseGlossesResponseBody> {
+  ): Promise<GetVersePhrasesResponseBody> {
     return this.client.get({
-      path: `/api/languages/${language}/verses/${verseId}/glosses`,
+      path: `/api/languages/${language}/verses/${verseId}/phrases`,
+    });
+  }
+
+  findVerseSuggestions(
+    verseId: string,
+    language: string
+  ): Promise<GetVerseSuggestionsResponseBody> {
+    return this.client.get({
+      path: `/api/languages/${language}/verses/${verseId}/suggestions`,
     });
   }
 
   findLemmaResources(verseId: string): Promise<GetLemmaResourcesResponseBody> {
     return this.client.get({ path: `/api/verses/${verseId}/lemma-resources` });
-  }
-
-  findNotes(
-    verseId: string,
-    language: string
-  ): Promise<GetVerseNotesResponseBody> {
-    return this.client.get({
-      path: `/api/languages/${language}/verses/${verseId}/notes`,
-    });
   }
 
   findNextUnapprovedVerse(

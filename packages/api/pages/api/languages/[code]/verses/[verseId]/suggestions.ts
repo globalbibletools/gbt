@@ -1,5 +1,5 @@
-import { GetVerseGlossesResponseBody } from '@translation/api-types';
-import { client, PrismaTypes } from '../../../../../../shared/db';
+import { GetVerseSuggestionsResponseBody } from '@translation/api-types';
+import { client } from '../../../../../../shared/db';
 import createRoute from '../../../../../../shared/Route';
 import { machineTranslationClient } from '../../../../../../shared/machine-translation';
 import languageMap from '../../../../../../../../data/language-mapping.json';
@@ -9,7 +9,6 @@ interface WordQuery {
   wordId: string;
   gloss?: string;
   suggestions?: string[];
-  state?: PrismaTypes.GlossState;
   refGloss?: string;
   machineGloss?: string;
 }
@@ -22,16 +21,15 @@ async function saveMachineGlosses(
 ) {
   await client.$executeRaw`
     INSERT INTO "MachineGloss" ("wordId", "gloss", "languageId")
-    SELECT "Gloss"."wordId", "Map"."gloss", ${language}::uuid FROM "Gloss"
-    JOIN "Language" ON "Gloss"."languageId" = "Language"."id"
+    SELECT phw."wordId", map.gloss, ${language}::uuid FROM "Gloss" AS g
+    JOIN "Phrase" AS ph ON ph.id = g."phraseId"
+    JOIN "PhraseWord" AS phw ON phw."phraseId" = ph.id
     JOIN (VALUES ${Prisma.join(
       Object.entries(glossMap).map(
         ([eng, gloss]) => Prisma.sql`(${eng}, ${gloss})`
       )
-    )})
-      AS "Map" ("eng","gloss")
-      ON "Gloss"."gloss" ILIKE "Map"."eng"
-    WHERE "Language"."code" = 'eng'
+    )}) AS map ("eng", "gloss") ON g.gloss ILIKE map.eng
+    WHERE ph."languageId" = (SELECT id FROM "Language" WHERE code = 'eng')
     ON CONFLICT ON CONSTRAINT "MachineGloss_pkey"
     DO UPDATE SET gloss = EXCLUDED."gloss"
   `;
@@ -77,7 +75,7 @@ async function generateMachineGlossesForVerse(
 }
 
 export default createRoute<{ code: string; verseId: string }>()
-  .get<void, GetVerseGlossesResponseBody>({
+  .get<void, GetVerseSuggestionsResponseBody>({
     async handler(req, res) {
       const language = await client.language.findUnique({
         where: {
@@ -91,7 +89,7 @@ export default createRoute<{ code: string; verseId: string }>()
       const words = await client.$queryRaw<WordQuery[]>`
         SELECT
           w.id AS "wordId",
-          target.gloss AS "gloss", target.state AS "state",
+          target.gloss AS "gloss",
           ref.gloss AS "refGloss",
           ma.gloss AS "machineGloss",
           suggestion.suggestions AS "suggestions"
@@ -118,7 +116,7 @@ export default createRoute<{ code: string; verseId: string }>()
         ) AS suggestion ON suggestion.form_id = w."formId"
 
         LEFT JOIN LATERAL (
-          SELECT phw."wordId", g.gloss, g.state FROM "PhraseWord" AS phw
+          SELECT phw."wordId", g.gloss FROM "PhraseWord" AS phw
           JOIN "Phrase" AS ph ON ph.id = phw."phraseId"
             AND ph."languageId" = ${language.id}::uuid
           JOIN "Gloss" AS g ON g."phraseId" = ph.id
@@ -148,9 +146,7 @@ export default createRoute<{ code: string; verseId: string }>()
           data: words.map((word) => {
             return {
               wordId: word.wordId,
-              gloss: word.gloss ?? '',
               suggestions: word.suggestions ?? [],
-              state: word.state ?? PrismaTypes.GlossState.UNAPPROVED,
               machineGloss:
                 word.machineGloss ??
                 (word.refGloss

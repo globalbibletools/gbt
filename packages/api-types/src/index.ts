@@ -161,6 +161,7 @@ export interface VerseWord {
   lemmaId: string;
   formId: string;
   grammar: string;
+  referenceGloss?: string;
 }
 
 export interface Verse {
@@ -176,6 +177,7 @@ export const GlossState = makeEnum({
   Approved: 'APPROVED',
   Unapproved: 'UNAPPROVED',
 });
+
 export type GlossState = typeof GlossState[keyof typeof GlossState];
 
 export const GlossSource = makeEnum({
@@ -184,17 +186,39 @@ export const GlossSource = makeEnum({
 });
 export type GlossSource = typeof GlossSource[keyof typeof GlossSource];
 
-export interface Gloss {
-  wordId: string;
-  gloss?: string;
-  suggestions: string[];
+interface PhraseNote {
+  content: string;
+  authorName: string;
+  timestamp: string;
+}
+
+interface PhraseGloss {
+  text?: string;
   state: GlossState;
+}
+
+interface VersePhrase {
+  id: number;
+  wordIds: string[];
+  footnote?: PhraseNote;
+  translatorNote?: PhraseNote;
+  gloss?: PhraseGloss;
+}
+
+export interface GetVersePhrasesResponseBody {
+  data: VersePhrase[];
+}
+
+export interface VerseWordSuggestion {
+  wordId: string;
+  suggestions: string[];
   machineGloss?: string;
 }
 
-export interface GetVerseGlossesResponseBody {
-  data: Gloss[];
+export interface GetVerseSuggestionsResponseBody {
+  data: VerseWordSuggestion[];
 }
+
 export interface PostBulkGlossesRequestBody {
   data: {
     [wordId: string]: { gloss?: string; state?: GlossState };
@@ -206,33 +230,12 @@ export interface PatchWordGlossRequestBody {
   state?: GlossState;
 }
 
-export interface TranslatorNote {
-  wordId: string;
-  authorName: string;
-  timestamp: number;
-  content: string;
-}
-
 export interface PatchWordTranslatorNoteRequestBody {
   note: string;
 }
 
-export interface Footnote {
-  wordId: string;
-  authorName: string;
-  timestamp: number;
-  content: string;
-}
-
 export interface PatchWordFootnoteRequestBody {
   note: string;
-}
-
-export interface GetVerseNotesResponseBody {
-  data: {
-    footnotes: Record<string, Footnote>;
-    translatorNotes: Record<string, TranslatorNote>;
-  };
 }
 
 export interface SNSConfirmSubscriptionMessage {
