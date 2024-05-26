@@ -6,7 +6,7 @@ import { GetVersePhrasesResponseBody } from '@translation/api-types';
 interface Note {
   content: string;
   authorName: string;
-  timestamp: number;
+  timestamp: string;
 }
 
 interface Gloss {

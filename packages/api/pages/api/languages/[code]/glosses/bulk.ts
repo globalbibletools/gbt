@@ -1,8 +1,4 @@
-import {
-  Gloss,
-  GlossState,
-  PostBulkGlossesRequestBody,
-} from '@translation/api-types';
+import { GlossState, PostBulkGlossesRequestBody } from '@translation/api-types';
 import createRoute from '../../../../../shared/Route';
 import * as z from 'zod';
 import { authorize } from '../../../../../shared/access-control/authorize';
