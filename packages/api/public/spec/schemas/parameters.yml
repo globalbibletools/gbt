@@ -22,6 +22,14 @@ wordId:
   schema:
     type: string
   example: '0201400101'
+phraseId:
+  name: phraseId
+  in: path
+  description: The phrase ID within a language.
+  required: true
+  schema:
+    type: string
+  example: '12'
 userId:
   name: userId
   in: path

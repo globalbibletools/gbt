@@ -68,6 +68,7 @@ export const TranslationSidebar = forwardRef<
     const phrase = phrasesQuery.data?.data.find((phrase) =>
       phrase.wordIds.includes(word.id)
     );
+    const phraseId = phrase?.id;
 
     const tabTitles = ['translate:lexicon', 'translate:notes'];
     if (showComments) {
@@ -101,40 +102,50 @@ export const TranslationSidebar = forwardRef<
       isLoading: isSavingTranslatorNote,
       mutateAsync: mutateTranslatorNote,
     } = useMutation({
-      mutationFn: (data: { wordId: string; language: string; note: string }) =>
-        apiClient.words.updateTranslatorNote(data),
+      mutationFn: (data: {
+        phraseId: number;
+        language: string;
+        note: string;
+      }) => apiClient.phrases.updateTranslatorNote(data),
       onSuccess: () => phrasesQuery.refetch(),
     });
 
     const saveTranslatorNote = useMemo(
       () =>
         throttle(
-          (note: string) =>
-            mutateTranslatorNote({ wordId: word.id, language, note }),
+          (note: string) => {
+            if (phraseId) {
+              mutateTranslatorNote({ phraseId, language, note });
+            }
+          },
           15000,
           { leading: false, trailing: true }
         ),
-      [language, mutateTranslatorNote, word.id]
+      [language, mutateTranslatorNote, phraseId]
     );
 
     const { isLoading: isSavingFootnote, mutateAsync: mutateFootnote } =
       useMutation({
         mutationFn: (data: {
-          wordId: string;
+          phraseId: number;
           language: string;
           note: string;
-        }) => apiClient.words.updateFootnote(data),
+        }) => apiClient.phrases.updateFootnote(data),
         onSuccess: () => phrasesQuery.refetch(),
       });
 
     const saveFootnote = useMemo(
       () =>
         throttle(
-          (note: string) => mutateFootnote({ wordId: word.id, language, note }),
+          (note: string) => {
+            if (phraseId) {
+              mutateFootnote({ phraseId, language, note });
+            }
+          },
           15000,
           { leading: false, trailing: true }
         ),
-      [language, mutateFootnote, word.id]
+      [language, mutateFootnote, phraseId]
     );
     const { bookId, chapterNumber, verseNumber } = parseVerseId(verse.id);
     const bdbCurrentVerseRef = `${

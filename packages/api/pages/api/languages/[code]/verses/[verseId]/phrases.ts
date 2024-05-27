@@ -34,6 +34,30 @@ export default createRoute<{ code: string; verseId: string }>()
         return res.notFound();
       }
 
+      // We ensure that every word is part of a phrase before we run the query.
+      // This prevents issues where separate network requests would otherwise
+      // attempt to create the same phrase twice resulting a duplicate phrase.
+      // On slower internet connections, approving the gloss twice in quick succession
+      // would require two separate network requests to create a new phrase with the gloss.
+      await client.$executeRaw`
+        WITH phw AS (
+          INSERT INTO "PhraseWord" ("phraseId", "wordId")
+          SELECT
+            nextval(pg_get_serial_sequence('"Phrase"', 'id')),
+            w.id
+          FROM "Word" AS w
+          LEFT JOIN (
+            SELECT * FROM "PhraseWord" AS phw
+            JOIN "Phrase" AS ph ON ph.id = phw."phraseId"
+            WHERE ph."languageId" = ${language.id}::uuid
+          ) ph ON ph."wordId" = w.id
+          WHERE w."verseId" = ${req.query.verseId} AND ph.id IS NULL
+          RETURNING "phraseId", "wordId"
+        )
+        INSERT INTO "Phrase" (id, "languageId")
+        SELECT phw."phraseId", ${language.id}::uuid FROM phw
+      `;
+
       const phrases = await client.$queryRaw<Phrase[]>`
         SELECT
           ph.*,
