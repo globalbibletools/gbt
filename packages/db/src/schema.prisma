@@ -55,6 +55,8 @@ model User {
   invitation         UserInvitation?
   /// The password reset tokens connected to this user.
   passwordResetToken ResetPasswordToken[]
+  /// The list of phrase events the user created.
+  phraseEvents       PhraseEvent[]
 
   @@map("User")
 }
@@ -275,7 +277,7 @@ model LanguageMemberRole {
   @@id([languageId, userId, role])
 }
 
-// A phrase connects one or more words into a single unit for a single language.
+/// A phrase connects one or more words into a single unit for a single language.
 model Phrase {
   id         Int      @id @default(autoincrement())
   /// The language the phrase belongs to.
@@ -291,11 +293,13 @@ model Phrase {
   translatorNote TranslatorNote?
   /// The footnote for the phrase.
   footnote       Footnote?
+  /// The list of events for the phrase.
+  events         PhraseEvent[]
 
   @@index([languageId])
 }
 
-// Connects one or more words to a phrase in a language.
+/// Connects one or more words to a phrase in a language.
 model PhraseWord {
   /// The phrase the word is in.
   phrase   Phrase @relation(fields: [phraseId], references: [id], onDelete: Cascade)
@@ -308,6 +312,42 @@ model PhraseWord {
 
   @@id([phraseId, wordId])
   @@index([wordId])
+}
+
+/// Records an event about a phrase
+model PhraseEvent {
+  /// The unique ID of the event.
+  id Int @id @default(autoincrement())
+
+  /// The phrase the event describes.
+  phrase   Phrase @relation(fields: [phraseId], references: [id], onDelete: Cascade)
+  /// The ID of the phrase the event describes.
+  phraseId Int
+
+  /// The user who created the event.
+  user   User?   @relation(fields: [userId], references: [id])
+  /// The ID of the user who created the event.
+  userId String? @db.Uuid
+
+  /// The type of event.
+  type   PhraseEventType? @relation(fields: [typeId], references: [id])
+  /// The ID of the event type.
+  typeId Int
+
+  /// The date and time of the event.
+  timestamp DateTime
+  /// The payload of the event.
+  data      Json?
+}
+
+/// Diferentiates event types.
+model PhraseEventType {
+  /// The unique ID of the event type
+  id     Int           @id @default(autoincrement())
+  /// The event code.
+  code   String
+  /// All phrase events of this type.
+  events PhraseEvent[]
 }
 
 enum GlossState {
