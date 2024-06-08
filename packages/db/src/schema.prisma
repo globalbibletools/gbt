@@ -56,6 +56,11 @@ model User {
   /// The password reset tokens connected to this user.
   passwordResetToken ResetPasswordToken[]
 
+  /// The list of phrases created by this user.
+  createdPhrases Phrase[] @relation("CreatedPhrases")
+  /// The list of phrases deleted by this user.
+  deletedPhrases Phrase[] @relation("DeletedPhrases")
+
   @@map("User")
 }
 
@@ -291,6 +296,20 @@ model Phrase {
   translatorNote TranslatorNote?
   /// The footnote for the phrase.
   footnote       Footnote?
+
+  /// The date and time the phrase was created.
+  createdAt     DateTime?
+  /// The user who created this phrase.
+  createdByUser User?     @relation("CreatedPhrases", fields: [createdBy], references: [id])
+  /// The ID of the user who created this phrase.
+  createdBy     String?   @db.Uuid
+
+  /// The user who deleted this phrase.
+  deletedByUser User?     @relation("DeletedPhrases", fields: [deletedBy], references: [id])
+  /// The ID of the user who deleted this phrase.
+  deletedBy     String?   @db.Uuid
+  /// The date and time the phrase was deleted.
+  deletedAt     DateTime?
 
   @@index([languageId])
 }
