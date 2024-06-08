@@ -55,8 +55,8 @@ export default createRoute<{ code: string; verseId: string }>()
           WHERE w."verseId" = ${req.query.verseId} AND ph.id IS NULL
           RETURNING "phraseId", "wordId"
         )
-        INSERT INTO "Phrase" (id, "languageId")
-        SELECT phw."phraseId", ${language.id}::uuid FROM phw
+        INSERT INTO "Phrase" (id, "languageId", "createdAt", "createdBy")
+        SELECT phw."phraseId", ${language.id}::uuid, now(), ${req.session?.user?.id}::uuid FROM phw
       `;
 
       const phrases = await client.$queryRaw<Phrase[]>`
