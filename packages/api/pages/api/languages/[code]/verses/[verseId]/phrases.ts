@@ -53,9 +53,24 @@ export default createRoute<{ code: string; verseId: string }>()
           ) ph ON ph."wordId" = w.id
           WHERE w."verseId" = ${req.query.verseId} AND ph.id IS NULL
           RETURNING "phraseId", "wordId"
+        ),
+        phrase AS (
+          INSERT INTO "Phrase" (id, "languageId")
+          SELECT phw."phraseId", ${language.id}::uuid FROM phw
         )
-        INSERT INTO "Phrase" (id, "languageId")
-        SELECT phw."phraseId", ${language.id}::uuid FROM phw
+        INSERT INTO "PhraseEvent" ("typeId", "phraseId", "timestamp", "data")
+        (SELECT
+          (SELECT id from "PhraseEventType" WHERE code = 'Created'),
+          phw."phraseId",
+          now(),
+          NULL
+        FROM phw)
+        UNION ALL (SELECT
+          (SELECT id from "PhraseEventType" WHERE code = 'WordAdded'),
+          phw."phraseId",
+          now(),
+          JSON_BUILD_OBJECT('wordId', phw."wordId")
+        FROM phw)
       `;
 
       const phrases = await client.$queryRaw<Phrase[]>`

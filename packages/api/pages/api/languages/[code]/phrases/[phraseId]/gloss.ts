@@ -1,6 +1,5 @@
 import {
   GlossState,
-  GlossSource,
   PatchPhraseGlossRequestBody,
 } from '@translation/api-types';
 import * as z from 'zod';
@@ -63,12 +62,16 @@ export default createRoute<{ code: string; phraseId: string }>()
           where: { id: phraseId, languageId: language.id },
           include: {
             gloss: true,
-            words: true,
           },
         });
         if (!phrase) {
           res.notFound();
           return;
+        }
+
+        if (phrase.gloss?.gloss === req.body.gloss && phrase.gloss?.state === req.body.state) {
+          res.ok()
+          return
         }
 
         await tx.gloss.upsert({
@@ -82,18 +85,21 @@ export default createRoute<{ code: string; phraseId: string }>()
           },
         });
 
-        await tx.glossHistoryEntry.createMany({
-          data: phrase.words.map((word) => ({
-            wordId: word.wordId,
-            languageId: language.id,
-            userId: req.session?.user?.id,
-            gloss:
-              fields.gloss !== phrase.gloss?.gloss ? fields.gloss : undefined,
-            state:
-              fields.state !== phrase.gloss?.state ? fields.state : undefined,
-            source: GlossSource.User,
-          })),
-        });
+        await tx.$executeRaw`
+          INSERT INTO "PhraseEvent" ("typeId", "phraseId", "userId", "timestamp", "data")
+          SELECT
+            (SELECT id FROM "PhraseEventType" WHERE code = 'GlossChanged'),
+            v.*
+          FROM (VALUES (
+            ${phrase.id},
+            ${req.session?.user?.id}::uuid,
+            now(),
+            ${JSON.stringify({
+              gloss: fields.gloss !== phrase.gloss?.gloss ? fields.gloss : undefined,
+              state: fields.state !== phrase.gloss?.state ? fields.state : undefined
+            })}::jsonb
+          )) AS v (phraseid, userid, timestamp, data)
+        `
       });
 
       res.ok();
