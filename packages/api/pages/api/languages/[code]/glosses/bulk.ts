@@ -52,13 +52,22 @@ export default createRoute<{ code: string }>()
                   phrase: {
                     languageId: language.id,
                   },
-                }
+                },
+                include: {
+                  phrase: {
+                    select: {
+                      words: {
+                        select: { wordId: true },
+                      },
+                    },
+                  },
+                },
               })
-            ).map(({ phraseId, ...data }) => [phraseId, data])
+            ).map(({ phrase, ...data }) => [phrase.words[0].wordId, data])
           );
 
           const patchedGlosses = await tx.$queryRaw<
-            { phraseId: number; gloss: string; state: GlossState }[]
+            { wordId: string; gloss: string; state: GlossState }[]
           >`
             WITH data (phrase_id, gloss, state) AS (VALUES ${Prisma.join(
               entriesToPatch.map(
@@ -69,45 +78,38 @@ export default createRoute<{ code: string }>()
                     GlossState.Unapproved
                   }::"GlossState")`
               )
-            )})
-            INSERT INTO "Gloss"("phraseId", "gloss", "state")
-            SELECT ph.id, data.gloss, data.state FROM data
-            JOIN "Phrase" AS ph ON ph.id = data.phrase_id
-            ON CONFLICT ("phraseId")
-                DO UPDATE SET
-                    "gloss" = COALESCE(EXCLUDED."gloss", "Gloss"."gloss"),
-                    "state" = COALESCE(EXCLUDED."state", "Gloss"."state")
-            RETURNING *
+            )}),
+            gloss AS (
+              INSERT INTO "Gloss"("phraseId", "gloss", "state")
+              SELECT ph.id, data.gloss, data.state FROM data
+              JOIN "Phrase" AS ph ON ph.id = data.phrase_id
+              ON CONFLICT ("phraseId")
+                  DO UPDATE SET
+                      "gloss" = COALESCE(EXCLUDED."gloss", "Gloss"."gloss"),
+                      "state" = COALESCE(EXCLUDED."state", "Gloss"."state")
+              RETURNING *
+            )
+            SELECT phw."wordId", gloss.gloss, gloss.state FROM gloss
+            JOIN "Phrase" AS ph ON ph.id = gloss."phraseId"
+            JOIN "PhraseWord" AS phw ON phw."phraseId" = ph.id
           `;
-
-          console.log(oldGlosses)
-          console.log(patchedGlosses)
 
           if (patchedGlosses.length > 0) {
             await tx.$executeRaw`
-              INSERT INTO "PhraseEvent" ("typeId", "phraseId", "userId", "timestamp", "data")
-              SELECT
-                (SELECT id FROM "PhraseEventType" WHERE code = 'GlossChanged'),
-                v.*
-              FROM (VALUES ${Prisma.join(
-                patchedGlosses.filter(patchedGloss => {
-                  const oldGloss = oldGlosses[patchedGloss.phraseId];
-                  console.log(oldGloss)
-                  return patchedGloss.gloss !== oldGloss?.gloss || patchedGloss.state === oldGloss?.state
-                }).map((patchedGloss) => {
-                  const oldGloss = oldGlosses[patchedGloss.phraseId];
-                  return Prisma.sql`(
-                    ${patchedGloss.phraseId},
+            INSERT INTO "GlossHistoryEntry"("languageId", "userId", "wordId", "gloss", "state", "source")
+            VALUES ${Prisma.join(
+              patchedGlosses.map((patchedGloss) => {
+                const oldGloss = oldGlosses[patchedGloss.wordId];
+                return Prisma.sql`
+                    (${language.id}::uuid,
                     ${req.session?.user?.id}::uuid,
-                    now(),
-                    ${JSON.stringify({
-                      gloss: patchedGloss.gloss !== oldGloss?.gloss ? patchedGloss.gloss : undefined,
-                      state: patchedGloss.state !== oldGloss?.state ? patchedGloss.state : undefined
-                    })}::jsonb
-                  )`
-                })
-              )}) AS v (phraseid, userid, timestamp, data)
-            `
+                    ${patchedGloss.wordId},
+                    NULLIF(${patchedGloss.gloss}, ${oldGloss?.gloss}),
+                    NULLIF(${patchedGloss.state}, ${oldGloss?.state})::"GlossState",
+                    'USER')`;
+              })
+            )}
+        `;
           }
         });
       }

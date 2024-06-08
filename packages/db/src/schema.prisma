@@ -345,7 +345,7 @@ model PhraseEventType {
   /// The unique ID of the event type
   id     Int           @id @default(autoincrement())
   /// The event code.
-  code   String @unique
+  code   String
   /// All phrase events of this type.
   events PhraseEvent[]
 }
