@@ -50,6 +50,7 @@ export default createRoute<{ code: string; verseId: string }>()
             SELECT * FROM "PhraseWord" AS phw
             JOIN "Phrase" AS ph ON ph.id = phw."phraseId"
             WHERE ph."languageId" = ${language.id}::uuid
+              AND ph."deletedAt" IS NULL
           ) ph ON ph."wordId" = w.id
           WHERE w."verseId" = ${req.query.verseId} AND ph.id IS NULL
           RETURNING "phraseId", "wordId"
@@ -100,6 +101,7 @@ export default createRoute<{ code: string; verseId: string }>()
           JOIN "Word" AS w ON phw."wordId" = w.id
           WHERE w."verseId" = ${req.query.verseId}
             AND ph."languageId" = ${language.id}::uuid
+            AND ph."deletedAt" IS NULL
           GROUP BY phw."phraseId"
         ) AS ph
 

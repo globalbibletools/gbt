@@ -30,6 +30,7 @@ async function saveMachineGlosses(
       )
     )}) AS map ("eng", "gloss") ON g.gloss ILIKE map.eng
     WHERE ph."languageId" = (SELECT id FROM "Language" WHERE code = 'eng')
+      AND ph."deletedAt" IS NULL
     ON CONFLICT ON CONSTRAINT "MachineGloss_pkey"
     DO UPDATE SET gloss = EXCLUDED."gloss"
   `;
@@ -109,6 +110,7 @@ export default createRoute<{ code: string; verseId: string }>()
             JOIN "Phrase" AS ph ON ph.id = phw."phraseId"
             JOIN "Gloss" AS g ON g."phraseId" = ph.id
             WHERE ph."languageId" = ${language.id}::uuid
+              AND ph."deletedAt" IS NULL
               AND g.gloss IS NOT NULL
             GROUP BY form.id, g.gloss
           ) AS form_suggestion
@@ -118,9 +120,10 @@ export default createRoute<{ code: string; verseId: string }>()
         LEFT JOIN LATERAL (
           SELECT phw."wordId", g.gloss FROM "PhraseWord" AS phw
           JOIN "Phrase" AS ph ON ph.id = phw."phraseId"
-            AND ph."languageId" = ${language.id}::uuid
           JOIN "Gloss" AS g ON g."phraseId" = ph.id
           WHERE phw."wordId" = w.id
+            AND ph."languageId" = ${language.id}::uuid
+            AND ph."deletedAt" IS NULL
         ) AS target ON true
 
         LEFT JOIN LATERAL (
@@ -129,6 +132,7 @@ export default createRoute<{ code: string; verseId: string }>()
           JOIN "Gloss" AS g ON g."phraseId" = ph.id
           WHERE phw."wordId" = w.id
             AND ph."languageId" = (SELECT id FROM "Language" WHERE code = 'eng')
+            AND ph."deletedAt" IS NULL
         ) AS ref ON true
 
         LEFT JOIN "MachineGloss" AS ma ON ma."wordId" = w.id

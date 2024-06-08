@@ -60,7 +60,7 @@ export default createRoute<{ code: string; phraseId: string }>()
 
       await client.$transaction(async (tx) => {
         const phrase = await tx.phrase.findUnique({
-          where: { id: phraseId, languageId: language.id },
+          where: { id: phraseId, languageId: language.id, deletedAt: null },
           include: {
             gloss: true,
             words: true,

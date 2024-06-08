@@ -51,6 +51,7 @@ export default createRoute<{ code: string }>()
                   },
                   phrase: {
                     languageId: language.id,
+                    deletedAt: null,
                   },
                 },
                 include: {
@@ -83,6 +84,7 @@ export default createRoute<{ code: string }>()
               INSERT INTO "Gloss"("phraseId", "gloss", "state")
               SELECT ph.id, data.gloss, data.state FROM data
               JOIN "Phrase" AS ph ON ph.id = data.phrase_id
+              WHERE ph."deletedAt" IS NULL
               ON CONFLICT ("phraseId")
                   DO UPDATE SET
                       "gloss" = COALESCE(EXCLUDED."gloss", "Gloss"."gloss"),
