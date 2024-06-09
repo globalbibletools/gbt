@@ -294,11 +294,11 @@ model Phrase {
   footnote       Footnote?
 
   /// The date and time the phrase was created.
-  createdAt     DateTime?
+  createdAt     DateTime
   /// The user who created this phrase.
-  createdByUser User?     @relation("CreatedPhrases", fields: [createdBy], references: [id])
+  createdByUser User?    @relation("CreatedPhrases", fields: [createdBy], references: [id])
   /// The ID of the user who created this phrase.
-  createdBy     String?   @db.Uuid
+  createdBy     String?  @db.Uuid
 
   /// The user who deleted this phrase.
   deletedByUser User?     @relation("DeletedPhrases", fields: [deletedBy], references: [id])
