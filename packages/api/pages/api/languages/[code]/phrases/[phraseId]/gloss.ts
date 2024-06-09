@@ -63,7 +63,6 @@ export default createRoute<{ code: string; phraseId: string }>()
           where: { id: phraseId, languageId: language.id, deletedAt: null },
           include: {
             gloss: true,
-            words: true,
           },
         });
         if (!phrase) {
@@ -72,9 +71,7 @@ export default createRoute<{ code: string; phraseId: string }>()
         }
 
         await tx.gloss.upsert({
-          where: {
-            phraseId,
-          },
+          where: { phraseId },
           update: fields,
           create: {
             ...fields,
@@ -82,17 +79,16 @@ export default createRoute<{ code: string; phraseId: string }>()
           },
         });
 
-        await tx.glossHistoryEntry.createMany({
-          data: phrase.words.map((word) => ({
-            wordId: word.wordId,
-            languageId: language.id,
+        await tx.glossEvent.create({
+          data: {
+            phraseId: phrase.id,
             userId: req.session?.user?.id,
             gloss:
               fields.gloss !== phrase.gloss?.gloss ? fields.gloss : undefined,
             state:
               fields.state !== phrase.gloss?.state ? fields.state : undefined,
             source: GlossSource.User,
-          })),
+          },
         });
       });
 

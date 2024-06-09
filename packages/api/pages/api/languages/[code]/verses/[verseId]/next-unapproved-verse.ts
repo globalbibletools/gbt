@@ -31,7 +31,7 @@ export default createRoute<{ code: string; verseId: string }>()
           LEFT JOIN "Gloss" AS g ON g."phraseId" = ph.id
           WHERE phw."wordId" = w.id
 			      AND ph."languageId" = ${language.id}::uuid
-			      AND ph."isDeleted" IS NULL
+			      AND ph."deletedAt" IS NULL
         ) AS g ON true
         WHERE w."verseId" > ${req.query.verseId}
           AND (g."state" = 'UNAPPROVED' OR g."state" IS NULL)

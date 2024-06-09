@@ -112,10 +112,9 @@ export const lambdaHandler = async (event: SQSEvent) => {
               state: GlossState.APPROVED,
             })),
           });
-          await client.glossHistoryEntry.createMany({
-            data: glossData.map(({ wordId, gloss }) => ({
-              wordId,
-              languageId: language.id,
+          await client.glossEvent.createMany({
+            data: glossData.map(({ phraseId, gloss }) => ({
+              phraseId,
               userId: job?.userId,
               gloss,
               state: GlossState.APPROVED,
