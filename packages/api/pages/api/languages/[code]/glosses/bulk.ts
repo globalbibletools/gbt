@@ -3,6 +3,7 @@ import createRoute from '../../../../../shared/Route';
 import * as z from 'zod';
 import { authorize } from '../../../../../shared/access-control/authorize';
 import { Prisma, client } from '../../../../../shared/db';
+import { GlossSource } from '@prisma/client';
 
 export default createRoute<{ code: string }>()
   .post<PostBulkGlossesRequestBody, void>({
@@ -51,23 +52,15 @@ export default createRoute<{ code: string }>()
                   },
                   phrase: {
                     languageId: language.id,
-                  },
-                },
-                include: {
-                  phrase: {
-                    select: {
-                      words: {
-                        select: { wordId: true },
-                      },
-                    },
+                    deletedAt: null,
                   },
                 },
               })
-            ).map(({ phrase, ...data }) => [phrase.words[0].wordId, data])
+            ).map(({ phraseId, ...data }) => [phraseId, data])
           );
 
           const patchedGlosses = await tx.$queryRaw<
-            { wordId: string; gloss: string; state: GlossState }[]
+            { phraseId: number; gloss: string; state: GlossState }[]
           >`
             WITH data (phrase_id, gloss, state) AS (VALUES ${Prisma.join(
               entriesToPatch.map(
@@ -78,38 +71,38 @@ export default createRoute<{ code: string }>()
                     GlossState.Unapproved
                   }::"GlossState")`
               )
-            )}),
-            gloss AS (
-              INSERT INTO "Gloss"("phraseId", "gloss", "state")
-              SELECT ph.id, data.gloss, data.state FROM data
-              JOIN "Phrase" AS ph ON ph.id = data.phrase_id
-              ON CONFLICT ("phraseId")
-                  DO UPDATE SET
-                      "gloss" = COALESCE(EXCLUDED."gloss", "Gloss"."gloss"),
-                      "state" = COALESCE(EXCLUDED."state", "Gloss"."state")
-              RETURNING *
-            )
-            SELECT phw."wordId", gloss.gloss, gloss.state FROM gloss
-            JOIN "Phrase" AS ph ON ph.id = gloss."phraseId"
-            JOIN "PhraseWord" AS phw ON phw."phraseId" = ph.id
+            )})
+            INSERT INTO "Gloss"("phraseId", "gloss", "state")
+            SELECT ph.id, data.gloss, data.state FROM data
+            JOIN "Phrase" AS ph ON ph.id = data.phrase_id
+            WHERE ph."deletedAt" IS NULL
+            ON CONFLICT ("phraseId")
+                DO UPDATE SET
+                    "gloss" = COALESCE(EXCLUDED."gloss", "Gloss"."gloss"),
+                    "state" = COALESCE(EXCLUDED."state", "Gloss"."state")
+            RETURNING *
           `;
 
           if (patchedGlosses.length > 0) {
-            await tx.$executeRaw`
-            INSERT INTO "GlossHistoryEntry"("languageId", "userId", "wordId", "gloss", "state", "source")
-            VALUES ${Prisma.join(
-              patchedGlosses.map((patchedGloss) => {
-                const oldGloss = oldGlosses[patchedGloss.wordId];
-                return Prisma.sql`
-                    (${language.id}::uuid,
-                    ${req.session?.user?.id}::uuid,
-                    ${patchedGloss.wordId},
-                    NULLIF(${patchedGloss.gloss}, ${oldGloss?.gloss}),
-                    NULLIF(${patchedGloss.state}, ${oldGloss?.state})::"GlossState",
-                    'USER')`;
-              })
-            )}
-        `;
+            await tx.glossEvent.createMany({
+              data: patchedGlosses.map((patchedGloss) => {
+                const oldGloss = oldGlosses[patchedGloss.phraseId];
+
+                return {
+                  phraseId: patchedGloss.phraseId,
+                  userId: req.session?.user?.id,
+                  gloss:
+                    patchedGloss.gloss !== oldGloss?.gloss
+                      ? patchedGloss.gloss
+                      : undefined,
+                  state:
+                    patchedGloss.state !== oldGloss?.state
+                      ? patchedGloss.state
+                      : undefined,
+                  source: GlossSource.USER,
+                };
+              }),
+            });
           }
         });
       }

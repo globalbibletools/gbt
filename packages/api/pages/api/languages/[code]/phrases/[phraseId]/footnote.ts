@@ -40,7 +40,7 @@ export default createRoute<{ code: string; phraseId: string }>()
       }
 
       const phrase = await client.phrase.findUnique({
-        where: { id: phraseId, languageId: language.id },
+        where: { id: phraseId, languageId: language.id, deletedAt: null },
       });
       if (!phrase) {
         res.notFound();

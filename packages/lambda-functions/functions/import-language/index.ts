@@ -24,19 +24,21 @@ export const lambdaHandler = async (event: SQSEvent) => {
     });
 
     if (language) {
+      const job = await client.languageImportJob.findUnique({
+        where: { languageId: language.id },
+      });
+
       // Delete all the glosses for the language.
-      console.log(`deleting glosses ... start`);
-      await client.phrase.deleteMany({
-        where: {
-          languageId: language.id,
-        },
-      });
-      await client.gloss.deleteMany({
-        where: {
-          languageId: language.id,
-        },
-      });
-      console.log(`deleting glosses ... complete`);
+      console.log(`deleting existing phrases... start`);
+      await client.$executeRaw`
+        UPDATE "Phrase"
+          SET
+            "deletedAt" = now()
+            "deletedBy" = ${job?.userId}::uuid
+        WHERE "languageId" = ${language.id}::uuid
+          AND "deletedAt" IS NULL
+      `;
+      console.log(`deleting existing phrases ... complete`);
 
       for (const key of bookKeys) {
         try {
@@ -86,8 +88,8 @@ export const lambdaHandler = async (event: SQSEvent) => {
           console.log(`${key} ... complete`);
 
           const phrases = await client.$queryRaw<{ id: number }[]>`
-            INSERT INTO "Phrase" ("languageId")
-            SELECT ${language.id}::uuid FROM generate_series(1,${glossData.length})
+            INSERT INTO "Phrase" ("languageId", "createdAt", "createdBy")
+            SELECT ${language.id}::uuid, now(), ${job?.userId}::uuid FROM generate_series(1,${glossData.length})
             RETURNING id
           `;
           for (const i in glossData) {
@@ -110,14 +112,9 @@ export const lambdaHandler = async (event: SQSEvent) => {
               state: GlossState.APPROVED,
             })),
           });
-
-          const job = await client.languageImportJob.findUnique({
-            where: { languageId: language.id },
-          });
-          await client.glossHistoryEntry.createMany({
-            data: glossData.map(({ wordId, gloss }) => ({
-              wordId,
-              languageId: language.id,
+          await client.glossEvent.createMany({
+            data: glossData.map(({ phraseId, gloss }) => ({
+              phraseId,
               userId: job?.userId,
               gloss,
               state: GlossState.APPROVED,
