@@ -46,6 +46,8 @@ paths:
     $ref: ./paths/translation/verse-suggestions.yml
   /languages/{code}/verses/{verseId}/next-unapproved-verse:
     $ref: ./paths/translation/next-unapproved-verse.yml
+  /languages/{code}/phrases:
+    $ref: ./paths/languages/phrases.yml
   /languages/{code}/phrases/{phraseId}/gloss:
     $ref: ./paths/languages/phrase-gloss.yml
   /languages/{code}/phrases/{phraseId}/translator-note:

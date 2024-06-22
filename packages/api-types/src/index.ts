@@ -219,6 +219,10 @@ export interface GetVerseSuggestionsResponseBody {
   data: VerseWordSuggestion[];
 }
 
+export interface PostPhraseRequestBody {
+  wordIds: string[];
+}
+
 export interface PostBulkGlossesRequestBody {
   data: { phraseId: number; gloss?: string; state?: GlossState }[];
 }
