@@ -34,7 +34,6 @@ import {
 import { isFlagEnabled } from '../../shared/featureFlags';
 import useTitle from '../../shared/hooks/useTitle';
 import { useFlash } from '../../shared/hooks/flash';
-import { isRichTextEmpty } from '../../shared/components/form/RichTextInput';
 
 export const translationLanguageKey = 'translation-language';
 export const translationVerseIdKey = 'translation-verse-id';
@@ -370,7 +369,6 @@ export default function TranslationView() {
   const sidebarRef = useRef<TranslationSidebarRef>(null);
 
   const [selectedWords, setSelectedWords] = useState<string[]>([]);
-
   const createPhraseMutation = useMutation({
     mutationFn: async (variables: { language: string; wordIds: string[] }) => {
       await apiClient.phrases.create(variables);
@@ -463,45 +461,28 @@ export default function TranslationView() {
                       throw new Error('Missing phrase');
                     }
 
-                    const wordSuggestions = suggestionsQuery.data.data.find(
-                      (w) => w.wordId === word.id
-                    );
-                    const isSaving = glossRequests.some(
-                      ({ phraseId }) => phraseId === phrase.id
-                    );
-
-                    let status: 'empty' | 'saving' | 'saved' | 'approved' =
-                      'empty';
-                    if (isSaving) {
-                      status = 'saving';
-                    } else if (phrase.gloss?.text) {
-                      status =
-                        phrase.gloss.state === GlossState.Approved
-                          ? 'approved'
-                          : 'saved';
-                    }
-
-                    const hasTranslatorNote = !isRichTextEmpty(
-                      phrase.translatorNote?.content ?? ''
-                    );
-                    const hasFootnote = !isRichTextEmpty(
-                      phrase.footnote?.content ?? ''
-                    );
-
                     return (
                       <TranslateWord
                         key={word.id}
+                        ref={(() => {
+                          if (i === 0) {
+                            return firstWord;
+                          } else if (i === verse.words.length - 1) {
+                            return lastWord;
+                          }
+                        })()}
+                        originalLanguage={isHebrew ? 'hebrew' : 'greek'}
+                        phrase={phrase}
+                        hints={suggestionsQuery.data.data.find(
+                          (w) => w.wordId === word.id
+                        )}
+                        word={word}
+                        targetLanguage={selectedLanguage}
                         editable={canEdit}
                         selected={selectedWords.includes(word.id)}
-                        word={word}
-                        originalLanguage={isHebrew ? 'hebrew' : 'greek'}
-                        status={status}
-                        gloss={phrase.gloss?.text}
-                        machineGloss={wordSuggestions?.machineGloss}
-                        targetLanguage={selectedLanguage}
-                        referenceGloss={word.referenceGloss}
-                        suggestions={wordSuggestions?.suggestions ?? []}
-                        hasNote={hasFootnote || (hasTranslatorNote && canEdit)}
+                        saving={glossRequests.some(
+                          ({ phraseId }) => phraseId === phrase.id
+                        )}
                         onChange={({ gloss, approved }) => {
                           glossMutation.mutate({
                             phraseId: phrase.id,
@@ -528,13 +509,6 @@ export default function TranslationView() {
                             }
                           });
                         }}
-                        ref={(() => {
-                          if (i === 0) {
-                            return firstWord;
-                          } else if (i === verse.words.length - 1) {
-                            return lastWord;
-                          }
-                        })()}
                       />
                     );
                   })}

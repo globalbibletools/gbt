@@ -13,21 +13,28 @@ import { expandFontFamily } from '../../shared/hooks/useFontLoader';
 import { useTextWidth } from '../../shared/hooks/useTextWidth';
 import { capitalize } from '../../shared/utils';
 import AutocompleteInput from '../../shared/components/form/AutocompleteInput';
-import { TextDirection } from '@translation/api-types';
+import {
+  GlossState,
+  TextDirection,
+  VersePhrase,
+  VerseWord,
+  VerseWordSuggestion,
+} from '@translation/api-types';
 import Button from '../../shared/components/actions/Button';
+import { isRichTextEmpty } from '../../shared/components/form/RichTextInput';
 
 export interface TranslateWordProps {
+  originalLanguage: 'hebrew' | 'greek';
+
+  phrase: VersePhrase;
+  hints?: VerseWordSuggestion;
+  word: VerseWord;
+  targetLanguage?: { textDirection: TextDirection; font: string };
+
   editable?: boolean;
   selected?: boolean;
-  word: { id: string; text: string };
-  originalLanguage: 'hebrew' | 'greek';
-  status: 'empty' | 'saving' | 'saved' | 'approved';
-  gloss?: string;
-  machineGloss?: string;
-  targetLanguage?: { textDirection: TextDirection; font: string };
-  referenceGloss?: string;
-  suggestions: string[];
-  hasNote?: boolean;
+  saving?: boolean;
+
   onChange(data: { gloss?: string; approved?: boolean }): void;
   onFocus?: () => void;
   onShowDetail?: () => void;
@@ -42,17 +49,16 @@ export interface TranslateWordRef {
 const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
   (
     {
+      phrase,
+      hints,
+      word,
+      targetLanguage,
+
       editable = false,
       selected = false,
-      word,
+      saving = false,
+
       originalLanguage,
-      status,
-      gloss,
-      machineGloss,
-      targetLanguage,
-      referenceGloss,
-      suggestions,
-      hasNote,
       onChange,
       onFocus,
       onShowDetail,
@@ -74,11 +80,27 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
       []
     );
 
-    const glossValue = gloss || suggestions[0] || machineGloss;
+    let status: 'empty' | 'saving' | 'saved' | 'approved' = 'empty';
+    if (saving) {
+      status = 'saving';
+    } else if (phrase.gloss?.text) {
+      status =
+        phrase.gloss.state === GlossState.Approved ? 'approved' : 'saved';
+    }
+
+    const hasTranslatorNote = !isRichTextEmpty(
+      phrase.translatorNote?.content ?? ''
+    );
+    const hasFootnote = !isRichTextEmpty(phrase.footnote?.content ?? '');
+    const hasNote = hasFootnote || (hasTranslatorNote && editable);
+
+    const glossValue =
+      phrase.gloss?.text || hints?.suggestions?.[0] || hints?.machineGloss;
     const [currentInputValue, setCurrentInputValue] = useState(
       glossValue ?? ''
     );
-    const hasMachineSuggestion = !gloss && !suggestions[0] && !!machineGloss;
+    const hasMachineSuggestion =
+      !phrase.gloss?.text && !hints?.suggestions?.[0] && !!hints?.machineGloss;
 
     const glossWidth = useTextWidth({
       text: glossValue ?? '',
@@ -150,7 +172,7 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
           dir="ltr"
         >
           <span className="inline-block" ref={refGloss}>
-            {editable ? referenceGloss : gloss}
+            {editable ? word.referenceGloss : phrase.gloss?.text}
           </span>
         </div>
         {editable && (
@@ -222,7 +244,7 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
                   renderOption={(item, i) => (
                     <div
                       className={
-                        machineGloss
+                        hints?.machineGloss
                           ? `relative ${
                               originalLanguage === 'hebrew' ? 'pl-5' : 'pr-5'
                             }`
@@ -230,7 +252,7 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
                       }
                     >
                       {item}
-                      {i === suggestions.length ? (
+                      {i === hints?.suggestions.length ? (
                         <Icon
                           className={`absolute top-1 ${
                             originalLanguage === 'hebrew' ? 'left-0' : 'right-0'
@@ -247,7 +269,7 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
                   aria-labelledby={`word-${word.id}`}
                   onChange={(value, implicit) => {
                     if (
-                      value !== gloss ||
+                      value !== phrase.gloss?.text ||
                       (!implicit && status !== 'approved')
                     ) {
                       onChange({
@@ -288,7 +310,9 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
                   }}
                   onFocus={() => onFocus?.()}
                   suggestions={
-                    machineGloss ? [...suggestions, machineGloss] : suggestions
+                    hints?.machineGloss
+                      ? [...(hints?.suggestions ?? []), hints?.machineGloss]
+                      : hints?.suggestions ?? []
                   }
                   ref={input}
                 />
