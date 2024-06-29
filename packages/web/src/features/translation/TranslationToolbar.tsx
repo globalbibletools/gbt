@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Icon } from '../../shared/components/Icon';
 import TextInput from '../../shared/components/form/TextInput';
@@ -25,8 +25,10 @@ export interface TranslationToolbarProps {
   languages: { name: string; code: string }[];
   onVerseChange: (verseId: string) => void;
   onLanguageChange: (languageCode: string) => void;
+  onCreatePhrase: () => void;
   approveAllGlosses: () => void;
   canApproveAllGlosses: boolean;
+  canCreatePhrase: boolean;
 }
 
 export function TranslationToolbar({
@@ -35,8 +37,10 @@ export function TranslationToolbar({
   languageCode,
   onLanguageChange,
   onVerseChange,
+  onCreatePhrase,
   approveAllGlosses,
   canApproveAllGlosses,
+  canCreatePhrase,
 }: TranslationToolbarProps) {
   const { t } = useTranslation(['translate', 'bible', 'common', 'languages']);
   const flash = useFlash();
@@ -169,14 +173,24 @@ export function TranslationToolbar({
         </div>
       )}
       {isTranslator && (
-        <div className="pt-6">
+        <div className="pt-6 flex items-center">
           <Button
-            variant="secondary"
+            variant="tertiary"
             disabled={!canApproveAllGlosses}
             onClick={approveAllGlosses}
           >
             <Icon icon="check" className="me-1" />
             {t('translate:approve_all')}
+          </Button>
+          <span className="mx-1" aria-hidden="true">
+            |
+          </span>
+          <Button
+            variant="tertiary"
+            disabled={!canCreatePhrase}
+            onClick={onCreatePhrase}
+          >
+            {t('translate:create_phrase')}
           </Button>
         </div>
       )}

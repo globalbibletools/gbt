@@ -35,7 +35,7 @@ function buttonClasses(
       } border-2 bg-white shadow-md`;
     }
     case 'tertiary': {
-      return `${sharedClasses} ${sizeClasses} ${
+      return `${sharedClasses} ${small ? 'h-6' : 'h-9'} ${
         destructive
           ? 'text-red-800 outline-red-300'
           : 'text-blue-800 outline-green-300'

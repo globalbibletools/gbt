@@ -1,4 +1,5 @@
 import {
+  MouseEvent,
   forwardRef,
   useImperativeHandle,
   useLayoutEffect,
@@ -17,6 +18,7 @@ import Button from '../../shared/components/actions/Button';
 
 export interface TranslateWordProps {
   editable?: boolean;
+  selected?: boolean;
   word: { id: string; text: string };
   originalLanguage: 'hebrew' | 'greek';
   status: 'empty' | 'saving' | 'saved' | 'approved';
@@ -30,6 +32,7 @@ export interface TranslateWordProps {
   onFocus?: () => void;
   onShowDetail?: () => void;
   onOpenNotes?: () => void;
+  onSelect?: () => void;
 }
 
 export interface TranslateWordRef {
@@ -40,6 +43,7 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
   (
     {
       editable = false,
+      selected = false,
       word,
       originalLanguage,
       status,
@@ -53,6 +57,7 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
       onFocus,
       onShowDetail,
       onOpenNotes,
+      onSelect,
     }: TranslateWordProps,
     ref
   ) => {
@@ -97,7 +102,15 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
     }, [hasNote, glossWidth, hasMachineSuggestion]);
 
     return (
-      <li ref={root} dir={originalLanguage === 'hebrew' ? 'rtl' : 'ltr'}>
+      <li
+        ref={root}
+        dir={originalLanguage === 'hebrew' ? 'rtl' : 'ltr'}
+        className={`p-2 rounded ${selected ? 'shadow-inner bg-brown-50' : ''}`}
+        onClick={(e) => {
+          if (!e.altKey) return;
+          onSelect?.();
+        }}
+      >
         <div
           id={`word-${word.id}`}
           className={`flex items-center gap-1.5 h-8 cursor-pointer font-mixed ${
@@ -120,7 +133,8 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
             small
             variant="tertiary"
             tabIndex={-1}
-            onClick={() => {
+            onClick={(e: MouseEvent) => {
+              if (e.altKey) return;
               onFocus?.();
               onShowDetail?.();
               onOpenNotes?.();
@@ -160,7 +174,8 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
                     className="!bg-green-600 w-9"
                     tabIndex={-1}
                     title={t('translate:approve_tooltip') ?? ''}
-                    onClick={() => {
+                    onClick={(e: MouseEvent) => {
+                      e.stopPropagation();
                       if (status === 'saved') {
                         onChange({ approved: true });
                       } else {
@@ -177,7 +192,8 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
                     className="!bg-red-600 w-9"
                     tabIndex={-1}
                     title={t('translate:revoke_tooltip') ?? ''}
-                    onClick={() => {
+                    onClick={(e: MouseEvent) => {
+                      e.stopPropagation();
                       onChange({ approved: false });
                       root.current?.querySelector('input')?.focus();
                     }}
@@ -246,13 +262,15 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
                     );
                   }}
                   onKeyDown={(e) => {
-                    if (e.metaKey || e.altKey || e.ctrlKey) return;
+                    if (e.metaKey || e.ctrlKey) return;
                     switch (e.key) {
                       case 'Enter': {
                         e.preventDefault();
                         if (e.shiftKey) {
                           const prev = root.current?.previousElementSibling;
                           prev?.querySelector('input')?.focus();
+                        } else if (e.altKey) {
+                          onSelect?.();
                         } else {
                           const nextRoot = root.current?.nextElementSibling;
                           const next =

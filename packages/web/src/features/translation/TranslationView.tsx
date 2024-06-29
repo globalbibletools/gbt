@@ -369,6 +369,17 @@ export default function TranslationView() {
 
   const sidebarRef = useRef<TranslationSidebarRef>(null);
 
+  const [selectedWords, setSelectedWords] = useState<string[]>([]);
+
+  const createPhraseMutation = useMutation({
+    mutationFn: async (variables: { language: string; wordIds: string[] }) => {
+      await apiClient.phrases.create(variables);
+    },
+    onSuccess() {
+      setSelectedWords([]);
+    },
+  });
+
   return (
     <div className="absolute w-full h-full flex flex-col flex-grow">
       <TranslationToolbar
@@ -378,6 +389,9 @@ export default function TranslationView() {
             ({ glossAsDisplayed, state }) =>
               glossAsDisplayed && state === GlossState.Unapproved
           )
+        }
+        canCreatePhrase={
+          selectedWords.length > 0 && createPhraseMutation.isIdle
         }
         approveAllGlosses={approveAllGlossesMutation.mutate}
         verseId={verseId}
@@ -392,6 +406,14 @@ export default function TranslationView() {
         onVerseChange={(verseId) =>
           navigate(`/interlinear/${language}/verses/${verseId}`)
         }
+        onCreatePhrase={() => {
+          if (createPhraseMutation.isIdle) {
+            createPhraseMutation.mutate({
+              language,
+              wordIds: selectedWords,
+            });
+          }
+        }}
       />
       {(() => {
         if (loading) {
@@ -429,7 +451,7 @@ export default function TranslationView() {
                   </p>
                 )}
                 <ol
-                  className={`flex h-fit content-start flex-wrap gap-x-4 gap-y-6 ${
+                  className={`flex h-fit content-start flex-wrap gap-x-2 gap-y-4 ${
                     isHebrew ? 'ltr:flex-row-reverse' : 'rtl:flex-row-reverse'
                   }`}
                 >
@@ -470,6 +492,7 @@ export default function TranslationView() {
                       <TranslateWord
                         key={word.id}
                         editable={canEdit}
+                        selected={selectedWords.includes(word.id)}
                         word={word}
                         originalLanguage={isHebrew ? 'hebrew' : 'greek'}
                         status={status}
@@ -496,6 +519,15 @@ export default function TranslationView() {
                         onOpenNotes={() =>
                           setTimeout(() => sidebarRef.current?.openNotes(), 0)
                         }
+                        onSelect={() => {
+                          setSelectedWords((words) => {
+                            if (words.includes(word.id)) {
+                              return words.filter((w) => w !== word.id);
+                            } else {
+                              return [...words, word.id];
+                            }
+                          });
+                        }}
                         ref={(() => {
                           if (i === 0) {
                             return firstWord;
