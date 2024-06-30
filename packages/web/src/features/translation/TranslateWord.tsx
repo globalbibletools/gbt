@@ -34,6 +34,7 @@ export interface TranslateWordProps {
   editable?: boolean;
   selected?: boolean;
   saving?: boolean;
+  phraseFocused?: boolean;
 
   onChange(data: { gloss?: string; approved?: boolean }): void;
   onFocus?: () => void;
@@ -57,6 +58,7 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
       editable = false,
       selected = false,
       saving = false,
+      phraseFocused = false,
 
       originalLanguage,
       onChange,
@@ -88,6 +90,8 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
         phrase.gloss.state === GlossState.Approved ? 'approved' : 'saved';
     }
 
+    const isMultiWord = phrase.wordIds.length > 1;
+
     const hasTranslatorNote = !isRichTextEmpty(
       phrase.translatorNote?.content ?? ''
     );
@@ -95,12 +99,18 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
     const hasNote = hasFootnote || (hasTranslatorNote && editable);
 
     const glossValue =
-      phrase.gloss?.text || hints?.suggestions?.[0] || hints?.machineGloss;
+      phrase.gloss?.text ||
+      (isMultiWord
+        ? undefined
+        : hints?.suggestions?.[0] || hints?.machineGloss);
     const [currentInputValue, setCurrentInputValue] = useState(
       glossValue ?? ''
     );
     const hasMachineSuggestion =
-      !phrase.gloss?.text && !hints?.suggestions?.[0] && !!hints?.machineGloss;
+      !isMultiWord &&
+      !phrase.gloss?.text &&
+      !hints?.suggestions?.[0] &&
+      !!hints?.machineGloss;
 
     const glossWidth = useTextWidth({
       text: glossValue ?? '',
@@ -114,23 +124,31 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
       setWidth(
         Math.max(
           // The extra 36 pixels accommodates the sticky note icon
-          (hasNote ? 36 : 0) + (ancientWord.current?.clientWidth ?? 0),
+          (hasNote ? 36 : 0) +
+            (isMultiWord ? 36 : 0) +
+            (ancientWord.current?.clientWidth ?? 0),
           refGloss.current?.clientWidth ?? 0,
           // The extra 24 pixels accommodates the google icon
           // The extra 48 pixels accommodates the approval button
           glossWidth + (hasMachineSuggestion ? 24 : 0) + 44
         )
       );
-    }, [hasNote, glossWidth, hasMachineSuggestion]);
+    }, [hasNote, glossWidth, hasMachineSuggestion, isMultiWord]);
 
     return (
       <li
         ref={root}
         dir={originalLanguage === 'hebrew' ? 'rtl' : 'ltr'}
-        className={`p-2 rounded ${selected ? 'shadow-inner bg-brown-50' : ''}`}
+        className={`
+          p-2 rounded
+          ${isMultiWord && phraseFocused ? 'bg-brown-50' : ''}
+          ${selected ? 'shadow-inner bg-brown-100' : ''}
+        `}
         onClick={(e) => {
           if (!e.altKey) return;
-          onSelect?.();
+          if (!isMultiWord) {
+            onSelect?.();
+          }
         }}
       >
         <div
@@ -150,8 +168,16 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
           >
             {word.text}
           </span>
+          {isMultiWord && (
+            <Icon
+              title="Linked to another word"
+              icon="link"
+              className="text-gray-600"
+            />
+          )}
           <Button
             className={hasNote ? 'inline-block' : 'hidden'}
+            title="Jump to Note"
             small
             variant="tertiary"
             tabIndex={-1}
@@ -292,7 +318,9 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
                           const prev = root.current?.previousElementSibling;
                           prev?.querySelector('input')?.focus();
                         } else if (e.altKey) {
-                          onSelect?.();
+                          if (!isMultiWord) {
+                            onSelect?.();
+                          }
                         } else {
                           const nextRoot = root.current?.nextElementSibling;
                           const next =

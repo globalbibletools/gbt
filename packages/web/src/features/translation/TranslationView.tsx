@@ -378,6 +378,11 @@ export default function TranslationView() {
     },
   });
 
+  const [focusedPhraseId, setFocusedPhrase] = useState<number>();
+  const focusedPhrase = phrasesQuery.data?.data.find(
+    (phrase) => phrase.id === focusedPhraseId
+  );
+
   return (
     <div className="absolute w-full h-full flex flex-col flex-grow">
       <TranslationToolbar
@@ -388,9 +393,8 @@ export default function TranslationView() {
               glossAsDisplayed && state === GlossState.Unapproved
           )
         }
-        canCreatePhrase={
-          selectedWords.length > 0 && createPhraseMutation.isIdle
-        }
+        canLinkWords={selectedWords.length > 0 && createPhraseMutation.isIdle}
+        canUnlinkWords={(focusedPhrase?.wordIds.length ?? 0) > 1}
         approveAllGlosses={approveAllGlossesMutation.mutate}
         verseId={verseId}
         languageCode={language}
@@ -404,13 +408,16 @@ export default function TranslationView() {
         onVerseChange={(verseId) =>
           navigate(`/interlinear/${language}/verses/${verseId}`)
         }
-        onCreatePhrase={() => {
+        onLinkWords={() => {
           if (createPhraseMutation.isIdle) {
             createPhraseMutation.mutate({
               language,
               wordIds: selectedWords,
             });
           }
+        }}
+        onUnlinkWords={() => {
+          // TODO
         }}
       />
       {(() => {
@@ -483,6 +490,7 @@ export default function TranslationView() {
                         saving={glossRequests.some(
                           ({ phraseId }) => phraseId === phrase.id
                         )}
+                        phraseFocused={phrase.id === focusedPhraseId}
                         onChange={({ gloss, approved }) => {
                           glossMutation.mutate({
                             phraseId: phrase.id,
@@ -495,7 +503,10 @@ export default function TranslationView() {
                                 : undefined,
                           });
                         }}
-                        onFocus={() => setSidebarWordIndex(i)}
+                        onFocus={() => {
+                          setSidebarWordIndex(i);
+                          setFocusedPhrase(phrase.id);
+                        }}
                         onShowDetail={() => setShowSidebar(true)}
                         onOpenNotes={() =>
                           setTimeout(() => sidebarRef.current?.openNotes(), 0)

@@ -25,10 +25,12 @@ export interface TranslationToolbarProps {
   languages: { name: string; code: string }[];
   onVerseChange: (verseId: string) => void;
   onLanguageChange: (languageCode: string) => void;
-  onCreatePhrase: () => void;
+  onLinkWords: () => void;
+  onUnlinkWords: () => void;
   approveAllGlosses: () => void;
   canApproveAllGlosses: boolean;
-  canCreatePhrase: boolean;
+  canLinkWords: boolean;
+  canUnlinkWords: boolean;
 }
 
 export function TranslationToolbar({
@@ -37,10 +39,12 @@ export function TranslationToolbar({
   languageCode,
   onLanguageChange,
   onVerseChange,
-  onCreatePhrase,
+  onLinkWords,
+  onUnlinkWords,
   approveAllGlosses,
   canApproveAllGlosses,
-  canCreatePhrase,
+  canLinkWords,
+  canUnlinkWords,
 }: TranslationToolbarProps) {
   const { t } = useTranslation(['translate', 'bible', 'common', 'languages']);
   const flash = useFlash();
@@ -185,13 +189,21 @@ export function TranslationToolbar({
           <span className="mx-1" aria-hidden="true">
             |
           </span>
-          <Button
-            variant="tertiary"
-            disabled={!canCreatePhrase}
-            onClick={onCreatePhrase}
-          >
-            {t('translate:create_phrase')}
-          </Button>
+          {canUnlinkWords ? (
+            <Button variant="tertiary" onClick={onUnlinkWords}>
+              <Icon icon="unlink" className="me-1" />
+              {t('translate:unlink_words')}
+            </Button>
+          ) : (
+            <Button
+              variant="tertiary"
+              disabled={!canLinkWords}
+              onClick={onLinkWords}
+            >
+              <Icon icon="link" className="me-1" />
+              {t('translate:link_words')}
+            </Button>
+          )}
         </div>
       )}
     </div>
