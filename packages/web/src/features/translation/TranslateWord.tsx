@@ -22,6 +22,7 @@ import {
 } from '@translation/api-types';
 import Button from '../../shared/components/actions/Button';
 import { isRichTextEmpty } from '../../shared/components/form/RichTextInput';
+import Checkbox from '../../shared/components/form/Checkbox';
 
 export interface TranslateWordProps {
   originalLanguage: 'hebrew' | 'greek';
@@ -123,10 +124,9 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
     useLayoutEffect(() => {
       setWidth(
         Math.max(
+          // The first 24 pixels accommodates the checkbox and link icon for phrases.
           // The extra 36 pixels accommodates the sticky note icon
-          (hasNote ? 36 : 0) +
-            (isMultiWord ? 36 : 0) +
-            (ancientWord.current?.clientWidth ?? 0),
+          24 + (hasNote ? 36 : 0) + (ancientWord.current?.clientWidth ?? 0),
           refGloss.current?.clientWidth ?? 0,
           // The extra 24 pixels accommodates the google icon
           // The extra 48 pixels accommodates the approval button
@@ -140,8 +140,8 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
         ref={root}
         dir={originalLanguage === 'hebrew' ? 'rtl' : 'ltr'}
         className={`
-          p-2 rounded
-          ${isMultiWord && phraseFocused ? 'bg-brown-50' : ''}
+          group/word relative p-2 rounded
+          ${phraseFocused && !selected ? 'bg-brown-50' : ''}
           ${selected ? 'shadow-inner bg-brown-100' : ''}
         `}
         onClick={(e) => {
@@ -168,13 +168,6 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
           >
             {word.text}
           </span>
-          {isMultiWord && (
-            <Icon
-              title="Linked to another word"
-              icon="link"
-              className="text-gray-600"
-            />
-          )}
           <Button
             className={hasNote ? 'inline-block' : 'hidden'}
             title="Jump to Note"
@@ -190,6 +183,26 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
           >
             <Icon icon="sticky-note" />
           </Button>
+          <div className="flex-grow" />
+          {isMultiWord ? (
+            <Icon
+              title="Linked to another word"
+              icon="link"
+              className="text-gray-600"
+            />
+          ) : (
+            <Checkbox
+              className="invisible group-hover/word:visible group-focus-within/word:visible [&:has(:checked)]:visible"
+              aria-label="word selected"
+              tabIndex={-1}
+              checked={selected}
+              onChange={() => onSelect?.()}
+              onFocus={() => {
+                onFocus?.();
+                onShowDetail?.();
+              }}
+            />
+          )}
         </div>
         <div
           className={`h-8 ${

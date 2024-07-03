@@ -393,7 +393,7 @@ export default function TranslationView() {
               glossAsDisplayed && state === GlossState.Unapproved
           )
         }
-        canLinkWords={selectedWords.length > 0 && createPhraseMutation.isIdle}
+        canLinkWords={selectedWords.length > 1 && createPhraseMutation.isIdle}
         canUnlinkWords={(focusedPhrase?.wordIds.length ?? 0) > 1}
         approveAllGlosses={approveAllGlossesMutation.mutate}
         verseId={verseId}

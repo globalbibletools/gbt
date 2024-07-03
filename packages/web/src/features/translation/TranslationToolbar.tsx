@@ -189,12 +189,7 @@ export function TranslationToolbar({
           <span className="mx-1" aria-hidden="true">
             |
           </span>
-          {canUnlinkWords ? (
-            <Button variant="tertiary" onClick={onUnlinkWords}>
-              <Icon icon="unlink" className="me-1" />
-              {t('translate:unlink_words')}
-            </Button>
-          ) : (
+          {!canUnlinkWords || canLinkWords ? (
             <Button
               variant="tertiary"
               disabled={!canLinkWords}
@@ -202,6 +197,11 @@ export function TranslationToolbar({
             >
               <Icon icon="link" className="me-1" />
               {t('translate:link_words')}
+            </Button>
+          ) : (
+            <Button variant="tertiary" onClick={onUnlinkWords}>
+              <Icon icon="unlink" className="me-1" />
+              {t('translate:unlink_words')}
             </Button>
           )}
         </div>
