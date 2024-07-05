@@ -373,8 +373,10 @@ export default function TranslationView() {
     mutationFn: async (variables: { language: string; wordIds: string[] }) => {
       await apiClient.phrases.create(variables);
     },
-    onSuccess() {
+    async onSuccess() {
+      await queryClient.invalidateQueries(['verse-phrases', language, verseId]);
       setSelectedWords([]);
+      flash.success(t('translate:phrase_created'));
     },
   });
 
