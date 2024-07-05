@@ -323,14 +323,14 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
                     );
                   }}
                   onKeyDown={(e) => {
-                    if (e.metaKey || e.ctrlKey) return;
+                    if (e.metaKey || e.altKey) return;
                     switch (e.key) {
                       case 'Enter': {
                         e.preventDefault();
                         if (e.shiftKey) {
                           const prev = root.current?.previousElementSibling;
                           prev?.querySelector('input')?.focus();
-                        } else if (e.altKey) {
+                        } else if (e.ctrlKey) {
                           if (!isMultiWord) {
                             onSelect?.();
                           }
@@ -344,6 +344,8 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
                         break;
                       }
                       case 'Escape': {
+                        if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey)
+                          return;
                         onChange({ approved: false });
                         break;
                       }
