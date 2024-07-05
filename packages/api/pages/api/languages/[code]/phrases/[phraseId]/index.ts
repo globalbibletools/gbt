@@ -32,6 +32,7 @@ export default createRoute<{ code: string; phraseId: string }>()
       await client.phrase.update({
         where: {
           id: phraseId,
+          languageId: language.id,
         },
         data: {
           deletedAt: new Date(),

@@ -316,7 +316,6 @@ export default function TranslationView() {
     async onSuccess() {
       await queryClient.invalidateQueries(['verse-phrases', language, verseId]);
       setSelectedWords([]);
-      flash.success(t('translate:phrase_created'));
     },
   });
   const deletePhraseMutation = useMutation({
@@ -326,7 +325,6 @@ export default function TranslationView() {
     async onSuccess() {
       await queryClient.invalidateQueries(['verse-phrases', language, verseId]);
       setSelectedWords([]);
-      flash.success(t('translate:phrase_deleted'));
     },
   });
 

@@ -7,6 +7,7 @@
   "footnotes": "Notas al pie",
   "interlinear": "Interlineal",
   "lexicon": "Léxico",
+  "link_words": "Enlazar palabras",
   "next_unapproved": "Siguiente no aprobado",
   "next_verse": "Siguiente verso",
   "notes": "Notas",
@@ -16,5 +17,6 @@
   "saving": "guardando",
   "select_verse": "Seleccionar verso",
   "strongs": "Fuerte",
-  "translator_notes": "Notas del traductor"
+  "translator_notes": "Notas del traductor",
+  "unlink_words": "Desenlazar palabras"
 }
