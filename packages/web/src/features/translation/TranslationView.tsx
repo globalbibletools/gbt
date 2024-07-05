@@ -379,6 +379,16 @@ export default function TranslationView() {
       flash.success(t('translate:phrase_created'));
     },
   });
+  const deletePhraseMutation = useMutation({
+    mutationFn: async (variables: { language: string; phraseId: number }) => {
+      await apiClient.phrases.delete(variables);
+    },
+    async onSuccess() {
+      await queryClient.invalidateQueries(['verse-phrases', language, verseId]);
+      setSelectedWords([]);
+      flash.success(t('translate:phrase_deleted'));
+    },
+  });
 
   const [focusedPhraseId, setFocusedPhrase] = useState<number>();
   const focusedPhrase = phrasesQuery.data?.data.find(
@@ -419,7 +429,12 @@ export default function TranslationView() {
           }
         }}
         onUnlinkWords={() => {
-          // TODO
+          if (focusedPhrase) {
+            deletePhraseMutation.mutate({
+              language,
+              phraseId: focusedPhrase?.id,
+            });
+          }
         }}
       />
       {(() => {

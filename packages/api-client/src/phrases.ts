@@ -61,4 +61,16 @@ export default class Phrases {
       body,
     });
   }
+
+  async delete({
+    language,
+    phraseId,
+  }: {
+    phraseId: number;
+    language: string;
+  }): Promise<void> {
+    await this.client.delete({
+      path: `/api/languages/${language}/phrases/${phraseId}`,
+    });
+  }
 }
