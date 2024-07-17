@@ -7,6 +7,7 @@
   "footnotes": "الحواشي السفلية",
   "interlinear": "بين السطور",
   "lexicon": "معجم",
+  "link_words": "كلمات مرتبطة",
   "next_unapproved": "التالي غير معتمد",
   "next_verse": "الآية التالية",
   "notes": "ملحوظات",
@@ -16,5 +17,6 @@
   "saving": "جاري الحفظ",
   "select_verse": "حدد الآية",
   "strongs": "أقوياء",
-  "translator_notes": "ملاحظات المترجم"
+  "translator_notes": "ملاحظات المترجم",
+  "unlink_words": "كلمات غير مرتبطة"
 }

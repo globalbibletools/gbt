@@ -186,18 +186,18 @@ export const GlossSource = makeEnum({
 });
 export type GlossSource = typeof GlossSource[keyof typeof GlossSource];
 
-interface PhraseNote {
+export interface PhraseNote {
   content: string;
   authorName: string;
   timestamp: string;
 }
 
-interface PhraseGloss {
+export interface PhraseGloss {
   text?: string;
   state: GlossState;
 }
 
-interface VersePhrase {
+export interface VersePhrase {
   id: number;
   wordIds: string[];
   footnote?: PhraseNote;
@@ -217,6 +217,10 @@ export interface VerseWordSuggestion {
 
 export interface GetVerseSuggestionsResponseBody {
   data: VerseWordSuggestion[];
+}
+
+export interface PostPhraseRequestBody {
+  wordIds: string[];
 }
 
 export interface PostBulkGlossesRequestBody {

@@ -34,7 +34,6 @@ import {
 import { isFlagEnabled } from '../../shared/featureFlags';
 import useTitle from '../../shared/hooks/useTitle';
 import { useFlash } from '../../shared/hooks/flash';
-import { isRichTextEmpty } from '../../shared/components/form/RichTextInput';
 
 export const translationLanguageKey = 'translation-language';
 export const translationVerseIdKey = 'translation-verse-id';
@@ -231,66 +230,6 @@ export default function TranslationView() {
 
   const firstWord = useRef<TranslateWordRef>(null);
   const lastWord = useRef<TranslateWordRef>(null);
-  const handleKeyPress = useCallback(
-    (event: {
-      key: string;
-      shiftKey: boolean;
-      ctrlKey: boolean;
-      preventDefault: VoidFunction;
-      stopPropagation: VoidFunction;
-    }) => {
-      const watchKeys = ['ArrowUp', 'ArrowDown', 'Home', 'End', 'd'];
-      if (!event.ctrlKey || !watchKeys.includes(event.key)) {
-        return;
-      }
-      event.preventDefault();
-      event.stopPropagation();
-      const { bookId } = parseVerseId(verseId);
-      switch (event.key) {
-        case 'ArrowUp':
-          navigate(
-            `/interlinear/${language}/verses/${decrementVerseId(verseId)}`
-          );
-          break;
-        case 'ArrowDown':
-          navigate(
-            `/interlinear/${language}/verses/${incrementVerseId(verseId)}`
-          );
-          break;
-        case 'Home':
-          if (event.shiftKey) {
-            navigate(
-              `/interlinear/${language}/verses/${bookFirstVerseId(bookId)}`
-            );
-          } else {
-            firstWord.current?.focus();
-          }
-          break;
-        case 'End':
-          if (event.shiftKey) {
-            navigate(
-              `/interlinear/${language}/verses/${bookLastVerseId(bookId)}`
-            );
-          } else {
-            lastWord.current?.focus();
-          }
-          break;
-        case 'd':
-          setShowSidebar((showSidebar) => !showSidebar);
-          break;
-      }
-    },
-    [language, navigate, verseId]
-  );
-
-  useEffect(() => {
-    // Attach the event listener to the window object
-    window.addEventListener('keydown', handleKeyPress);
-    // Cleanup by removing the event listener when the component unmounts
-    return () => {
-      window.removeEventListener('keydown', handleKeyPress);
-    };
-  }, [handleKeyPress]);
 
   const loading =
     !verseQuery.isSuccess ||
@@ -369,6 +308,119 @@ export default function TranslationView() {
 
   const sidebarRef = useRef<TranslationSidebarRef>(null);
 
+  const [selectedWords, setSelectedWords] = useState<string[]>([]);
+  const createPhraseMutation = useMutation({
+    mutationFn: async (variables: { language: string; wordIds: string[] }) => {
+      await apiClient.phrases.create(variables);
+    },
+    async onSuccess() {
+      await queryClient.invalidateQueries(['verse-phrases', language, verseId]);
+      setSelectedWords([]);
+    },
+  });
+  const deletePhraseMutation = useMutation({
+    mutationFn: async (variables: { language: string; phraseId: number }) => {
+      await apiClient.phrases.delete(variables);
+    },
+    async onSuccess() {
+      await queryClient.invalidateQueries(['verse-phrases', language, verseId]);
+      setSelectedWords([]);
+    },
+  });
+
+  const [focusedWordId, setFocusedWord] = useState<string>();
+  const focusedPhrase = focusedWordId
+    ? phrasesQuery.data?.data.find((phrase) =>
+        phrase.wordIds.includes(focusedWordId)
+      )
+    : undefined;
+
+  const handleKeyPress = useCallback(
+    (event: {
+      key: string;
+      shiftKey: boolean;
+      ctrlKey: boolean;
+      preventDefault: VoidFunction;
+      stopPropagation: VoidFunction;
+    }) => {
+      if (event.ctrlKey) {
+        const { bookId } = parseVerseId(verseId);
+        switch (event.key) {
+          case 'ArrowUp':
+            navigate(
+              `/interlinear/${language}/verses/${decrementVerseId(verseId)}`
+            );
+            break;
+          case 'ArrowDown':
+            navigate(
+              `/interlinear/${language}/verses/${incrementVerseId(verseId)}`
+            );
+            break;
+          case 'Home':
+            if (event.shiftKey) {
+              navigate(
+                `/interlinear/${language}/verses/${bookFirstVerseId(bookId)}`
+              );
+            } else {
+              firstWord.current?.focus();
+            }
+            break;
+          case 'End':
+            if (event.shiftKey) {
+              navigate(
+                `/interlinear/${language}/verses/${bookLastVerseId(bookId)}`
+              );
+            } else {
+              lastWord.current?.focus();
+            }
+            break;
+          case 'l':
+            if (!createPhraseMutation.isLoading && selectedWords.length > 1) {
+              createPhraseMutation.mutate({
+                language,
+                wordIds: selectedWords,
+              });
+            }
+            break;
+          case 'u':
+            if (focusedPhrase && focusedPhrase.wordIds.length > 1) {
+              deletePhraseMutation.mutate({
+                language,
+                phraseId: focusedPhrase.id,
+              });
+            }
+            break;
+          case 'd':
+            setShowSidebar((showSidebar) => !showSidebar);
+            break;
+          default:
+            return;
+        }
+      } else {
+        return;
+      }
+      event.preventDefault();
+      event.stopPropagation();
+    },
+    [
+      language,
+      navigate,
+      verseId,
+      createPhraseMutation,
+      selectedWords,
+      focusedPhrase,
+      deletePhraseMutation,
+    ]
+  );
+  useEffect(() => {
+    // Attach the event listener to the window object
+    window.addEventListener('keydown', handleKeyPress);
+    // Cleanup by removing the event listener when the component unmounts
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress);
+    };
+  }, [handleKeyPress]);
+
   return (
     <div className="absolute w-full h-full flex flex-col flex-grow">
       <TranslationToolbar
@@ -379,6 +431,10 @@ export default function TranslationView() {
               glossAsDisplayed && state === GlossState.Unapproved
           )
         }
+        canLinkWords={
+          selectedWords.length > 1 && !createPhraseMutation.isLoading
+        }
+        canUnlinkWords={(focusedPhrase?.wordIds.length ?? 0) > 1}
         approveAllGlosses={approveAllGlossesMutation.mutate}
         verseId={verseId}
         languageCode={language}
@@ -392,6 +448,22 @@ export default function TranslationView() {
         onVerseChange={(verseId) =>
           navigate(`/interlinear/${language}/verses/${verseId}`)
         }
+        onLinkWords={() => {
+          if (!createPhraseMutation.isLoading) {
+            createPhraseMutation.mutate({
+              language,
+              wordIds: selectedWords,
+            });
+          }
+        }}
+        onUnlinkWords={() => {
+          if (focusedPhrase) {
+            deletePhraseMutation.mutate({
+              language,
+              phraseId: focusedPhrase?.id,
+            });
+          }
+        }}
       />
       {(() => {
         if (loading) {
@@ -429,7 +501,7 @@ export default function TranslationView() {
                   </p>
                 )}
                 <ol
-                  className={`flex h-fit content-start flex-wrap gap-x-4 gap-y-6 ${
+                  className={`flex h-fit content-start flex-wrap gap-x-2 gap-y-4 ${
                     isHebrew ? 'ltr:flex-row-reverse' : 'rtl:flex-row-reverse'
                   }`}
                 >
@@ -441,44 +513,29 @@ export default function TranslationView() {
                       throw new Error('Missing phrase');
                     }
 
-                    const wordSuggestions = suggestionsQuery.data.data.find(
-                      (w) => w.wordId === word.id
-                    );
-                    const isSaving = glossRequests.some(
-                      ({ phraseId }) => phraseId === phrase.id
-                    );
-
-                    let status: 'empty' | 'saving' | 'saved' | 'approved' =
-                      'empty';
-                    if (isSaving) {
-                      status = 'saving';
-                    } else if (phrase.gloss?.text) {
-                      status =
-                        phrase.gloss.state === GlossState.Approved
-                          ? 'approved'
-                          : 'saved';
-                    }
-
-                    const hasTranslatorNote = !isRichTextEmpty(
-                      phrase.translatorNote?.content ?? ''
-                    );
-                    const hasFootnote = !isRichTextEmpty(
-                      phrase.footnote?.content ?? ''
-                    );
-
                     return (
                       <TranslateWord
                         key={word.id}
-                        editable={canEdit}
-                        word={word}
+                        ref={(() => {
+                          if (i === 0) {
+                            return firstWord;
+                          } else if (i === verse.words.length - 1) {
+                            return lastWord;
+                          }
+                        })()}
                         originalLanguage={isHebrew ? 'hebrew' : 'greek'}
-                        status={status}
-                        gloss={phrase.gloss?.text}
-                        machineGloss={wordSuggestions?.machineGloss}
+                        phrase={phrase}
+                        hints={suggestionsQuery.data.data.find(
+                          (w) => w.wordId === word.id
+                        )}
+                        word={word}
                         targetLanguage={selectedLanguage}
-                        referenceGloss={word.referenceGloss}
-                        suggestions={wordSuggestions?.suggestions ?? []}
-                        hasNote={hasFootnote || (hasTranslatorNote && canEdit)}
+                        editable={canEdit}
+                        selected={selectedWords.includes(word.id)}
+                        saving={glossRequests.some(
+                          ({ phraseId }) => phraseId === phrase.id
+                        )}
+                        phraseFocused={phrase.id === focusedPhrase?.id}
                         onChange={({ gloss, approved }) => {
                           glossMutation.mutate({
                             phraseId: phrase.id,
@@ -491,18 +548,23 @@ export default function TranslationView() {
                                 : undefined,
                           });
                         }}
-                        onFocus={() => setSidebarWordIndex(i)}
+                        onFocus={() => {
+                          setSidebarWordIndex(i);
+                          setFocusedWord(word.id);
+                        }}
                         onShowDetail={() => setShowSidebar(true)}
                         onOpenNotes={() =>
                           setTimeout(() => sidebarRef.current?.openNotes(), 0)
                         }
-                        ref={(() => {
-                          if (i === 0) {
-                            return firstWord;
-                          } else if (i === verse.words.length - 1) {
-                            return lastWord;
-                          }
-                        })()}
+                        onSelect={() => {
+                          setSelectedWords((words) => {
+                            if (words.includes(word.id)) {
+                              return words.filter((w) => w !== word.id);
+                            } else {
+                              return [...words, word.id];
+                            }
+                          });
+                        }}
                       />
                     );
                   })}

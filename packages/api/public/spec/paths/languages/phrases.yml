@@ -1,0 +1,27 @@
+post:
+  tags:
+    - Languages
+  summary: Create a phrase with one or more words.
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            wordIds:
+              type: array
+              items:
+                type: string
+              example:
+                - 0100100101
+                - 0100100102
+                - 0100100103
+  responses:
+    201:
+      description: Created
+      headers:
+        Location:
+          schema:
+            type: string
+          description: URL to new phrase.

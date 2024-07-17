@@ -40,5 +40,7 @@ library.add(
   FaSolid.faAlignRight,
   FaSolid.faExternalLink,
   FaSolid.faStickyNote,
-  FaSolid.faSave
+  FaSolid.faSave,
+  FaSolid.faLink,
+  FaSolid.faUnlink
 );

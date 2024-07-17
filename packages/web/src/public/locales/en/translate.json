@@ -7,6 +7,7 @@
   "footnotes": "Footnotes",
   "interlinear": "Interlinear",
   "lexicon": "Lexicon",
+  "link_words": "Link Words",
   "next_unapproved": "Next Unapproved",
   "next_verse": "Next Verse",
   "notes": "Notes",
@@ -16,5 +17,6 @@
   "saving": "saving",
   "select_verse": "Select verse",
   "strongs": "Strongs",
-  "translator_notes": "Translator's Notes"
+  "translator_notes": "Translator's Notes",
+  "unlink_words": "Unlink Words"
 }

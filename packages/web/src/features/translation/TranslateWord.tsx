@@ -1,4 +1,5 @@
 import {
+  MouseEvent,
   forwardRef,
   useImperativeHandle,
   useLayoutEffect,
@@ -12,24 +13,35 @@ import { expandFontFamily } from '../../shared/hooks/useFontLoader';
 import { useTextWidth } from '../../shared/hooks/useTextWidth';
 import { capitalize } from '../../shared/utils';
 import AutocompleteInput from '../../shared/components/form/AutocompleteInput';
-import { TextDirection } from '@translation/api-types';
+import {
+  GlossState,
+  TextDirection,
+  VersePhrase,
+  VerseWord,
+  VerseWordSuggestion,
+} from '@translation/api-types';
 import Button from '../../shared/components/actions/Button';
+import { isRichTextEmpty } from '../../shared/components/form/RichTextInput';
+import Checkbox from '../../shared/components/form/Checkbox';
 
 export interface TranslateWordProps {
-  editable?: boolean;
-  word: { id: string; text: string };
   originalLanguage: 'hebrew' | 'greek';
-  status: 'empty' | 'saving' | 'saved' | 'approved';
-  gloss?: string;
-  machineGloss?: string;
+
+  phrase: VersePhrase;
+  hints?: VerseWordSuggestion;
+  word: VerseWord;
   targetLanguage?: { textDirection: TextDirection; font: string };
-  referenceGloss?: string;
-  suggestions: string[];
-  hasNote?: boolean;
+
+  editable?: boolean;
+  selected?: boolean;
+  saving?: boolean;
+  phraseFocused?: boolean;
+
   onChange(data: { gloss?: string; approved?: boolean }): void;
   onFocus?: () => void;
   onShowDetail?: () => void;
   onOpenNotes?: () => void;
+  onSelect?: () => void;
 }
 
 export interface TranslateWordRef {
@@ -39,20 +51,22 @@ export interface TranslateWordRef {
 const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
   (
     {
-      editable = false,
+      phrase,
+      hints,
       word,
-      originalLanguage,
-      status,
-      gloss,
-      machineGloss,
       targetLanguage,
-      referenceGloss,
-      suggestions,
-      hasNote,
+
+      editable = false,
+      selected = false,
+      saving = false,
+      phraseFocused = false,
+
+      originalLanguage,
       onChange,
       onFocus,
       onShowDetail,
       onOpenNotes,
+      onSelect,
     }: TranslateWordProps,
     ref
   ) => {
@@ -69,11 +83,35 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
       []
     );
 
-    const glossValue = gloss || suggestions[0] || machineGloss;
+    let status: 'empty' | 'saving' | 'saved' | 'approved' = 'empty';
+    if (saving) {
+      status = 'saving';
+    } else if (phrase.gloss?.text) {
+      status =
+        phrase.gloss.state === GlossState.Approved ? 'approved' : 'saved';
+    }
+
+    const isMultiWord = phrase.wordIds.length > 1;
+
+    const hasTranslatorNote = !isRichTextEmpty(
+      phrase.translatorNote?.content ?? ''
+    );
+    const hasFootnote = !isRichTextEmpty(phrase.footnote?.content ?? '');
+    const hasNote = hasFootnote || (hasTranslatorNote && editable);
+
+    const glossValue =
+      phrase.gloss?.text ||
+      (isMultiWord
+        ? undefined
+        : hints?.suggestions?.[0] || hints?.machineGloss);
     const [currentInputValue, setCurrentInputValue] = useState(
       glossValue ?? ''
     );
-    const hasMachineSuggestion = !gloss && !suggestions[0] && !!machineGloss;
+    const hasMachineSuggestion =
+      !isMultiWord &&
+      !phrase.gloss?.text &&
+      !hints?.suggestions?.[0] &&
+      !!hints?.machineGloss;
 
     const glossWidth = useTextWidth({
       text: glossValue ?? '',
@@ -86,18 +124,33 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
     useLayoutEffect(() => {
       setWidth(
         Math.max(
+          // The first 24 pixels accommodates the checkbox and link icon for phrases.
           // The extra 36 pixels accommodates the sticky note icon
-          (hasNote ? 36 : 0) + (ancientWord.current?.clientWidth ?? 0),
+          24 + (hasNote ? 36 : 0) + (ancientWord.current?.clientWidth ?? 0),
           refGloss.current?.clientWidth ?? 0,
           // The extra 24 pixels accommodates the google icon
           // The extra 48 pixels accommodates the approval button
           glossWidth + (hasMachineSuggestion ? 24 : 0) + 44
         )
       );
-    }, [hasNote, glossWidth, hasMachineSuggestion]);
+    }, [hasNote, glossWidth, hasMachineSuggestion, isMultiWord]);
 
     return (
-      <li ref={root} dir={originalLanguage === 'hebrew' ? 'rtl' : 'ltr'}>
+      <li
+        ref={root}
+        dir={originalLanguage === 'hebrew' ? 'rtl' : 'ltr'}
+        className={`
+          group/word relative p-2 rounded
+          ${phraseFocused && !selected ? 'bg-brown-50' : ''}
+          ${selected ? 'shadow-inner bg-brown-100' : ''}
+        `}
+        onClick={(e) => {
+          if (!e.altKey) return;
+          if (!isMultiWord) {
+            onSelect?.();
+          }
+        }}
+      >
         <div
           id={`word-${word.id}`}
           className={`flex items-center gap-1.5 h-8 cursor-pointer font-mixed ${
@@ -117,10 +170,12 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
           </span>
           <Button
             className={hasNote ? 'inline-block' : 'hidden'}
+            title="Jump to Note"
             small
             variant="tertiary"
             tabIndex={-1}
-            onClick={() => {
+            onClick={(e: MouseEvent) => {
+              if (e.altKey) return;
               onFocus?.();
               onShowDetail?.();
               onOpenNotes?.();
@@ -128,6 +183,26 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
           >
             <Icon icon="sticky-note" />
           </Button>
+          <div className="flex-grow" />
+          {isMultiWord ? (
+            <Icon
+              title="Linked to another word"
+              icon="link"
+              className="text-gray-600"
+            />
+          ) : (
+            <Checkbox
+              className="invisible group-hover/word:visible group-focus-within/word:visible [&:has(:checked)]:visible"
+              aria-label="word selected"
+              tabIndex={-1}
+              checked={selected}
+              onChange={() => onSelect?.()}
+              onFocus={() => {
+                onFocus?.();
+                onShowDetail?.();
+              }}
+            />
+          )}
         </div>
         <div
           className={`h-8 ${
@@ -136,7 +211,7 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
           dir="ltr"
         >
           <span className="inline-block" ref={refGloss}>
-            {editable ? referenceGloss : gloss}
+            {editable ? word.referenceGloss : phrase.gloss?.text}
           </span>
         </div>
         {editable && (
@@ -160,7 +235,8 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
                     className="!bg-green-600 w-9"
                     tabIndex={-1}
                     title={t('translate:approve_tooltip') ?? ''}
-                    onClick={() => {
+                    onClick={(e: MouseEvent) => {
+                      e.stopPropagation();
                       if (status === 'saved') {
                         onChange({ approved: true });
                       } else {
@@ -177,7 +253,8 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
                     className="!bg-red-600 w-9"
                     tabIndex={-1}
                     title={t('translate:revoke_tooltip') ?? ''}
-                    onClick={() => {
+                    onClick={(e: MouseEvent) => {
+                      e.stopPropagation();
                       onChange({ approved: false });
                       root.current?.querySelector('input')?.focus();
                     }}
@@ -206,7 +283,7 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
                   renderOption={(item, i) => (
                     <div
                       className={
-                        machineGloss
+                        hints?.machineGloss
                           ? `relative ${
                               originalLanguage === 'hebrew' ? 'pl-5' : 'pr-5'
                             }`
@@ -214,7 +291,7 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
                       }
                     >
                       {item}
-                      {i === suggestions.length ? (
+                      {i === hints?.suggestions.length ? (
                         <Icon
                           className={`absolute top-1 ${
                             originalLanguage === 'hebrew' ? 'left-0' : 'right-0'
@@ -231,7 +308,7 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
                   aria-labelledby={`word-${word.id}`}
                   onChange={(value, implicit) => {
                     if (
-                      value !== gloss ||
+                      value !== phrase.gloss?.text ||
                       (!implicit && status !== 'approved')
                     ) {
                       onChange({
@@ -246,13 +323,17 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
                     );
                   }}
                   onKeyDown={(e) => {
-                    if (e.metaKey || e.altKey || e.ctrlKey) return;
+                    if (e.metaKey || e.altKey) return;
                     switch (e.key) {
                       case 'Enter': {
                         e.preventDefault();
                         if (e.shiftKey) {
                           const prev = root.current?.previousElementSibling;
                           prev?.querySelector('input')?.focus();
+                        } else if (e.ctrlKey) {
+                          if (!isMultiWord) {
+                            onSelect?.();
+                          }
                         } else {
                           const nextRoot = root.current?.nextElementSibling;
                           const next =
@@ -263,6 +344,8 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
                         break;
                       }
                       case 'Escape': {
+                        if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey)
+                          return;
                         onChange({ approved: false });
                         break;
                       }
@@ -270,7 +353,9 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
                   }}
                   onFocus={() => onFocus?.()}
                   suggestions={
-                    machineGloss ? [...suggestions, machineGloss] : suggestions
+                    hints?.machineGloss
+                      ? [...(hints?.suggestions ?? []), hints?.machineGloss]
+                      : hints?.suggestions ?? []
                   }
                   ref={input}
                 />

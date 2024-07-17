@@ -12,7 +12,7 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
       <input
         ref={ref}
         className={`
-          border rounded shadow-inner px-3 h-9
+          border rounded shadow-inner px-3 h-9 bg-white
           focus-visible:outline outline-2
           ${
             hasErrors

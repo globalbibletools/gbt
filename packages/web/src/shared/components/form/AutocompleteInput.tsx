@@ -121,7 +121,7 @@ const AutocompleteInput = forwardRef<HTMLInputElement, AutocompleteInputProps>(
           className={`
             ${inputClassName}
             border rounded shadow-inner focus-visible:outline outline-2 outline-green-300
-            w-full px-3 h-9 bg-transparent
+            w-full px-3 h-9 bg-white
             ${state === 'success' ? 'border-green-600' : 'border-gray-400'}
           `}
           autoComplete="off"
