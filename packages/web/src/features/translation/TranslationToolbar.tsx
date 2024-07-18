@@ -48,7 +48,6 @@ export function TranslationToolbar({
 }: TranslationToolbarProps) {
   const { t } = useTranslation(['translate', 'bible', 'common', 'languages']);
   const flash = useFlash();
-  const verseInfo = parseVerseId(verseId);
 
   const userCan = useAccessControl();
   const isTranslator = userCan('translate', {
@@ -97,6 +96,11 @@ export function TranslationToolbar({
     verseReferenceForm.register('verseReference');
   const verseReferenceInput = useRef<HTMLInputElement>(null);
 
+  const { setValue } = verseReferenceForm;
+  useEffect(() => {
+    setValue('verseReference', generateReference(parseVerseId(verseId), t));
+  }, [verseId, setValue, t]);
+
   return (
     <div className="flex items-center shadow-md px-6 md:px-8 py-4">
       <Form
@@ -122,12 +126,12 @@ export function TranslationToolbar({
               id="verse-reference"
               className="pe-16 placeholder-current w-56"
               autoComplete="off"
-              placeholder={generateReference(verseInfo, t)}
               {...verseReferenceAttributes}
               ref={useMergedRef(
                 verseReferenceAttributes.ref,
                 verseReferenceInput
               )}
+              onFocus={(e) => e.target.select()}
             />
             <Button
               className="absolute end-8 top-1 w-7 !h-7"
