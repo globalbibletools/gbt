@@ -337,9 +337,11 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
                         } else {
                           const nextRoot = root.current?.nextElementSibling;
                           const next =
-                            nextRoot?.querySelector('input') ??
+                            nextRoot?.querySelector('input:not([type])') ??
                             nextRoot?.querySelector('button');
-                          next?.focus();
+                          if (next && next instanceof HTMLElement) {
+                            next.focus();
+                          }
                         }
                         break;
                       }
