@@ -51,9 +51,11 @@ const RichTextInput = forwardRef<RichTextInputRef, RichTextInputProps>(
     });
 
     useEffect(() => {
-      editor?.commands.setContent(value ?? '', false, {
-        preserveWhitespace: 'full',
-      });
+      if (value !== editor?.getHTML()) {
+        editor?.commands.setContent(value ?? '', false, {
+          preserveWhitespace: 'full',
+        });
+      }
     }, [value, editor]);
 
     useImperativeHandle(
