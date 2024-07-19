@@ -49,12 +49,14 @@ export default function LanguagesView() {
   const { data: languages } = useLanguagesQuery();
   const createDialog = useRef<CreateLanguageDialogRef>(null);
 
-  const { data: languageProgresses } = useQuery({
-    queryKey: ['languages-progress'],
-    queryFn() {
-      return apiClient.languages.findProgresses();
-    },
-  });
+  const { data: languageProgresses, isFetched: isProgressesFetched } = useQuery(
+    {
+      queryKey: ['languages-progress'],
+      queryFn() {
+        return apiClient.languages.findProgresses();
+      },
+    }
+  );
 
   return (
     <div className="px-8 py-6 w-fit">
@@ -94,12 +96,13 @@ export default function LanguagesView() {
                 </span>
               </ListCell>
               <ListCell>
-                {(
-                  (languageProgresses?.data.find(
-                    (l) => l.code === language.code
-                  )?.progress ?? 0) * 100
-                ).toFixed(2)}
-                %
+                {isProgressesFetched
+                  ? (
+                      (languageProgresses?.data.find(
+                        (l) => l.code === language.code
+                      )?.progress ?? 0) * 100
+                    ).toFixed(2) + '%'
+                  : '-'}
               </ListCell>
               <ListCell>
                 {userCan('administer', {
