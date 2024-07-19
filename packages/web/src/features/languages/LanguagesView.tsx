@@ -11,7 +11,6 @@ import {
 } from '../../shared/components/List';
 import ViewTitle from '../../shared/components/ViewTitle';
 import { useLoaderData } from 'react-router-dom';
-import { GetLanguagesResponseBody } from '@translation/api-types';
 import { capitalize } from '../../shared/utils';
 import { useAccessControl } from '../../shared/accessControl';
 import useTitle from '../../shared/hooks/useTitle';
@@ -50,6 +49,13 @@ export default function LanguagesView() {
   const { data: languages } = useLanguagesQuery();
   const createDialog = useRef<CreateLanguageDialogRef>(null);
 
+  const { data: languageProgresses } = useQuery({
+    queryKey: ['languages-progress'],
+    queryFn() {
+      return apiClient.languages.findProgresses();
+    },
+  });
+
   return (
     <div className="px-8 py-6 w-fit">
       <div className="flex items-baseline mb-4">
@@ -73,6 +79,9 @@ export default function LanguagesView() {
           <ListHeaderCell className="min-w-[240px]">
             {t('languages:language', { count: 1 }).toUpperCase()}
           </ListHeaderCell>
+          <ListHeaderCell className="min-w-[96px]">
+            {t('languages:progress').toUpperCase()}
+          </ListHeaderCell>
           <ListHeaderCell />
         </ListHeader>
         <ListBody>
@@ -83,6 +92,14 @@ export default function LanguagesView() {
                 <span className="text-sm ml-1 font-normal">
                   {language.code}
                 </span>
+              </ListCell>
+              <ListCell>
+                {(
+                  (languageProgresses?.data.find(
+                    (l) => l.code === language.code
+                  )?.progress ?? 0) * 100
+                ).toFixed(2)}
+                %
               </ListCell>
               <ListCell>
                 {userCan('administer', {

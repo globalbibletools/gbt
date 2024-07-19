@@ -117,6 +117,15 @@ export interface PostLanguageImportRequestBody {
   import: string;
 }
 
+export interface LanguageProgress {
+  code: string;
+  progress: number;
+}
+
+export interface GetLanguagesProgressResponseBody {
+  data: LanguageProgress[];
+}
+
 export interface GetLanguageImportResponseBody {
   startDate: string;
   endDate?: string;
