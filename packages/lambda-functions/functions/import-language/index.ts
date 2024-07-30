@@ -33,7 +33,7 @@ export const lambdaHandler = async (event: SQSEvent) => {
       await client.$executeRaw`
         UPDATE "Phrase"
           SET
-            "deletedAt" = now()
+            "deletedAt" = now(),
             "deletedBy" = ${job?.userId}::uuid
         WHERE "languageId" = ${language.id}::uuid
           AND "deletedAt" IS NULL
@@ -105,8 +105,6 @@ export const lambdaHandler = async (event: SQSEvent) => {
 
           await client.gloss.createMany({
             data: glossData.map((word) => ({
-              wordId: word.wordId,
-              languageId: language.id,
               gloss: word.gloss,
               phraseId: word.phraseId,
               state: GlossState.APPROVED,
