@@ -14,6 +14,7 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
           className="
             border border-gray-400 rounded bg-white w-5 h-5 shadow-inner
             flex justify-center items-center text-blue-800
+            dark:border-gray-500 dark:bg-gray-800 dark:text-green-400
             [:focus+&]:outline outline-2 outline-green-300
           "
         >

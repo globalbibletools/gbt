@@ -122,7 +122,12 @@ const AutocompleteInput = forwardRef<HTMLInputElement, AutocompleteInputProps>(
             ${inputClassName}
             border rounded shadow-inner focus-visible:outline outline-2 outline-green-300
             w-full px-3 h-9 bg-white
-            ${state === 'success' ? 'border-green-600' : 'border-gray-400'}
+            dark:shadow-none dark:bg-gray-800
+            ${
+              state === 'success'
+                ? 'border-green-600 dark:border-green-500'
+                : 'border-gray-400 dark:border-gray-500'
+            }
           `}
           autoComplete="off"
           value={
@@ -204,9 +209,11 @@ const AutocompleteInput = forwardRef<HTMLInputElement, AutocompleteInputProps>(
         />
         {isOpen && filteredSuggestions.length > 0 && (
           <ol
-            className={`z-10 absolute min-w-full min-h-[24px] max-h-80 bg-white overflow-auto mt-1 rounded border border-gray-400 shadow ${
-              right ? 'right-0' : 'left-0'
-            }`}
+            className={`
+              z-10 absolute min-w-full min-h-[24px] max-h-80 bg-white overflow-auto mt-1 rounded border border-gray-400 shadow
+              dark:bg-gray-700 dark:border-gray-600
+              ${right ? 'right-0' : 'left-0'}
+            `}
           >
             {filteredSuggestions.map((suggestion, i) => (
               <li
@@ -222,7 +229,11 @@ const AutocompleteInput = forwardRef<HTMLInputElement, AutocompleteInputProps>(
                 }
                 className={`
                   px-3 py-1 whitespace-nowrap cursor-pointer
-                  ${i === activeIndex ? 'bg-blue-800 text-white' : ''}
+                  ${
+                    i === activeIndex
+                      ? 'bg-green-200 dark:bg-green-400 dark:text-gray-800'
+                      : ''
+                  }
                 `}
                 key={suggestion}
                 onClick={() => {

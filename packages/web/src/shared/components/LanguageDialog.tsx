@@ -23,7 +23,10 @@ const LanguageDialog = forwardRef<LanguageDialogRef>((_, ref) => {
   return (
     <dialog
       ref={root}
-      className="rounded-lg shadow-md border border-gray-200 bg-white mx-auto p-8 focus-visible:outline outline-green-300 outline-2 end-2 bottom-2 start-auto"
+      className="
+        rounded-lg shadow-md border border-gray-200 bg-white mx-auto p-8 focus-visible:outline outline-green-300 outline-2 end-2 bottom-2 start-auto
+        dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200
+      "
     >
       <h2 className="font-bold text-xl mb-6 text-center">
         <Icon icon="language" className="me-2" />

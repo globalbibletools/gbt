@@ -57,7 +57,7 @@ const SortableMultiselectInput = forwardRef<
               <div className="py-2 px-1 flex items-center" key={item.value}>
                 <span className="grow mx-1">{item.label}</span>
                 <button
-                  className="w-8 h-8 pb-[2px] rounded-md text-blue-800 focus-visible:outline outline-2 outline-green-300 disabled:opacity-25"
+                  className="flex-shrink-0 w-8 h-8 pb-[2px] rounded-md text-blue-800 dark:text-green-400 focus-visible:outline outline-2 outline-green-300 disabled:opacity-25"
                   type="button"
                   disabled={isFirst}
                   onClick={() => moveItem(i, i - 1)}
@@ -67,7 +67,7 @@ const SortableMultiselectInput = forwardRef<
                   <span className="sr-only">{t('common:direction.up')}</span>
                 </button>
                 <button
-                  className="w-8 h-8 pb-[2px] rounded-md text-blue-800 focus-visible:outline outline-2 outline-green-300 disabled:opacity-25"
+                  className="flex-shrink-0 w-8 h-8 pb-[2px] rounded-md text-blue-800 dark:text-green-400 focus-visible:outline outline-2 outline-green-300 disabled:opacity-25"
                   type="button"
                   disabled={isLast}
                   onClick={() => moveItem(i, i + 1)}
@@ -77,7 +77,7 @@ const SortableMultiselectInput = forwardRef<
                   <span className="sr-only">{t('common:direction.down')}</span>
                 </button>
                 <button
-                  className="w-8 h-8 rounded-md text-red-800 focus-visible:outline outline-2 outline-red-700"
+                  className="flex-shrink-0 w-8 h-8 rounded-md text-red-800 dark:text-red-700 focus-visible:outline outline-2 outline-red-700"
                   type="button"
                   onClick={() => removeItem(i)}
                   onBlur={onBlur}

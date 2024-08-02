@@ -114,6 +114,7 @@ export function FlashProvider({ children }: FlashProviderProps) {
               className={`
                 mt-2 rounded shadow border font-bold flex items-stretch bg-white
                 pointer-events-auto
+                dark:bg-gray-800
                 ${
                   message.level === 'success'
                     ? 'border-green-600'

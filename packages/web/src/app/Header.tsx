@@ -13,7 +13,11 @@ import logo from '../assets/images/bet-scroll.png';
 function navLinkClasses(props: { isActive: boolean }) {
   return `
     h-full px-2 text-center block pt-[28px] md:pt-[30px] font-bold md:mx-2 border-b-4
-    ${props.isActive ? 'border-blue-800' : 'border-white'}
+    ${
+      props.isActive
+        ? 'border-blue-800 dark:border-green-400'
+        : 'border-transparent'
+    }
   `;
 }
 
@@ -24,7 +28,12 @@ export default function Header() {
   const userCan = useAccessControl();
 
   return (
-    <nav className="bg-white flex items-center h-20 border-b border-gray-200 relative flex-shrink-0 px-6 md:px-8">
+    <nav
+      className="
+      bg-white flex items-center h-20 border-b border-gray-200 relative flex-shrink-0 px-6 md:px-8
+      dark:bg-gray-800 dark:border-gray-500
+    "
+    >
       <NavLink to="/" className="flex items-center me-8 lg:me-12">
         <img src={logo} className="w-14 h-14" alt="" aria-hidden="true" />
         <h1 className="font-bold ms-2 hidden sm:text-lg md:text-2xl sm:block">

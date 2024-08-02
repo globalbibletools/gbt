@@ -35,7 +35,7 @@ export function ListHeaderCell({
   return (
     <th
       className={`
-        border-b-2 border-green-300 text-start text-sm first:ps-4 last:pe-4
+        border-b-2 border-green-300 dark:border-blue-800 text-start text-sm first:ps-4 last:pe-4
         ${className}
       `}
     >
@@ -54,7 +54,7 @@ export interface ListRowActionProps {
 export function ListRowAction({ colSpan, ...props }: ListRowActionProps) {
   return (
     <tbody>
-      <tr className="h-10 border-b-2 border-green-300">
+      <tr className="h-10 border-b-2 border-green-300 dark:border-blue-800">
         <td colSpan={colSpan} className="px-1">
           <Button {...props} variant="tertiary" />
         </td>
@@ -78,7 +78,11 @@ export interface ListRowProps {
 
 export function ListRow({ children, className = '' }: ListRowProps) {
   return (
-    <tr className={`h-8 border-green-200 border-b ${className}`}>{children}</tr>
+    <tr
+      className={`h-8 border-green-200 dark:border-green-700 border-b ${className}`}
+    >
+      {children}
+    </tr>
   );
 }
 
