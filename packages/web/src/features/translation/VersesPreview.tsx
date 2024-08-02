@@ -96,7 +96,7 @@ export const VersesPreview = ({
     usePreviewQueries(language, isValid, verseIds);
 
   return (
-    <div className="my-1 -mx-4 py-2 px-4 bg-gray-300 dark:bg-gray-600">
+    <div className="my-1 -mx-4 py-2 px-4 bg-brown-50 dark:bg-gray-600">
       <div className="flex ltr:flex-row rtl:flex-row-reverse items-center justify-between">
         <span className="text-base font-bold">{title}</span>
         <button
