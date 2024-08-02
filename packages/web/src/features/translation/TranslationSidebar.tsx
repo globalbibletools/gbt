@@ -175,11 +175,6 @@ export const TranslationSidebar = forwardRef<
 
       const previewElement = document.createElement('div');
       previewElement.id = 'ref-preview';
-      previewElement.style.width = 'calc(100% + 32px)';
-      previewElement.style.margin = '4px -16px';
-      previewElement.style.padding = '8px 16px';
-      previewElement.style.backgroundColor = '#ffffff80';
-      previewElement.style.float = 'left';
       anchorElement.insertAdjacentElement('afterend', previewElement);
       setPreviewElement(previewElement);
     };
@@ -199,14 +194,15 @@ export const TranslationSidebar = forwardRef<
     return (
       <div
         className={`
-        relative flex flex-col gap-4 flex-shrink-0 shadow rounded-2xl bg-brown-100
-        ${className}
+          relative flex flex-col gap-4 flex-shrink-0 shadow rounded-2xl bg-brown-100
+          dark:bg-gray-700 dark:shadow-none
+          ${className}
       `}
       >
         <button
           onClick={onClose}
           type="button"
-          className="absolute w-9 h-9 end-1 top-1 text-red-700 rounded-md focus-visible:outline outline-2 outline-green-300"
+          className="absolute w-9 h-9 end-1 top-1 text-red-700 dark:text-red-600 rounded-md focus-visible:outline outline-2 outline-green-300"
         >
           <Icon icon="xmark" />
           <span className="sr-only">{t('common:close')}</span>
@@ -223,19 +219,22 @@ export const TranslationSidebar = forwardRef<
         <div className="grow flex flex-col min-h-0">
           <Tab.Group selectedIndex={tabIndex} onChange={setTabIndex}>
             <Tab.List className="flex flex-row">
-              <div className="border-b border-blue-800 h-full w-2"></div>
+              <div className="border-b border-blue-800 dark:border-green-400 h-full w-2"></div>
               {tabTitles.map((title) => (
                 <>
                   <Tab
                     key={title}
-                    className="px-4 py-1 text-blue-800 font-bold rounded-t-lg border border-blue-800 ui-selected:border-b-transparent outline-green-300 focus-visible:outline outline-2"
+                    className="
+                      px-4 py-1 text-blue-800 font-bold rounded-t-lg border border-blue-800 ui-selected:border-b-transparent outline-green-300 focus-visible:outline outline-2
+                      dark:text-green-400 dark:border-green-400
+                    "
                   >
                     {t(title)}
                   </Tab>
-                  <div className="border-b border-blue-800 h-full w-1"></div>
+                  <div className="border-b border-blue-800 dark:border-green-400 h-full w-1"></div>
                 </>
               ))}
-              <div className="border-b border-blue-800 h-full grow"></div>
+              <div className="border-b border-blue-800 dark:border-green-400 h-full grow"></div>
             </Tab.List>
             <Tab.Panels className="overflow-y-auto grow px-4 pt-4 mb-4">
               <Tab.Panel unmount={false}>

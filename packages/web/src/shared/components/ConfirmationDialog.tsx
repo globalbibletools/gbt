@@ -63,7 +63,8 @@ const ConfirmationDialog = forwardRef<
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog
         as="div"
-        className="relative z-50"
+        className="relative z-50
+        "
         onClose={() => handleResult(false)}
       >
         <Transition.Child
@@ -89,15 +90,17 @@ const ConfirmationDialog = forwardRef<
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel className="w-full max-w-md flex flex-col gap-2 transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-                <Dialog.Title
-                  as="h3"
-                  className="text-lg font-medium leading-6 text-gray-900"
-                >
+              <Dialog.Panel
+                className="
+                  w-full max-w-md flex flex-col gap-2 transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all
+                  dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200
+                "
+              >
+                <Dialog.Title as="h3" className="text-lg font-medium leading-6">
                   {title}
                 </Dialog.Title>
                 <p className="text-sm text-red-500 font-bold">{description}</p>
-                <p id="prompt" className="text-sm text-gray-600">
+                <p id="prompt" className="text-sm">
                   {t('common:confirm_prompt', { value: confirmationValue })}
                 </p>
                 <Form context={formContext} onSubmit={() => handleResult(true)}>

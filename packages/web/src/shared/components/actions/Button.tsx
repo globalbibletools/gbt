@@ -23,22 +23,22 @@ function buttonClasses(
     case 'primary': {
       return `${sharedClasses} ${sizeClasses} ${
         destructive
-          ? 'bg-red-800 outline-red-300'
-          : 'bg-blue-800 outline-green-300'
+          ? 'bg-red-800 dark:bg-red-700 outline-red-300'
+          : 'bg-blue-800 dark:bg-green-400 dark:text-gray-800 outline-green-300'
       } text-white shadow-md`;
     }
     case 'secondary': {
       return `${sharedClasses} ${sizeClasses} ${
         destructive
-          ? 'text-red-800 border-red-800 outline-red-300'
-          : 'text-blue-800 border-blue-800 outline-green-300'
+          ? 'text-red-800 dark:text-red-700 border-red-800 outline-red-300'
+          : 'text-blue-800 dark:text-green-400 border-blue-800 dark:border-green-800 outline-green-300'
       } border-2 bg-white shadow-md`;
     }
     case 'tertiary': {
       return `${sharedClasses} ${small ? 'h-6' : 'h-9'} ${
         destructive
-          ? 'text-red-800 outline-red-300'
-          : 'text-blue-800 outline-green-300'
+          ? 'text-red-800 dark:text-red-700 outline-red-300'
+          : 'text-blue-800 dark:text-green-400 outline-green-300'
       }`;
     }
   }
