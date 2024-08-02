@@ -1,9 +1,20 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useTextWidth } from '../../shared/hooks/useTextWidth';
 
-export default function TranslationProgressBar() {
+interface TranslationProgressBarProps {
+  wordsApproved: number;
+  wordsTotal: number;
+}
+
+export default function TranslationProgressBar(
+  props: TranslationProgressBarProps
+) {
   const theRef = useRef<HTMLDivElement>(null);
-  const text = '1232/4500 words (27.3%)';
+
+  const fractionFull = props.wordsApproved / props.wordsTotal;
+  const text = `${props.wordsApproved}/${props.wordsTotal} words (${(
+    fractionFull * 100
+  ).toFixed(1)}%)`;
   const textElementWidth =
     32 +
     useTextWidth({ text: text, fontSize: '12px', fontFamily: 'inherit' }) +
@@ -11,7 +22,6 @@ export default function TranslationProgressBar() {
 
   const [fitsInside, setFitsInside] = useState(true);
 
-  const fractionFull = 0.3;
   useEffect(() => {
     const { current } = theRef;
     if (!current) return;
@@ -29,7 +39,7 @@ export default function TranslationProgressBar() {
       }
     });
     resizeObserver.observe(current);
-    return () => resizeObserver.disconnect(); // clean up
+    return () => resizeObserver.disconnect();
   }, [textElementWidth]);
   //   useEffect(() => {
   //     if (theRef.current) {

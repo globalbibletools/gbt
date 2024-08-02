@@ -466,7 +466,7 @@ export default function TranslationView() {
           }
         }}
       />
-      <TranslationProgressBar />
+      <TranslationProgressBar wordsApproved={1232} wordsTotal={4500} />
       {(() => {
         if (loading) {
           return (
