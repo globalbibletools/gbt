@@ -34,6 +34,7 @@ import {
 import { isFlagEnabled } from '../../shared/featureFlags';
 import useTitle from '../../shared/hooks/useTitle';
 import { useFlash } from '../../shared/hooks/flash';
+import TranslationProgressBar from './TranslationProgressBar';
 
 export const translationLanguageKey = 'translation-language';
 export const translationVerseIdKey = 'translation-verse-id';
@@ -465,6 +466,7 @@ export default function TranslationView() {
           }
         }}
       />
+      <TranslationProgressBar />
       {(() => {
         if (loading) {
           return (
