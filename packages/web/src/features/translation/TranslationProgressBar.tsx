@@ -1,6 +1,6 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTextWidth } from '../../shared/hooks/useTextWidth';
-import { useTranslation, getI18n } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 
 interface TranslationProgressBarProps {
   wordsApproved: number;
@@ -11,37 +11,41 @@ export default function TranslationProgressBar(
   props: TranslationProgressBarProps
 ) {
   const { t } = useTranslation();
-  const theRef = useRef<HTMLDivElement>(null);
+  const progressElementRef = useRef<HTMLDivElement>(null);
 
   const fractionFull = props.wordsApproved / props.wordsTotal;
 
-  const text = `${props.wordsApproved}/${props.wordsTotal} ${t(
+  const progressText = `${props.wordsApproved}/${props.wordsTotal} ${t(
     'translate:words'
   )} (${(fractionFull * 100).toFixed(1)}%)`;
   const textElementWidth =
-    32 +
-    useTextWidth({ text: text, fontSize: '12px', fontFamily: 'inherit' }) +
-    12;
+    32 + // 32px for the left/start margin
+    useTextWidth({
+      text: progressText,
+      fontSize: '12px',
+      fontFamily: 'inherit',
+    }) +
+    12; // 12px for the right/end margin;
 
   const [fitsInside, setFitsInside] = useState(true);
 
   useEffect(() => {
-    const { current } = theRef;
-    if (!current) return;
+    const { current: progressElement } = progressElementRef;
+    if (!progressElement) return;
     const resizeObserver = new ResizeObserver(() => {
       console.log(
         JSON.stringify({
           textElementWidth,
-          offsetWidth: current.offsetWidth,
+          offsetWidth: progressElement.offsetWidth,
         })
       );
-      if (textElementWidth > current.offsetWidth) {
+      if (textElementWidth > progressElement.offsetWidth) {
         setFitsInside(false);
       } else {
         setFitsInside(true);
       }
     });
-    resizeObserver.observe(current);
+    resizeObserver.observe(progressElement);
     return () => resizeObserver.disconnect();
   }, [textElementWidth]);
 
@@ -49,13 +53,13 @@ export default function TranslationProgressBar(
     <div className="relative h-2 group">
       <div className="absolute w-full min-h-2 overflow-auto flex">
         <div
-          ref={theRef}
+          ref={progressElementRef}
           style={{ width: `${fractionFull * 100}%` }}
           className="min-h-2 bg-blue-700"
         >
           {fitsInside && (
             <div className="ms-8 me-3 hidden group-hover:inline-block text-xs text-white select-none">
-              {text}
+              {progressText}
             </div>
           )}
         </div>
@@ -65,7 +69,7 @@ export default function TranslationProgressBar(
         >
           {!fitsInside && (
             <div className="ms-3 hidden group-hover:inline-block text-xs text-black select-none">
-              {text}
+              {progressText}
             </div>
           )}
         </div>
