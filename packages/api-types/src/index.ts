@@ -119,7 +119,8 @@ export interface PostLanguageImportRequestBody {
 
 export interface LanguageProgress {
   code: string;
-  progress: number;
+  ot: { progress: number; words: number };
+  nt: { progress: number; words: number };
 }
 
 export interface GetLanguagesProgressResponseBody {
