@@ -1,5 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useTextWidth } from '../../shared/hooks/useTextWidth';
+import { useTranslation, getI18n } from 'react-i18next';
 
 interface TranslationProgressBarProps {
   wordsApproved: number;
@@ -9,12 +10,14 @@ interface TranslationProgressBarProps {
 export default function TranslationProgressBar(
   props: TranslationProgressBarProps
 ) {
+  const { t } = useTranslation();
   const theRef = useRef<HTMLDivElement>(null);
 
   const fractionFull = props.wordsApproved / props.wordsTotal;
-  const text = `${props.wordsApproved}/${props.wordsTotal} words (${(
-    fractionFull * 100
-  ).toFixed(1)}%)`;
+
+  const text = `${props.wordsApproved}/${props.wordsTotal} ${t(
+    'translate:words'
+  )} (${(fractionFull * 100).toFixed(1)}%)`;
   const textElementWidth =
     32 +
     useTextWidth({ text: text, fontSize: '12px', fontFamily: 'inherit' }) +
@@ -41,21 +44,7 @@ export default function TranslationProgressBar(
     resizeObserver.observe(current);
     return () => resizeObserver.disconnect();
   }, [textElementWidth]);
-  //   useEffect(() => {
-  //     if (theRef.current) {
-  //       console.log(
-  //         JSON.stringify({
-  //           textElementWidth,
-  //           offsetWidth: theRef.current.offsetWidth,
-  //         })
-  //       );
-  //       if (textElementWidth > theRef.current.offsetWidth) {
-  //         fitsInside.current = false;
-  //       } else {
-  //         fitsInside.current = true;
-  //       }
-  //     }
-  //   });
+
   return (
     <div className="relative h-2 group">
       <div className="absolute w-full min-h-2 overflow-auto flex">
@@ -65,7 +54,7 @@ export default function TranslationProgressBar(
           className="min-h-2 bg-blue-700"
         >
           {fitsInside && (
-            <div className="ml-8 mr-3 hidden group-hover:inline-block text-xs text-white select-none">
+            <div className="ms-8 me-3 hidden group-hover:inline-block text-xs text-white select-none">
               {text}
             </div>
           )}
@@ -75,7 +64,7 @@ export default function TranslationProgressBar(
           className="min-h-2 bg-brown-100"
         >
           {!fitsInside && (
-            <div className="ml-3 hidden group-hover:inline-block text-xs text-black select-none">
+            <div className="ms-3 hidden group-hover:inline-block text-xs text-black select-none">
               {text}
             </div>
           )}
