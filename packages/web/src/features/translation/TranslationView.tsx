@@ -83,11 +83,6 @@ function useTranslationQueries(language: string, verseId: string) {
         queryFn: ({ queryKey }) => apiClient.verses.findById(queryKey[1]),
       });
       queryClient.prefetchQuery({
-        queryKey: ['verse-suggestions', language, nextVerseId],
-        queryFn: ({ queryKey }) =>
-          apiClient.verses.findVerseSuggestions(queryKey[2], queryKey[1]),
-      });
-      queryClient.prefetchQuery({
         queryKey: ['verse-phrases', language, nextVerseId],
         queryFn: ({ queryKey }) =>
           apiClient.verses.findVersePhrases(queryKey[2], queryKey[1]),
