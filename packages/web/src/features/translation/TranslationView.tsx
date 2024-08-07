@@ -6,7 +6,7 @@ import {
 } from '@translation/api-types';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useLoaderData, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useAccessControl } from '../../shared/accessControl';
 import apiClient from '../../shared/apiClient';
 import bibleTranslationClient from '../../shared/bibleTranslationClient';
@@ -112,30 +112,15 @@ function useTranslationQueries(language: string, verseId: string) {
   };
 }
 
-/// This function loads the current language for use in the interlinear tab title.
-export async function translationViewLoader(code: string) {
-  const languages = await apiClient.languages.findAll();
-  return {
-    languageName: languages.data.find((l) => l.code === code)?.name ?? '',
-  };
-}
-
 export default function TranslationView() {
   const { t, i18n } = useTranslation(['common']);
   const { language, verseId } = useParams() as {
     language: string;
     verseId: string;
   };
-  const loaderData = useLoaderData() as { languageName: string };
-
-  useTitle(
-    t('common:tab_titles.interlinear', {
-      languageName: loaderData.languageName,
-    })
-  );
 
   const [sidebarWordIndex, setSidebarWordIndex] = useState(0);
-  const [showSidebar, setShowSidebar] = useState(true);
+  const [showSidebar, setShowSidebar] = useState(false);
 
   useEffect(() => {
     localStorage.setItem(translationLanguageKey, language);
@@ -156,6 +141,13 @@ export default function TranslationView() {
     phrasesQuery,
     translationQuery,
   } = useTranslationQueries(language, verseId);
+
+  useTitle(
+    t('common:tab_titles.interlinear', {
+      languageName:
+        translationLanguages.find((l) => l.code === language)?.name ?? '',
+    })
+  );
 
   useFontLoader(selectedLanguage ? [selectedLanguage.font] : []);
 
@@ -482,8 +474,8 @@ export default function TranslationView() {
 
           const isHebrew = isOldTestament(verse.id);
           return (
-            <div className="flex flex-col flex-grow w-full min-h-0 gap-6 lg:flex-row">
-              <div className="flex flex-col max-h-full min-h-0 gap-8 overflow-auto grow pt-8 pb-10 px-6 lg:pe-0 lg:ps-8">
+            <div className="flex flex-col flex-grow w-full min-h-0 lg:flex-row">
+              <div className="flex flex-col max-h-full min-h-0 gap-8 overflow-auto grow pt-8 pb-10 px-6">
                 {translationQuery.data && (
                   <p
                     className="mx-2 text-base"
