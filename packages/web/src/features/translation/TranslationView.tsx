@@ -75,6 +75,9 @@ function useTranslationQueries(language: string, verseId: string) {
   // This primes the cache with verse data for the next VERSES_TO_PREFETCH verses.
   // API requests are only sent if there is no data in the cache for the verse.
   useEffect(() => {
+    // Make sure suggestions load before we try to load anything else
+    if (suggestionsQuery.isLoading) return;
+
     let nextVerseId = verseId;
     for (let i = 0; i < VERSES_TO_PREFETCH; i++) {
       nextVerseId = incrementVerseId(nextVerseId);
@@ -88,7 +91,13 @@ function useTranslationQueries(language: string, verseId: string) {
           apiClient.verses.findVersePhrases(queryKey[2], queryKey[1]),
       });
     }
-  }, [language, verseId, queryClient, selectedLanguage]);
+  }, [
+    language,
+    verseId,
+    queryClient,
+    selectedLanguage,
+    suggestionsQuery.isLoading,
+  ]);
 
   // This ensures that when the verse changes, we have the latest gloss suggestions,
   // but in the meantime, we can show what was prefetched.
@@ -512,7 +521,7 @@ export default function TranslationView() {
                         })()}
                         originalLanguage={isHebrew ? 'hebrew' : 'greek'}
                         phrase={phrase}
-                        hints={suggestionsQuery.data.data.find(
+                        hints={suggestionsQuery.data?.data.find(
                           (w) => w.wordId === word.id
                         )}
                         word={word}
