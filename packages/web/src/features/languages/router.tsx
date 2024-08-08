@@ -13,6 +13,7 @@ import ManageLanguageImportView, {
 import ManageLanguageSettingsView, {
   manageLanguageSettingsViewLoader,
 } from './ManageLanguageSettingsView';
+import ManageLanguageReportsView from './ManageLanguageReportsView';
 
 export const languageAdminRoutes: RouteObject[] = [
   {
@@ -54,6 +55,10 @@ export const languagePageRoutes: RouteObject[] = [
         element: <ManageLanguageUserView />,
         loader: ({ params }) =>
           manageLanguageUsersViewLoader(params.code as string),
+      },
+      {
+        path: 'reports',
+        element: <ManageLanguageReportsView />,
       },
       {
         path: 'import',

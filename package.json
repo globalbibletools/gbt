@@ -72,6 +72,7 @@
     "@typescript-eslint/eslint-plugin": "5.62.0",
     "@typescript-eslint/parser": "5.62.0",
     "autoprefixer": "10.4.13",
+    "chart.js": "4.4.3",
     "dompurify": "3.0.6",
     "esbuild": "0.17.5",
     "eslint": "8.46.0",

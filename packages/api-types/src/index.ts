@@ -111,6 +111,16 @@ export interface GetLanguageResponseBody {
   data: Language;
 }
 
+export interface BookProgress {
+  name: string;
+  wordCount: number;
+  approvedCount: number;
+}
+
+export interface GetLanguageProgressResponseBody {
+  data: BookProgress[];
+}
+
 export type PostLanguageRequestBody = Pick<Language, 'code' | 'name'>;
 
 export interface PostLanguageImportRequestBody {

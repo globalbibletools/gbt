@@ -42,5 +42,6 @@ library.add(
   FaSolid.faStickyNote,
   FaSolid.faSave,
   FaSolid.faLink,
-  FaSolid.faUnlink
+  FaSolid.faUnlink,
+  FaSolid.faChartBar
 );
