@@ -33,6 +33,7 @@ export default createRoute<{ code: string }>()
           JOIN "Phrase" AS ph ON ph.id = phw."phraseId"
           JOIN "Gloss" AS g ON g."phraseId" = ph.id
           WHERE ph."languageId" = ${language.id}::uuid
+            AND ph."deletedAt" IS NULL
             AND g.state = 'APPROVED'
         ) AS ph ON ph."wordId" = w.id
         GROUP BY b.id

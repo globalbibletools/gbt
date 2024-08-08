@@ -11,7 +11,7 @@ import { Chart } from 'chart.js/auto';
 export default function ManageLanguageUserView() {
   const params = useParams() as { code: string };
 
-  const { t } = useTranslation(['common']);
+  const { t } = useTranslation(['common', 'bible']);
 
   const { isLoading, data } = useQuery({
     queryKey: ['language-progress', params.code],
@@ -35,14 +35,16 @@ export default function ManageLanguageUserView() {
       const chart = new Chart(chartRoot.current, {
         type: 'bar',
         data: {
-          labels: data.data.map((book) => book.name),
+          labels: data.data.map((book) =>
+            t(`bible:${book.name.toLowerCase()}`)
+          ),
           datasets: [
             {
               label: 'Progress',
               data: data.data.map(
                 (book) => (book.approvedCount / book.wordCount) * 100
               ),
-              backgroundColor: isDarkMode ? '#83C5BE' : '#066F74',
+              backgroundColor: isDarkMode ? '#59A8A2' : '#066F74',
             },
           ],
         },
