@@ -40,21 +40,31 @@ export default function ManageLanguageUserView() {
           ),
           datasets: [
             {
-              label: 'Progress',
-              data: data.data.map(
-                (book) => (book.approvedCount / book.wordCount) * 100
-              ),
+              label: 'Approved',
+              data: data.data.map((book) => book.approvedCount),
               backgroundColor: isDarkMode ? '#59A8A2' : '#066F74',
+            },
+            {
+              label: 'Remaining',
+              data: data.data.map(
+                (book) => book.wordCount - book.approvedCount
+              ),
+              backgroundColor: isDarkMode ? '#4b5563' : '#d1d5db',
             },
           ],
         },
         options: {
           maintainAspectRatio: false,
           indexAxis: 'y',
+          interaction: {
+            mode: 'index',
+          },
           scales: {
             x: {
-              min: 0,
-              max: 100,
+              stacked: true,
+            },
+            y: {
+              stacked: true,
             },
           },
           plugins: {
@@ -64,7 +74,7 @@ export default function ManageLanguageUserView() {
       });
       return () => chart.destroy();
     }
-  }, [data, isDarkMode]);
+  }, [data, isDarkMode, t]);
 
   return (
     <div className="absolute w-full h-full px-8 py-6 overflow-y-auto">
@@ -75,6 +85,7 @@ export default function ManageLanguageUserView() {
         <LoadingSpinner />
       ) : (
         <div className="w-full h-[1200px] mb-6">
+          <h2 className="font-bold">Words Approved by Book</h2>
           <canvas ref={chartRoot} />
         </div>
       )}
