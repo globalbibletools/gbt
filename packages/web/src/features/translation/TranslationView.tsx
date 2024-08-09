@@ -225,10 +225,15 @@ export default function TranslationView() {
 
       alert('Unknown error occurred.');
     },
-    onSettled: (_, __, ___, context) => {
+    onSettled: (_, __, variables, context) => {
       queryClient.invalidateQueries({
         queryKey: ['verse-glosses', language, verseId],
       });
+      if (variables.state) {
+        queryClient.invalidateQueries({
+          queryKey: ['book-progress', language, parseVerseId(verseId).bookId],
+        });
+      }
 
       if (context?.requestId) {
         setGlossRequests((requests) =>
