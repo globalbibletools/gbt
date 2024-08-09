@@ -50,7 +50,7 @@ export default function TranslationProgressBar(
   }, [textElementWidth]);
 
   return (
-    <div className="relative h-2 group">
+    <div className="relative h-2 group z-10">
       <div className="absolute w-full min-h-2 overflow-auto flex">
         <div
           ref={progressElementRef}
