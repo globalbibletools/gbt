@@ -214,7 +214,7 @@ export interface VersePhrase {
   gloss?: PhraseGloss;
 }
 
-export interface BookProgressResponseBody {
+export interface GetBookProgressResponseBody {
   wordsApproved: number;
   wordsTotal: number;
 }

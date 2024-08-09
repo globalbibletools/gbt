@@ -1,9 +1,9 @@
-import { BookProgressResponseBody } from '@translation/api-types';
+import { GetBookProgressResponseBody } from '@translation/api-types';
 import { client } from '../../../../../../shared/db';
 import createRoute from '../../../../../../shared/Route';
 
 export default createRoute<{ code: string; bookId: string }>()
-  .get<void, BookProgressResponseBody>({
+  .get<void, GetBookProgressResponseBody>({
     async handler(req, res) {
       const language = await client.language.findUnique({
         where: { code: req.query.code },

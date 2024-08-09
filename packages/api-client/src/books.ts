@@ -1,4 +1,4 @@
-import { BookProgressResponseBody } from '@translation/api-types';
+import { GetBookProgressResponseBody } from '@translation/api-types';
 import ApiClient from './client';
 
 export default class Books {
@@ -7,7 +7,7 @@ export default class Books {
   findProgress(
     bookId: number,
     language: string
-  ): Promise<BookProgressResponseBody> {
+  ): Promise<GetBookProgressResponseBody> {
     return this.client.get({
       path: `/api/languages/${language}/books/${bookId}/progress`,
     });
