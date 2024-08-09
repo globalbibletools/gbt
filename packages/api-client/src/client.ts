@@ -5,6 +5,7 @@ import Languages from './languages';
 import Users from './users';
 import Verses from './verses';
 import Phrases from './phrases';
+import Books from './books';
 
 export interface ApiClientOptions {
   baseUrl: string;
@@ -52,6 +53,7 @@ export class ApiClientError extends Error {
 export default class ApiClient {
   readonly languages: Languages;
   readonly import: Import;
+  readonly books: Books;
   readonly verses: Verses;
   readonly phrases: Phrases;
   readonly users: Users;
@@ -60,6 +62,7 @@ export default class ApiClient {
   constructor(private options: ApiClientOptions = { baseUrl: '' }) {
     this.languages = new Languages(this);
     this.import = new Import(this);
+    this.books = new Books(this);
     this.verses = new Verses(this);
     this.phrases = new Phrases(this);
     this.users = new Users(this);

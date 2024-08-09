@@ -71,6 +71,15 @@ function useTranslationQueries(language: string, verseId: string) {
     { enabled: !!selectedLanguage }
   );
 
+  const bookProgressQuery = useQuery(
+    ['book-progress', language, parseVerseId(verseId).bookId],
+    ({
+      queryKey: [, language, bookId],
+    }: {
+      queryKey: [string, string, number];
+    }) => apiClient.books.findProgress(bookId, language)
+  );
+
   const queryClient = useQueryClient();
 
   // This primes the cache with verse data for the next VERSES_TO_PREFETCH verses.
@@ -110,6 +119,7 @@ function useTranslationQueries(language: string, verseId: string) {
     suggestionsQuery,
     phrasesQuery,
     translationQuery,
+    bookProgressQuery,
   };
 }
 
@@ -156,6 +166,7 @@ export default function TranslationView() {
     suggestionsQuery,
     phrasesQuery,
     translationQuery,
+    bookProgressQuery,
   } = useTranslationQueries(language, verseId);
 
   useFontLoader(selectedLanguage ? [selectedLanguage.font] : []);
@@ -466,7 +477,10 @@ export default function TranslationView() {
           }
         }}
       />
-      <TranslationProgressBar wordsApproved={1232} wordsTotal={4500} />
+      <TranslationProgressBar
+        wordsApproved={bookProgressQuery.data?.wordsApproved ?? 0}
+        wordsTotal={bookProgressQuery.data?.wordsTotal ?? 0}
+      />
       {(() => {
         if (loading) {
           return (

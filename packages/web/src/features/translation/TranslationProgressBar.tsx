@@ -13,11 +13,11 @@ export default function TranslationProgressBar(
   const { t } = useTranslation();
   const progressElementRef = useRef<HTMLDivElement>(null);
 
-  const fractionFull = props.wordsApproved / props.wordsTotal;
+  const percentageFull = (props.wordsApproved / props.wordsTotal) * 100;
 
   const progressText = `${props.wordsApproved}/${props.wordsTotal} ${t(
     'translate:words'
-  )} (${(fractionFull * 100).toFixed(1)}%)`;
+  )} (${percentageFull.toFixed(1)}%)`;
   const textElementWidth =
     32 + // 32px for the left/start margin
     useTextWidth({
@@ -54,7 +54,7 @@ export default function TranslationProgressBar(
       <div className="absolute w-full min-h-2 overflow-auto flex">
         <div
           ref={progressElementRef}
-          style={{ width: `${fractionFull * 100}%` }}
+          style={{ width: `${percentageFull}%` }}
           className="min-h-2 bg-blue-700"
         >
           {fitsInside && (
@@ -64,7 +64,7 @@ export default function TranslationProgressBar(
           )}
         </div>
         <div
-          style={{ width: `${(1 - fractionFull) * 100}%` }}
+          style={{ width: `${100 - percentageFull}%` }}
           className="min-h-2 bg-brown-100"
         >
           {!fitsInside && (
