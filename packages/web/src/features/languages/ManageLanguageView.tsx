@@ -32,7 +32,7 @@ export default function ManageLanguageView() {
 
   return (
     <div className="absolute w-full h-full flex items-stretch">
-      <div className="w-56 flex-shrink-0 bg-brown-100 p-6 pt-7">
+      <div className="w-56 flex-shrink-0 bg-brown-100 dark:bg-gray-700 p-6 pt-7">
         <div className="px-3 mb-4">
           <h2 className="font-bold text-lg">{language.data.name}</h2>
         </div>
@@ -41,8 +41,8 @@ export default function ManageLanguageView() {
             <NavLink
               to={`/admin/languages/${params.code}/settings`}
               className={({ isActive }) =>
-                `block px-3 py-1 rounded-lg text-blue-800 font-bold mb-2 ${
-                  isActive ? 'bg-green-200 ' : ''
+                `block px-3 py-1 rounded-lg text-blue-800 dark:text-green-400 font-bold mb-2 ${
+                  isActive ? 'bg-green-200 dark:bg-gray-600' : ''
                 }`
               }
             >
@@ -54,8 +54,8 @@ export default function ManageLanguageView() {
             <NavLink
               to={`/admin/languages/${params.code}/users`}
               className={({ isActive }) =>
-                `block px-3 py-1 rounded-lg text-blue-800 font-bold mb-2 ${
-                  isActive ? 'bg-green-200 ' : ''
+                `block px-3 py-1 rounded-lg text-blue-800 dark:text-green-400 font-bold mb-2 ${
+                  isActive ? 'bg-green-200 dark:bg-gray-600' : ''
                 }`
               }
             >
@@ -65,10 +65,23 @@ export default function ManageLanguageView() {
           </li>
           <li>
             <NavLink
+              to={`/admin/languages/${params.code}/reports`}
+              className={({ isActive }) =>
+                `block px-3 py-1 rounded-lg text-blue-800 dark:text-green-400 font-bold mb-2 ${
+                  isActive ? 'bg-green-200 dark:bg-gray-600' : ''
+                }`
+              }
+            >
+              <Icon icon="chart-bar" className="w-4 me-2" />
+              {t('languages:reports')}
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
               to={`/admin/languages/${params.code}/import`}
               className={({ isActive }) =>
-                `block px-3 py-1 rounded-lg text-blue-800 font-bold mb-2 ${
-                  isActive ? 'bg-green-200 ' : ''
+                `block px-3 py-1 rounded-lg text-blue-800 dark:text-green-400 font-bold mb-2 ${
+                  isActive ? 'bg-green-200 dark:bg-gray-600' : ''
                 }`
               }
             >
@@ -78,7 +91,7 @@ export default function ManageLanguageView() {
           </li>
         </ul>
       </div>
-      <div className="flex-grow">
+      <div className="flex-grow relative">
         <Outlet />
       </div>
     </div>

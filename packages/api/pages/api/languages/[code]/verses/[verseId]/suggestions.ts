@@ -101,18 +101,20 @@ export default createRoute<{ code: string; verseId: string }>()
             id AS form_id,
             array_agg(gloss ORDER BY count DESC) AS "suggestions"
           FROM (
-            SELECT form.id, g.gloss, COUNT(1) FROM (
-              SELECT DISTINCT ON(wd."formId") wd."formId" AS id FROM "Word" AS wd
-              WHERE wd."verseId" = ${req.query.verseId}
-            ) AS form
-            JOIN "Word" AS w ON w."formId" = form.id
+            SELECT w."formId" AS id, g.gloss, COUNT(*)
+            FROM "Word" AS w
             JOIN "PhraseWord" AS phw ON phw."wordId" = w.id
             JOIN "Phrase" AS ph ON ph.id = phw."phraseId"
             JOIN "Gloss" AS g ON g."phraseId" = ph.id
             WHERE ph."languageId" = ${language.id}::uuid
               AND ph."deletedAt" IS NULL
               AND g.gloss IS NOT NULL
-            GROUP BY form.id, g.gloss
+              AND EXISTS (
+                SELECT 1 FROM "Word" AS wd
+                  WHERE wd."verseId" = ${req.query.verseId}
+                    AND wd."formId" = w."formId"
+              )
+            GROUP BY w."formId", g.gloss
           ) AS form_suggestion
           GROUP BY id
         ) AS suggestion ON suggestion.form_id = w."formId"

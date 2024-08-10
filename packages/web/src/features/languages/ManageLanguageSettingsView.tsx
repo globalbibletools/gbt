@@ -129,7 +129,7 @@ export default function ManageLanguageSettingsView() {
     <div className="px-8 py-6 w-fit overflow-y-auto h-full">
       <div className="flex items-baseline mb-4">
         <ViewTitle>{t('languages:settings')}</ViewTitle>
-        <div className="ms-6 text-gray-700">
+        <div className="ms-6 text-gray-700 dark:text-gray-400">
           {isLoading ? (
             <>
               <Icon icon="arrows-rotate" className="me-1" />
@@ -144,7 +144,7 @@ export default function ManageLanguageSettingsView() {
         </div>
       </div>
       <Form context={formContext} className="max-w-[1000px]">
-        <section className="flex flex-col gap-4 lg:flex-row lg:gap-20 pb-8 px-10 border-b border-b-green-300">
+        <section className="flex flex-col gap-4 lg:flex-row lg:gap-20 pb-8 px-10 border-b border-b-green-300 dark:border-b-blue-800">
           <div className="flex-grow">
             <h3 className="font-bold text-lg mb-2">
               {t('languages:identification')}
@@ -200,7 +200,7 @@ export default function ManageLanguageSettingsView() {
             </div>
           </div>
         </section>
-        <section className="flex flex-col gap-4 lg:flex-row lg:gap-20 py-8 px-10 border-b border-b-green-300">
+        <section className="flex flex-col gap-4 lg:flex-row lg:gap-20 py-8 px-10 border-b border-b-green-300 dark:border-b-blue-800">
           <div className="flex-grow">
             <h3 className="font-bold text-lg mb-2">{t('languages:text')}</h3>
             <p className="text-sm">{t('languages:settings_help.text')}</p>

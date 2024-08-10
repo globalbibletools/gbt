@@ -141,8 +141,12 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
         dir={originalLanguage === 'hebrew' ? 'rtl' : 'ltr'}
         className={`
           group/word relative p-2 rounded
-          ${phraseFocused && !selected ? 'bg-brown-50' : ''}
-          ${selected ? 'shadow-inner bg-brown-100' : ''}
+          ${phraseFocused && !selected ? 'bg-brown-50 dark:bg-gray-700' : ''}
+          ${
+            selected
+              ? 'shadow-inner dark:shadow-none bg-brown-100 dark:bg-gray-600'
+              : ''
+          }
         `}
         onClick={(e) => {
           if (!e.altKey) return;
@@ -188,7 +192,7 @@ const TranslateWord = forwardRef<TranslateWordRef, TranslateWordProps>(
             <Icon
               title="Linked to another word"
               icon="link"
-              className="text-gray-600"
+              className="text-gray-600 dark:text-gray-400"
             />
           ) : (
             <Checkbox

@@ -85,7 +85,10 @@ const InviteLanguageMemberDialog = forwardRef<
   return (
     <dialog
       ref={root}
-      className="rounded-lg shadow-md bg-white mx-auto p-12 focus-visible:outline outline-green-300 outline-2"
+      className="
+        rounded-lg shadow-md bg-white mx-auto p-12 focus-visible:outline outline-green-300 outline-2
+        dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200
+      "
     >
       <Form context={formContext} onSubmit={(data) => mutateAsync(data)}>
         <h2 className="font-bold text-xl mb-6 text-center">

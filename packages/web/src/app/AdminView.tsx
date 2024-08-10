@@ -8,7 +8,7 @@ export default function AdminView() {
 
   return (
     <div className="absolute w-full h-full flex items-stretch">
-      <div className="min-w-[280px] flex-shrink-0 bg-brown-100 p-6 pt-7">
+      <div className="min-w-[280px] flex-shrink-0 bg-brown-100 dark:bg-gray-700 p-6 pt-7">
         <div className="px-3 mb-4">
           <h2 className="font-bold text-lg">{t('common:admin')}</h2>
         </div>
@@ -17,8 +17,8 @@ export default function AdminView() {
             <NavLink
               to="/admin/languages"
               className={({ isActive }) =>
-                `block px-3 py-1 rounded-lg text-blue-800 font-bold mb-2 ${
-                  isActive ? 'bg-green-200 ' : ''
+                `block px-3 py-1 rounded-lg text-blue-800 dark:text-green-400 font-bold mb-2 ${
+                  isActive ? 'bg-green-200 dark:bg-gray-600' : ''
                 }`
               }
             >
@@ -30,8 +30,8 @@ export default function AdminView() {
             <NavLink
               to="/admin/users"
               className={({ isActive }) =>
-                `block px-3 py-1 rounded-lg text-blue-800 font-bold mb-2 ${
-                  isActive ? 'bg-green-200 ' : ''
+                `block px-3 py-1 rounded-lg text-blue-800 dark:text-green-400 font-bold mb-2 ${
+                  isActive ? 'bg-green-200 dark:bg-gray-600' : ''
                 }`
               }
             >

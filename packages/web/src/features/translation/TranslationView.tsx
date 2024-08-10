@@ -6,7 +6,7 @@ import {
 } from '@translation/api-types';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useLoaderData, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useAccessControl } from '../../shared/accessControl';
 import apiClient from '../../shared/apiClient';
 import bibleTranslationClient from '../../shared/bibleTranslationClient';
@@ -85,6 +85,9 @@ function useTranslationQueries(language: string, verseId: string) {
   // This primes the cache with verse data for the next VERSES_TO_PREFETCH verses.
   // API requests are only sent if there is no data in the cache for the verse.
   useEffect(() => {
+    // Make sure suggestions load before we try to load anything else
+    if (suggestionsQuery.isLoading) return;
+
     let nextVerseId = verseId;
     for (let i = 0; i < VERSES_TO_PREFETCH; i++) {
       nextVerseId = incrementVerseId(nextVerseId);
@@ -93,17 +96,18 @@ function useTranslationQueries(language: string, verseId: string) {
         queryFn: ({ queryKey }) => apiClient.verses.findById(queryKey[1]),
       });
       queryClient.prefetchQuery({
-        queryKey: ['verse-suggestions', language, nextVerseId],
-        queryFn: ({ queryKey }) =>
-          apiClient.verses.findVerseSuggestions(queryKey[2], queryKey[1]),
-      });
-      queryClient.prefetchQuery({
         queryKey: ['verse-phrases', language, nextVerseId],
         queryFn: ({ queryKey }) =>
           apiClient.verses.findVersePhrases(queryKey[2], queryKey[1]),
       });
     }
-  }, [language, verseId, queryClient, selectedLanguage]);
+  }, [
+    language,
+    verseId,
+    queryClient,
+    selectedLanguage,
+    suggestionsQuery.isLoading,
+  ]);
 
   // This ensures that when the verse changes, we have the latest gloss suggestions,
   // but in the meantime, we can show what was prefetched.
@@ -123,30 +127,15 @@ function useTranslationQueries(language: string, verseId: string) {
   };
 }
 
-/// This function loads the current language for use in the interlinear tab title.
-export async function translationViewLoader(code: string) {
-  const languages = await apiClient.languages.findAll();
-  return {
-    languageName: languages.data.find((l) => l.code === code)?.name ?? '',
-  };
-}
-
 export default function TranslationView() {
   const { t, i18n } = useTranslation(['common']);
   const { language, verseId } = useParams() as {
     language: string;
     verseId: string;
   };
-  const loaderData = useLoaderData() as { languageName: string };
-
-  useTitle(
-    t('common:tab_titles.interlinear', {
-      languageName: loaderData.languageName,
-    })
-  );
 
   const [sidebarWordIndex, setSidebarWordIndex] = useState(0);
-  const [showSidebar, setShowSidebar] = useState(true);
+  const [showSidebar, setShowSidebar] = useState(false);
 
   useEffect(() => {
     localStorage.setItem(translationLanguageKey, language);
@@ -168,6 +157,13 @@ export default function TranslationView() {
     translationQuery,
     bookProgressQuery,
   } = useTranslationQueries(language, verseId);
+
+  useTitle(
+    t('common:tab_titles.interlinear', {
+      languageName:
+        translationLanguages.find((l) => l.code === language)?.name ?? '',
+    })
+  );
 
   useFontLoader(selectedLanguage ? [selectedLanguage.font] : []);
 
@@ -503,8 +499,8 @@ export default function TranslationView() {
 
           const isHebrew = isOldTestament(verse.id);
           return (
-            <div className="flex flex-col flex-grow w-full min-h-0 gap-6 lg:flex-row">
-              <div className="flex flex-col max-h-full min-h-0 gap-8 overflow-auto grow pt-8 pb-10 px-6 lg:pe-0 lg:ps-8">
+            <div className="flex flex-col flex-grow w-full min-h-0 lg:flex-row">
+              <div className="flex flex-col max-h-full min-h-0 gap-8 overflow-auto grow pt-8 pb-10 px-6">
                 {translationQuery.data && (
                   <p
                     className="mx-2 text-base"
@@ -546,7 +542,7 @@ export default function TranslationView() {
                         })()}
                         originalLanguage={isHebrew ? 'hebrew' : 'greek'}
                         phrase={phrase}
-                        hints={suggestionsQuery.data.data.find(
+                        hints={suggestionsQuery.data?.data.find(
                           (w) => w.wordId === word.id
                         )}
                         word={word}

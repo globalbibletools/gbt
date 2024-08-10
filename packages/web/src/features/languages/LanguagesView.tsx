@@ -81,8 +81,11 @@ export default function LanguagesView() {
           <ListHeaderCell className="min-w-[240px]">
             {t('languages:language', { count: 1 }).toUpperCase()}
           </ListHeaderCell>
-          <ListHeaderCell className="min-w-[96px]">
-            {t('languages:progress').toUpperCase()}
+          <ListHeaderCell className="min-w-[120px]">
+            {t('languages:ot_progress').toUpperCase()}
+          </ListHeaderCell>
+          <ListHeaderCell className="min-w-[120px]">
+            {t('languages:nt_progress').toUpperCase()}
           </ListHeaderCell>
           <ListHeaderCell />
         </ListHeader>
@@ -97,11 +100,26 @@ export default function LanguagesView() {
               </ListCell>
               <ListCell>
                 {isProgressesFetched
-                  ? (
-                      (languageProgresses?.data.find(
+                  ? (() => {
+                      const languageData = languageProgresses?.data.find(
                         (l) => l.code === language.code
-                      )?.progress ?? 0) * 100
-                    ).toFixed(2) + '%'
+                      );
+                      return `${(
+                        (languageData?.ot.progress ?? 0) * 100
+                      ).toFixed(2)} %`;
+                    })()
+                  : '-'}
+              </ListCell>
+              <ListCell>
+                {isProgressesFetched
+                  ? (() => {
+                      const languageData = languageProgresses?.data.find(
+                        (l) => l.code === language.code
+                      );
+                      return `${(
+                        (languageData?.nt.progress ?? 0) * 100
+                      ).toFixed(2)} %`;
+                    })()
                   : '-'}
               </ListCell>
               <ListCell>

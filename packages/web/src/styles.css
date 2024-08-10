@@ -38,6 +38,6 @@
     @apply ps-7 list-disc;
   }
   .ref {
-    @apply text-green-600 font-bold hover:underline cursor-pointer;
+    @apply text-blue-800 dark:text-green-400 font-bold hover:underline cursor-pointer;
   }
 }

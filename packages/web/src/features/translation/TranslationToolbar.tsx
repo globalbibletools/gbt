@@ -102,7 +102,7 @@ export function TranslationToolbar({
   }, [verseId, setValue, t]);
 
   return (
-    <div className="flex items-center shadow-md px-6 md:px-8 py-4">
+    <div className="flex items-center shadow-md dark:shadow-none dark:border-b dark:border-gray-500 px-6 md:px-8 py-4">
       <Form
         context={verseReferenceForm}
         onSubmit={({ verseReference }) => {
@@ -190,7 +190,7 @@ export function TranslationToolbar({
             <Icon icon="check" className="me-1" />
             {t('translate:approve_all')}
           </Button>
-          <span className="mx-1" aria-hidden="true">
+          <span className="mx-1 dark:text-gray-300" aria-hidden="true">
             |
           </span>
           {!canUnlinkWords || canLinkWords ? (
