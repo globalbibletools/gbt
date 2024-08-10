@@ -480,7 +480,7 @@ export default function TranslationView() {
       />
       <TranslationProgressBar
         wordsApproved={bookProgressQuery.data?.wordsApproved ?? 0}
-        wordsTotal={bookProgressQuery.data?.wordsTotal ?? 0}
+        wordsTotal={bookProgressQuery.data?.wordsTotal ?? Infinity}
       />
       {(() => {
         if (loading) {

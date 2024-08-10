@@ -12,34 +12,21 @@ export default createRoute<{ code: string; bookId: string }>()
         return res.notFound();
       }
 
-      const { wordsApproved } = (
-        await client.$queryRaw<[{ wordsApproved: number }]>`
-        SELECT COUNT(1)::integer AS "wordsApproved"
-            FROM "Word" AS w
-            JOIN "Verse" AS v ON v.id = w."verseId" AND v."bookId" = ${parseInt(
-              req.query.bookId
-            )}
-            JOIN "PhraseWord" AS phw ON phw."wordId" = w.id
-            LEFT JOIN "Phrase" AS ph ON ph.id = phw."phraseId" AND ph."languageId" = ${
-              language.id
-            }::uuid
-            LEFT JOIN "Gloss" AS g ON g."phraseId" = ph.id
-        WHERE ph."deletedAt" IS NULL AND g.state = 'APPROVED'
-        `
+      const { wordsApproved, wordsTotal } = (
+        await client.$queryRaw<[{ wordsApproved: number; wordsTotal: number }]>`
+        SELECT (COUNT(DISTINCT w.id) FILTER (WHERE ph."deletedAt" IS NULL AND g.state = 'APPROVED'))::integer AS "wordsApproved", 
+               (COUNT(DISTINCT w.id))::integer AS "wordsTotal"
+          FROM "Word" AS w
+          JOIN "Verse" AS v ON v.id = w."verseId" AND v."bookId" = ${parseInt(
+            req.query.bookId
+          )}
+          LEFT JOIN "PhraseWord" AS phw ON phw."wordId" = w.id
+          LEFT JOIN "Phrase" AS ph ON ph.id = phw."phraseId" AND ph."languageId" = ${
+            language.id
+          }::uuid
+          LEFT JOIN "Gloss" AS g ON g."phraseId" = ph.id`
       )[0];
 
-      const { wordsTotal } = (
-        await client.$queryRaw<[{ wordsTotal: number }]>`
-        SELECT COUNT(1)::integer AS "wordsTotal"
-            FROM "Word" AS w
-            JOIN "Verse" AS v ON v.id = w."verseId" AND v."bookId" = ${parseInt(
-              req.query.bookId
-            )}
-        `
-      )[0];
-
-      console.log(wordsApproved);
-      console.log(wordsTotal);
       return res.ok({ wordsApproved, wordsTotal });
     },
   })

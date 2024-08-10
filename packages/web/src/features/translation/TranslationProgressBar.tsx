@@ -27,23 +27,13 @@ export default function TranslationProgressBar(
     }) +
     12; // 12px for the right/end margin;
 
-  const [fitsInside, setFitsInside] = useState(true);
+  const [textFitsInside, setTextFitsInside] = useState(true);
 
   useEffect(() => {
     const { current: progressElement } = progressElementRef;
     if (!progressElement) return;
     const resizeObserver = new ResizeObserver(() => {
-      console.log(
-        JSON.stringify({
-          textElementWidth,
-          offsetWidth: progressElement.offsetWidth,
-        })
-      );
-      if (textElementWidth > progressElement.offsetWidth) {
-        setFitsInside(false);
-      } else {
-        setFitsInside(true);
-      }
+      setTextFitsInside(textElementWidth <= progressElement.offsetWidth);
     });
     resizeObserver.observe(progressElement);
     return () => resizeObserver.disconnect();
@@ -57,7 +47,7 @@ export default function TranslationProgressBar(
           style={{ width: `${percentageFull}%` }}
           className="min-h-2 bg-blue-700"
         >
-          {fitsInside && (
+          {textFitsInside && (
             <div className="ms-8 me-3 hidden group-hover:inline-block text-xs text-white select-none">
               {progressText}
             </div>
@@ -67,7 +57,7 @@ export default function TranslationProgressBar(
           style={{ width: `${100 - percentageFull}%` }}
           className="min-h-2 bg-brown-100"
         >
-          {!fitsInside && (
+          {!textFitsInside && (
             <div className="ms-3 hidden group-hover:inline-block text-xs text-black select-none">
               {progressText}
             </div>
