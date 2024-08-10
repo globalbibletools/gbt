@@ -310,7 +310,7 @@ model Phrase {
   /// The history of events of the gloss for this phrase.
   glossEvents GlossEvent[]
 
-  @@index([languageId])
+  @@index([languageId, deletedAt])
 }
 
 // Connects one or more words to a phrase in a language.
@@ -325,7 +325,7 @@ model PhraseWord {
   wordId   String
 
   @@id([phraseId, wordId])
-  @@index([wordId])
+  @@index([wordId, phraseId])
 }
 
 enum GlossState {
