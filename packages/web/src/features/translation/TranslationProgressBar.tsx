@@ -3,8 +3,8 @@ import { useTextWidth } from '../../shared/hooks/useTextWidth';
 import { useTranslation } from 'react-i18next';
 
 interface TranslationProgressBarProps {
-  wordsApproved: number;
-  wordsTotal: number;
+  approvedCount: number;
+  wordCount: number;
 }
 
 export default function TranslationProgressBar(
@@ -13,9 +13,9 @@ export default function TranslationProgressBar(
   const { t } = useTranslation();
   const progressElementRef = useRef<HTMLDivElement>(null);
 
-  const percentageFull = (props.wordsApproved / props.wordsTotal) * 100;
+  const percentageFull = (props.approvedCount / props.wordCount) * 100;
 
-  const progressText = `${props.wordsApproved}/${props.wordsTotal} ${t(
+  const progressText = `${props.approvedCount}/${props.wordCount} ${t(
     'translate:words'
   )} (${percentageFull.toFixed(1)}%)`;
   const textElementWidth =

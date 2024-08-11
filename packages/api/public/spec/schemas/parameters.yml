@@ -6,14 +6,6 @@ languageCode:
   schema:
     type: string
   example: es
-bookId:
-  name: bookId
-  in: path
-  description: The book number within the Bible. Starts at 1, ends at 66
-  required: true
-  schema:
-    type: string
-  example: '7'
 verseId:
   name: verseId
   in: path
