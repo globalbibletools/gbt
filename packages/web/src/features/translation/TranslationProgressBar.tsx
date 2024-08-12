@@ -40,12 +40,12 @@ export default function TranslationProgressBar(
   }, [textElementWidth]);
 
   return (
-    <div className="relative h-2 group z-10">
-      <div className="absolute w-full min-h-2 overflow-auto flex">
+    <div className="relative h-2 group z-[1]">
+      <div className="absolute min-h-2 w-full flex">
         <div
           ref={progressElementRef}
           style={{ width: `${percentageFull}%` }}
-          className="min-h-2 bg-blue-700"
+          className="bg-blue-700"
         >
           {textFitsInside && (
             <div className="ms-8 me-3 hidden group-hover:inline-block text-xs text-white select-none">
@@ -55,7 +55,7 @@ export default function TranslationProgressBar(
         </div>
         <div
           style={{ width: `${100 - percentageFull}%` }}
-          className="min-h-2 bg-brown-100"
+          className="bg-brown-100"
         >
           {!textFitsInside && (
             <div className="ms-3 hidden group-hover:inline-block text-xs text-black select-none">
