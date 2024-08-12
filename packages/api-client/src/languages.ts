@@ -12,6 +12,7 @@ import {
   type PostLanguageRequestBody,
   GetLanguagesProgressResponseBody,
   GetLanguageProgressResponseBody,
+  GetLanguageVerseRangeResponseBody,
 } from '@translation/api-types';
 import type ApiClient from './client';
 
@@ -40,6 +41,16 @@ export default class Languages {
   findProgress(code: string): Promise<GetLanguageProgressResponseBody> {
     return this.client.get<GetLanguageProgressResponseBody>({
       path: `/api/languages/${code}/progress`,
+    });
+  }
+
+  read(
+    code: string,
+    startVerse: string
+  ): Promise<GetLanguageVerseRangeResponseBody> {
+    return this.client.get<GetLanguageVerseRangeResponseBody>({
+      path: `/api/languages/${code}/read`,
+      query: { start: startVerse },
     });
   }
 

@@ -111,6 +111,30 @@ export interface GetLanguageResponseBody {
   data: Language;
 }
 
+export interface GetLanguageVerseRangeRequestBody {
+  start: string;
+}
+
+export interface ReadingWord {
+  id: string;
+  text: string;
+  gloss?: string;
+  linkedWords?: string[];
+}
+
+export interface ReadingVerse {
+  id: string;
+  number: number;
+  chapter: number;
+  book: number;
+  words: ReadingWord[];
+}
+
+export interface GetLanguageVerseRangeResponseBody {
+  data: ReadingVerse[];
+  next?: string;
+}
+
 export interface BookProgress {
   name: string;
   wordCount: number;
