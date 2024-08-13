@@ -71,8 +71,13 @@ function useTranslationQueries(language: string, verseId: string) {
     { enabled: !!selectedLanguage }
   );
 
-  const bookProgressQuery = useQuery(['language-progress', language], () =>
-    apiClient.languages.findProgress(language)
+  const bookProgressQuery = useQuery(
+    ['book-progress', language, parseVerseId(verseId).bookId],
+    ({
+      queryKey: [, language, bookId],
+    }: {
+      queryKey: [string, string, number];
+    }) => apiClient.books.findProgress(bookId, language)
   );
 
   const queryClient = useQueryClient();
@@ -222,7 +227,7 @@ export default function TranslationView() {
       });
       if (variables.state) {
         queryClient.invalidateQueries({
-          queryKey: ['language-progress', language],
+          queryKey: ['book-progress', language, parseVerseId(verseId).bookId],
         });
       }
 
@@ -474,14 +479,8 @@ export default function TranslationView() {
         }}
       />
       <TranslationProgressBar
-        approvedCount={
-          bookProgressQuery.data?.data[parseVerseId(verseId).bookId - 1]
-            .approvedCount ?? 0
-        }
-        wordCount={
-          bookProgressQuery.data?.data[parseVerseId(verseId).bookId - 1]
-            .wordCount ?? Infinity
-        }
+        wordsApproved={bookProgressQuery.data?.wordsApproved ?? 0}
+        wordsTotal={bookProgressQuery.data?.wordsTotal ?? Infinity}
       />
       {(() => {
         if (loading) {

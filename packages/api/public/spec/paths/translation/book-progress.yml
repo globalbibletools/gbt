@@ -1,0 +1,21 @@
+get:
+  tags:
+    - Languages
+  summary: Get the translation progress of a book within a certain language
+  parameters:
+    - $ref: '../../schemas/parameters.yml#languageCode'
+    - $ref: '../../schemas/parameters.yml#bookId'
+  responses:
+    '200':
+      description: Ok
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              wordsApproved:
+                type: integer
+                description: The number of words with approved glosses within this book
+              wordsTotal:
+                type: integer
+                description: The number of words within this book.
