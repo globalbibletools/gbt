@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTextWidth } from '../../shared/hooks/useTextWidth';
 import { useTranslation } from 'react-i18next';
 import apiClient from '../../shared/apiClient';
@@ -42,27 +42,17 @@ export default function TranslationProgressBar({
     }) +
     12; // 12px for the right/end margin;
 
-  const onResize = useCallback(
-    (progressElement: HTMLDivElement) => {
-      setTextFitsInside(textElementWidth <= progressElement.offsetWidth);
-    },
-    [textElementWidth]
-  );
-  const resizeObserverRef = useRef(
-    new ResizeObserver(([progressElementObserver]) =>
-      onResize(progressElementObserver.target as HTMLDivElement)
-    )
-  );
   const [textFitsInside, setTextFitsInside] = useState(true);
 
   useEffect(() => {
     const { current: progressElement } = progressElementRef;
-    const { current: resizeObserver } = resizeObserverRef;
-    if (!progressElement || !resizeObserver) return;
-
+    if (!progressElement) return;
+    const resizeObserver = new ResizeObserver(() => {
+      setTextFitsInside(textElementWidth <= progressElement.offsetWidth);
+    });
     resizeObserver.observe(progressElement);
-    return () => resizeObserver.unobserve(progressElement);
-  }, []);
+    return () => resizeObserver.disconnect();
+  }, [textElementWidth]);
 
   return (
     <div className="relative h-2 group z-[1]">
