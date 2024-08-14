@@ -43,14 +43,14 @@ export default function TranslationProgressBar({
     12; // 12px for the right/end margin;
 
   const onResize = useCallback(
-    (progressElement: Element) => {
+    (progressElement: HTMLDivElement) => {
       setTextFitsInside(textElementWidth <= progressElement.offsetWidth);
     },
     [textElementWidth]
   );
   const resizeObserverRef = useRef(
     new ResizeObserver(([progressElementObserver]) =>
-      onResize(progressElementObserver.target)
+      onResize(progressElementObserver.target as HTMLDivElement)
     )
   );
   const [textFitsInside, setTextFitsInside] = useState(true);
