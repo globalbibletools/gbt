@@ -77,7 +77,7 @@ export default function ReadingView() {
           return (
             <div
               className="font-mixed p-4 mx-auto max-w-[960px] leading-loose text-right"
-              dir="rlt"
+              dir="rtl"
             >
               {selectedWord &&
                 createPortal(
@@ -93,40 +93,37 @@ export default function ReadingView() {
               {versesQuery.data?.pages.map((page, i) => (
                 <Fragment key={i}>
                   {page.data.map((verse) => (
-                    <span key={verse.id} className="me-2">
+                    <span key={verse.id}>
                       {verse.words.map((word, i) => {
                         if (i === 0) {
                           return (
                             <Fragment key={word.id}>
-                              <span className="whitespace-nowrap">
-                                <span className="font-sans text-xs">
-                                  {verse.number === 1
-                                    ? verse.chapter + ':'
-                                    : ''}
-                                  {verse.number}
-                                </span>{' '}
-                                <span
-                                  onClick={(e) => onWordClick(e, word)}
-                                  onMouseEnter={(e) =>
-                                    onWordMouseEnter(e, word)
-                                  }
-                                  onMouseLeave={(e) => onWordMouseLeave(e)}
-                                >
-                                  {word.text}
-                                </span>
-                              </span>{' '}
-                            </Fragment>
-                          );
-                        } else {
-                          return (
-                            <Fragment key={word.id}>
+                              <span className="font-sans text-xs">
+                                {verse.number === 1 ? verse.chapter + ':' : ''}
+                                {verse.number}&nbsp;
+                              </span>
                               <span
                                 onClick={(e) => onWordClick(e, word)}
                                 onMouseEnter={(e) => onWordMouseEnter(e, word)}
                                 onMouseLeave={(e) => onWordMouseLeave(e)}
                               >
                                 {word.text}
-                              </span>{' '}
+                              </span>
+                              {!word.text.endsWith('־') && ' '}
+                            </Fragment>
+                          );
+                        } else {
+                          return (
+                            <Fragment key={word.id}>
+                              <span
+                                className="last:me-1"
+                                onClick={(e) => onWordClick(e, word)}
+                                onMouseEnter={(e) => onWordMouseEnter(e, word)}
+                                onMouseLeave={(e) => onWordMouseLeave(e)}
+                              >
+                                {word.text}
+                              </span>
+                              {!word.text.endsWith('־') && ' '}
                             </Fragment>
                           );
                         }
