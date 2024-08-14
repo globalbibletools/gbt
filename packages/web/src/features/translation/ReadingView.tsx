@@ -5,8 +5,11 @@ import { Fragment, MouseEvent, useEffect, useRef, useState } from 'react';
 import { useFloating, autoUpdate } from '@floating-ui/react-dom';
 import { ReadingWord } from '@translation/api-types';
 import { createPortal } from 'react-dom';
+import { bookName } from './verse-utils';
+import { useTranslation } from 'react-i18next';
 
 export default function ReadingView() {
+  const { t } = useTranslation(['bible']);
   const languageCode = 'spa';
 
   const versesQuery = useInfiniteQuery({
@@ -92,49 +95,45 @@ export default function ReadingView() {
                 )}
               {versesQuery.data?.pages.map((page, i) => (
                 <Fragment key={i}>
-                  {page.data.map((verse) => (
-                    <span key={verse.id}>
-                      {verse.words.map((word, i) => {
-                        if (i === 0) {
-                          return (
-                            <Fragment key={word.id}>
-                              <span
-                                className={`font-sans ${
-                                  verse.number === 1 ? 'text-lg' : 'text-xs'
-                                }`}
-                              >
-                                {verse.number === 1
-                                  ? verse.chapter
-                                  : verse.number}
-                                &nbsp;
-                              </span>
-                              <span
-                                onClick={(e) => onWordClick(e, word)}
-                                onMouseEnter={(e) => onWordMouseEnter(e, word)}
-                                onMouseLeave={(e) => onWordMouseLeave(e)}
-                              >
-                                {word.text}
-                              </span>
-                              {!word.text.endsWith('־') && ' '}
-                            </Fragment>
-                          );
-                        } else {
-                          return (
-                            <Fragment key={word.id}>
-                              <span
-                                className="last:me-1"
-                                onClick={(e) => onWordClick(e, word)}
-                                onMouseEnter={(e) => onWordMouseEnter(e, word)}
-                                onMouseLeave={(e) => onWordMouseLeave(e)}
-                              >
-                                {word.text}
-                              </span>
-                              {!word.text.endsWith('־') && ' '}
-                            </Fragment>
-                          );
-                        }
-                      })}
-                    </span>
+                  {page.data.map((chapter) => (
+                    <Fragment key={`${chapter.book}-${chapter.chapter}`}>
+                      {chapter.chapter === 1 && (
+                        <h2 className="text-center font-bold text-3xl mb-4 mt-2">
+                          {bookName(chapter.book, t)}
+                        </h2>
+                      )}
+                      <p>
+                        <span className="font-sans text-lg">
+                          {chapter.chapter}&nbsp;
+                        </span>
+                        {chapter.verses.map((verse) => (
+                          <span key={verse.id}>
+                            {verse.words.map((word, i) => {
+                              return (
+                                <Fragment key={word.id}>
+                                  {i === 0 && verse.number !== 1 && (
+                                    <span className={'font-sans text-xs'}>
+                                      {verse.number}&nbsp;
+                                    </span>
+                                  )}
+                                  <span
+                                    className="last:me-1"
+                                    onClick={(e) => onWordClick(e, word)}
+                                    onMouseEnter={(e) =>
+                                      onWordMouseEnter(e, word)
+                                    }
+                                    onMouseLeave={(e) => onWordMouseLeave(e)}
+                                  >
+                                    {word.text}
+                                  </span>
+                                  {!word.text.endsWith('־') && ' '}
+                                </Fragment>
+                              );
+                            })}
+                          </span>
+                        ))}
+                      </p>
+                    </Fragment>
                   ))}
                 </Fragment>
               ))}

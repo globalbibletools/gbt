@@ -125,13 +125,17 @@ export interface ReadingWord {
 export interface ReadingVerse {
   id: string;
   number: number;
-  chapter: number;
-  book: number;
   words: ReadingWord[];
 }
 
+export interface ReadingChapter {
+  chapter: number;
+  book: number;
+  verses: ReadingVerse[];
+}
+
 export interface GetLanguageVerseRangeResponseBody {
-  data: ReadingVerse[];
+  data: ReadingChapter[];
   next?: string;
 }
 
