@@ -98,9 +98,15 @@ export default function ReadingView() {
                         if (i === 0) {
                           return (
                             <Fragment key={word.id}>
-                              <span className="font-sans text-xs">
-                                {verse.number === 1 ? verse.chapter + ':' : ''}
-                                {verse.number}&nbsp;
+                              <span
+                                className={`font-sans ${
+                                  verse.number === 1 ? 'text-lg' : 'text-xs'
+                                }`}
+                              >
+                                {verse.number === 1
+                                  ? verse.chapter
+                                  : verse.number}
+                                &nbsp;
                               </span>
                               <span
                                 onClick={(e) => onWordClick(e, word)}
