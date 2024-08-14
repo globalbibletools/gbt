@@ -34,6 +34,7 @@ import {
 import { isFlagEnabled } from '../../shared/featureFlags';
 import useTitle from '../../shared/hooks/useTitle';
 import { useFlash } from '../../shared/hooks/flash';
+import TranslationProgressBar from './TranslationProgressBar';
 
 export const translationLanguageKey = 'translation-language';
 export const translationVerseIdKey = 'translation-verse-id';
@@ -209,10 +210,15 @@ export default function TranslationView() {
 
       alert('Unknown error occurred.');
     },
-    onSettled: (_, __, ___, context) => {
+    onSettled: (_, __, variables, context) => {
       queryClient.invalidateQueries({
         queryKey: ['verse-glosses', language, verseId],
       });
+      if (variables.state) {
+        queryClient.invalidateQueries({
+          queryKey: ['book-progress', language, parseVerseId(verseId).bookId],
+        });
+      }
 
       if (context?.requestId) {
         setGlossRequests((requests) =>
@@ -297,6 +303,11 @@ export default function TranslationView() {
       }
     },
     onSuccess: async () => {
+      await queryClient.invalidateQueries([
+        'book-progress',
+        language,
+        parseVerseId(verseId).bookId,
+      ]);
       await queryClient.invalidateQueries(['verse-phrases', language, verseId]);
       flash.success(t('translate:all_glosses_approved'));
     },
@@ -461,6 +472,12 @@ export default function TranslationView() {
           }
         }}
       />
+      {!!userCan('read', { type: 'Language', id: language }) && (
+        <TranslationProgressBar
+          language={language}
+          bookId={parseVerseId(verseId).bookId}
+        />
+      )}
       {(() => {
         if (loading) {
           return (
