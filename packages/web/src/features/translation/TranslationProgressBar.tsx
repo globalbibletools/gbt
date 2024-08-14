@@ -19,7 +19,7 @@ export default function TranslationProgressBar({
       queryKey: [, language, bookId],
     }: {
       queryKey: [string, string, number];
-    }) => apiClient.books.findProgress(bookId, language)
+    }) => apiClient.languages.findBookProgress(bookId, language)
   );
   const approvedCount = bookProgressQuery.data?.data.approvedCount ?? 0;
   const wordCount = bookProgressQuery.data?.data.wordCount ?? Infinity;

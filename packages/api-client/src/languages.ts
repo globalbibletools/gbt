@@ -12,6 +12,7 @@ import {
   type PostLanguageRequestBody,
   GetLanguagesProgressResponseBody,
   GetLanguageProgressResponseBody,
+  GetBookProgressResponseBody,
 } from '@translation/api-types';
 import type ApiClient from './client';
 
@@ -40,6 +41,15 @@ export default class Languages {
   findProgress(code: string): Promise<GetLanguageProgressResponseBody> {
     return this.client.get<GetLanguageProgressResponseBody>({
       path: `/api/languages/${code}/progress`,
+    });
+  }
+
+  findBookProgress(
+    bookId: number,
+    language: string
+  ): Promise<GetBookProgressResponseBody> {
+    return this.client.get({
+      path: `/api/languages/${language}/books/${bookId}/progress`,
     });
   }
 
