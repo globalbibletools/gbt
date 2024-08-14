@@ -14,20 +14,30 @@ export default createRoute<{ code: string; bookId: string }>()
 
       const bookProgress = (
         await client.$queryRaw<[{ approvedCount: number; wordCount: number }]>`
-        SELECT (COUNT(DISTINCT w.id) FILTER (WHERE ph."deletedAt" IS NULL AND g.state = 'APPROVED'))::integer AS "approvedCount", 
-               (COUNT(DISTINCT w.id))::integer AS "wordCount"
-          FROM "Word" AS w
-          JOIN "Verse" AS v ON v.id = w."verseId" AND v."bookId" = ${parseInt(
-            req.query.bookId
-          )}
-          LEFT JOIN "PhraseWord" AS phw ON phw."wordId" = w.id
-          LEFT JOIN "Phrase" AS ph ON ph.id = phw."phraseId" AND ph."languageId" = ${
-            language.id
-          }::uuid
-          LEFT JOIN "Gloss" AS g ON g."phraseId" = ph.id`
+          SELECT
+            COUNT(*) AS "wordCount",
+            COUNT(*) FILTER (WHERE ph."wordId" IS NOT NULL) AS "approvedCount"
+          FROM "Book" AS b
+          JOIN "Verse" AS v ON v."bookId" = b.id
+          JOIN "Word" AS w ON w."verseId" = v.id
+          LEFT JOIN LATERAL (
+            SELECT phw."wordId" FROM "PhraseWord" AS phw
+            JOIN "Phrase" AS ph ON ph.id = phw."phraseId"
+            JOIN "Gloss" AS g ON g."phraseId" = ph.id
+            WHERE ph."languageId" = ${language.id}::uuid
+              AND ph."deletedAt" IS NULL
+              AND g.state = 'APPROVED'
+              AND phw."wordId" = w.id
+          ) AS ph ON true
+          WHERE v."bookId" = ${parseInt(req.query.bookId)}`
       )[0];
 
-      return res.ok({ data: bookProgress });
+      return res.ok({
+        data: {
+          approvedCount: Number(bookProgress.approvedCount),
+          wordCount: Number(bookProgress.wordCount),
+        },
+      });
     },
   })
   .build();

@@ -27,7 +27,7 @@ export default function TranslationProgressBar({
   const { t } = useTranslation();
   const progressElementRef = useRef<HTMLDivElement>(null);
 
-  const percentageFull = 25 || (approvedCount / wordCount) * 100;
+  const percentageFull = (approvedCount / wordCount) * 100;
 
   const progressText = `${approvedCount}/${wordCount} ${t(
     'translate:words'
