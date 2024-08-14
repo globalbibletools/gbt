@@ -13,9 +13,10 @@ get:
           schema:
             type: object
             properties:
-              wordsApproved:
-                type: integer
-                description: The number of words with approved glosses within this book
-              wordsTotal:
-                type: integer
-                description: The number of words within this book.
+              data:
+                approvedCount:
+                  type: integer
+                  description: The number of words with approved glosses within this book
+                wordCount:
+                  type: integer
+                  description: The number of words within this book.

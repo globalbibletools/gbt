@@ -71,15 +71,6 @@ function useTranslationQueries(language: string, verseId: string) {
     { enabled: !!selectedLanguage }
   );
 
-  const bookProgressQuery = useQuery(
-    ['book-progress', language, parseVerseId(verseId).bookId],
-    ({
-      queryKey: [, language, bookId],
-    }: {
-      queryKey: [string, string, number];
-    }) => apiClient.books.findProgress(bookId, language)
-  );
-
   const queryClient = useQueryClient();
 
   // This primes the cache with verse data for the next VERSES_TO_PREFETCH verses.
@@ -123,7 +114,6 @@ function useTranslationQueries(language: string, verseId: string) {
     suggestionsQuery,
     phrasesQuery,
     translationQuery,
-    bookProgressQuery,
   };
 }
 
@@ -155,7 +145,6 @@ export default function TranslationView() {
     suggestionsQuery,
     phrasesQuery,
     translationQuery,
-    bookProgressQuery,
   } = useTranslationQueries(language, verseId);
 
   useTitle(
@@ -314,6 +303,11 @@ export default function TranslationView() {
       }
     },
     onSuccess: async () => {
+      await queryClient.invalidateQueries([
+        'book-progress',
+        language,
+        parseVerseId(verseId).bookId,
+      ]);
       await queryClient.invalidateQueries(['verse-phrases', language, verseId]);
       flash.success(t('translate:all_glosses_approved'));
     },
@@ -478,10 +472,12 @@ export default function TranslationView() {
           }
         }}
       />
-      <TranslationProgressBar
-        wordsApproved={bookProgressQuery.data?.wordsApproved ?? 0}
-        wordsTotal={bookProgressQuery.data?.wordsTotal ?? Infinity}
-      />
+      {!!userCan('read', { type: 'Language', id: language }) && (
+        <TranslationProgressBar
+          language={language}
+          bookId={parseVerseId(verseId).bookId}
+        />
+      )}
       {(() => {
         if (loading) {
           return (

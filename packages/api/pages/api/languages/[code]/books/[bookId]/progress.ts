@@ -12,10 +12,10 @@ export default createRoute<{ code: string; bookId: string }>()
         return res.notFound();
       }
 
-      const { wordsApproved, wordsTotal } = (
-        await client.$queryRaw<[{ wordsApproved: number; wordsTotal: number }]>`
-        SELECT (COUNT(DISTINCT w.id) FILTER (WHERE ph."deletedAt" IS NULL AND g.state = 'APPROVED'))::integer AS "wordsApproved", 
-               (COUNT(DISTINCT w.id))::integer AS "wordsTotal"
+      const bookProgress = (
+        await client.$queryRaw<[{ approvedCount: number; wordCount: number }]>`
+        SELECT (COUNT(DISTINCT w.id) FILTER (WHERE ph."deletedAt" IS NULL AND g.state = 'APPROVED'))::integer AS "approvedCount", 
+               (COUNT(DISTINCT w.id))::integer AS "wordCount"
           FROM "Word" AS w
           JOIN "Verse" AS v ON v.id = w."verseId" AND v."bookId" = ${parseInt(
             req.query.bookId
@@ -27,7 +27,7 @@ export default createRoute<{ code: string; bookId: string }>()
           LEFT JOIN "Gloss" AS g ON g."phraseId" = ph.id`
       )[0];
 
-      return res.ok({ wordsApproved, wordsTotal });
+      return res.ok({ data: bookProgress });
     },
   })
   .build();
