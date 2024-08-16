@@ -8,7 +8,10 @@ export function Layout() {
     <Suspense fallback="loading">
       <div className="relative min-h-screen flex flex-col">
         <Header />
-        <div className="flex-grow relative flex flex-col max-w-[1800px] mx-auto w-full">
+        <div
+          id="scroll-root"
+          className="flex-grow relative flex flex-col max-w-[1800px] mx-auto w-full"
+        >
           <Outlet />
         </div>
         <Footer className="absolute bottom-0 w-full" />

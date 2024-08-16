@@ -1,7 +1,14 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 import apiClient from '../../shared/apiClient';
 import LoadingSpinner from '../../shared/components/LoadingSpinner';
-import { Fragment, MouseEvent, useEffect, useRef, useState } from 'react';
+import {
+  Fragment,
+  MouseEvent,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { useFloating, autoUpdate } from '@floating-ui/react-dom';
 import { ReadingWord } from '@translation/api-types';
 import { createPortal } from 'react-dom';
@@ -74,6 +81,44 @@ function usePopover(onClose?: () => void) {
   };
 }
 
+function useInfiniteScroll(options: {
+  enable: boolean;
+  fetchNextPage: () => void;
+}) {
+  const root = useRef<HTMLDivElement>(null);
+  const bottomSentinel = useRef<HTMLDivElement>(null);
+  const observer = useRef<IntersectionObserver>();
+
+  const { fetchNextPage } = options;
+
+  useEffect(() => {
+    observer.current = new IntersectionObserver(
+      ([entry]) => {
+        console.log(entry.isIntersecting);
+        if (entry.isIntersecting) {
+          fetchNextPage();
+        }
+      },
+      {
+        root: root.current,
+        threshold: 1,
+        rootMargin: '1000px',
+      }
+    );
+  }, [fetchNextPage]);
+
+  useEffect(() => {
+    const sentinel = bottomSentinel.current;
+    const obs = observer.current;
+    if (options.enable && sentinel && obs) {
+      obs.observe(sentinel);
+      return () => obs.unobserve(sentinel);
+    }
+  }, [options.enable, observer]);
+
+  return { root, bottomSentinel };
+}
+
 export default function ReadingView() {
   const { t } = useTranslation(['bible']);
   const languageCode = 'spa';
@@ -88,8 +133,16 @@ export default function ReadingView() {
 
   const popover = usePopover();
 
+  const infiniteScroll = useInfiniteScroll({
+    enable: !versesQuery.isLoading,
+    fetchNextPage: versesQuery.fetchNextPage,
+  });
+
   return (
-    <div className="absolute w-full h-full flex flex-col flex-grow overflow-y-auto pb-8">
+    <div
+      ref={infiniteScroll.root}
+      className="absolute w-full h-full flex flex-col flex-grow overflow-y-auto pb-8"
+    >
       {(() => {
         if (versesQuery.status === 'loading') {
           return (
@@ -99,10 +152,68 @@ export default function ReadingView() {
           );
         } else {
           return (
-            <div
-              className="font-mixed p-4 mx-auto max-w-[960px] leading-loose text-right"
-              dir="rtl"
-            >
+            <div>
+              <div
+                className="font-mixed p-4 mx-auto max-w-[960px] leading-loose text-right"
+                dir="rtl"
+              >
+                {versesQuery.data?.pages.map((page, i) => (
+                  <Fragment key={i}>
+                    {page.data.map((chapter) => (
+                      <Fragment key={`${chapter.book}-${chapter.chapter}`}>
+                        {chapter.chapter === 1 && (
+                          <h2 className="text-center font-bold text-3xl mb-4 mt-2">
+                            {bookName(chapter.book, t)}
+                          </h2>
+                        )}
+                        <p>
+                          <span className="font-sans text-lg">
+                            {chapter.chapter}&nbsp;
+                          </span>
+                          {chapter.verses.map((verse) => (
+                            <span key={verse.id}>
+                              {verse.words.map((word, i) => {
+                                return (
+                                  <Fragment key={word.id}>
+                                    {i === 0 && verse.number !== 1 && (
+                                      <span className={'font-sans text-xs'}>
+                                        {verse.number}&nbsp;
+                                      </span>
+                                    )}
+                                    <span
+                                      className="last:me-1"
+                                      onClick={(e) =>
+                                        popover.onWordClick(e, word)
+                                      }
+                                      onMouseEnter={(e) =>
+                                        popover.onWordMouseEnter(e, word)
+                                      }
+                                      onMouseLeave={(e) =>
+                                        popover.onWordMouseLeave(e)
+                                      }
+                                    >
+                                      {word.text}
+                                    </span>
+                                    {!word.text.endsWith('־') && ' '}
+                                  </Fragment>
+                                );
+                              })}
+                            </span>
+                          ))}
+                        </p>
+                      </Fragment>
+                    ))}
+                  </Fragment>
+                ))}
+              </div>
+              {versesQuery.hasNextPage && (
+                <div ref={infiniteScroll.bottomSentinel} />
+              )}
+              <div>
+                {versesQuery.isFetching && versesQuery.isFetchingNextPage
+                  ? 'Fetching...'
+                  : null}
+              </div>
               {popover.selectedWord &&
                 createPortal(
                   <div
@@ -114,73 +225,6 @@ export default function ReadingView() {
                   </div>,
                   document.body
                 )}
-              {versesQuery.data?.pages.map((page, i) => (
-                <Fragment key={i}>
-                  {page.data.map((chapter) => (
-                    <Fragment key={`${chapter.book}-${chapter.chapter}`}>
-                      {chapter.chapter === 1 && (
-                        <h2 className="text-center font-bold text-3xl mb-4 mt-2">
-                          {bookName(chapter.book, t)}
-                        </h2>
-                      )}
-                      <p>
-                        <span className="font-sans text-lg">
-                          {chapter.chapter}&nbsp;
-                        </span>
-                        {chapter.verses.map((verse) => (
-                          <span key={verse.id}>
-                            {verse.words.map((word, i) => {
-                              return (
-                                <Fragment key={word.id}>
-                                  {i === 0 && verse.number !== 1 && (
-                                    <span className={'font-sans text-xs'}>
-                                      {verse.number}&nbsp;
-                                    </span>
-                                  )}
-                                  <span
-                                    className="last:me-1"
-                                    onClick={(e) =>
-                                      popover.onWordClick(e, word)
-                                    }
-                                    onMouseEnter={(e) =>
-                                      popover.onWordMouseEnter(e, word)
-                                    }
-                                    onMouseLeave={(e) =>
-                                      popover.onWordMouseLeave(e)
-                                    }
-                                  >
-                                    {word.text}
-                                  </span>
-                                  {!word.text.endsWith('־') && ' '}
-                                </Fragment>
-                              );
-                            })}
-                          </span>
-                        ))}
-                      </p>
-                    </Fragment>
-                  ))}
-                </Fragment>
-              ))}
-              <div>
-                <button
-                  onClick={() => versesQuery.fetchNextPage()}
-                  disabled={
-                    !versesQuery.hasNextPage || versesQuery.isFetchingNextPage
-                  }
-                >
-                  {versesQuery.isFetchingNextPage
-                    ? 'Loading more...'
-                    : versesQuery.hasNextPage
-                    ? 'Load More'
-                    : 'Nothing more to load'}
-                </button>
-              </div>
-              <div>
-                {versesQuery.isFetching && !versesQuery.isFetchingNextPage
-                  ? 'Fetching...'
-                  : null}
-              </div>
             </div>
           );
         }
