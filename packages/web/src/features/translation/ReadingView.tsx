@@ -1,14 +1,7 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 import apiClient from '../../shared/apiClient';
 import LoadingSpinner from '../../shared/components/LoadingSpinner';
-import {
-  Fragment,
-  MouseEvent,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import { Fragment, MouseEvent, useEffect, useRef, useState } from 'react';
 import { useFloating, autoUpdate } from '@floating-ui/react-dom';
 import { ReadingWord } from '@translation/api-types';
 import { createPortal } from 'react-dom';
@@ -84,19 +77,23 @@ function usePopover(onClose?: () => void) {
 function useInfiniteScroll(options: {
   enable: boolean;
   fetchNextPage: () => void;
+  fetchPreviousPage: () => void;
 }) {
   const root = useRef<HTMLDivElement>(null);
   const bottomSentinel = useRef<HTMLDivElement>(null);
+  const topSentinel = useRef<HTMLDivElement>(null);
   const observer = useRef<IntersectionObserver>();
 
-  const { fetchNextPage } = options;
+  const { fetchNextPage, fetchPreviousPage } = options;
 
   useEffect(() => {
     observer.current = new IntersectionObserver(
       ([entry]) => {
-        console.log(entry.isIntersecting);
-        if (entry.isIntersecting) {
+        if (!entry.isIntersecting) return;
+        if (entry.target === bottomSentinel.current) {
           fetchNextPage();
+        } else if (entry.target === topSentinel.current) {
+          fetchPreviousPage();
         }
       },
       {
@@ -105,18 +102,23 @@ function useInfiniteScroll(options: {
         rootMargin: '1000px',
       }
     );
-  }, [fetchNextPage]);
+  }, [fetchNextPage, fetchPreviousPage]);
 
   useEffect(() => {
-    const sentinel = bottomSentinel.current;
+    const btm = bottomSentinel.current;
+    const top = topSentinel.current;
     const obs = observer.current;
-    if (options.enable && sentinel && obs) {
-      obs.observe(sentinel);
-      return () => obs.unobserve(sentinel);
+    if (options.enable && btm && top && obs) {
+      obs.observe(btm);
+      obs.observe(top);
+      return () => {
+        obs.unobserve(btm);
+        obs.unobserve(top);
+      };
     }
   }, [options.enable, observer]);
 
-  return { root, bottomSentinel };
+  return { root, bottomSentinel, topSentinel };
 }
 
 export default function ReadingView() {
@@ -125,10 +127,11 @@ export default function ReadingView() {
 
   const versesQuery = useInfiniteQuery({
     queryKey: ['reading', languageCode],
-    queryFn({ queryKey, pageParam = '01001001' }) {
+    queryFn({ queryKey, pageParam = { start: '02001001' } }) {
       return apiClient.languages.read(queryKey[1], pageParam);
     },
-    getNextPageParam: (lastPage) => lastPage.next,
+    getNextPageParam: (page) => ({ start: page.next }),
+    getPreviousPageParam: (page) => ({ end: page.prev }),
   });
 
   const popover = usePopover();
@@ -136,6 +139,7 @@ export default function ReadingView() {
   const infiniteScroll = useInfiniteScroll({
     enable: !versesQuery.isLoading,
     fetchNextPage: versesQuery.fetchNextPage,
+    fetchPreviousPage: versesQuery.fetchPreviousPage,
   });
 
   return (
@@ -153,6 +157,14 @@ export default function ReadingView() {
         } else {
           return (
             <div>
+              {versesQuery.hasPreviousPage && (
+                <div ref={infiniteScroll.topSentinel} />
+              )}
+              <div>
+                {versesQuery.isFetching && versesQuery.isFetchingPreviousPage
+                  ? 'Fetching...'
+                  : null}
+              </div>
               <div
                 className="font-mixed p-4 mx-auto max-w-[960px] leading-loose text-right"
                 dir="rtl"

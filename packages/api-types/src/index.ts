@@ -112,7 +112,8 @@ export interface GetLanguageResponseBody {
 }
 
 export interface GetLanguageVerseRangeRequestBody {
-  start: string;
+  end?: string;
+  start?: string;
 }
 
 export interface ReadingWord {
@@ -136,6 +137,7 @@ export interface ReadingChapter {
 
 export interface GetLanguageVerseRangeResponseBody {
   data: ReadingChapter[];
+  prev?: string;
   next?: string;
 }
 
