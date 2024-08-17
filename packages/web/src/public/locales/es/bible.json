@@ -1,5 +1,6 @@
 {
   "reference_format": "{{bookName}} {{chapterNumber}}:{{verseNumber}}",
+  "reference_format_chapter": "{{bookName}} {{chapterNumber}}",
   "gen": "Génesis",
   "gen_short": "Gn",
   "exo": "Éxodo",

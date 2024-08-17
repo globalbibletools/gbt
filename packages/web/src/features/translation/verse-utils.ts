@@ -11,6 +11,11 @@ export type VerseInfo = {
   verseNumber: number;
 };
 
+export type ChapterInfo = {
+  bookId: number;
+  chapterNumber: number;
+};
+
 /**
  * Count the chapters in a given book of the Bible.
  * @param bookId The ID of the book to use.
@@ -106,6 +111,31 @@ export function decrementVerseId(verseId: string) {
 }
 
 /**
+ * Get the chapter ID of the previous verse of the Bible.
+ * Wraps across chapters and books, and from Revelations to Genesis.
+ * @param chapterId The current chapter ID.
+ * @returns The chapter ID of the previous chapter of the Bible.
+ */
+// TODO: It would be good to have unit tests for this function.
+export function decrementChapterId(chapterId: string) {
+  let { bookId, chapterNumber }: VerseInfo = parseVerseId(chapterId);
+  chapterNumber -= 1;
+  if (chapterNumber < 1) {
+    // Wrap to previous book.
+    bookId -= 1;
+    if (bookId < 1) {
+      // Wrap around to Revelations.
+      bookId = 66;
+    }
+    // Last chapter of the book.
+    chapterNumber = chapterCount(bookId);
+  }
+  return `${bookId.toString().padStart(2, '0')}${chapterNumber
+    .toString()
+    .padStart(3, '0')}`;
+}
+
+/**
  * Get the verse ID of the next verse of the Bible.
  * Wraps across chapters and books, and from Genesis to Revelations.
  * @param verseId The current verse ID.
@@ -130,6 +160,31 @@ export function incrementVerseId(verseId: string) {
     verseNumber = 1;
   }
   return generateVerseId({ bookId, chapterNumber, verseNumber });
+}
+
+/**
+ * Get the chapter ID of the next chapter of the Bible.
+ * Wraps across chapters and books, and from Genesis to Revelations.
+ * @param verseId The current chapter ID.
+ * @returns The chapter ID of the next chapter of the Bible.
+ */
+// TODO: It would be good to have unit tests for this function.
+export function incrementChapterId(chapterId: string) {
+  let { bookId, chapterNumber }: VerseInfo = parseVerseId(chapterId);
+  // Wrap to next chapter.
+  chapterNumber += 1;
+  if (chapterNumber > chapterCount(bookId)) {
+    // Wrap to next book.
+    bookId += 1;
+    if (bookId > 66) {
+      // Wrap around to Genesis.
+      bookId = 1;
+    }
+    chapterNumber = 1;
+  }
+  return `${bookId.toString().padStart(2, '0')}${chapterNumber
+    .toString()
+    .padStart(3, '0')}`;
 }
 
 /**
@@ -250,6 +305,23 @@ export function generateReference(verseInfo: VerseInfo, t: TFunction) {
   return t('reference_format', {
     ...verseInfo,
     bookName: bookName(verseInfo.bookId, t),
+    ns: 'bible',
+  });
+}
+
+/**
+ * Generate a localized reference for the given chapter.
+ * @param chapterInfo The chapter to reference.
+ * @param t The i18n translation function to use.
+ * @returns The human-readable Bible reference.
+ */
+export function generateChapterReference(
+  chapterInfo: ChapterInfo,
+  t: TFunction
+) {
+  return t('reference_format_chapter', {
+    ...chapterInfo,
+    bookName: bookName(chapterInfo.bookId, t),
     ns: 'bible',
   });
 }

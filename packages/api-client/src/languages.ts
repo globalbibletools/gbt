@@ -12,6 +12,7 @@ import {
   type PostLanguageRequestBody,
   GetLanguagesProgressResponseBody,
   GetLanguageProgressResponseBody,
+  GetLanguageReadingChapterResponseBody,
   GetBookProgressResponseBody,
 } from '@translation/api-types';
 import type ApiClient from './client';
@@ -44,6 +45,15 @@ export default class Languages {
     });
   }
 
+  readChapter(
+    code: string,
+    chapter: string
+  ): Promise<GetLanguageReadingChapterResponseBody> {
+    return this.client.get<GetLanguageReadingChapterResponseBody>({
+      path: `/api/languages/${code}/chapters/${chapter}/read`,
+    })
+  }
+  
   findBookProgress(
     bookId: number,
     language: string

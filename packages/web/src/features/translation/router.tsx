@@ -3,6 +3,7 @@ import TranslationView, {
   translationLanguageKey,
   translationVerseIdKey,
 } from './TranslationView';
+import ReadingView from './ReadingView';
 
 const routes: RouteObject[] = [
   {
@@ -16,6 +17,10 @@ const routes: RouteObject[] = [
   {
     path: 'interlinear/:language/verses/:verseId?',
     element: <TranslationView />,
+  },
+  {
+    path: 'read',
+    element: <ReadingView />,
   },
 ];
 
