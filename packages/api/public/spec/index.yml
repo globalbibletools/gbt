@@ -38,6 +38,8 @@ paths:
     $ref: ./paths/languages/language.yml
   /languages/{code}/import:
     $ref: ./paths/languages/languages-import.yml
+  /languages/{code}/books/{bookId}/progress:
+    $ref: ./paths/translation/book-progress.yml
   /languages/{code}/verses/{verseId}/translation:
     $ref: ./paths/translation/translations.yml
   /languages/{code}/verses/{verseId}/phrases:
