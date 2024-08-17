@@ -7,6 +7,7 @@ import { ReadingWord } from '@translation/api-types';
 import { createPortal } from 'react-dom';
 import { useSearchParams } from 'react-router-dom';
 import { ReadingToolbar } from './ReadingToolbar';
+import { isOldTestament } from './verse-utils';
 
 function usePopover(onClose?: () => void) {
   const [selectedWord, selectWord] = useState<{
@@ -80,6 +81,7 @@ export default function ReadingView() {
 
   const languageCode = searchParams.get('lang') ?? 'eng';
   const chapterId = searchParams.get('chapter') ?? '01001';
+  const isOT = isOldTestament(chapterId + '001');
 
   const { data, isLoading } = useQuery({
     queryKey: ['read-chapter', languageCode, chapterId],
@@ -130,8 +132,10 @@ export default function ReadingView() {
               <div className="flex flex-col flex-grow w-full min-h-0 lg:flex-row">
                 <div className="flex flex-col max-h-full min-h-0 gap-8 overflow-auto grow pt-8 pb-10 px-6">
                   <div
-                    className="font-mixed p-4 mx-auto max-w-[960px] leading-loose text-right"
-                    dir="rtl"
+                    className={`font-mixed mx-auto max-w-[960px] leading-loose ${
+                      isOT ? 'text-right' : 'text-left'
+                    }`}
+                    dir={isOT ? 'rtl' : 'ltr'}
                   >
                     {data?.data.verses.flatMap((verse) => {
                       const words = verse.words.map((word, i) => (
