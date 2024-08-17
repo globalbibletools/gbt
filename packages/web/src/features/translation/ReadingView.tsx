@@ -5,8 +5,8 @@ import { Fragment, MouseEvent, useEffect, useState } from 'react';
 import { useFloating, autoUpdate } from '@floating-ui/react-dom';
 import { ReadingWord } from '@translation/api-types';
 import { createPortal } from 'react-dom';
-import { bookName } from './verse-utils';
-import { useTranslation } from 'react-i18next';
+import { useSearchParams } from 'react-router-dom';
+import { ReadingToolbar } from './ReadingToolbar';
 
 function usePopover(onClose?: () => void) {
   const [selectedWord, selectWord] = useState<{
@@ -76,13 +76,10 @@ function usePopover(onClose?: () => void) {
 }
 
 export default function ReadingView() {
-  const { t } = useTranslation(['bible']);
-  const languageCode = 'spa';
-  const chapterId = '01001';
-  const bookId = parseInt(chapterId.slice(0, 2)) || 1;
-  const chapterNumber = parseInt(chapterId.slice(2, 5)) || 1;
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const popover = usePopover();
+  const languageCode = searchParams.get('lang') ?? 'eng';
+  const chapterId = searchParams.get('chapter') ?? '01001';
 
   const { data, isLoading } = useQuery({
     queryKey: ['read-chapter', languageCode, chapterId],
@@ -91,8 +88,35 @@ export default function ReadingView() {
     },
   });
 
+  const languagesQuery = useQuery(['languages'], () =>
+    apiClient.languages.findAll()
+  );
+
+  const popover = usePopover();
+
   return (
-    <div className="absolute w-full h-full flex flex-col flex-grow overflow-y-auto pb-8">
+    <div className="absolute w-full h-full flex flex-col flex-grow">
+      <ReadingToolbar
+        verseId={chapterId + '001'}
+        languageCode={languageCode}
+        languages={
+          languagesQuery.data?.data.map(({ code, name }) => ({
+            code,
+            name,
+          })) ?? []
+        }
+        onLanguageChange={(language) => {
+          searchParams.set('lang', language);
+          setSearchParams(searchParams);
+        }}
+        onVerseChange={(verseId) => {
+          const newChapterId = verseId.slice(0, 5);
+          if (newChapterId !== chapterId) {
+            searchParams.set('chapter', newChapterId);
+            setSearchParams(searchParams);
+          }
+        }}
+      />
       {(() => {
         if (isLoading) {
           return (
@@ -102,36 +126,40 @@ export default function ReadingView() {
           );
         } else {
           return (
-            <div>
-              <h2 className="text-center font-bold text-3xl mb-4 mt-2">
-                {bookName(bookId, t)} {chapterNumber}
-              </h2>
-              <div
-                className="font-mixed p-4 mx-auto max-w-[960px] leading-loose text-right"
-                dir="rtl"
-              >
-                {data?.data.verses.flatMap((verse) =>
-                  verse.words.map((word) => {
-                    return (
-                      <Fragment key={word.id}>
+            <>
+              <div className="flex flex-col flex-grow w-full min-h-0 lg:flex-row">
+                <div className="flex flex-col max-h-full min-h-0 gap-8 overflow-auto grow pt-8 pb-10 px-6">
+                  <div
+                    className="font-mixed p-4 mx-auto max-w-[960px] leading-loose text-right"
+                    dir="rtl"
+                  >
+                    {data?.data.verses.flatMap((verse) => {
+                      const words = verse.words.map((word, i) => (
+                        <Fragment key={word.id}>
+                          <span
+                            className={
+                              i === verse.words.length - 1 ? 'me-1' : ''
+                            }
+                            onClick={(e) => popover.onWordClick(e, word)}
+                            onMouseEnter={(e) =>
+                              popover.onWordMouseEnter(e, word)
+                            }
+                            onMouseLeave={(e) => popover.onWordMouseLeave(e)}
+                          >
+                            {word.text}
+                          </span>
+                          {!word.text.endsWith('־') && ' '}
+                        </Fragment>
+                      ));
+                      words.unshift(
                         <span className={'font-sans text-xs'}>
                           {verse.number}&nbsp;
                         </span>
-                        <span
-                          className="last:me-1"
-                          onClick={(e) => popover.onWordClick(e, word)}
-                          onMouseEnter={(e) =>
-                            popover.onWordMouseEnter(e, word)
-                          }
-                          onMouseLeave={(e) => popover.onWordMouseLeave(e)}
-                        >
-                          {word.text}
-                        </span>
-                        {!word.text.endsWith('־') && ' '}
-                      </Fragment>
-                    );
-                  })
-                )}
+                      );
+                      return words;
+                    })}
+                  </div>
+                </div>
               </div>
               {popover.selectedWord &&
                 createPortal(
@@ -144,7 +172,7 @@ export default function ReadingView() {
                   </div>,
                   document.body
                 )}
-            </div>
+            </>
           );
         }
       })()}
