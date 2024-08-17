@@ -12,8 +12,7 @@ import {
   type PostLanguageRequestBody,
   GetLanguagesProgressResponseBody,
   GetLanguageProgressResponseBody,
-  GetLanguageVerseRangeResponseBody,
-  GetLanguageVerseRangeRequestBody,
+  GetLanguageReadingChapterResponseBody,
 } from '@translation/api-types';
 import type ApiClient from './client';
 
@@ -45,13 +44,12 @@ export default class Languages {
     });
   }
 
-  read(
+  readChapter(
     code: string,
-    { start, end }: GetLanguageVerseRangeRequestBody
-  ): Promise<GetLanguageVerseRangeResponseBody> {
-    return this.client.get<GetLanguageVerseRangeResponseBody>({
-      path: `/api/languages/${code}/read`,
-      query: { ...(start && { start }), ...(end && { end }) },
+    chapter: string
+  ): Promise<GetLanguageReadingChapterResponseBody> {
+    return this.client.get<GetLanguageReadingChapterResponseBody>({
+      path: `/api/languages/${code}/chapters/${chapter}/read`,
     });
   }
 

@@ -111,11 +111,6 @@ export interface GetLanguageResponseBody {
   data: Language;
 }
 
-export interface GetLanguageVerseRangeRequestBody {
-  end?: string;
-  start?: string;
-}
-
 export interface ReadingWord {
   id: string;
   text: string;
@@ -129,16 +124,10 @@ export interface ReadingVerse {
   words: ReadingWord[];
 }
 
-export interface ReadingChapter {
-  chapter: number;
-  book: number;
-  verses: ReadingVerse[];
-}
-
-export interface GetLanguageVerseRangeResponseBody {
-  data: ReadingChapter[];
-  prev?: string;
-  next?: string;
+export interface GetLanguageReadingChapterResponseBody {
+  data: {
+    verses: ReadingVerse[];
+  };
 }
 
 export interface BookProgress {
