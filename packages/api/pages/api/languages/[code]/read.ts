@@ -119,8 +119,10 @@ async function endCursorQuery(
   end: string,
   languageId: string
 ): Promise<GetLanguageVerseRangeResponseBody> {
-  const bookId = parseInt(end.slice(0, 1)) || 1;
+  const bookId = parseInt(end.slice(0, 2)) || 1;
   const chapterNumber = parseInt(end.slice(2, 5)) || 1;
+
+  console.log(bookId, chapterNumber);
 
   const data = await client.$queryRaw<GetLanguageVerseRangeResponseBody[]>`
         SELECT

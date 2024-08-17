@@ -11,7 +11,10 @@ import {
   useState,
 } from 'react';
 import { useFloating, autoUpdate } from '@floating-ui/react-dom';
-import { ReadingWord } from '@translation/api-types';
+import {
+  GetLanguageVerseRangeResponseBody,
+  ReadingWord,
+} from '@translation/api-types';
 import { createPortal } from 'react-dom';
 import { bookName } from './verse-utils';
 import { useTranslation } from 'react-i18next';
@@ -84,99 +87,96 @@ function usePopover(onClose?: () => void) {
   };
 }
 
-function useInfiniteScroll(options: {
-  chapters: { book: number; chapter: number }[];
-  fetchNextPage: () => void;
-  fetchPreviousPage: () => void;
-}) {
+function useInfiniteScroll(languageCode: string) {
+  const {
+    isLoading,
+    fetchPreviousPage,
+    fetchNextPage,
+    hasNextPage,
+    hasPreviousPage,
+    isFetching,
+    data,
+  } = useInfiniteQuery({
+    queryKey: ['reading', languageCode],
+    queryFn({ queryKey, pageParam = { start: '20001001' } }) {
+      return apiClient.languages.read(queryKey[1], pageParam);
+    },
+    getNextPageParam: (page) => (page.next ? { start: page.next } : undefined),
+    getPreviousPageParam: (page) =>
+      page.prev ? { end: page.prev } : undefined,
+  });
+
+  const chapters = data?.pages.flatMap((page) => page.data) ?? [];
+
   const root = useRef<HTMLDivElement>(null);
-  const observer = useRef<IntersectionObserver>();
-
-  const { fetchNextPage, fetchPreviousPage } = options;
-
-  useEffect(() => {
-    const obs = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (!entry.isIntersecting) continue;
-          if (entry.target.id === 'bottom-sentinel') {
-            fetchNextPage();
-          } else if (entry.target.id === 'top-sentinel') {
-            fetchPreviousPage();
-          }
-        }
-      },
-      {
-        root: root.current,
-        threshold: 1,
-        rootMargin: '1000px',
-      }
-    );
-    observer.current = obs;
-    return () => obs.disconnect();
-  }, [fetchNextPage, fetchPreviousPage]);
-
-  const bottomSentinel = useRef<HTMLDivElement>(null);
-  const setBottomSentinel = useCallback((el: HTMLDivElement | null) => {
-    if (bottomSentinel.current) {
-      observer.current?.unobserve(bottomSentinel.current);
-    }
-    if (el) {
-      observer.current?.observe(el);
-    }
-  }, []);
-
-  const topSentinel = useRef<HTMLDivElement>(null);
-  const setTopSentinel = useCallback((el: HTMLDivElement | null) => {
-    if (topSentinel.current) {
-      observer.current?.unobserve(topSentinel.current);
-    }
-    if (el) {
-      observer.current?.observe(el);
-    }
-  }, []);
 
   const virtualizer = useVirtualizer({
-    count: options.chapters.length,
+    count: chapters.length,
     getScrollElement: () => root.current,
     getItemKey: (index: number) =>
-      `virt-${options.chapters[index]?.book}-${options.chapters[index]?.chapter}`,
-    estimateSize: () => 1000,
+      `virt-${chapters[index]?.book}-${chapters[index]?.chapter}`,
+    estimateSize: () => 100,
     overscan: 5,
   });
 
-  const virtualItems = virtualizer.getVirtualItems();
+  const { scrollOffset, scrollToOffset, range, getVirtualItems } = virtualizer;
+  const virtualItems = getVirtualItems();
 
-  return { root, setBottomSentinel, setTopSentinel, virtualizer, virtualItems };
+  const firstPage = useRef<GetLanguageVerseRangeResponseBody>();
+  useEffect(() => {
+    const newFirstPage = data?.pages[0];
+    if (newFirstPage && firstPage.current !== newFirstPage) {
+      console.log('page loaded');
+    }
+    firstPage.current = newFirstPage;
+  }, [data, getVirtualItems, scrollOffset, scrollToOffset]);
+
+  useEffect(() => {
+    const items = getVirtualItems();
+    const lastItem = items.at(-1);
+    const firstItem = items[0];
+
+    if (
+      lastItem &&
+      lastItem.index >= chapters.length - 1 &&
+      hasNextPage &&
+      !isFetching
+    ) {
+      fetchNextPage();
+    }
+    if (firstItem && firstItem.index < 1 && hasPreviousPage && !isFetching) {
+      fetchPreviousPage();
+    }
+  }, [
+    range?.startIndex,
+    range?.endIndex,
+    getVirtualItems,
+    fetchNextPage,
+    fetchPreviousPage,
+    chapters.length,
+    hasNextPage,
+    isFetching,
+    hasPreviousPage,
+  ]);
+
+  return { root, virtualizer, virtualItems, isLoading, chapters };
 }
 
 export default function ReadingView() {
   const { t } = useTranslation(['bible']);
   const languageCode = 'spa';
 
-  const versesQuery = useInfiniteQuery({
-    queryKey: ['reading', languageCode],
-    queryFn({ queryKey, pageParam = { start: '02001001' } }) {
-      return apiClient.languages.read(queryKey[1], pageParam);
-    },
-    getNextPageParam: (page) => ({ start: page.next }),
-    getPreviousPageParam: (page) => ({ end: page.prev }),
-  });
-
   const popover = usePopover();
 
-  const chapters = versesQuery.data?.pages.flatMap((page) => page.data) ?? [];
-
-  const infiniteScroll = useInfiniteScroll({
-    chapters,
-    fetchNextPage: versesQuery.fetchNextPage,
-    fetchPreviousPage: versesQuery.fetchPreviousPage,
-  });
+  const infiniteScroll = useInfiniteScroll(languageCode);
 
   return (
-    <div className="absolute w-full h-full flex flex-col flex-grow overflow-y-auto pb-8">
+    <div
+      ref={infiniteScroll.root}
+      className="absolute w-full h-full flex flex-col flex-grow overflow-y-auto pb-8"
+    >
       {(() => {
-        if (versesQuery.status === 'loading') {
+        if (infiniteScroll.isLoading) {
           return (
             <div className="flex items-center justify-center flex-grow">
               <LoadingSpinner />
@@ -186,7 +186,6 @@ export default function ReadingView() {
           return (
             <div>
               <div
-                ref={infiniteScroll.root}
                 className="font-mixed p-4 mx-auto max-w-[960px] leading-loose text-right"
                 dir="rtl"
               >
@@ -208,8 +207,8 @@ export default function ReadingView() {
                       }px)`,
                     }}
                   >
-                    {infiniteScroll.virtualItems.map((item) => {
-                      const chapter = chapters[item.index];
+                    {infiniteScroll.virtualItems.map((item, i) => {
+                      const chapter = infiniteScroll.chapters[item.index];
                       if (!chapter) return null;
 
                       return (
@@ -218,13 +217,6 @@ export default function ReadingView() {
                           ref={infiniteScroll.virtualizer.measureElement}
                           data-index={item.index}
                         >
-                          {item.index === 0 && (
-                            <div
-                              id="top-sentinel"
-                              ref={infiniteScroll.setTopSentinel}
-                              className="h-px"
-                            />
-                          )}
                           {chapter.chapter === 1 && (
                             <h2 className="text-center font-bold text-3xl mb-4 mt-2">
                               {bookName(chapter.book, t)}
@@ -265,13 +257,6 @@ export default function ReadingView() {
                               </span>
                             ))}
                           </p>
-                          {item.index === chapters.length - 1 && (
-                            <div
-                              id="bottom-sentinel"
-                              ref={infiniteScroll.setBottomSentinel}
-                              className="h-px"
-                            />
-                          )}
                         </div>
                       );
                     })}
