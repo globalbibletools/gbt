@@ -1,12 +1,21 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 import apiClient from '../../shared/apiClient';
 import LoadingSpinner from '../../shared/components/LoadingSpinner';
-import { Fragment, MouseEvent, useEffect, useRef, useState } from 'react';
+import {
+  Fragment,
+  MouseEvent,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
 import { useFloating, autoUpdate } from '@floating-ui/react-dom';
 import { ReadingWord } from '@translation/api-types';
 import { createPortal } from 'react-dom';
 import { bookName } from './verse-utils';
 import { useTranslation } from 'react-i18next';
+import { useVirtualizer } from '@tanstack/react-virtual';
 
 function usePopover(onClose?: () => void) {
   const [selectedWord, selectWord] = useState<{
@@ -15,6 +24,7 @@ function usePopover(onClose?: () => void) {
   }>();
 
   const { refs, elements, floatingStyles } = useFloating({
+    strategy: 'fixed',
     placement: 'top',
     whileElementsMounted: autoUpdate,
   });
@@ -75,25 +85,25 @@ function usePopover(onClose?: () => void) {
 }
 
 function useInfiniteScroll(options: {
-  enable: boolean;
+  chapters: { book: number; chapter: number }[];
   fetchNextPage: () => void;
   fetchPreviousPage: () => void;
 }) {
   const root = useRef<HTMLDivElement>(null);
-  const bottomSentinel = useRef<HTMLDivElement>(null);
-  const topSentinel = useRef<HTMLDivElement>(null);
   const observer = useRef<IntersectionObserver>();
 
   const { fetchNextPage, fetchPreviousPage } = options;
 
   useEffect(() => {
-    observer.current = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry.isIntersecting) return;
-        if (entry.target === bottomSentinel.current) {
-          fetchNextPage();
-        } else if (entry.target === topSentinel.current) {
-          fetchPreviousPage();
+    const obs = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          if (entry.target.id === 'bottom-sentinel') {
+            fetchNextPage();
+          } else if (entry.target.id === 'top-sentinel') {
+            fetchPreviousPage();
+          }
         }
       },
       {
@@ -102,23 +112,42 @@ function useInfiniteScroll(options: {
         rootMargin: '1000px',
       }
     );
+    observer.current = obs;
+    return () => obs.disconnect();
   }, [fetchNextPage, fetchPreviousPage]);
 
-  useEffect(() => {
-    const btm = bottomSentinel.current;
-    const top = topSentinel.current;
-    const obs = observer.current;
-    if (options.enable && btm && top && obs) {
-      obs.observe(btm);
-      obs.observe(top);
-      return () => {
-        obs.unobserve(btm);
-        obs.unobserve(top);
-      };
+  const bottomSentinel = useRef<HTMLDivElement>(null);
+  const setBottomSentinel = useCallback((el: HTMLDivElement | null) => {
+    if (bottomSentinel.current) {
+      observer.current?.unobserve(bottomSentinel.current);
     }
-  }, [options.enable, observer]);
+    if (el) {
+      observer.current?.observe(el);
+    }
+  }, []);
 
-  return { root, bottomSentinel, topSentinel };
+  const topSentinel = useRef<HTMLDivElement>(null);
+  const setTopSentinel = useCallback((el: HTMLDivElement | null) => {
+    if (topSentinel.current) {
+      observer.current?.unobserve(topSentinel.current);
+    }
+    if (el) {
+      observer.current?.observe(el);
+    }
+  }, []);
+
+  const virtualizer = useVirtualizer({
+    count: options.chapters.length,
+    getScrollElement: () => root.current,
+    getItemKey: (index: number) =>
+      `virt-${options.chapters[index]?.book}-${options.chapters[index]?.chapter}`,
+    estimateSize: () => 1000,
+    overscan: 5,
+  });
+
+  const virtualItems = virtualizer.getVirtualItems();
+
+  return { root, setBottomSentinel, setTopSentinel, virtualizer, virtualItems };
 }
 
 export default function ReadingView() {
@@ -136,17 +165,16 @@ export default function ReadingView() {
 
   const popover = usePopover();
 
+  const chapters = versesQuery.data?.pages.flatMap((page) => page.data) ?? [];
+
   const infiniteScroll = useInfiniteScroll({
-    enable: !versesQuery.isLoading,
+    chapters,
     fetchNextPage: versesQuery.fetchNextPage,
     fetchPreviousPage: versesQuery.fetchPreviousPage,
   });
 
   return (
-    <div
-      ref={infiniteScroll.root}
-      className="absolute w-full h-full flex flex-col flex-grow overflow-y-auto pb-8"
-    >
+    <div className="absolute w-full h-full flex flex-col flex-grow overflow-y-auto pb-8">
       {(() => {
         if (versesQuery.status === 'loading') {
           return (
@@ -157,74 +185,98 @@ export default function ReadingView() {
         } else {
           return (
             <div>
-              {versesQuery.hasPreviousPage && (
-                <div ref={infiniteScroll.topSentinel} />
-              )}
-              <div>
-                {versesQuery.isFetching && versesQuery.isFetchingPreviousPage
-                  ? 'Fetching...'
-                  : null}
-              </div>
               <div
+                ref={infiniteScroll.root}
                 className="font-mixed p-4 mx-auto max-w-[960px] leading-loose text-right"
                 dir="rtl"
               >
-                {versesQuery.data?.pages.map((page, i) => (
-                  <Fragment key={i}>
-                    {page.data.map((chapter) => (
-                      <Fragment key={`${chapter.book}-${chapter.chapter}`}>
-                        {chapter.chapter === 1 && (
-                          <h2 className="text-center font-bold text-3xl mb-4 mt-2">
-                            {bookName(chapter.book, t)}
-                          </h2>
-                        )}
-                        <p>
-                          <span className="font-sans text-lg">
-                            {chapter.chapter}&nbsp;
-                          </span>
-                          {chapter.verses.map((verse) => (
-                            <span key={verse.id}>
-                              {verse.words.map((word, i) => {
-                                return (
-                                  <Fragment key={word.id}>
-                                    {i === 0 && verse.number !== 1 && (
-                                      <span className={'font-sans text-xs'}>
-                                        {verse.number}&nbsp;
-                                      </span>
-                                    )}
-                                    <span
-                                      className="last:me-1"
-                                      onClick={(e) =>
-                                        popover.onWordClick(e, word)
-                                      }
-                                      onMouseEnter={(e) =>
-                                        popover.onWordMouseEnter(e, word)
-                                      }
-                                      onMouseLeave={(e) =>
-                                        popover.onWordMouseLeave(e)
-                                      }
-                                    >
-                                      {word.text}
-                                    </span>
-                                    {!word.text.endsWith('־') && ' '}
-                                  </Fragment>
-                                );
-                              })}
+                <div
+                  style={{
+                    height: `${infiniteScroll.virtualizer.getTotalSize()}px`,
+                    width: '100%',
+                    position: 'relative',
+                  }}
+                >
+                  <div
+                    style={{
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      width: '100%',
+                      transform: `translateY(${
+                        infiniteScroll.virtualItems[0]?.start ?? 0
+                      }px)`,
+                    }}
+                  >
+                    {infiniteScroll.virtualItems.map((item) => {
+                      const chapter = chapters[item.index];
+                      if (!chapter) return null;
+
+                      return (
+                        <div
+                          key={`${chapter.book}-${chapter.chapter}`}
+                          ref={infiniteScroll.virtualizer.measureElement}
+                          data-index={item.index}
+                        >
+                          {item.index === 0 && (
+                            <div
+                              id="top-sentinel"
+                              ref={infiniteScroll.setTopSentinel}
+                              className="h-px"
+                            />
+                          )}
+                          {chapter.chapter === 1 && (
+                            <h2 className="text-center font-bold text-3xl mb-4 mt-2">
+                              {bookName(chapter.book, t)}
+                            </h2>
+                          )}
+                          <p>
+                            <span className="font-sans text-lg">
+                              {chapter.chapter}&nbsp;
                             </span>
-                          ))}
-                        </p>
-                      </Fragment>
-                    ))}
-                  </Fragment>
-                ))}
-              </div>
-              {versesQuery.hasNextPage && (
-                <div ref={infiniteScroll.bottomSentinel} />
-              )}
-              <div>
-                {versesQuery.isFetching && versesQuery.isFetchingNextPage
-                  ? 'Fetching...'
-                  : null}
+                            {chapter.verses.map((verse) => (
+                              <span key={verse.id}>
+                                {verse.words.map((word, i) => {
+                                  return (
+                                    <Fragment key={word.id}>
+                                      {i === 0 && verse.number !== 1 && (
+                                        <span className={'font-sans text-xs'}>
+                                          {verse.number}&nbsp;
+                                        </span>
+                                      )}
+                                      <span
+                                        className="last:me-1"
+                                        onClick={(e) =>
+                                          popover.onWordClick(e, word)
+                                        }
+                                        onMouseEnter={(e) =>
+                                          popover.onWordMouseEnter(e, word)
+                                        }
+                                        onMouseLeave={(e) =>
+                                          popover.onWordMouseLeave(e)
+                                        }
+                                      >
+                                        {word.text}
+                                      </span>
+                                      {!word.text.endsWith('־') && ' '}
+                                    </Fragment>
+                                  );
+                                })}
+                              </span>
+                            ))}
+                          </p>
+                          {item.index === chapters.length - 1 && (
+                            <div
+                              id="bottom-sentinel"
+                              ref={infiniteScroll.setBottomSentinel}
+                              className="h-px"
+                            />
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
               </div>
               {popover.selectedWord &&
                 createPortal(
