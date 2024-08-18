@@ -29,7 +29,7 @@ export default createRoute<{ code: string; chapterId: string }>()
             'id', w.id,
             'text', w.text,
             'gloss', g.gloss,
-            'linked_words', ph.linked_words
+            'linkedWords', ph.linked_words
           )) ORDER BY w.id) AS words
         FROM "Verse" AS v
         JOIN "Word" AS w ON w."verseId" = v.id

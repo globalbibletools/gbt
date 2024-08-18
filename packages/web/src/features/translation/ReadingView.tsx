@@ -95,6 +95,7 @@ export default function ReadingView() {
   );
 
   const popover = usePopover();
+  const linkedWords = popover.selectedWord?.word.linkedWords ?? [];
 
   return (
     <div className="absolute w-full h-full flex flex-col flex-grow">
@@ -141,9 +142,16 @@ export default function ReadingView() {
                       const words = verse.words.map((word, i) => (
                         <Fragment key={word.id}>
                           <span
-                            className={
-                              i === verse.words.length - 1 ? 'me-1' : ''
-                            }
+                            className={`
+                              ${i === verse.words.length - 1 ? 'me-1' : ''}
+                              ${
+                                (linkedWords.length > 0 &&
+                                  popover.selectedWord?.word.id === word.id) ||
+                                linkedWords.includes(word.id)
+                                  ? 'bg-green-200 dark:bg-gray-600 rounded-sm'
+                                  : ''
+                              }
+                            `}
                             onClick={(e) => popover.onWordClick(e, word)}
                             onMouseEnter={(e) =>
                               popover.onWordMouseEnter(e, word)
